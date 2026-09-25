@@ -7,10 +7,9 @@ import { useShop } from "@/shared/providers/ShopProvider";
 import {
   Phone,
   MapPin,
-  CheckCircle2,
   Sparkles,
-  Award,
   ArrowRight,
+  Award,
   Scissors,
   Truck,
   HeartHandshake
@@ -65,13 +64,11 @@ export default function CeoLetterSection() {
         </div>
 
         {/* =============================================
-            Main Card
+            Main Card — 2 columns
             ============================================= */}
         <div className="bg-slate-50 rounded-2xl sm:rounded-3xl border border-slate-200 p-4 sm:p-6 md:p-10 shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
-            {/* =========================================
-                Left: CEO Portrait
-                ========================================= */}
+            {/* Left: CEO Portrait */}
             <div className="lg:col-span-5 flex flex-col items-center text-center">
               <div className="relative group w-full max-w-sm">
                 <div className="absolute -inset-1.5 sm:-inset-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-3xl blur-md opacity-30 group-hover:opacity-50 transition duration-500" />
@@ -130,9 +127,7 @@ export default function CeoLetterSection() {
               </div>
             </div>
 
-            {/* =========================================
-                Right: Letter Content
-                ========================================= */}
+            {/* Right: Letter Content */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <div className="space-y-2 sm:space-y-3">
                 <div className="text-[#071b34] font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
@@ -148,65 +143,7 @@ export default function CeoLetterSection() {
                 </p>
               </div>
 
-              {/* 4 Benefits */}
-              <div>
-                <div className="text-[#071b34] font-extrabold text-xs sm:text-sm uppercase tracking-wider mb-3 sm:mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-500" />
-                  <span>LỢI ÍCH HỢP TÁC VÀNG:</span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 hover:border-amber-400 transition-colors flex items-start gap-2.5 sm:gap-3 shadow-sm hover:shadow-md">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#071b34] text-xs sm:text-sm">Chất Lượng Vượt Trội</h4>
-                      <p className="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                        Vải dệt công nghệ mới, kháng khuẩn, co giãn 4 chiều.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 hover:border-amber-400 transition-colors flex items-start gap-2.5 sm:gap-3 shadow-sm hover:shadow-md">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#071b34] text-xs sm:text-sm">Thiết Kế Độc Quyền</h4>
-                      <p className="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                        Miễn phí phác thảo 3D và may mẫu áo thật duyệt form.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 hover:border-amber-400 transition-colors flex items-start gap-2.5 sm:gap-3 shadow-sm hover:shadow-md">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#071b34] text-xs sm:text-sm">Giá Cả Cạnh Tranh</h4>
-                      <p className="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                        Sản xuất khép kín tại xưởng 2.500m², giá gốc tận tay.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 hover:border-amber-400 transition-colors flex items-start gap-2.5 sm:gap-3 shadow-sm hover:shadow-md">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 mt-0.5">
-                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-[#071b34] text-xs sm:text-sm">Dịch Vụ Tận Tâm</h4>
-                      <p className="text-[11px] sm:text-xs text-slate-600 mt-1 leading-relaxed">
-                        Bảo hành 1 đổi 1 trong 30 ngày, hỗ trợ may bổ sung.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* 5 Commitments */}
+              {/* 5 Commitments row */}
               <div className="pt-2 border-t border-slate-200">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-2 text-[11px] sm:text-xs text-slate-700">
                   <span className="flex items-center gap-1.5 text-[#071b34] font-bold">

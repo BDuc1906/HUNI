@@ -3,72 +3,105 @@
 import React from "react";
 import { ThemeProvider } from "@/shared/providers/ThemeProvider";
 import { ShopProvider } from "@/shared/providers/ShopProvider";
+import ErrorBoundary from "@/shared/components/ErrorBoundary";
 
 import Header from "@/shared/components/layout/Header";
+import Footer from "@/shared/components/layout/Footer";
+import FloatingActions from "@/shared/components/layout/FloatingActions";
+
 import HeroBanner from "@/features/home/components/HeroBanner";
+import TrustBar from "@/features/home/components/TrustBar";
 import ProductCatalog from "@/features/catalog/components/ProductCatalog";
-import CeoLetterSection from "@/features/home/components/CeoLetterSection";
+import WhyChooseUs from "@/features/home/components/WhyChooseUs";
 import FabricGuideSection from "@/features/home/components/FabricGuideSection";
 import ProcessSection from "@/features/home/components/ProcessSection";
-import QuickQuoteSection from "@/features/quote/components/QuickQuoteSection";
+import CeoLetterSection from "@/features/home/components/CeoLetterSection";
 import TestimonialsSection from "@/features/home/components/TestimonialsSection";
+import QuickQuoteSection from "@/features/quote/components/QuickQuoteSection";
 import FaqSection from "@/features/home/components/FaqSection";
-import Footer from "@/shared/components/layout/Footer";
+import MapSection from "@/features/home/components/MapSection";
+import FinalCtaSection from "@/features/home/components/FinalCtaSection";
 
-// Modals & Interactive Drawers
 import ProductDetailModal from "@/features/catalog/components/ProductDetailModal";
 import LogoCustomizerModal from "@/features/customize/components/LogoCustomizerModal";
 import CartDrawer from "@/features/cart/components/CartDrawer";
 import CheckoutModal from "@/features/checkout/components/CheckoutModal";
 import OrderTrackingModal from "@/features/tracking/components/OrderTrackingModal";
 import QuickQuoteModal from "@/features/quote/components/QuickQuoteModal";
-import FloatingActions from "@/shared/components/layout/FloatingActions";
 
 export default function Home() {
   return (
     <ThemeProvider>
       <ShopProvider>
         <div className="flex flex-col min-h-screen">
-          {/* Navigation & Header */}
-          <Header />
+          <ErrorBoundary name="Header">
+            <Header />
+          </ErrorBoundary>
 
-          {/* Main Content Sections */}
           <main className="flex-1">
-            {/* 1. Hero Showcase */}
-            <HeroBanner />
+            <ErrorBoundary name="Hero">
+              <HeroBanner />
+            </ErrorBoundary>
 
-            {/* 2. Danh Mục & Sản Phẩm — merged into a single unified section */}
-            <ProductCatalog />
+            <ErrorBoundary name="Trust Bar">
+              <TrustBar />
+            </ErrorBoundary>
 
-            {/* 3. Letter of Partnership from CEO Nguyen Thi Thuong */}
-            <CeoLetterSection />
+            <ErrorBoundary name="Sản phẩm">
+              <ProductCatalog />
+            </ErrorBoundary>
 
-            {/* 4. Fabric Quality Comparison Table */}
-            <FabricGuideSection />
+            <ErrorBoundary name="Vì sao chọn HUNI">
+              <WhyChooseUs />
+            </ErrorBoundary>
 
-            {/* 5. 5-Step Manufacturing Process */}
-            <ProcessSection />
+            <ErrorBoundary name="Bảng vải">
+              <FabricGuideSection />
+            </ErrorBoundary>
 
-            {/* 6. Quick Cost Estimator Form */}
-            <QuickQuoteSection />
+            <ErrorBoundary name="Quy trình">
+              <ProcessSection />
+            </ErrorBoundary>
 
-            {/* 7. Client Testimonials & Enterprise Trust Logos */}
-            <TestimonialsSection />
+            <ErrorBoundary name="Thư mời hợp tác">
+              <CeoLetterSection />
+            </ErrorBoundary>
 
-            {/* 8. Frequently Asked Questions (FAQ) */}
-            <FaqSection />
+            <ErrorBoundary name="Đánh giá khách hàng">
+              <TestimonialsSection />
+            </ErrorBoundary>
+
+            <ErrorBoundary name="Báo giá nhanh">
+              <QuickQuoteSection />
+            </ErrorBoundary>
+
+            <ErrorBoundary name="FAQ">
+              <FaqSection />
+            </ErrorBoundary>
+
+            {/* ✨ MỚI: Bản đồ trụ sở */}
+            <ErrorBoundary name="Bản đồ">
+              <MapSection />
+            </ErrorBoundary>
+
+            <ErrorBoundary name="CTA cuối">
+              <FinalCtaSection />
+            </ErrorBoundary>
           </main>
 
-          {/* Footer */}
-          <Footer />
+          <ErrorBoundary name="Footer">
+            <Footer />
+          </ErrorBoundary>
 
-          {/* Interactive Modals & Drawers */}
-          <ProductDetailModal />
-          <LogoCustomizerModal />
-          <CartDrawer />
-          <CheckoutModal />
-          <OrderTrackingModal />
-          <QuickQuoteModal />
+          <ErrorBoundary name="Modals">
+            <ProductDetailModal />
+            <LogoCustomizerModal />
+            <CartDrawer />
+            <CheckoutModal />
+            <OrderTrackingModal />
+            <QuickQuoteModal />
+          </ErrorBoundary>
+
           <FloatingActions />
         </div>
       </ShopProvider>
