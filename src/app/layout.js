@@ -1,7 +1,11 @@
+// src/app/layout.js
 import "./globals.css";
+import { Suspense } from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
-export const dynamic = 'force-dynamic';
+
+export const dynamic = "force-dynamic";
+
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
    ============================================================ */
@@ -20,7 +24,8 @@ export const metadata = {
   metadataBase: new URL("https://huniuniform.vn"),
 
   title: {
-    default: "HUNI UNIFORM - Đồng Phục Doanh Nghiệp & May Đo Cao Cấp | HDC GROUP VN",
+    default:
+      "HUNI UNIFORM - Đồng Phục Doanh Nghiệp & May Đo Cao Cấp | HDC GROUP VN",
     template: "%s | HUNI UNIFORM",
   },
   description:
@@ -65,7 +70,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "HUNI UNIFORM - Đồng Phục Doanh Nghiệp Cao Cấp",
-    description: "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ.",
+    description:
+      "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ.",
     images: ["/images/uniform_polo_corporate.jpg"],
   },
 
@@ -229,11 +235,13 @@ export default function RootLayout({ children }) {
       >
         {/* ============================================================
             AUTH PROVIDER — NextAuth SessionProvider
-            Bao quanh toàn bộ app để useSession() hoạt động
+            ✅ Bọc Suspense ở đây (Server Component) để bắt suspension
+            từ SessionProvider trong lúc Next.js prerender trang.
+            Tránh lỗi "Cannot read properties of null (reading 'useState')"
             ============================================================ */}
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <Suspense fallback={null}>
+          <AuthProvider>{children}</AuthProvider>
+        </Suspense>
 
         {/* ============================================================
             JSON-LD STRUCTURED DATA
