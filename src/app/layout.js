@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
 
-export const dynamic = "force-dynamic";
+
 
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
