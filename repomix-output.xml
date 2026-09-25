@@ -42,12 +42,87 @@ The content is organized as follows:
 <directory_structure>
 public/
   images/
-    ceo_portrait.jpg
-    uniform_accessories.jpg
-    uniform_corporate_suits.jpg
-    uniform_polo_corporate.jpg
-    uniform_school_students.jpg
-    uniform_sport_golf.jpg
+    images_full/
+      01_portraits/
+        01_portraits_01.jpg
+        01_portraits_02.jpg
+      02_materials/
+        02_materials_01.jpg
+        02_materials_02.jpg
+        02_materials_03.jpg
+        02_materials_04.jpg
+        02_materials_05.jpg
+        02_materials_06.jpg
+        02_materials_07.jpg
+        02_materials_08.jpg
+        02_materials_09.jpg
+        02_materials_10.jpg
+      03_fabric_tech/
+        03_fabric_tech_01.jpg
+        03_fabric_tech_02.jpg
+        03_fabric_tech_03.jpg
+        03_fabric_tech_04.jpg
+        03_fabric_tech_05.jpg
+        03_fabric_tech_06.jpg
+        03_fabric_tech_07.jpg
+        03_fabric_tech_08.jpg
+      04_culture_accessories/
+        04_culture_accessories_01.jpg
+        04_culture_accessories_02.jpg
+        04_culture_accessories_03.jpg
+        04_culture_accessories_04.jpg
+        04_culture_accessories_05.jpg
+        04_culture_accessories_06.jpg
+        04_culture_accessories_07.jpg
+      05_bestseller_shirts/
+        05_bestseller_shirts_01.jpg
+        05_bestseller_shirts_02.jpg
+        05_bestseller_shirts_03.jpg
+        05_bestseller_shirts_04.jpg
+        05_bestseller_shirts_05.jpg
+        05_bestseller_shirts_06.jpg
+        05_bestseller_shirts_07.jpg
+        05_bestseller_shirts_08.jpg
+        05_bestseller_shirts_09.jpg
+        05_bestseller_shirts_10.jpg
+        05_bestseller_shirts_11.jpg
+        05_bestseller_shirts_12.jpg
+        05_bestseller_shirts_13.jpg
+      06_polo/
+        06_polo_01.jpg
+        06_polo_02.jpg
+        06_polo_03.jpg
+        06_polo_04.jpg
+        06_polo_05.jpg
+        06_polo_06.jpg
+      07_corporate_golf/
+        07_corporate_golf_01.jpg
+        07_corporate_golf_02.jpg
+        07_corporate_golf_03.jpg
+        07_corporate_golf_04.jpg
+      08_golf_event/
+        08_golf_event_01.jpg
+        08_golf_event_02.jpg
+        08_golf_event_03.jpg
+      09_kids_school/
+        09_kids_school_01.jpg
+        09_kids_school_02.jpg
+        09_kids_school_03.jpg
+      10_kids_why/
+        10_kids_why_01.jpg
+        10_kids_why_02.jpg
+        10_kids_why_03.jpg
+      11_kids_polo_products/
+        11_kids_polo_products_01.jpg
+        11_kids_polo_products_02.jpg
+        11_kids_polo_products_03.jpg
+        11_kids_polo_products_04.jpg
+        11_kids_polo_products_05.jpg
+      12_kids_bestseller/
+        12_kids_bestseller_01.jpg
+        12_kids_bestseller_02.jpg
+        12_kids_bestseller_03.jpg
+        12_kids_bestseller_04.jpg
   file.svg
   globe.svg
   next.svg
@@ -233,11 +308,10 @@ export default function RootLayout({ children }) {
 <file path="src/app/page.js">
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { ShopProvider } from "@/context/ShopContext";
 import Header from "@/components/Header";
 import HeroBanner from "@/components/HeroBanner";
-import CategoryShowcase from "@/components/CategoryShowcase";
 import ProductCatalog from "@/components/ProductCatalog";
 import CeoLetterSection from "@/components/CeoLetterSection";
 import FabricGuideSection from "@/components/FabricGuideSection";
@@ -257,8 +331,6 @@ import QuickQuoteModal from "@/components/QuickQuoteModal";
 import FloatingActions from "@/components/FloatingActions";
 
 export default function Home() {
-  const [activeCategory, setActiveCategory] = useState("all");
-
   return (
     <ShopProvider>
       <div className="flex flex-col min-h-screen">
@@ -270,31 +342,25 @@ export default function Home() {
           {/* 1. Hero Showcase */}
           <HeroBanner />
 
-          {/* 2. 5 Main Categories Showcase */}
-          <CategoryShowcase onSelectCategory={(catId) => setActiveCategory(catId)} />
+          {/* 2. Danh Mục & Sản Phẩm — merged into a single unified section */}
+          <ProductCatalog />
 
-          {/* 3. Product Catalog with Wholesale Pricing & Filters */}
-          <ProductCatalog
-            activeCategory={activeCategory}
-            setActiveCategory={setActiveCategory}
-          />
-
-          {/* 4. Letter of Partnership from CEO Nguyen Thi Thuong (Image 1 & 3) */}
+          {/* 3. Letter of Partnership from CEO Nguyen Thi Thuong (Image 1 & 3) */}
           <CeoLetterSection />
 
-          {/* 5. Fabric Quality Comparison Table */}
+          {/* 4. Fabric Quality Comparison Table */}
           <FabricGuideSection />
 
-          {/* 6. 5-Step Manufacturing Process */}
+          {/* 5. 5-Step Manufacturing Process */}
           <ProcessSection />
 
-          {/* 7. Quick Cost Estimator Form */}
+          {/* 6. Quick Cost Estimator Form */}
           <QuickQuoteSection />
 
-          {/* 8. Client Testimonials & Enterprise Trust Logos */}
+          {/* 7. Client Testimonials & Enterprise Trust Logos */}
           <TestimonialsSection />
 
-          {/* 9. Frequently Asked Questions (FAQ) */}
+          {/* 8. Frequently Asked Questions (FAQ) */}
           <FaqSection />
         </main>
 
@@ -1279,7 +1345,7 @@ export default function ThemeToggle({ className = "" }) {
       className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-colors border border-neutral-300 dark:border-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 ${className}`}
     >
       {theme === "dark" ? (
-        <Sun className="w-4 h-4 text-amber-400" />
+        <Sun className="w-4 h-4 text-cyan-400" />
       ) : (
         <Moon className="w-4 h-4 text-neutral-700" />
       )}
@@ -1345,9 +1411,9 @@ export default function CartDrawer() {
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
       <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
         {/* Header */}
-        <div className="p-4 bg-[#071b34] text-white flex items-center justify-between border-b border-amber-500/20">
+        <div className="p-4 bg-[#071b34] text-white flex items-center justify-between border-b border-cyan-500/20">
           <div className="flex items-center gap-2.5">
-            <ShoppingBag className="w-5 h-5 text-amber-400" />
+            <ShoppingBag className="w-5 h-5 text-cyan-400" />
             <h2 className="font-extrabold text-base">Giỏ Hàng Đồng Phục ({cartCount})</h2>
           </div>
           <button
@@ -1393,7 +1459,7 @@ export default function CartDrawer() {
                         <strong className="text-slate-700">{item.size}</strong>
                       </div>
                       {item.customLogo && (
-                        <div className="text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded text-[10px] inline-block border border-amber-200">
+                        <div className="text-cyan-700 font-semibold bg-cyan-50 px-2 py-0.5 rounded text-[10px] inline-block border border-cyan-200">
                           ✓ {item.customLogo.method} ({item.customLogo.position})
                         </div>
                       )}
@@ -1441,7 +1507,7 @@ export default function CartDrawer() {
               </p>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="px-4 py-2 bg-[#071b34] text-amber-300 font-bold text-xs rounded-xl"
+                className="px-4 py-2 bg-[#071b34] text-cyan-300 font-bold text-xs rounded-xl"
               >
                 Khám phá sản phẩm
               </button>
@@ -1473,11 +1539,11 @@ export default function CartDrawer() {
                   placeholder="Nhập mã ưu đãi (HUNI2026, DOANHNGHIEP)..."
                   value={inputVoucher}
                   onChange={(e) => setInputVoucher(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs uppercase text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                  className="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs uppercase text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                 />
                 <button
                   type="submit"
-                  className="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-amber-300 font-bold text-xs rounded-xl transition-colors"
+                  className="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-cyan-300 font-bold text-xs rounded-xl transition-colors"
                 >
                   Áp dụng
                 </button>
@@ -1516,7 +1582,7 @@ export default function CartDrawer() {
             {/* Proceed to checkout button */}
             <button
               onClick={handleProceedToCheckout}
-              className="w-full py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-extrabold text-sm rounded-2xl shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
+              className="w-full py-3.5 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-extrabold text-sm rounded-2xl shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
             >
               <span>Tiến Hành Đặt Hàng & May Mẫu</span>
               <ArrowRight className="w-4 h-4" />
@@ -1654,16 +1720,16 @@ export default function CeoLetterSection() {
   const { setIsQuickQuoteOpen } = useShop();
 
   return (
-    <section id="ceo-letter-section" className="py-20 bg-gradient-to-b from-[#071b34] to-[#040e1c] text-white relative overflow-hidden border-t border-b border-amber-500/20">
+    <section id="ceo-letter-section" className="py-20 bg-gradient-to-b from-[#071b34] to-[#040e1c] text-white relative overflow-hidden border-t border-b border-cyan-500/20">
       {/* Background Decorative Gold Watermarks */}
-      <div className="absolute top-1/2 left-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         {/* Section Header Title matching Image 1 */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             Thư Mời Hợp Tác Doanh Nghiệp
           </div>
 
@@ -1673,19 +1739,19 @@ export default function CeoLetterSection() {
           <p className="text-xl sm:text-2xl font-bold text-gold-gradient">
             Nâng tầm thương hiệu cùng HUNI UNIFORM
           </p>
-          <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto rounded-full mt-2" />
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-cyan-600 mx-auto rounded-full mt-2" />
         </div>
 
         {/* Main Content Card with Golden Border */}
-        <div className="bg-[#0b2042]/90 backdrop-blur-md rounded-3xl border border-amber-400/30 p-6 sm:p-10 shadow-2xl">
+        <div className="bg-[#0b2042]/90 backdrop-blur-md rounded-3xl border border-cyan-400/30 p-6 sm:p-10 shadow-2xl">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left: CEO Portrait Card */}
             <div className="lg:col-span-5 flex flex-col items-center text-center">
               <div className="relative group">
                 {/* Gold glowing border */}
-                <div className="absolute -inset-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-700 rounded-3xl blur-md opacity-40 group-hover:opacity-60 transition duration-500" />
+                <div className="absolute -inset-2 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-700 rounded-3xl blur-md opacity-40 group-hover:opacity-60 transition duration-500" />
 
-                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400/60 shadow-2xl max-w-sm w-full bg-slate-900">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-cyan-400/60 shadow-2xl max-w-sm w-full bg-slate-900">
                   <img
                     src={BRAND_INFO.ceo.image}
                     alt={BRAND_INFO.ceo.name}
@@ -1694,7 +1760,7 @@ export default function CeoLetterSection() {
 
                   {/* Golden Name Tag on Portrait */}
                   <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#071b34] via-[#071b34]/90 to-transparent p-5 text-white">
-                    <h3 className="text-xl font-black text-amber-300 tracking-wide uppercase">
+                    <h3 className="text-xl font-black text-cyan-300 tracking-wide uppercase">
                       {BRAND_INFO.ceo.name}
                     </h3>
                     <div className="text-xs font-bold text-white uppercase tracking-wider mt-0.5">
@@ -1705,19 +1771,19 @@ export default function CeoLetterSection() {
               </div>
 
               {/* Direct Hotline badge */}
-              <div className="mt-6 w-full max-w-sm space-y-2 text-left bg-[#071b34]/90 p-4 rounded-2xl border border-amber-400/20 text-xs">
+              <div className="mt-6 w-full max-w-sm space-y-2 text-left bg-[#071b34]/90 p-4 rounded-2xl border border-cyan-400/20 text-xs">
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="flex items-center gap-3 text-amber-400 hover:text-amber-300 font-extrabold text-sm"
+                  className="flex items-center gap-3 text-cyan-400 hover:text-cyan-300 font-extrabold text-sm"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-400">
+                  <div className="w-8 h-8 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-400">
                     <Phone className="w-4 h-4 animate-bounce" />
                   </div>
                   <span>Hotline Trực Tiếp: {BRAND_INFO.contact.hotline}</span>
                 </a>
 
                 <div className="flex items-start gap-3 text-slate-300 pt-2 border-t border-slate-700">
-                  <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400 shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400 shrink-0">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
@@ -1726,7 +1792,7 @@ export default function CeoLetterSection() {
                 </div>
 
                 <div className="flex items-start gap-3 text-slate-300 pt-2 border-t border-slate-700">
-                  <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400 shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400 shrink-0">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
@@ -1740,14 +1806,14 @@ export default function CeoLetterSection() {
             <div className="lg:col-span-7 space-y-6">
               {/* About HUNI Paragraph */}
               <div className="space-y-3">
-                <div className="text-amber-400 font-extrabold text-sm uppercase tracking-wider flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <div className="text-cyan-400 font-extrabold text-sm uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
                   <span>Về HUNI UNIFORM:</span>
                 </div>
                 <p className="text-slate-200 text-sm sm:text-base leading-relaxed text-justify">
                   {BRAND_INFO.ceo.bio}
                 </p>
-                <p className="text-amber-200/90 text-sm italic font-medium">
+                <p className="text-cyan-200/90 text-sm italic font-medium">
                   &ldquo;Chúng tôi tin rằng, mỗi bộ đồng phục không chỉ là trang phục công sở đơn thuần,
                   mà còn là niềm tự hào, đại diện cho bản sắc văn hóa và đẳng cấp của một tập thể.&rdquo;
                 </p>
@@ -1755,14 +1821,14 @@ export default function CeoLetterSection() {
 
               {/* 4 Partnership Benefits matching Image 1 */}
               <div>
-                <div className="text-amber-400 font-extrabold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <div className="text-cyan-400 font-extrabold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-cyan-400" />
                   <span>LỢI ÍCH HỢP TÁC VÀNG:</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-amber-400/50 transition-colors flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-cyan-400/50 transition-colors flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -1773,8 +1839,8 @@ export default function CeoLetterSection() {
                     </div>
                   </div>
 
-                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-amber-400/50 transition-colors flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-cyan-400/50 transition-colors flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -1785,8 +1851,8 @@ export default function CeoLetterSection() {
                     </div>
                   </div>
 
-                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-amber-400/50 transition-colors flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-cyan-400/50 transition-colors flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -1797,8 +1863,8 @@ export default function CeoLetterSection() {
                     </div>
                   </div>
 
-                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-amber-400/50 transition-colors flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="bg-[#071b34]/90 p-4 rounded-2xl border border-slate-700/80 hover:border-cyan-400/50 transition-colors flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0 mt-0.5">
                       <CheckCircle2 className="w-5 h-5" />
                     </div>
                     <div>
@@ -1814,19 +1880,19 @@ export default function CeoLetterSection() {
               {/* 5 Commitments matching Image 3 */}
               <div className="pt-2 border-t border-slate-800">
                 <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-300">
-                  <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
                     <Award className="w-4 h-4" /> Chất lượng cam kết
                   </span>
-                  <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
                     <Sparkles className="w-4 h-4" /> Thiết kế độc quyền
                   </span>
-                  <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
                     <Scissors className="w-4 h-4" /> May đo chuyên nghiệp
                   </span>
-                  <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
                     <Truck className="w-4 h-4" /> Giao hàng đúng hẹn
                   </span>
-                  <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
                     <HeartHandshake className="w-4 h-4" /> Đồng hành lâu dài
                   </span>
                 </div>
@@ -1836,7 +1902,7 @@ export default function CeoLetterSection() {
               <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
                 <button
                   onClick={() => setIsQuickQuoteOpen(true)}
-                  className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
+                  className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
                 >
                   <span>Nhận Thư Báo Giá & Mẫu Vải Miễn Phí</span>
                   <ArrowRight className="w-4 h-4" />
@@ -1844,7 +1910,7 @@ export default function CeoLetterSection() {
 
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="w-full sm:w-auto px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/30 font-bold text-sm rounded-2xl flex items-center justify-center gap-2 transition-colors"
+                  className="w-full sm:w-auto px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-cyan-400 border border-cyan-500/30 font-bold text-sm rounded-2xl flex items-center justify-center gap-2 transition-colors"
                 >
                   <Phone className="w-4 h-4 animate-pulse" />
                   <span>Kết Nối Trực Tiếp CEO: {BRAND_INFO.contact.hotline}</span>
@@ -1981,16 +2047,16 @@ export default function CheckoutModal() {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95">
         {/* Header */}
-        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-amber-500/20">
+        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-cyan-500/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-400 text-[#071b34] font-black flex items-center justify-center text-sm">
+            <div className="w-8 h-8 rounded-lg bg-cyan-400 text-[#071b34] font-black flex items-center justify-center text-sm">
               HN
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg">
                 {step === 1 ? "Đặt Hàng & May Đồng Phục HUNI" : "Đặt May Thành Công!"}
               </h3>
-              <p className="text-xs text-amber-200/80">HDC GROUP VN • Xưởng Sản Xuất Trực Tiếp</p>
+              <p className="text-xs text-cyan-200/80">HDC GROUP VN • Xưởng Sản Xuất Trực Tiếp</p>
             </div>
           </div>
           <button
@@ -2007,7 +2073,7 @@ export default function CheckoutModal() {
             {/* Customer Information */}
             <div>
               <h4 className="text-sm font-bold text-[#071b34] uppercase tracking-wider mb-3 flex items-center gap-2">
-                <Building className="w-4 h-4 text-amber-600" />
+                <Building className="w-4 h-4 text-cyan-600" />
                 <span>1. Thông Tin Doanh Nghiệp & Người Đặt Hàng</span>
               </h4>
 
@@ -2022,7 +2088,7 @@ export default function CheckoutModal() {
                     placeholder="Nguyễn Văn A"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
@@ -2036,7 +2102,7 @@ export default function CheckoutModal() {
                     placeholder="0984.xxx.xxx"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
@@ -2049,7 +2115,7 @@ export default function CheckoutModal() {
                     placeholder="Công ty CP Tập Đoàn..."
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
@@ -2060,7 +2126,7 @@ export default function CheckoutModal() {
                     placeholder="email@doanhnghiep.vn"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
 
@@ -2074,7 +2140,7 @@ export default function CheckoutModal() {
                     placeholder="Số nhà, Tòa nhà, Đường, Quận/Huyện, Tỉnh/TP..."
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
@@ -2087,9 +2153,9 @@ export default function CheckoutModal() {
                   type="checkbox"
                   checked={needVat}
                   onChange={(e) => setNeedVat(e.target.checked)}
-                  className="w-4 h-4 text-amber-600 rounded"
+                  className="w-4 h-4 text-cyan-600 rounded"
                 />
-                <FileText className="w-4 h-4 text-amber-600" />
+                <FileText className="w-4 h-4 text-cyan-600" />
                 <span>Yêu cầu xuất hóa đơn điện tử VAT (Thuế GTGT doanh nghiệp)</span>
               </label>
 
@@ -2132,7 +2198,7 @@ export default function CheckoutModal() {
             {/* Payment Methods */}
             <div>
               <h4 className="text-sm font-bold text-[#071b34] uppercase tracking-wider mb-3 flex items-center gap-2">
-                <CreditCard className="w-4 h-4 text-amber-600" />
+                <CreditCard className="w-4 h-4 text-cyan-600" />
                 <span>2. Chọn Phương Thức Thanh Toán & Nghiệm Thu</span>
               </h4>
 
@@ -2142,13 +2208,13 @@ export default function CheckoutModal() {
                   onClick={() => setPaymentMethod("vietqr")}
                   className={`p-3 rounded-2xl border text-left transition-all ${
                     paymentMethod === "vietqr"
-                      ? "border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20"
+                      ? "border-cyan-600 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-500/20"
                       : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
                     <span>Quét Mã VietQR</span>
-                    <QrCode className="w-4 h-4 text-amber-600" />
+                    <QrCode className="w-4 h-4 text-cyan-600" />
                   </div>
                   <div className="text-[10px] text-slate-500 mt-1">Chuyển khoản nhanh qua app ngân hàng</div>
                 </button>
@@ -2158,13 +2224,13 @@ export default function CheckoutModal() {
                   onClick={() => setPaymentMethod("deposit30")}
                   className={`p-3 rounded-2xl border text-left transition-all ${
                     paymentMethod === "deposit30"
-                      ? "border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20"
+                      ? "border-cyan-600 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-500/20"
                       : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
                     <span>Đặt Cọc Xưởng 30%</span>
-                    <Truck className="w-4 h-4 text-amber-600" />
+                    <Truck className="w-4 h-4 text-cyan-600" />
                   </div>
                   <div className="text-[10px] text-slate-500 mt-1">Cọc 30% lên chuyền may, 70% khi nhận hàng</div>
                 </button>
@@ -2174,13 +2240,13 @@ export default function CheckoutModal() {
                   onClick={() => setPaymentMethod("freesample")}
                   className={`p-3 rounded-2xl border text-left transition-all ${
                     paymentMethod === "freesample"
-                      ? "border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20"
+                      ? "border-cyan-600 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-500/20"
                       : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
                     <span>May Mẫu Thử 0Đ</span>
-                    <Sparkles className="w-4 h-4 text-amber-600" />
+                    <Sparkles className="w-4 h-4 text-cyan-600" />
                   </div>
                   <div className="text-[10px] text-slate-500 mt-1">Duyệt áo mẫu trước, chưa cần thanh toán</div>
                 </button>
@@ -2188,7 +2254,7 @@ export default function CheckoutModal() {
 
               {/* VietQR Display Box */}
               {(paymentMethod === "vietqr" || paymentMethod === "deposit30") && (
-                <div className="p-4 bg-slate-900 text-white rounded-2xl border border-amber-500/40 flex flex-col sm:flex-row items-center gap-5">
+                <div className="p-4 bg-slate-900 text-white rounded-2xl border border-cyan-500/40 flex flex-col sm:flex-row items-center gap-5">
                   <div className="bg-white p-2 rounded-xl shrink-0 shadow-lg text-center">
                     <img
                       src={vietQrUrl}
@@ -2199,7 +2265,7 @@ export default function CheckoutModal() {
                   </div>
 
                   <div className="space-y-1.5 text-xs flex-1">
-                    <div className="text-amber-400 font-extrabold text-sm">
+                    <div className="text-cyan-400 font-extrabold text-sm">
                       Số tiền: {currentPayAmount.toLocaleString("vi-VN")} đ
                     </div>
                     <div>Ngân hàng: <strong>{BRAND_INFO.bankInfo.bankName}</strong></div>
@@ -2208,7 +2274,7 @@ export default function CheckoutModal() {
                       <button
                         type="button"
                         onClick={handleCopyAccount}
-                        className="text-amber-400 hover:text-amber-300 p-0.5"
+                        className="text-cyan-400 hover:text-cyan-300 p-0.5"
                         title="Sao chép số tài khoản"
                       >
                         {copiedBank ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -2216,7 +2282,7 @@ export default function CheckoutModal() {
                     </div>
                     <div>Chủ tài khoản: <strong>{BRAND_INFO.bankInfo.accountHolder}</strong></div>
                     <div className="text-[11px] text-slate-400 pt-1">
-                      Nội dung CK: <strong className="text-amber-300">HUNI {phone || "DONHANG"}</strong>
+                      Nội dung CK: <strong className="text-cyan-300">HUNI {phone || "DONHANG"}</strong>
                     </div>
                   </div>
                 </div>
@@ -2237,7 +2303,7 @@ export default function CheckoutModal() {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2"
               >
                 <CheckCircle2 className="w-5 h-5" />
                 <span>Xác Nhận Đặt Hàng & Lên Chuyền May</span>
@@ -2259,10 +2325,10 @@ export default function CheckoutModal() {
             </div>
 
             {placedOrder && (
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 max-w-md mx-auto text-left text-xs space-y-1.5">
+              <div className="bg-cyan-50 border border-cyan-200 rounded-2xl p-4 max-w-md mx-auto text-left text-xs space-y-1.5">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Mã đơn hàng:</span>
-                  <strong className="text-amber-900 font-black text-sm">{placedOrder.id}</strong>
+                  <strong className="text-cyan-900 font-black text-sm">{placedOrder.id}</strong>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Khách hàng:</span>
@@ -2274,11 +2340,11 @@ export default function CheckoutModal() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Tổng thanh toán:</span>
-                  <strong className="text-amber-800 font-bold">{placedOrder.total.toLocaleString("vi-VN")} đ</strong>
+                  <strong className="text-cyan-800 font-bold">{placedOrder.total.toLocaleString("vi-VN")} đ</strong>
                 </div>
-                <div className="flex justify-between pt-1 border-t border-amber-200 text-slate-700">
+                <div className="flex justify-between pt-1 border-t border-cyan-200 text-slate-700">
                   <span>Trạng thái:</span>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 font-bold text-[10px]">
+                  <span className="px-2 py-0.5 rounded-full bg-cyan-200 text-cyan-900 font-bold text-[10px]">
                     {placedOrder.status}
                   </span>
                 </div>
@@ -2293,7 +2359,7 @@ export default function CheckoutModal() {
             <div className="flex items-center justify-center gap-3 pt-2">
               <button
                 onClick={handleClose}
-                className="px-6 py-2.5 bg-[#071b34] text-amber-300 font-bold text-xs rounded-xl shadow"
+                className="px-6 py-2.5 bg-[#071b34] text-cyan-300 font-bold text-xs rounded-xl shadow"
               >
                 Tiếp tục xem sản phẩm
               </button>
@@ -2302,7 +2368,7 @@ export default function CheckoutModal() {
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
                 className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs rounded-xl flex items-center gap-1.5"
               >
-                <Phone className="w-3.5 h-3.5 text-amber-600" />
+                <Phone className="w-3.5 h-3.5 text-cyan-600" />
                 <span>Hotline: {BRAND_INFO.contact.hotline}</span>
               </a>
             </div>
@@ -2330,8 +2396,8 @@ export default function FabricGuideSection() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold uppercase tracking-wider">
-            <Layers className="w-3.5 h-3.5 text-amber-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 text-xs font-bold uppercase tracking-wider">
+            <Layers className="w-3.5 h-3.5 text-cyan-600" />
             Cẩm Nang Chất Liệu Vải
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
@@ -2347,7 +2413,7 @@ export default function FabricGuideSection() {
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[#071b34] text-white uppercase text-xs font-extrabold tracking-wider border-b border-amber-500/30">
+              <thead className="bg-[#071b34] text-white uppercase text-xs font-extrabold tracking-wider border-b border-cyan-500/30">
                 <tr>
                   <th className="py-4 px-5">Loại Vải Tiêu Biểu</th>
                   <th className="py-4 px-5">Đặc Tính Nổi Bật</th>
@@ -2360,16 +2426,16 @@ export default function FabricGuideSection() {
                 {FABRIC_COMPARISONS.map((fabric, idx) => (
                   <tr
                     key={idx}
-                    className="hover:bg-amber-50/40 transition-colors"
+                    className="hover:bg-cyan-50/40 transition-colors"
                   >
                     <td className="py-4 px-5 font-bold text-[#071b34] whitespace-nowrap flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-amber-500" />
+                      <span className="w-2 h-2 rounded-full bg-cyan-500" />
                       <span>{fabric.name}</span>
                     </td>
                     <td className="py-4 px-5 max-w-xs">{fabric.features}</td>
                     <td className="py-4 px-5 font-semibold text-slate-800">{fabric.usage}</td>
                     <td className="py-4 px-5 text-emerald-700 font-semibold">{fabric.shrinkage}</td>
-                    <td className="py-4 px-5 text-center text-amber-500 font-bold whitespace-nowrap">
+                    <td className="py-4 px-5 text-center text-cyan-500 font-bold whitespace-nowrap">
                       {fabric.breathability}
                     </td>
                   </tr>
@@ -2379,9 +2445,9 @@ export default function FabricGuideSection() {
           </div>
 
           {/* Banner bottom: Request Free Swatch */}
-          <div className="bg-gradient-to-r from-amber-500/10 via-amber-400/20 to-amber-500/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-amber-300/40">
+          <div className="bg-gradient-to-r from-cyan-500/10 via-cyan-400/20 to-cyan-500/10 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-cyan-300/40">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500 text-[#071b34] flex items-center justify-center font-bold shadow-md shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500 text-[#071b34] flex items-center justify-center font-bold shadow-md shrink-0">
                 <Sparkles className="w-6 h-6" />
               </div>
               <div>
@@ -2396,7 +2462,7 @@ export default function FabricGuideSection() {
 
             <button
               onClick={() => setIsQuickQuoteOpen(true)}
-              className="px-6 py-3 bg-[#071b34] hover:bg-slate-800 text-amber-300 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all shrink-0 flex items-center gap-2"
+              className="px-6 py-3 bg-[#071b34] hover:bg-slate-800 text-cyan-300 font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all shrink-0 flex items-center gap-2"
             >
               <Send className="w-4 h-4" />
               <span>Đăng Ký Nhận Bảng Vải 0đ</span>
@@ -2428,8 +2494,8 @@ export default function FaqSection() {
       <div className="max-w-5xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold uppercase tracking-wider">
-            <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 text-xs font-bold uppercase tracking-wider">
+            <HelpCircle className="w-3.5 h-3.5 text-cyan-600" />
             Giải Đáp Thắc Mắc
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
@@ -2459,7 +2525,7 @@ export default function FaqSection() {
                   </span>
                   <div
                     className={`w-7 h-7 rounded-full bg-white border border-slate-300 flex items-center justify-center shrink-0 transition-transform ${
-                      isOpen ? "rotate-180 bg-amber-500 text-white border-amber-500" : "text-slate-600"
+                      isOpen ? "rotate-180 bg-cyan-500 text-white border-cyan-500" : "text-slate-600"
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -2479,7 +2545,7 @@ export default function FaqSection() {
         {/* Support Banner */}
         <div className="mt-10 p-6 bg-gradient-to-r from-[#071b34] to-[#0d274c] text-white rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <h4 className="font-extrabold text-base sm:text-lg text-amber-300">
+            <h4 className="font-extrabold text-base sm:text-lg text-cyan-300">
               Bạn vẫn còn câu hỏi thắc mắc riêng về đơn hàng?
             </h4>
             <p className="text-xs text-slate-300 mt-0.5">
@@ -2489,7 +2555,7 @@ export default function FaqSection() {
 
           <a
             href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-            className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
+            className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
           >
             <PhoneCall className="w-4 h-4" />
             <span>Gọi Ngay: {BRAND_INFO.contact.hotline}</span>
@@ -2530,7 +2596,7 @@ export default function FloatingActions() {
       {/* 1. Quick Quote Floating Button */}
       <button
         onClick={() => setIsQuickQuoteOpen(true)}
-        className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-extrabold text-xs uppercase shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-amber-300/40"
+        className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-cyan-400 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-extrabold text-xs uppercase shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-cyan-300/40"
       >
         <Sparkles className="w-4 h-4" />
         <span>Báo Giá May 3 Phút</span>
@@ -2551,7 +2617,7 @@ export default function FloatingActions() {
       <a
         href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
         title={`Gọi Hotline tư vấn 24/7: ${BRAND_INFO.contact.hotline}`}
-        className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-amber-400 text-[#071b34] flex items-center justify-center shadow-2xl transition-all transform hover:scale-110 border-2 border-white animate-radar"
+        className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 to-cyan-400 text-[#071b34] flex items-center justify-center shadow-2xl transition-all transform hover:scale-110 border-2 border-white animate-radar"
       >
         <Phone className="w-7 h-7 animate-bounce" />
         <span className="sr-only">Hotline {BRAND_INFO.contact.hotline}</span>
@@ -2562,7 +2628,7 @@ export default function FloatingActions() {
         <button
           onClick={scrollToTop}
           title="Cuộn lên đầu trang"
-          className="w-10 h-10 rounded-full bg-[#071b34] hover:bg-slate-800 text-amber-400 flex items-center justify-center shadow-lg transition-all border border-amber-400/30"
+          className="w-10 h-10 rounded-full bg-[#071b34] hover:bg-slate-800 text-cyan-400 flex items-center justify-center shadow-lg transition-all border border-cyan-400/30"
         >
           <ArrowUp className="w-4 h-4" />
         </button>
@@ -2590,12 +2656,12 @@ import {
 
 export default function Footer() {
   return (
-    <footer id="footer-section" className="bg-[#040e1c] text-slate-300 text-xs border-t border-amber-500/20">
+    <footer id="footer-section" className="bg-[#040e1c] text-slate-300 text-xs border-t border-cyan-500/20">
       {/* Top Banner Feature Bar */}
       <div className="bg-[#071b34] py-8 border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
@@ -2605,7 +2671,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0">
               <Sparkles className="w-6 h-6" />
             </div>
             <div>
@@ -2615,7 +2681,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0">
               <Award className="w-6 h-6" />
             </div>
             <div>
@@ -2625,7 +2691,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-amber-400/20 text-amber-400 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-400/20 text-cyan-400 flex items-center justify-center shrink-0">
               <Phone className="w-6 h-6" />
             </div>
             <div>
@@ -2642,12 +2708,12 @@ export default function Footer() {
           {/* Brand Col */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-[#071b34] font-black text-lg shadow-md">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center text-[#071b34] font-black text-lg shadow-md">
                 HN
               </div>
               <div>
                 <span className="font-black text-xl text-white tracking-wider block">HUNI UNIFORM</span>
-                <span className="text-[10px] text-amber-400 uppercase tracking-widest font-semibold">
+                <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-semibold">
                   HDC GROUP VN • ĐỒNG PHỤC DOANH NGHIỆP
                 </span>
               </div>
@@ -2658,8 +2724,8 @@ export default function Footer() {
               đồng hành cùng hơn 50.000+ tập đoàn, doanh nghiệp, trường học và các giải thể thao trên toàn quốc.
             </p>
 
-            <div className="p-3 bg-[#071b34] rounded-2xl border border-amber-400/20 space-y-1 text-[11px]">
-              <div className="text-amber-300 font-bold">Người sáng lập & Điều hành:</div>
+            <div className="p-3 bg-[#071b34] rounded-2xl border border-cyan-400/20 space-y-1 text-[11px]">
+              <div className="text-cyan-300 font-bold">Người sáng lập & Điều hành:</div>
               <div className="text-white font-extrabold text-sm">{BRAND_INFO.ceo.name}</div>
               <div className="text-slate-400">{BRAND_INFO.ceo.title}</div>
             </div>
@@ -2667,37 +2733,37 @@ export default function Footer() {
 
           {/* Core Categories Col */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-extrabold text-white text-sm uppercase tracking-wider text-amber-400">
+            <h4 className="font-extrabold text-white text-sm uppercase tracking-wider text-cyan-400">
               Dịch Vụ Đồng Phục
             </h4>
             <ul className="space-y-2 text-slate-400">
               <li>
-                <a href="#catalog-section" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-amber-400" />
+                <a href="#catalog-section" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-cyan-400" />
                   <span>Đồng phục Polo doanh nghiệp</span>
                 </a>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-amber-400" />
+                <a href="#catalog-section" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-cyan-400" />
                   <span>Vest & Sơ mi lãnh đạo may đo</span>
                 </a>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-amber-400" />
+                <a href="#catalog-section" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-cyan-400" />
                   <span>Đồng phục Golf & Pickleball thể thao</span>
                 </a>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-amber-400" />
+                <a href="#catalog-section" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-cyan-400" />
                   <span>Đồng phục học sinh & giáo viên</span>
                 </a>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
-                  <ArrowRight className="w-3 h-3 text-amber-400" />
+                <a href="#catalog-section" className="hover:text-cyan-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-cyan-400" />
                   <span>Phụ kiện nón, cặp da, túi quà tặng</span>
                 </a>
               </li>
@@ -2706,39 +2772,39 @@ export default function Footer() {
 
           {/* Head Office & Branches matching Image 1 */}
           <div className="lg:col-span-5 space-y-3">
-            <h4 className="font-extrabold text-white text-sm uppercase tracking-wider text-amber-400">
+            <h4 className="font-extrabold text-white text-sm uppercase tracking-wider text-cyan-400">
               Hệ Thống Trụ Sở & Showroom
             </h4>
 
             <div className="space-y-3 text-slate-300">
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-white">Trụ sở Phú Thọ:</strong> {BRAND_INFO.contact.headquarters}
                 </div>
               </div>
 
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-white">Chi nhánh Hà Nội:</strong> {BRAND_INFO.contact.branchHanoi}
                 </div>
               </div>
 
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                 <div>
                   <strong className="text-white">Xưởng sản xuất:</strong> {BRAND_INFO.contact.factory}
                 </div>
               </div>
 
               <div className="flex items-center gap-2.5 pt-1">
-                <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
                 <div>
                   Hotline / Zalo tiếp nhận:{" "}
                   <a
                     href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                    className="text-amber-400 font-extrabold text-sm hover:underline"
+                    className="text-cyan-400 font-extrabold text-sm hover:underline"
                   >
                     {BRAND_INFO.contact.hotline}
                   </a>
@@ -2746,7 +2812,7 @@ export default function Footer() {
               </div>
 
               <div className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-amber-400 shrink-0" />
+                <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
                 <div>Email: {BRAND_INFO.contact.email}</div>
               </div>
             </div>
@@ -2790,8 +2856,23 @@ import {
   X,
   ChevronDown,
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  LayoutGrid,
+  Crown,
+  Briefcase,
+  Activity,
+  GraduationCap,
+  PackageCheck
 } from "lucide-react";
+import { CATEGORIES } from "@/data/products";
+
+const catIconMap = {
+  Briefcase: Briefcase,
+  Crown: Crown,
+  Activity: Activity,
+  GraduationCap: GraduationCap,
+  PackageCheck: PackageCheck
+};
 
 export default function Header() {
   const {
@@ -2800,12 +2881,25 @@ export default function Header() {
     wishlist,
     setIsQuickQuoteOpen,
     setIsOrderTrackingOpen,
-    setQuickViewProduct
+    setQuickViewProduct,
+    activeCategory,
+    setActiveCategory
   } = useShop();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
+  const [categoryMenuOpen, setCategoryMenuOpen] = useState(false);
+
+  const menuCategories = CATEGORIES.filter((c) => c.id !== "all");
+
+  const handleSelectCategory = (catId) => {
+    setActiveCategory(catId);
+    setCategoryMenuOpen(false);
+    setMobileMenuOpen(false);
+    const el = document.getElementById("catalog-section");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Filtered search results
   const searchResults = searchQuery.trim()
@@ -2824,14 +2918,14 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#071b34] text-white border-b border-amber-400/20 shadow-xl">
+    <header className="sticky top-0 z-40 bg-[#071b34] text-white border-b border-cyan-400/20 shadow-xl">
       {/* Top Banner Bar */}
-      <div className="bg-[#040e1c] text-xs py-2 px-4 border-b border-amber-500/10 text-slate-300">
+      <div className="bg-[#040e1c] text-xs py-2 px-4 border-b border-cyan-500/10 text-slate-300">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           {/* Left notice */}
           <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-start">
-            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/30">
-              <Sparkles className="w-3 h-3 text-amber-300" />
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-semibold border border-cyan-500/30">
+              <Sparkles className="w-3 h-3 text-cyan-300" />
               Ưu đãi 2026
             </span>
             <span>Miễn phí thiết kế 2D/3D & may áo mẫu thử 0đ trước khi sản xuất</span>
@@ -2846,15 +2940,15 @@ export default function Header() {
           <div className="flex items-center gap-4 text-xs font-medium">
             <a
               href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-              className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors"
+              className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 transition-colors"
             >
-              <Phone className="w-3.5 h-3.5 animate-pulse text-amber-400" />
+              <Phone className="w-3.5 h-3.5 animate-pulse text-cyan-400" />
               <span>Hotline/Zalo: <strong>{BRAND_INFO.contact.hotline}</strong></span>
             </a>
             <span className="text-slate-600">|</span>
             <button
               onClick={() => setIsOrderTrackingOpen(true)}
-              className="flex items-center gap-1 hover:text-amber-300 transition-colors text-slate-300"
+              className="flex items-center gap-1 hover:text-cyan-300 transition-colors text-slate-300"
             >
               <ClipboardList className="w-3.5 h-3.5" />
               <span>Tra cứu đơn hàng</span>
@@ -2867,21 +2961,65 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
         {/* Brand Logo matching images */}
         <a href="#" className="flex items-center gap-3 group">
-          <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-amber-400 via-amber-500 to-amber-700 flex items-center justify-center shadow-lg shadow-amber-900/30 border border-amber-300/40 transform group-hover:scale-105 transition-transform">
+          <div className="w-11 h-11 rounded-lg bg-gradient-to-br from-cyan-400 via-cyan-500 to-cyan-700 flex items-center justify-center shadow-lg shadow-cyan-900/30 border border-cyan-300/40 transform group-hover:scale-105 transition-transform">
             <span className="font-extrabold text-xl text-[#071b34] tracking-tighter">HN</span>
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1.5">
               <span className="font-black text-2xl tracking-wider text-white">HUNI</span>
-              <span className="text-[10px] uppercase tracking-widest px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/30 font-bold">
+              <span className="text-[10px] uppercase tracking-widest px-1.5 py-0.5 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30 font-bold">
                 UNIFORM
               </span>
             </div>
-            <span className="text-[10.5px] uppercase tracking-wider text-amber-400/90 font-medium">
+            <span className="text-[10.5px] uppercase tracking-wider text-cyan-400/90 font-medium">
               Đồng Phục Doanh Nghiệp • HDC GROUP VN
             </span>
           </div>
         </a>
+
+        {/* Category Dropdown Button */}
+        <div className="hidden lg:block relative">
+          <button
+            onClick={() => setCategoryMenuOpen((v) => !v)}
+            onBlur={() => setTimeout(() => setCategoryMenuOpen(false), 150)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/30 text-cyan-200 font-bold text-sm transition-colors whitespace-nowrap"
+          >
+            <LayoutGrid className="w-4 h-4" />
+            <span>Danh Mục</span>
+            <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoryMenuOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          {categoryMenuOpen && (
+            <div
+              onMouseDown={(e) => e.preventDefault()}
+              className="absolute left-0 top-full mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
+            >
+              <button
+                onClick={() => handleSelectCategory("all")}
+                className="w-full text-left px-3 py-2.5 rounded-xl hover:bg-slate-100 text-slate-800 font-semibold text-sm flex items-center gap-2.5"
+              >
+                <PackageCheck className="w-4 h-4 text-cyan-600" />
+                Tất Cả Sản Phẩm
+              </button>
+              <div className="h-px bg-slate-100 my-1" />
+              {menuCategories.map((cat) => {
+                const Icon = catIconMap[cat.icon] || Briefcase;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleSelectCategory(cat.id)}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm flex items-center gap-2.5 transition-colors ${
+                      activeCategory === cat.id ? "text-cyan-700 font-bold bg-cyan-50" : "text-slate-700 font-medium"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 text-cyan-600 shrink-0" />
+                    <span className="flex-1">{cat.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
         {/* Search Bar with live autocomplete */}
         <div className="hidden lg:flex flex-1 max-w-md mx-6 relative">
@@ -2892,7 +3030,7 @@ export default function Header() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-full text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-slate-900/80 border border-slate-700 rounded-full text-sm text-white placeholder-slate-400 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             {searchQuery && (
@@ -2908,10 +3046,10 @@ export default function Header() {
           {/* Autocomplete Dropdown */}
           {searchFocused && searchQuery.trim() && (
             <div
-              className="absolute left-0 right-0 top-full mt-2 bg-[#0c2444] border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
+              className="absolute left-0 right-0 top-full mt-2 bg-[#0c2444] border border-cyan-500/30 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
               onMouseDown={(e) => e.preventDefault()}
             >
-              <div className="p-2 text-xs font-semibold text-amber-400 border-b border-slate-800">
+              <div className="p-2 text-xs font-semibold text-cyan-400 border-b border-slate-800">
                 Gợi ý tìm kiếm ({searchResults.length} kết quả)
               </div>
               {searchResults.length > 0 ? (
@@ -2931,7 +3069,7 @@ export default function Header() {
                         <div className="text-sm font-semibold text-white truncate">
                           {item.title}
                         </div>
-                        <div className="text-xs text-amber-400 font-bold">
+                        <div className="text-xs text-cyan-400 font-bold">
                           Từ {item.price.toLocaleString("vi-VN")} đ/{item.unit}
                         </div>
                       </div>
@@ -2941,7 +3079,7 @@ export default function Header() {
               ) : (
                 <div className="p-4 text-center text-xs text-slate-400">
                   Không tìm thấy mẫu phù hợp. Hãy gọi hotline{" "}
-                  <strong className="text-amber-300">0984.959.586</strong> để được tư vấn may riêng!
+                  <strong className="text-cyan-300">0984.959.586</strong> để được tư vấn may riêng!
                 </div>
               )}
             </div>
@@ -2957,7 +3095,7 @@ export default function Header() {
               if (el) el.scrollIntoView({ behavior: "smooth" });
             }}
             title="Sản phẩm yêu thích"
-            className="relative p-2.5 rounded-full hover:bg-slate-800 text-slate-300 hover:text-amber-400 transition-colors"
+            className="relative p-2.5 rounded-full hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition-colors"
           >
             <Heart className="w-5 h-5" />
             {wishlist.length > 0 && (
@@ -2970,12 +3108,12 @@ export default function Header() {
           {/* Cart button */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative p-2.5 rounded-full bg-slate-800/80 hover:bg-slate-800 text-amber-400 border border-slate-700 hover:border-amber-400 transition-all flex items-center gap-2"
+            className="relative p-2.5 rounded-full bg-slate-800/80 hover:bg-slate-800 text-cyan-400 border border-slate-700 hover:border-cyan-400 transition-all flex items-center gap-2"
           >
             <ShoppingBag className="w-5 h-5" />
             <span className="hidden sm:inline text-xs font-bold text-white">Giỏ hàng</span>
             {cartCount > 0 && (
-              <span className="w-5 h-5 bg-amber-500 text-[#071b34] text-xs font-black rounded-full flex items-center justify-center animate-bounce">
+              <span className="w-5 h-5 bg-cyan-500 text-[#071b34] text-xs font-black rounded-full flex items-center justify-center animate-bounce">
                 {cartCount}
               </span>
             )}
@@ -2984,7 +3122,7 @@ export default function Header() {
           {/* Instant Quote Button */}
           <button
             onClick={() => setIsQuickQuoteOpen(true)}
-            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs uppercase tracking-wider rounded-full shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all"
+            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-bold text-xs uppercase tracking-wider rounded-full shadow-lg shadow-cyan-500/20 transform hover:-translate-y-0.5 transition-all"
           >
             <Sparkles className="w-4 h-4 fill-current" />
             <span>Báo Giá Nhanh</span>
@@ -3006,62 +3144,62 @@ export default function Header() {
           <div className="flex items-center gap-1">
             <a
               href="#"
-              className="px-4 py-2.5 text-amber-300 font-semibold border-b-2 border-amber-400 flex items-center gap-1.5"
+              className="px-4 py-2.5 text-cyan-300 font-semibold border-b-2 border-cyan-400 flex items-center gap-1.5"
             >
               Trang Chủ
             </a>
             <a
-              href="#category-showcase"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors flex items-center gap-1"
+              href="#catalog-section"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors flex items-center gap-1"
             >
               Danh Mục Sản Phẩm
             </a>
             <a
               href="#catalog-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Đồng Phục Doanh Nghiệp
             </a>
             <a
               href="#catalog-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Vest & May Đo Lãnh Đạo
             </a>
             <a
               href="#catalog-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Thể Thao & Golf
             </a>
             <a
               href="#catalog-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Trường Học
             </a>
             <a
               href="#ceo-letter-section"
-              className="px-4 py-2.5 text-amber-300 hover:text-amber-200 transition-colors font-semibold flex items-center gap-1.5"
+              className="px-4 py-2.5 text-cyan-300 hover:text-cyan-200 transition-colors font-semibold flex items-center gap-1.5"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
               Thư Mời Hợp Tác
             </a>
             <a
               href="#fabric-guide-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Bảng Vải Cao Cấp
             </a>
             <a
               href="#process-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Quy Trình May
             </a>
             <a
               href="#footer-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
+              className="px-4 py-2.5 text-slate-300 hover:text-cyan-300 transition-colors"
             >
               Liên Hệ & Xưởng May
             </a>
@@ -3069,7 +3207,7 @@ export default function Header() {
 
           <div className="flex items-center gap-3 text-xs text-slate-400">
             <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <MapPin className="w-3.5 h-3.5 text-cyan-400" />
               Hà Nội • Phú Thọ
             </span>
           </div>
@@ -3095,16 +3233,9 @@ export default function Header() {
             <a
               href="#"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-2.5 text-amber-300 font-semibold"
+              className="py-2.5 text-cyan-300 font-semibold"
             >
               Trang Chủ
-            </a>
-            <a
-              href="#category-showcase"
-              onClick={() => setMobileMenuOpen(false)}
-              className="py-2.5 text-slate-200"
-            >
-              Danh Mục Sản Phẩm
             </a>
             <a
               href="#catalog-section"
@@ -3113,10 +3244,37 @@ export default function Header() {
             >
               Bộ Sưu Tập Đồng Phục 2026
             </a>
+          </div>
+
+          {/* Mobile category quick-select */}
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <button
+              onClick={() => handleSelectCategory("all")}
+              className={`px-3 py-2 rounded-xl text-xs font-bold text-left ${
+                activeCategory === "all" ? "bg-cyan-500 text-[#071b34]" : "bg-slate-800 text-cyan-200"
+              }`}
+            >
+              Tất Cả Sản Phẩm
+            </button>
+            {menuCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => handleSelectCategory(cat.id)}
+                className={`px-3 py-2 rounded-xl text-xs font-bold text-left line-clamp-1 ${
+                  activeCategory === cat.id ? "bg-cyan-500 text-[#071b34]" : "bg-slate-800 text-cyan-200"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col divide-y divide-slate-800 text-sm">
+            {/* keep remaining links below in original flow */}
             <a
               href="#ceo-letter-section"
               onClick={() => setMobileMenuOpen(false)}
-              className="py-2.5 text-amber-400 font-bold"
+              className="py-2.5 text-cyan-400 font-bold"
             >
               Thư Mời Hợp Tác - CEO Nguyễn Thị Thương
             </a>
@@ -3149,13 +3307,13 @@ export default function Header() {
                 setMobileMenuOpen(false);
                 setIsQuickQuoteOpen(true);
               }}
-              className="w-full py-3 bg-gradient-to-r from-amber-400 to-amber-600 text-[#071b34] font-bold text-center rounded-xl text-sm"
+              className="w-full py-3 bg-gradient-to-r from-cyan-400 to-cyan-600 text-[#071b34] font-bold text-center rounded-xl text-sm"
             >
               Nhận Báo Giá Nhanh 3 Phút
             </button>
             <a
               href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-              className="w-full py-3 bg-slate-800 text-amber-400 border border-amber-500/40 font-bold text-center rounded-xl text-sm flex items-center justify-center gap-2"
+              className="w-full py-3 bg-slate-800 text-cyan-400 border border-cyan-500/40 font-bold text-center rounded-xl text-sm flex items-center justify-center gap-2"
             >
               <Phone className="w-4 h-4" />
               Gọi Hotline: {BRAND_INFO.contact.hotline}
@@ -3226,9 +3384,9 @@ export default function HeroBanner() {
   }, [slides.length]);
 
   return (
-    <section className="relative bg-gradient-to-b from-[#071b34] via-[#092448] to-[#0a192f] text-white pt-8 pb-16 overflow-hidden border-b border-amber-500/20">
+    <section className="relative bg-gradient-to-b from-[#071b34] via-[#092448] to-[#0a192f] text-white pt-8 pb-16 overflow-hidden border-b border-cyan-500/20">
       {/* Decorative Golden Ambient Lighting */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
@@ -3236,8 +3394,8 @@ export default function HeroBanner() {
           {/* Left Column: Brand Statement & CTA */}
           <div className="lg:col-span-7 space-y-6">
             {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-semibold backdrop-blur-sm">
-              <Sparkles className="w-4 h-4 text-amber-400 animate-spin" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs sm:text-sm font-semibold backdrop-blur-sm">
+              <Sparkles className="w-4 h-4 text-cyan-400 animate-spin" />
               <span>HDC GROUP VN • THƯƠNG HIỆU HUNI UNIFORM</span>
             </div>
 
@@ -3248,7 +3406,7 @@ export default function HeroBanner() {
                 <br />
                 CÙNG HUNI UNIFORM
               </h1>
-              <p className="text-amber-200/90 font-medium text-base sm:text-lg italic">
+              <p className="text-cyan-200/90 font-medium text-base sm:text-lg italic">
                 &ldquo;{BRAND_INFO.slogan}&rdquo;
               </p>
             </div>
@@ -3262,27 +3420,27 @@ export default function HeroBanner() {
             {/* Key Value Checklist */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 text-xs sm:text-sm font-medium text-slate-200">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Thiết kế 3D miễn phí</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>May mẫu thử 0 đồng</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Hỗ trợ đo tận nơi</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Chiết khấu sỉ cực cao</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Bảo hành 1 đổi 1 30 ngày</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0" />
                 <span>Giao hàng toàn quốc</span>
               </div>
             </div>
@@ -3291,7 +3449,7 @@ export default function HeroBanner() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-3">
               <button
                 onClick={() => setIsQuickQuoteOpen(true)}
-                className="px-8 py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-extrabold text-sm sm:text-base rounded-2xl shadow-xl shadow-amber-500/25 flex items-center justify-center gap-2.5 transition-all transform hover:-translate-y-1"
+                className="px-8 py-4 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-extrabold text-sm sm:text-base rounded-2xl shadow-xl shadow-cyan-500/25 flex items-center justify-center gap-2.5 transition-all transform hover:-translate-y-1"
               >
                 <span>Nhận Báo Giá & May Mẫu 0đ</span>
                 <ArrowRight className="w-5 h-5" />
@@ -3299,17 +3457,17 @@ export default function HeroBanner() {
 
               <a
                 href="#catalog-section"
-                className="px-6 py-4 bg-slate-900/80 hover:bg-slate-800 text-white font-semibold text-sm sm:text-base rounded-2xl border border-slate-700 hover:border-amber-400/50 flex items-center justify-center gap-2 transition-all"
+                className="px-6 py-4 bg-slate-900/80 hover:bg-slate-800 text-white font-semibold text-sm sm:text-base rounded-2xl border border-slate-700 hover:border-cyan-400/50 flex items-center justify-center gap-2 transition-all"
               >
                 <span>Xem Bộ Sưu Tập</span>
-                <ChevronRight className="w-4 h-4 text-amber-400" />
+                <ChevronRight className="w-4 h-4 text-cyan-400" />
               </a>
 
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="px-4 py-4 text-amber-400 hover:text-amber-300 font-bold text-sm flex items-center justify-center gap-1.5 transition-colors"
+                className="px-4 py-4 text-cyan-400 hover:text-cyan-300 font-bold text-sm flex items-center justify-center gap-1.5 transition-colors"
               >
-                <PhoneCall className="w-4 h-4 animate-bounce text-amber-400" />
+                <PhoneCall className="w-4 h-4 animate-bounce text-cyan-400" />
                 <span>{BRAND_INFO.contact.hotline}</span>
               </a>
             </div>
@@ -3318,7 +3476,7 @@ export default function HeroBanner() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-slate-800">
               {BRAND_INFO.stats.map((stat, idx) => (
                 <div key={idx} className="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80">
-                  <div className="text-xl sm:text-2xl font-black text-amber-400">{stat.value}</div>
+                  <div className="text-xl sm:text-2xl font-black text-cyan-400">{stat.value}</div>
                   <div className="text-xs font-semibold text-white">{stat.label}</div>
                   <div className="text-[11px] text-slate-400 truncate">{stat.sub}</div>
                 </div>
@@ -3330,9 +3488,9 @@ export default function HeroBanner() {
           <div className="lg:col-span-5 relative">
             <div className="relative mx-auto max-w-md lg:max-w-none">
               {/* Golden Frame Accent */}
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-3xl blur-md opacity-30 animate-pulse" />
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan-400 to-cyan-600 rounded-3xl blur-md opacity-30 animate-pulse" />
 
-              <div className="relative bg-[#0d274c] rounded-3xl overflow-hidden border border-amber-400/30 shadow-2xl">
+              <div className="relative bg-[#0d274c] rounded-3xl overflow-hidden border border-cyan-400/30 shadow-2xl">
                 {/* Image Slide */}
                 <div className="relative h-80 sm:h-96 w-full overflow-hidden">
                   <img
@@ -3343,14 +3501,14 @@ export default function HeroBanner() {
                   <div className="absolute inset-0 bg-gradient-to-t from-[#071b34] via-[#071b34]/30 to-transparent" />
 
                   {/* Top Badge */}
-                  <div className="absolute top-4 left-4 px-3 py-1 bg-amber-500 text-[#071b34] font-black text-xs uppercase tracking-wider rounded-full shadow-lg">
+                  <div className="absolute top-4 left-4 px-3 py-1 bg-cyan-500 text-[#071b34] font-black text-xs uppercase tracking-wider rounded-full shadow-lg">
                     {slides[activeSlide].badge}
                   </div>
 
                   {/* Slide details */}
-                  <div className="absolute bottom-4 left-4 right-4 p-4 bg-[#071b34]/90 backdrop-blur-md rounded-2xl border border-amber-400/30">
+                  <div className="absolute bottom-4 left-4 right-4 p-4 bg-[#071b34]/90 backdrop-blur-md rounded-2xl border border-cyan-400/30">
                     <h3 className="text-lg font-bold text-white">{slides[activeSlide].title}</h3>
-                    <p className="text-xs text-amber-300 font-medium">{slides[activeSlide].sub}</p>
+                    <p className="text-xs text-cyan-300 font-medium">{slides[activeSlide].sub}</p>
                   </div>
                 </div>
 
@@ -3362,7 +3520,7 @@ export default function HeroBanner() {
                         key={idx}
                         onClick={() => setActiveSlide(idx)}
                         className={`h-2 rounded-full transition-all ${
-                          activeSlide === idx ? "w-6 bg-amber-400" : "w-2 bg-slate-600 hover:bg-slate-400"
+                          activeSlide === idx ? "w-6 bg-cyan-400" : "w-2 bg-slate-600 hover:bg-slate-400"
                         }`}
                         title={`Xem slide ${idx + 1}`}
                       />
@@ -3371,27 +3529,27 @@ export default function HeroBanner() {
 
                   <a
                     href="#ceo-letter-section"
-                    className="flex items-center gap-2 text-slate-300 hover:text-amber-300 text-xs font-medium"
+                    className="flex items-center gap-2 text-slate-300 hover:text-cyan-300 text-xs font-medium"
                   >
                     <img
                       src={BRAND_INFO.ceo.image}
                       alt={BRAND_INFO.ceo.name}
-                      className="w-6 h-6 rounded-full object-cover border border-amber-400"
+                      className="w-6 h-6 rounded-full object-cover border border-cyan-400"
                     />
                     <span>Thư ngỏ CEO Nguyễn Thị Thương</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-amber-400" />
+                    <ArrowRight className="w-3.5 h-3.5 text-cyan-400" />
                   </a>
                 </div>
               </div>
 
               {/* Floating Mini Guarantee Tag */}
-              <div className="absolute -bottom-5 -left-4 sm:left-4 bg-gradient-to-br from-[#071b34] to-[#0e2c56] p-3.5 rounded-2xl border border-amber-400/40 shadow-2xl flex items-center gap-3 backdrop-blur-lg">
-                <div className="w-10 h-10 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-400">
+              <div className="absolute -bottom-5 -left-4 sm:left-4 bg-gradient-to-br from-[#071b34] to-[#0e2c56] p-3.5 rounded-2xl border border-cyan-400/40 shadow-2xl flex items-center gap-3 backdrop-blur-lg">
+                <div className="w-10 h-10 rounded-xl bg-cyan-400/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400">
                   <Scissors className="w-5 h-5" />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-white">May Đo Tận Nơi</div>
-                  <div className="text-[11px] text-amber-300">Đội ngũ thợ may 15 năm kinh nghiệm</div>
+                  <div className="text-[11px] text-cyan-300">Đội ngũ thợ may 15 năm kinh nghiệm</div>
                 </div>
               </div>
             </div>
@@ -3480,18 +3638,18 @@ export default function LogoCustomizerModal() {
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-amber-400/40 animate-in fade-in zoom-in-95">
+      <div className="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-cyan-400/40 animate-in fade-in zoom-in-95">
         {/* Header */}
-        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-amber-500/20">
+        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-cyan-500/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300">
+            <div className="w-9 h-9 rounded-xl bg-cyan-400/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg">
                 Mô Phỏng In / Thêu Logo Thương Hiệu
               </h3>
-              <p className="text-xs text-amber-200/80">
+              <p className="text-xs text-cyan-200/80">
                 Áp dụng cho: <strong>{customizerProduct.title}</strong>
               </p>
             </div>
@@ -3518,45 +3676,45 @@ export default function LogoCustomizerModal() {
 
               {/* Dynamic Logo Placement on Shirt */}
               {position === "chest_left" && (
-                <div className="absolute top-[32%] left-[34%] transform -translate-x-1/2 -translate-y-1/2 p-2 rounded border border-amber-400/60 bg-black/40 backdrop-blur-xs flex items-center justify-center">
+                <div className="absolute top-[32%] left-[34%] transform -translate-x-1/2 -translate-y-1/2 p-2 rounded border border-cyan-400/60 bg-black/40 backdrop-blur-xs flex items-center justify-center">
                   {logoType === "upload" && logoImage ? (
                     <img src={logoImage} alt="Uploaded logo" className="max-h-8 max-w-16 object-contain" />
                   ) : (
-                    <span className="text-[11px] font-black tracking-wider text-amber-300 drop-shadow-md">
+                    <span className="text-[11px] font-black tracking-wider text-cyan-300 drop-shadow-md">
                       {customText || "LOGO CTY"}
                     </span>
                   )}
-                  <span className="absolute -top-4 text-[9px] bg-amber-500 text-black px-1 rounded font-bold">
+                  <span className="absolute -top-4 text-[9px] bg-cyan-500 text-black px-1 rounded font-bold">
                     Ngực trái
                   </span>
                 </div>
               )}
 
               {position === "back_center" && (
-                <div className="absolute top-[40%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 p-3 rounded border border-amber-400/60 bg-black/40 backdrop-blur-xs flex items-center justify-center w-36">
+                <div className="absolute top-[40%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 p-3 rounded border border-cyan-400/60 bg-black/40 backdrop-blur-xs flex items-center justify-center w-36">
                   {logoType === "upload" && logoImage ? (
                     <img src={logoImage} alt="Uploaded logo" className="max-h-12 max-w-full object-contain" />
                   ) : (
-                    <span className="text-xs font-black tracking-wider text-amber-300 text-center drop-shadow-md">
+                    <span className="text-xs font-black tracking-wider text-cyan-300 text-center drop-shadow-md">
                       {customText || "TÊN DOANH NGHIỆP"}
                     </span>
                   )}
-                  <span className="absolute -top-4 text-[9px] bg-amber-500 text-black px-1 rounded font-bold">
+                  <span className="absolute -top-4 text-[9px] bg-cyan-500 text-black px-1 rounded font-bold">
                     Sau lưng
                   </span>
                 </div>
               )}
 
               {position === "sleeve_left" && (
-                <div className="absolute top-[42%] left-[18%] transform -translate-x-1/2 -translate-y-1/2 p-1.5 rounded border border-amber-400/60 bg-black/40 backdrop-blur-xs flex items-center justify-center">
+                <div className="absolute top-[42%] left-[18%] transform -translate-x-1/2 -translate-y-1/2 p-1.5 rounded border border-cyan-400/60 bg-black/40 backdrop-blur-xs flex items-center justify-center">
                   {logoType === "upload" && logoImage ? (
                     <img src={logoImage} alt="Uploaded logo" className="max-h-6 max-w-10 object-contain" />
                   ) : (
-                    <span className="text-[9px] font-black text-amber-300">
+                    <span className="text-[9px] font-black text-cyan-300">
                       {customText || "LOGO"}
                     </span>
                   )}
-                  <span className="absolute -top-4 text-[9px] bg-amber-500 text-black px-1 rounded font-bold">
+                  <span className="absolute -top-4 text-[9px] bg-cyan-500 text-black px-1 rounded font-bold">
                     Tay áo
                   </span>
                 </div>
@@ -3581,13 +3739,13 @@ export default function LogoCustomizerModal() {
                   onClick={() => setMethod("theu_vi_tinh")}
                   className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all ${
                     method === "theu_vi_tinh"
-                      ? "border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20"
+                      ? "border-cyan-600 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-500/20"
                       : "border-slate-200 hover:border-slate-300 text-slate-700"
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
                     <span>Thêu Vi Tính Tajima</span>
-                    {method === "theu_vi_tinh" && <Check className="w-3.5 h-3.5 text-amber-600" />}
+                    {method === "theu_vi_tinh" && <Check className="w-3.5 h-3.5 text-cyan-600" />}
                   </div>
                   <div className="text-[10px] text-slate-500 mt-0.5">Sang trọng, bền vĩnh viễn</div>
                 </button>
@@ -3597,13 +3755,13 @@ export default function LogoCustomizerModal() {
                   onClick={() => setMethod("in_pet_4k")}
                   className={`p-2.5 rounded-xl border text-left text-xs font-semibold transition-all ${
                     method === "in_pet_4k"
-                      ? "border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20"
+                      ? "border-cyan-600 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-500/20"
                       : "border-slate-200 hover:border-slate-300 text-slate-700"
                   }`}
                 >
                   <div className="font-bold flex items-center justify-between">
                     <span>In Pet Chuyển Nhiệt 4K</span>
-                    {method === "in_pet_4k" && <Check className="w-3.5 h-3.5 text-amber-600" />}
+                    {method === "in_pet_4k" && <Check className="w-3.5 h-3.5 text-cyan-600" />}
                   </div>
                   <div className="text-[10px] text-slate-500 mt-0.5">Đa sắc màu, sắc nét 100%</div>
                 </button>
@@ -3627,7 +3785,7 @@ export default function LogoCustomizerModal() {
                     onClick={() => setPosition(pos.id)}
                     className={`py-2 px-2.5 rounded-xl border text-center font-bold transition-all ${
                       position === pos.id
-                        ? "bg-[#071b34] text-amber-300 border-[#071b34]"
+                        ? "bg-[#071b34] text-cyan-300 border-[#071b34]"
                         : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
                     }`}
                   >
@@ -3648,7 +3806,7 @@ export default function LogoCustomizerModal() {
                     type="button"
                     onClick={() => setLogoType("upload")}
                     className={`px-2 py-0.5 rounded font-semibold ${
-                      logoType === "upload" ? "bg-amber-100 text-amber-800" : "text-slate-500"
+                      logoType === "upload" ? "bg-cyan-100 text-cyan-800" : "text-slate-500"
                     }`}
                   >
                     Tải File Ảnh
@@ -3657,7 +3815,7 @@ export default function LogoCustomizerModal() {
                     type="button"
                     onClick={() => setLogoType("text")}
                     className={`px-2 py-0.5 rounded font-semibold ${
-                      logoType === "text" ? "bg-amber-100 text-amber-800" : "text-slate-500"
+                      logoType === "text" ? "bg-cyan-100 text-cyan-800" : "text-slate-500"
                     }`}
                   >
                     Gõ Tên Chữ
@@ -3666,14 +3824,14 @@ export default function LogoCustomizerModal() {
               </div>
 
               {logoType === "upload" ? (
-                <div className="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-2xl p-4 text-center cursor-pointer bg-slate-50 relative">
+                <div className="border-2 border-dashed border-slate-300 hover:border-cyan-500 rounded-2xl p-4 text-center cursor-pointer bg-slate-50 relative">
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageUpload}
                     className="absolute inset-0 opacity-0 cursor-pointer"
                   />
-                  <Upload className="w-6 h-6 text-amber-600 mx-auto mb-1" />
+                  <Upload className="w-6 h-6 text-cyan-600 mx-auto mb-1" />
                   <div className="text-xs font-bold text-slate-700">
                     Bấm để tải logo doanh nghiệp lên
                   </div>
@@ -3687,7 +3845,7 @@ export default function LogoCustomizerModal() {
                   placeholder="Nhập tên doanh nghiệp / Slogan..."
                   value={customText}
                   onChange={(e) => setCustomText(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-cyan-500"
                 />
               )}
             </div>
@@ -3721,7 +3879,7 @@ export default function LogoCustomizerModal() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Ví dụ: Chỉ thêu chỉ vàng kim nhũ, kích thước logo rộng 7.5cm..."
-                className="w-full p-2.5 border border-slate-300 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                className="w-full p-2.5 border border-slate-300 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
               />
             </div>
 
@@ -3730,7 +3888,7 @@ export default function LogoCustomizerModal() {
               <button
                 type="button"
                 onClick={handleApplyAndAddToCart}
-                className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-[#071b34] font-black text-sm shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
+                className="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 text-[#071b34] font-black text-sm shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Lưu Bản Mockup & Thêm Vào Giỏ Hàng</span>
@@ -3824,16 +3982,16 @@ export default function OrderTrackingModal() {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95">
         {/* Header */}
-        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-amber-500/20">
+        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-cyan-500/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-400 text-[#071b34] font-black flex items-center justify-center text-sm">
+            <div className="w-8 h-8 rounded-lg bg-cyan-400 text-[#071b34] font-black flex items-center justify-center text-sm">
               HN
             </div>
             <div>
               <h3 className="font-extrabold text-base sm:text-lg">
                 Tra Cứu Tiến Độ Đơn May Đồng Phục
               </h3>
-              <p className="text-xs text-amber-200/80">HỆ THỐNG QUẢN LÝ TIẾN ĐỘ SẢN XUẤT HUNI</p>
+              <p className="text-xs text-cyan-200/80">HỆ THỐNG QUẢN LÝ TIẾN ĐỘ SẢN XUẤT HUNI</p>
             </div>
           </div>
           <button
@@ -3855,13 +4013,13 @@ export default function OrderTrackingModal() {
                 placeholder="Nhập mã đơn (VD: HN-123456) hoặc Số điện thoại đặt hàng..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
             <button
               type="submit"
-              className="px-6 py-3 bg-[#071b34] hover:bg-slate-800 text-amber-300 font-bold text-xs sm:text-sm rounded-2xl shadow transition-colors shrink-0"
+              className="px-6 py-3 bg-[#071b34] hover:bg-slate-800 text-cyan-300 font-bold text-xs sm:text-sm rounded-2xl shadow transition-colors shrink-0"
             >
               Tra cứu
             </button>
@@ -3871,18 +4029,18 @@ export default function OrderTrackingModal() {
           {searched && searchedOrder ? (
             <div className="space-y-6">
               {/* Order Info Card */}
-              <div className="p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-slate-700 space-y-2">
+              <div className="p-4 bg-cyan-50 rounded-2xl border border-cyan-200 text-xs text-slate-700 space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <span className="text-slate-500">Mã đơn hàng: </span>
-                    <strong className="text-amber-900 font-black text-sm">{searchedOrder.id}</strong>
+                    <strong className="text-cyan-900 font-black text-sm">{searchedOrder.id}</strong>
                   </div>
                   <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[11px]">
                     {searchedOrder.status || "Đang xử lý tại xưởng"}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 border-t border-amber-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 border-t border-cyan-200">
                   <div>
                     Khách hàng: <strong>{searchedOrder.customer?.fullName}</strong>
                   </div>
@@ -3909,7 +4067,7 @@ export default function OrderTrackingModal() {
                         key={i}
                         className={`flex items-start gap-3 p-3 rounded-2xl border transition-all ${
                           isCurrent
-                            ? "bg-amber-50/80 border-amber-400 ring-2 ring-amber-500/20"
+                            ? "bg-cyan-50/80 border-cyan-400 ring-2 ring-cyan-500/20"
                             : isDone
                             ? "bg-emerald-50/40 border-emerald-200 text-slate-700"
                             : "bg-slate-50 border-slate-200 opacity-50"
@@ -3928,7 +4086,7 @@ export default function OrderTrackingModal() {
                           <div className="text-xs font-bold text-[#071b34] flex items-center justify-between">
                             <span>{st.title}</span>
                             {isCurrent && (
-                              <span className="text-[10px] bg-amber-400 text-black px-2 py-0.5 rounded-full font-bold animate-pulse">
+                              <span className="text-[10px] bg-cyan-400 text-black px-2 py-0.5 rounded-full font-bold animate-pulse">
                                 Đang thực hiện
                               </span>
                             )}
@@ -3946,7 +4104,7 @@ export default function OrderTrackingModal() {
                 Cần cập nhật hoặc điều chỉnh số đo gấp? Gọi ngay hotline xưởng:{" "}
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="font-bold text-amber-700 hover:underline"
+                  className="font-bold text-cyan-700 hover:underline"
                 >
                   {BRAND_INFO.contact.hotline}
                 </a>
@@ -3962,7 +4120,7 @@ export default function OrderTrackingModal() {
               </p>
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 text-[#071b34] font-bold text-xs rounded-xl mt-2"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-cyan-500 text-[#071b34] font-bold text-xs rounded-xl mt-2"
               >
                 <Phone className="w-3.5 h-3.5" />
                 <span>Gọi Hotline: {BRAND_INFO.contact.hotline}</span>
@@ -4001,7 +4159,7 @@ export default function ProcessSection() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 text-xs font-bold uppercase tracking-wider">
             Quy Trình Khép Kín
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
@@ -4021,20 +4179,20 @@ export default function ProcessSection() {
             return (
               <div
                 key={idx}
-                className="relative bg-slate-50 hover:bg-amber-50/50 p-6 rounded-3xl border border-slate-200 hover:border-amber-400 transition-all duration-300 flex flex-col justify-between group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
+                className="relative bg-slate-50 hover:bg-cyan-50/50 p-6 rounded-3xl border border-slate-200 hover:border-cyan-400 transition-all duration-300 flex flex-col justify-between group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
               >
                 <div>
                   {/* Step Number & Icon */}
                   <div className="flex items-center justify-between mb-5">
-                    <span className="text-2xl font-black text-amber-500/80 group-hover:text-amber-600 transition-colors">
+                    <span className="text-2xl font-black text-cyan-500/80 group-hover:text-cyan-600 transition-colors">
                       {item.step}
                     </span>
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 group-hover:border-amber-400 group-hover:bg-amber-500 group-hover:text-[#071b34] text-slate-800 flex items-center justify-center shadow-sm transition-all">
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 group-hover:border-cyan-400 group-hover:bg-cyan-500 group-hover:text-[#071b34] text-slate-800 flex items-center justify-center shadow-sm transition-all">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <h3 className="font-extrabold text-[#071b34] text-base mb-2 group-hover:text-amber-800 transition-colors">
+                  <h3 className="font-extrabold text-[#071b34] text-base mb-2 group-hover:text-cyan-800 transition-colors">
                     {item.title}
                   </h3>
 
@@ -4043,7 +4201,7 @@ export default function ProcessSection() {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-3 border-t border-slate-200/80 text-[11px] text-amber-700 font-bold flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                <div className="mt-6 pt-3 border-t border-slate-200/80 text-[11px] text-cyan-700 font-bold flex items-center gap-1 opacity-80 group-hover:opacity-100">
                   <span>Cam kết đúng tiến độ</span>
                   <ArrowRight className="w-3 h-3" />
                 </div>
@@ -4090,7 +4248,7 @@ export default function ProductCard({ product }) {
   return (
     <div
       onClick={() => setQuickViewProduct(product)}
-      className="group bg-white rounded-2xl border border-slate-200 hover:border-amber-400/80 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer relative"
+      className="group bg-white rounded-2xl border border-slate-200 hover:border-cyan-400/80 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col cursor-pointer relative"
     >
       {/* Product Image Area */}
       <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-100">
@@ -4103,7 +4261,7 @@ export default function ProductCard({ product }) {
         {/* Overlay Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 items-start">
           {product.badge && (
-            <span className="px-2.5 py-1 rounded-full bg-[#071b34] text-amber-300 font-bold text-[11px] shadow-md border border-amber-400/40">
+            <span className="px-2.5 py-1 rounded-full bg-[#071b34] text-cyan-300 font-bold text-[11px] shadow-md border border-cyan-400/40">
               {product.badge}
             </span>
           )}
@@ -4137,14 +4295,14 @@ export default function ProductCard({ product }) {
             }}
             className="flex-1 py-2 px-3 bg-white/95 backdrop-blur-md hover:bg-[#071b34] hover:text-white text-slate-800 text-xs font-bold rounded-xl shadow-lg flex items-center justify-center gap-1.5 transition-colors"
           >
-            <Eye className="w-3.5 h-3.5 text-amber-500" />
+            <Eye className="w-3.5 h-3.5 text-cyan-500" />
             <span>Xem Chi Tiết</span>
           </button>
 
           <button
             onClick={handleOpenCustomizer}
             title="Thử mô phỏng in / thêu logo công ty lên áo"
-            className="py-2 px-3 bg-amber-500 hover:bg-amber-400 text-[#071b34] text-xs font-extrabold rounded-xl shadow-lg flex items-center justify-center gap-1 transition-colors"
+            className="py-2 px-3 bg-cyan-500 hover:bg-cyan-400 text-[#071b34] text-xs font-extrabold rounded-xl shadow-lg flex items-center justify-center gap-1 transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Mô Phỏng Logo</span>
@@ -4157,7 +4315,7 @@ export default function ProductCard({ product }) {
         <div>
           {/* Rating & Sold count */}
           <div className="flex items-center justify-between text-xs text-slate-500 mb-1.5">
-            <div className="flex items-center gap-1 text-amber-500">
+            <div className="flex items-center gap-1 text-cyan-500">
               <Star className="w-3.5 h-3.5 fill-current" />
               <span className="font-bold text-slate-800">{product.rating}</span>
               <span className="text-slate-400">({product.reviewsCount})</span>
@@ -4166,13 +4324,13 @@ export default function ProductCard({ product }) {
           </div>
 
           {/* Title */}
-          <h3 className="font-bold text-[#071b34] text-sm sm:text-base leading-snug group-hover:text-amber-700 transition-colors line-clamp-2">
+          <h3 className="font-bold text-[#071b34] text-sm sm:text-base leading-snug group-hover:text-cyan-700 transition-colors line-clamp-2">
             {product.title}
           </h3>
 
           {/* Material Tag */}
           <div className="mt-2 text-xs text-slate-500 flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
             <span className="truncate font-medium">{product.material}</span>
           </div>
 
@@ -4208,7 +4366,7 @@ export default function ProductCard({ product }) {
                 </span>
               )}
             </div>
-            <div className="text-[11px] text-amber-700 font-bold">
+            <div className="text-[11px] text-cyan-700 font-bold">
               Sỉ chỉ từ: {lowestPrice.toLocaleString("vi-VN")} đ/{product.unit}
             </div>
           </div>
@@ -4219,7 +4377,7 @@ export default function ProductCard({ product }) {
               addToCart(product, 10);
             }}
             title="Thêm số lượng tiêu chuẩn (10 áo) vào giỏ hàng"
-            className="w-10 h-10 rounded-xl bg-slate-900 hover:bg-amber-500 text-amber-400 hover:text-[#071b34] flex items-center justify-center shadow-md transition-colors"
+            className="w-10 h-10 rounded-xl bg-slate-900 hover:bg-cyan-500 text-cyan-400 hover:text-[#071b34] flex items-center justify-center shadow-md transition-colors"
           >
             <ShoppingCart className="w-4 h-4" />
           </button>
@@ -4234,26 +4392,39 @@ export default function ProductCard({ product }) {
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { useShop } from "@/context/ShopContext";
 import { PRODUCTS, CATEGORIES } from "@/data/products";
 import ProductCard from "./ProductCard";
-import { Filter, SlidersHorizontal, Sparkles, RefreshCw, Search } from "lucide-react";
+import {
+  Filter,
+  SlidersHorizontal,
+  Sparkles,
+  RefreshCw,
+  Search,
+  Crown,
+  Briefcase,
+  Activity,
+  GraduationCap,
+  PackageCheck
+} from "lucide-react";
 
-export default function ProductCatalog({ activeCategory, setActiveCategory }) {
+const iconMap = {
+  Briefcase: Briefcase,
+  Crown: Crown,
+  Activity: Activity,
+  GraduationCap: GraduationCap,
+  PackageCheck: PackageCheck
+};
+
+export default function ProductCatalog() {
+  const { activeCategory, setActiveCategory } = useShop();
   const [searchFilter, setSearchFilter] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
   const [priceRange, setPriceRange] = useState("all");
 
-  // Unique materials list for filter
-  const materialsList = useMemo(() => {
-    const list = ["all"];
-    PRODUCTS.forEach((p) => {
-      if (p.material && !list.includes(p.material)) {
-        list.push(p.material);
-      }
-    });
-    return list;
-  }, []);
+  // Only real categories (excluding "all") for the visual card grid
+  const displayCategories = CATEGORIES.filter((c) => c.id !== "all");
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
@@ -4296,44 +4467,118 @@ export default function ProductCatalog({ activeCategory, setActiveCategory }) {
     setPriceRange("all");
   };
 
+  const scrollToGrid = () => {
+    const el = document.getElementById("product-grid-anchor");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <section id="catalog-section" className="py-16 bg-white border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold uppercase tracking-wider mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              Bộ Sưu Tập Đồng Phục 2026
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
-              DANH MỤC SẢN PHẨM & MAY ĐO HUNI
-            </h2>
-            <p className="text-slate-600 text-sm mt-1">
-              Khám phá các dòng sản phẩm đồng phục chất lượng cao, tính giá sỉ tự động theo số lượng.
-            </p>
+        <div className="text-center max-w-3xl mx-auto mb-10 space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-700 text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" />
+            Danh Mục &amp; Sản Phẩm 2026
           </div>
-
-          <div className="text-xs text-slate-500 font-medium">
-            Hiển thị <strong className="text-slate-900">{filteredProducts.length}</strong> / {PRODUCTS.length} mẫu thiết kế
-          </div>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900">
+            DANH MỤC SẢN PHẨM ĐỒNG PHỤC HUNI
+          </h2>
+          <p className="text-slate-600 text-sm sm:text-base">
+            Chọn nhóm sản phẩm bên dưới để xem ngay các mẫu thiết kế, chất liệu và bảng giá sỉ
+            tương ứng — tất cả trong một nơi duy nhất.
+          </p>
         </div>
 
-        {/* Filter Navigation Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar border-b border-slate-200">
-          {CATEGORIES.map((cat) => (
+        {/* Category Cards Grid (visual selector) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-10">
+          {displayCategories.map((cat) => {
+            const Icon = iconMap[cat.icon] || Briefcase;
+            const isActive = activeCategory === cat.id;
+
+            return (
+              <button
+                key={cat.id}
+                type="button"
+                onClick={() => {
+                  setActiveCategory(cat.id);
+                  scrollToGrid();
+                }}
+                className={`group relative text-left cursor-pointer rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-2xl transition-all duration-300 border flex flex-col transform hover:-translate-y-1.5 ${
+                  isActive ? "border-cyan-500 ring-2 ring-cyan-500/30" : "border-slate-200 hover:border-cyan-400"
+                }`}
+              >
+                {/* Category Image */}
+                <div className="relative h-56 w-full overflow-hidden bg-slate-100">
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+
+                  {/* Icon Badge */}
+                  <div
+                    className={`absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-sm flex items-center justify-center shadow-md transition-colors ${
+                      isActive ? "bg-cyan-500 text-white" : "bg-white/90 text-slate-900 group-hover:bg-cyan-500 group-hover:text-white"
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="p-4 flex-1 flex flex-col justify-between bg-white">
+                  <div>
+                    <h3 className="font-bold text-slate-900 group-hover:text-cyan-600 transition-colors text-base line-clamp-1">
+                      {cat.name}
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                      {cat.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="text-cyan-600 font-bold">Xem mẫu &amp; bảng giá</span>
+                    <span className="text-slate-400 font-medium">{cat.count} mẫu hot</span>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Anchor + result count + "all" pill */}
+        <div id="product-grid-anchor" className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6 pt-2 border-t border-slate-100">
+          <div className="flex items-center gap-2 flex-wrap pt-6">
             <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 ${
-                activeCategory === cat.id
-                  ? "bg-[#071b34] text-amber-300 shadow-md shadow-slate-900/20"
+              onClick={() => setActiveCategory("all")}
+              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                activeCategory === "all"
+                  ? "bg-slate-900 text-cyan-300 shadow-md shadow-slate-900/20"
                   : "bg-slate-100 hover:bg-slate-200 text-slate-700"
               }`}
             >
-              <span>{cat.name}</span>
+              Tất cả sản phẩm
             </button>
-          ))}
+            {displayCategories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  activeCategory === cat.id
+                    ? "bg-slate-900 text-cyan-300 shadow-md shadow-slate-900/20"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                }`}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
+
+          <div className="text-xs text-slate-500 font-medium pt-6 shrink-0">
+            Hiển thị <strong className="text-slate-900">{filteredProducts.length}</strong> / {PRODUCTS.length} mẫu thiết kế
+          </div>
         </div>
 
         {/* Secondary Filter Bar */}
@@ -4345,7 +4590,7 @@ export default function ProductCatalog({ activeCategory, setActiveCategory }) {
               placeholder="Lọc theo tên hoặc chất liệu..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+              className="w-full pl-8 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
           </div>
@@ -4357,7 +4602,7 @@ export default function ProductCatalog({ activeCategory, setActiveCategory }) {
               <select
                 value={priceRange}
                 onChange={(e) => setPriceRange(e.target.value)}
-                className="bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-amber-500"
+                className="bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-cyan-500"
               >
                 <option value="all">Tất cả mức giá</option>
                 <option value="under200">Dưới 200.000 đ</option>
@@ -4372,7 +4617,7 @@ export default function ProductCatalog({ activeCategory, setActiveCategory }) {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-amber-500"
+                className="bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-cyan-500"
               >
                 <option value="popular">Phổ biến & Đặt nhiều</option>
                 <option value="priceAsc">Giá sỉ tăng dần</option>
@@ -4413,7 +4658,7 @@ export default function ProductCatalog({ activeCategory, setActiveCategory }) {
             </p>
             <button
               onClick={resetFilters}
-              className="px-5 py-2.5 bg-[#071b34] text-amber-300 font-bold text-xs rounded-xl shadow hover:bg-slate-800 transition-colors"
+              className="px-5 py-2.5 bg-slate-900 text-cyan-300 font-bold text-xs rounded-xl shadow hover:bg-slate-800 transition-colors"
             >
               Xem tất cả sản phẩm
             </button>
@@ -4513,7 +4758,7 @@ export default function ProductDetailModal() {
                   className="w-full h-full object-cover object-top"
                 />
                 {quickViewProduct.badge && (
-                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#071b34] text-amber-300 font-bold text-xs border border-amber-400/40">
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#071b34] text-cyan-300 font-bold text-xs border border-cyan-400/40">
                     {quickViewProduct.badge}
                   </div>
                 )}
@@ -4528,7 +4773,7 @@ export default function ProductDetailModal() {
                       onClick={() => setSelectedImage(img)}
                       className={`w-16 h-16 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
                         selectedImage === img
-                          ? "border-amber-500 ring-2 ring-amber-500/30"
+                          ? "border-cyan-500 ring-2 ring-cyan-500/30"
                           : "border-slate-200 hover:border-slate-400"
                       }`}
                     >
@@ -4550,11 +4795,11 @@ export default function ProductDetailModal() {
                 <span>Giao hàng toàn quốc</span>
               </div>
               <div className="flex items-center gap-2">
-                <Ruler className="w-4 h-4 text-amber-600 shrink-0" />
+                <Ruler className="w-4 h-4 text-cyan-600 shrink-0" />
                 <span>Hỗ trợ đo số đo tận nơi</span>
               </div>
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                <Sparkles className="w-4 h-4 text-cyan-600 shrink-0" />
                 <span>May áo mẫu thử 0 đồng</span>
               </div>
             </div>
@@ -4565,10 +4810,10 @@ export default function ProductDetailModal() {
             <div>
               {/* Category & Rating */}
               <div className="flex items-center justify-between gap-2 text-xs">
-                <span className="text-amber-700 font-bold uppercase tracking-wider">
+                <span className="text-cyan-700 font-bold uppercase tracking-wider">
                   Mã SKU: {quickViewProduct.sku}
                 </span>
-                <div className="flex items-center gap-1 text-amber-500">
+                <div className="flex items-center gap-1 text-cyan-500">
                   <Star className="w-4 h-4 fill-current" />
                   <span className="font-bold text-slate-800">{quickViewProduct.rating}</span>
                   <span className="text-slate-400">({quickViewProduct.reviewsCount} đánh giá)</span>
@@ -4581,7 +4826,7 @@ export default function ProductDetailModal() {
               </h2>
 
               {/* Material */}
-              <div className="mt-2 text-xs text-slate-600 bg-amber-50 px-3 py-1.5 rounded-lg border border-amber-200 inline-block font-medium">
+              <div className="mt-2 text-xs text-slate-600 bg-cyan-50 px-3 py-1.5 rounded-lg border border-cyan-200 inline-block font-medium">
                 Chất liệu: <strong>{quickViewProduct.material}</strong>
               </div>
 
@@ -4589,7 +4834,7 @@ export default function ProductDetailModal() {
               <div className="mt-4 p-3 bg-slate-50 rounded-2xl border border-slate-200">
                 <div className="text-xs font-bold text-slate-700 mb-2 flex items-center justify-between">
                   <span>Bảng Giá Sỉ Tận Xưởng:</span>
-                  <span className="text-[11px] text-amber-700 font-semibold">Đơn vị: {quickViewProduct.unit}</span>
+                  <span className="text-[11px] text-cyan-700 font-semibold">Đơn vị: {quickViewProduct.unit}</span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-center">
                   {quickViewProduct.wholesaleTiers?.map((tier, idx) => (
@@ -4597,7 +4842,7 @@ export default function ProductDetailModal() {
                       key={idx}
                       className={`p-2 rounded-xl text-xs transition-colors ${
                         quantity >= tier.min && quantity <= tier.max
-                          ? "bg-[#071b34] text-amber-300 font-bold shadow-sm"
+                          ? "bg-[#071b34] text-cyan-300 font-bold shadow-sm"
                           : "bg-white border border-slate-200 text-slate-600"
                       }`}
                     >
@@ -4614,7 +4859,7 @@ export default function ProductDetailModal() {
               {quickViewProduct.colors && (
                 <div className="mt-4">
                   <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                    Màu sắc đã chọn: <span className="text-amber-700">{selectedColor}</span>
+                    Màu sắc đã chọn: <span className="text-cyan-700">{selectedColor}</span>
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {quickViewProduct.colors.map((c, i) => (
@@ -4623,7 +4868,7 @@ export default function ProductDetailModal() {
                         onClick={() => setSelectedColor(c.name)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2 border transition-all ${
                           selectedColor === c.name
-                            ? "border-amber-600 bg-amber-50 text-amber-900 ring-2 ring-amber-500/20"
+                            ? "border-cyan-600 bg-cyan-50 text-cyan-900 ring-2 ring-cyan-500/20"
                             : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                         }`}
                       >
@@ -4645,7 +4890,7 @@ export default function ProductDetailModal() {
                     <span className="text-slate-700">Kích thước (Size):</span>
                     <button
                       onClick={() => alert("HUNI hỗ trợ gửi bảng size chi tiết hoặc chuyên viên đến tận nơi đo đạc!")}
-                      className="text-amber-700 hover:underline flex items-center gap-1"
+                      className="text-cyan-700 hover:underline flex items-center gap-1"
                     >
                       <Ruler className="w-3 h-3" />
                       <span>Hướng dẫn chọn size</span>
@@ -4658,7 +4903,7 @@ export default function ProductDetailModal() {
                         onClick={() => setSelectedSize(s)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
                           selectedSize === s
-                            ? "bg-[#071b34] text-amber-300 border-[#071b34]"
+                            ? "bg-[#071b34] text-cyan-300 border-[#071b34]"
                             : "bg-white text-slate-700 border-slate-200 hover:border-slate-300"
                         }`}
                       >
@@ -4670,7 +4915,7 @@ export default function ProductDetailModal() {
               )}
 
               {/* Quantity input & Real-time Calculator */}
-              <div className="mt-4 p-4 bg-amber-50/60 rounded-2xl border border-amber-200/80">
+              <div className="mt-4 p-4 bg-cyan-50/60 rounded-2xl border border-cyan-200/80">
                 <div className="flex items-center justify-between gap-4">
                   <div>
                     <label className="text-xs font-bold text-slate-800 block">
@@ -4705,10 +4950,10 @@ export default function ProductDetailModal() {
                 </div>
 
                 {/* Live Calculated Subtotal */}
-                <div className="mt-3 pt-3 border-t border-amber-200/60 flex items-center justify-between text-xs">
+                <div className="mt-3 pt-3 border-t border-cyan-200/60 flex items-center justify-between text-xs">
                   <div>
                     <span className="text-slate-600">Đơn giá áp dụng: </span>
-                    <strong className="text-amber-800 text-sm font-black">
+                    <strong className="text-cyan-800 text-sm font-black">
                       {currentUnitPrice.toLocaleString("vi-VN")} đ
                     </strong>
                     <span className="text-slate-500">/{quickViewProduct.unit}</span>
@@ -4733,16 +4978,16 @@ export default function ProductDetailModal() {
             <div className="space-y-2.5 pt-2">
               <button
                 onClick={handleOpenCustomizer}
-                className="w-full py-3 px-4 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors"
+                className="w-full py-3 px-4 rounded-2xl bg-cyan-100 hover:bg-cyan-200 text-cyan-900 border border-cyan-300 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors"
               >
-                <Palette className="w-4 h-4 text-amber-700" />
+                <Palette className="w-4 h-4 text-cyan-700" />
                 <span>Mô Phỏng In / Thêu Logo Công Ty Lên Áo (Miễn Phí)</span>
               </button>
 
               <div className="flex items-center gap-3">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 px-6 rounded-2xl bg-[#071b34] hover:bg-slate-800 text-amber-300 font-extrabold text-sm shadow-xl flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
+                  className="flex-1 py-3.5 px-6 rounded-2xl bg-[#071b34] hover:bg-slate-800 text-cyan-300 font-extrabold text-sm shadow-xl flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   <span>Thêm Vào Giỏ Hàng ({quantity} {quickViewProduct.unit})</span>
@@ -4797,14 +5042,14 @@ export default function QuickQuoteModal() {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95">
         {/* Header */}
-        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-amber-500/20">
+        <div className="bg-[#071b34] text-white p-5 flex items-center justify-between border-b border-cyan-500/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-400 text-[#071b34] font-black flex items-center justify-center text-sm">
+            <div className="w-8 h-8 rounded-lg bg-cyan-400 text-[#071b34] font-black flex items-center justify-center text-sm">
               <Calculator className="w-4 h-4" />
             </div>
             <div>
               <h3 className="font-extrabold text-base">Đăng Ký Báo Giá Nhanh & Mẫu Thử 0Đ</h3>
-              <p className="text-xs text-amber-200/80">HUNI UNIFORM • Phản hồi chỉ trong 5 phút</p>
+              <p className="text-xs text-cyan-200/80">HUNI UNIFORM • Phản hồi chỉ trong 5 phút</p>
             </div>
           </div>
           <button
@@ -4826,7 +5071,7 @@ export default function QuickQuoteModal() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 font-medium focus:outline-none focus:border-amber-500"
+                className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 font-medium focus:outline-none focus:border-cyan-500"
               >
                 <option value="polo">Áo Polo Doanh Nghiệp (Cá sấu / Cotton compact)</option>
                 <option value="shirt">Áo Sơ Mi Công Sở (Sợi tre Bamboo / Kate Ý)</option>
@@ -4866,7 +5111,7 @@ export default function QuickQuoteModal() {
                   placeholder="0984.xxx.xxx"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -4879,7 +5124,7 @@ export default function QuickQuoteModal() {
                   placeholder="Công ty CP..."
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
@@ -4892,13 +5137,13 @@ export default function QuickQuoteModal() {
                   placeholder="VD: Cần may gấp trong 5 ngày, giao tại Hà Nội..."
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-cyan-500"
                 />
               </div>
             </div>
 
             {/* Guarantees */}
-            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 text-[11px] space-y-1">
+            <div className="p-3 bg-cyan-50 rounded-xl border border-cyan-200 text-cyan-900 text-[11px] space-y-1">
               <div className="font-bold">Ưu đãi khi đăng ký ngay hôm nay:</div>
               <div>✓ Miễn phí 100% thiết kế phối cảnh 3D theo nhận diện cty</div>
               <div>✓ Miễn phí may 01 áo mẫu thử duyệt form trước khi may đồng loạt</div>
@@ -4906,7 +5151,7 @@ export default function QuickQuoteModal() {
 
             <button
               type="submit"
-              className="w-full py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
+              className="w-full py-3.5 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
             >
               <Send className="w-4 h-4" />
               <span>Gửi Yêu Cầu Nhận Báo Giá Chi Tiết</span>
@@ -4923,7 +5168,7 @@ export default function QuickQuoteModal() {
             </p>
             <button
               onClick={handleClose}
-              className="px-6 py-2.5 bg-[#071b34] text-amber-300 font-bold text-xs rounded-xl"
+              className="px-6 py-2.5 bg-[#071b34] text-cyan-300 font-bold text-xs rounded-xl"
             >
               Đóng cửa sổ
             </button>
@@ -4999,14 +5244,14 @@ export default function QuickQuoteSection() {
   return (
     <section id="quick-quote-section" className="py-20 bg-[#071b34] text-white relative overflow-hidden">
       {/* Glow */}
-      <div className="absolute top-0 right-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Description */}
           <div className="lg:col-span-5 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-bold uppercase tracking-wider">
-              <Calculator className="w-3.5 h-3.5 text-amber-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold uppercase tracking-wider">
+              <Calculator className="w-3.5 h-3.5 text-cyan-400" />
               Công Cụ Báo Giá Nhanh
             </div>
 
@@ -5021,26 +5266,26 @@ export default function QuickQuoteSection() {
 
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
-                <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
                   ✓
                 </div>
                 <span>Tặng 100% chi phí thiết kế phối cảnh 3D bộ nhận diện</span>
               </div>
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
-                <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
                   ✓
                 </div>
                 <span>May áo mẫu thật gửi tận văn phòng thẩm định chất lượng vải</span>
               </div>
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-200">
-                <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                <div className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center shrink-0">
                   ✓
                 </div>
                 <span>Cử chuyên viên mang bảng size hoặc đến đo tận nơi</span>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex items-center gap-4 text-xs text-amber-400">
+            <div className="pt-4 border-t border-slate-800 flex items-center gap-4 text-xs text-cyan-400">
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
                 className="flex items-center gap-2 hover:underline font-bold"
@@ -5053,12 +5298,12 @@ export default function QuickQuoteSection() {
 
           {/* Right Interactive Calculator Card */}
           <div className="lg:col-span-7">
-            <div className="bg-[#0b2042] rounded-3xl border border-amber-400/30 p-6 sm:p-8 shadow-2xl">
+            <div className="bg-[#0b2042] rounded-3xl border border-cyan-400/30 p-6 sm:p-8 shadow-2xl">
               {!submitted ? (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {/* Select Category */}
                   <div>
-                    <label className="text-xs font-bold text-amber-300 block mb-2">
+                    <label className="text-xs font-bold text-cyan-300 block mb-2">
                       1. Chọn Dòng Đồng Phục:
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -5075,7 +5320,7 @@ export default function QuickQuoteSection() {
                           onClick={() => setCategory(item.id)}
                           className={`p-2.5 rounded-xl border text-center font-bold transition-all ${
                             category === item.id
-                              ? "bg-amber-500 text-[#071b34] border-amber-400 shadow-md"
+                              ? "bg-cyan-500 text-[#071b34] border-cyan-400 shadow-md"
                               : "bg-slate-900/80 border-slate-700 text-slate-300 hover:border-slate-500"
                           }`}
                         >
@@ -5088,8 +5333,8 @@ export default function QuickQuoteSection() {
                   {/* Quantity Slider */}
                   <div>
                     <div className="flex items-center justify-between text-xs font-bold mb-2">
-                      <span className="text-amber-300">2. Số Lượng Áo Dự Kiến:</span>
-                      <span className="text-base text-amber-400 font-black">{quantity} sản phẩm</span>
+                      <span className="text-cyan-300">2. Số Lượng Áo Dự Kiến:</span>
+                      <span className="text-base text-cyan-400 font-black">{quantity} sản phẩm</span>
                     </div>
                     <input
                       type="range"
@@ -5098,7 +5343,7 @@ export default function QuickQuoteSection() {
                       step="10"
                       value={quantity}
                       onChange={(e) => setQuantity(parseInt(e.target.value))}
-                      className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                      className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
                     />
                     <div className="flex justify-between text-[10px] text-slate-400 mt-1">
                       <span>10 chiếc</span>
@@ -5110,7 +5355,7 @@ export default function QuickQuoteSection() {
 
                   {/* Fabric Option */}
                   <div>
-                    <label className="text-xs font-bold text-amber-300 block mb-2">
+                    <label className="text-xs font-bold text-cyan-300 block mb-2">
                       3. Nhu Cầu Về Chất Liệu:
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -5125,7 +5370,7 @@ export default function QuickQuoteSection() {
                           onClick={() => setFabric(f.id)}
                           className={`p-2 rounded-xl border text-center font-semibold transition-all ${
                             fabric === f.id
-                              ? "border-amber-400 bg-amber-400/20 text-amber-200"
+                              ? "border-cyan-400 bg-cyan-400/20 text-cyan-200"
                               : "border-slate-700 bg-slate-900/60 text-slate-300 hover:border-slate-600"
                           }`}
                         >
@@ -5136,10 +5381,10 @@ export default function QuickQuoteSection() {
                   </div>
 
                   {/* Estimated Output Banner */}
-                  <div className="p-4 bg-gradient-to-r from-[#071b34] to-[#040e1c] rounded-2xl border border-amber-500/40 flex items-center justify-between">
+                  <div className="p-4 bg-gradient-to-r from-[#071b34] to-[#040e1c] rounded-2xl border border-cyan-500/40 flex items-center justify-between">
                     <div>
                       <div className="text-[11px] text-slate-400">Đơn giá sỉ ước tính:</div>
-                      <div className="text-lg font-black text-amber-400">
+                      <div className="text-lg font-black text-cyan-400">
                         ~{unitPrice.toLocaleString("vi-VN")} đ/sp
                       </div>
                     </div>
@@ -5162,12 +5407,12 @@ export default function QuickQuoteSection() {
                         placeholder="VD: Công ty TNHH HUNI..."
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
                       />
                     </div>
                     <div>
                       <label className="font-bold text-slate-200 block mb-1">
-                        Số Điện Thoại / Zalo Nhận Báo Giá <span className="text-amber-400">*</span>:
+                        Số Điện Thoại / Zalo Nhận Báo Giá <span className="text-cyan-400">*</span>:
                       </label>
                       <input
                         type="tel"
@@ -5175,7 +5420,7 @@ export default function QuickQuoteSection() {
                         placeholder="0984.xxx.xxx"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                        className="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400"
                       />
                     </div>
                   </div>
@@ -5183,7 +5428,7 @@ export default function QuickQuoteSection() {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
+                    className="w-full py-4 bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
                   >
                     <Send className="w-4 h-4" />
                     <span>Gửi Yêu Cầu Báo Giá Kèm File Phối Cảnh 3D</span>
@@ -5191,17 +5436,17 @@ export default function QuickQuoteSection() {
                 </form>
               ) : (
                 <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-amber-400/20 text-amber-400 flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-cyan-400/20 text-cyan-400 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <h3 className="text-xl font-bold text-white">YÊU CẦU ĐÃ ĐƯỢC TIẾP NHẬN!</h3>
                   <p className="text-sm text-slate-300 max-w-md mx-auto">
                     Chuyên viên báo giá HUNI Uniform sẽ gửi file dự toán chi tiết và liên hệ số{" "}
-                    <strong className="text-amber-300">{phone}</strong> trong vòng 5 - 10 phút.
+                    <strong className="text-cyan-300">{phone}</strong> trong vòng 5 - 10 phút.
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="px-5 py-2.5 bg-slate-800 text-amber-400 rounded-xl text-xs font-bold hover:bg-slate-700"
+                    className="px-5 py-2.5 bg-slate-800 text-cyan-400 rounded-xl text-xs font-bold hover:bg-slate-700"
                   >
                     Tính giá cho dự án khác
                   </button>
@@ -5247,7 +5492,7 @@ export default function TestimonialsSection() {
             {partnerLogos.map((partner, idx) => (
               <div
                 key={idx}
-                className="px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-2xs font-extrabold text-xs sm:text-sm text-slate-700 tracking-wider hover:text-amber-700 hover:border-amber-400 transition-colors"
+                className="px-4 py-2 bg-white rounded-xl border border-slate-200 shadow-2xs font-extrabold text-xs sm:text-sm text-slate-700 tracking-wider hover:text-cyan-700 hover:border-cyan-400 transition-colors"
               >
                 {partner}
               </div>
@@ -5257,8 +5502,8 @@ export default function TestimonialsSection() {
 
         {/* Testimonials Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-700 text-xs font-bold uppercase tracking-wider">
-            <Award className="w-3.5 h-3.5 text-amber-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 text-xs font-bold uppercase tracking-wider">
+            <Award className="w-3.5 h-3.5 text-cyan-600" />
             Đánh Giá Khách Hàng
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
@@ -5274,17 +5519,17 @@ export default function TestimonialsSection() {
           {TESTIMONIALS.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 hover:border-amber-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 hover:border-cyan-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
             >
               <div className="space-y-4">
                 {/* Rating Stars */}
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-amber-400">
+                  <div className="flex items-center gap-1 text-cyan-400">
                     {[...Array(item.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-current" />
                     ))}
                   </div>
-                  <Quote className="w-7 h-7 text-amber-200" />
+                  <Quote className="w-7 h-7 text-cyan-200" />
                 </div>
 
                 <p className="text-slate-700 text-xs sm:text-sm leading-relaxed italic">
@@ -5296,12 +5541,12 @@ export default function TestimonialsSection() {
                 <img
                   src={item.avatar}
                   alt={item.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-amber-400 shadow-sm"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-cyan-400 shadow-sm"
                 />
                 <div>
                   <h4 className="font-extrabold text-[#071b34] text-sm">{item.name}</h4>
                   <p className="text-[11px] text-slate-500 line-clamp-1">{item.role}</p>
-                  <span className="text-[10px] text-amber-700 font-semibold">{item.location}</span>
+                  <span className="text-[10px] text-cyan-700 font-semibold">{item.location}</span>
                 </div>
               </div>
             </div>
@@ -5337,6 +5582,9 @@ export function ShopProvider({ children }) {
   const [isQuickQuoteOpen, setIsQuickQuoteOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [customizerProduct, setCustomizerProduct] = useState(null);
+
+  // Active product category (shared between Header dropdown & Catalog section)
+  const [activeCategory, setActiveCategory] = useState("all");
 
   // Discount voucher
   const [voucherCode, setVoucherCode] = useState("");
@@ -5569,6 +5817,8 @@ export function ShopProvider({ children }) {
   return (
     <ShopContext.Provider
       value={{
+        activeCategory,
+        setActiveCategory,
         cart,
         addToCart,
         updateCartQuantity,

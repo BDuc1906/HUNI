@@ -1,0 +1,7 @@
+export const FABRIC_COMPARISONS = [
+  { name: "Bamboo Sợi Tre Tự Nhiên",  features: "Kháng khuẩn 99.8%, mềm mướt như lụa, hạ nhiệt 3°C, chống tia UV", usage: "Áo sơ mi công sở cao cấp, áo thun doanh nhân", shrinkage: "Gần như không co rút (<0.5%)",          durability: "★★★★★", breathability: "★★★★★" },
+  { name: "Cotton Compact 100%",       features: "Sợi bông dài chải kỹ, không xơ lông, thấm hút mồ hôi tối đa",     usage: "Áo polo doanh nghiệp, áo đồng phục sự kiện",  shrinkage: "Ổn định với công nghệ xử lý nhiệt",         durability: "★★★★★", breathability: "★★★★★" },
+  { name: "Pique Mắt Chim Thể Thao",   features: "Cấu trúc dệt tổ ong 3D tạo rãnh thoát khí, co giãn 4 chiều",       usage: "Đồng phục Golf, Pickleball, Áo thể thao",     shrinkage: "Không nhăn, không bai dão",                  durability: "★★★★★", breathability: "★★★★★" },
+  { name: "Kate Ý & Kate Mỹ",          features: "Bề mặt phẳng mịn sang trọng, không xù lông, đứng form áo",         usage: "Áo sơ mi văn phòng, đồng phục ngân hàng",     shrinkage: "Chuẩn form sau nhiều lần giặt",              durability: "★★★★☆", breathability: "★★★★☆" },
+  { name: "Cashmere Wool Nhập Khẩu",   features: "Chất len mịn ấm mùa đông, thoáng mùa hè, giữ phom ve áo đứng",     usage: "Bộ Vest doanh nhân, quần âu, chân váy cao cấp", shrinkage: "Chống nhăn tuyệt đối",                       durability: "★★★★★", breathability: "★★★★☆" }
+];

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import confetti from "canvas-confetti";
-import { calculateTierPrice } from "@/utils/pricing";
+import { calculateTierPrice } from "@/shared/lib/pricing";
 
 const ShopContext = createContext(null);
 
@@ -21,6 +21,9 @@ export function ShopProvider({ children }) {
   const [isQuickQuoteOpen, setIsQuickQuoteOpen] = useState(false);
   const [isCustomizerOpen, setIsCustomizerOpen] = useState(false);
   const [customizerProduct, setCustomizerProduct] = useState(null);
+
+  // Active product category (shared between Header dropdown & Catalog section)
+  const [activeCategory, setActiveCategory] = useState("all");
 
   // Discount voucher
   const [voucherCode, setVoucherCode] = useState("");
@@ -253,6 +256,8 @@ export function ShopProvider({ children }) {
   return (
     <ShopContext.Provider
       value={{
+        activeCategory,
+        setActiveCategory,
         cart,
         addToCart,
         updateCartQuantity,
