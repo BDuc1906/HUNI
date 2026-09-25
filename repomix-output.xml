@@ -229,6 +229,7 @@ src/
         route.js
     login/
       LoginForm.jsx
+      LoginWrapper.jsx
       page.jsx
     register/
       page.jsx
@@ -308,7 +309,7 @@ src/
       AuthProvider.jsx
       ShopProvider.jsx
       ThemeProvider.jsx
-  middleware.js
+  proxy.js
 .gitignore
 2023-12-28_Catalogue đồng phục_1.pdf
 AGENTS.md
@@ -2693,9 +2694,10 @@ export function useTheme() {
 }
 </file>
 
-<file path="src/middleware.js">
+<file path="src/proxy.js">
 // ==================================================
-// src/middleware.js — Bảo vệ routes
+// src/proxy.js — Bảo vệ routes (Next.js 16 proxy convention)
+// Thay thế cho middleware.js cũ (đã deprecated)
 // ==================================================
 
 import { NextResponse } from "next/server";
@@ -2857,6 +2859,31 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
   "discount": 0,
   "total": 3100000,
   "notes": "Test đơn hàng đầu tiên"
+}
+</file>
+
+<file path="src/app/login/LoginWrapper.jsx">
+// ==================================================
+// src/app/login/LoginWrapper.jsx
+// Tải động LoginForm — chỉ render ở client (ssr: false)
+// ==================================================
+
+"use client";
+
+import dynamic from "next/dynamic";
+import { Loader2 } from "lucide-react";
+
+const LoginForm = dynamic(() => import("./LoginForm"), {
+  ssr: false,
+  loading: () => (
+    <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
+      <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+    </div>
+  ),
+});
+
+export default function LoginWrapper() {
+  return <LoginForm />;
 }
 </file>
 
@@ -6769,23 +6796,6 @@ export const PRODUCTS = [
 export { useShop } from "@/shared/providers/ShopProvider";
 </file>
 
-<file path="src/shared/providers/AuthProvider.jsx">
-"use client";
-
-import { SessionProvider } from "next-auth/react";
-import { Suspense } from "react";
-
-export default function AuthProvider({ children }) {
-  return (
-    <SessionProvider>
-      <Suspense fallback={null}>
-        {children}
-      </Suspense>
-    </SessionProvider>
-  );
-}
-</file>
-
 <file path="src/shared/providers/ShopProvider.jsx">
 "use client";
 
@@ -7205,35 +7215,6 @@ const config = {
 };
 
 export default config;
-</file>
-
-<file path="src/app/login/page.jsx">
-// ==================================================
-// Server Component — Chỉ render wrapper + metadata
-// ==================================================
-
-import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
-import LoginForm from "./LoginForm";
-
-export const metadata = {
-  title: "Đăng nhập",
-  description: "Đăng nhập tài khoản HUNI UNIFORM",
-};
-export const dynamic = "force-dynamic";
-export default function LoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
-        </div>
-      }
-    >
-      <LoginForm />
-    </Suspense>
-  );
-}
 </file>
 
 <file path="src/app/globals.css">
@@ -9002,6 +8983,16 @@ export default function Header() {
 }
 </file>
 
+<file path="src/shared/providers/AuthProvider.jsx">
+"use client";
+
+import { SessionProvider } from "next-auth/react";
+
+export default function AuthProvider({ children }) {
+  return <SessionProvider>{children}</SessionProvider>;
+}
+</file>
+
 <file path="next.config.mjs">
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -9169,11 +9160,55 @@ export default function Home() {
 }
 </file>
 
+<file path="src/app/login/page.jsx">
+// ==================================================
+// src/app/login/page.jsx
+// Server Component — Chỉ render wrapper + metadata
+// Sử dụng connection() để buộc route render động
+// (thay thế cho force-dynamic không còn hiệu quả trong Next.js 16)
+// ==================================================
+
+import { Suspense } from "react";
+import { connection } from "next/server";
+import { Loader2 } from "lucide-react";
+import LoginWrapper from "./LoginWrapper";
+
+export const metadata = {
+  title: "Đăng nhập",
+  description: "Đăng nhập tài khoản HUNI UNIFORM",
+};
+
+// ==================================================
+// LoginPage — Server Component
+// await connection() buộc route này phải render động,
+// bỏ qua hoàn toàn quá trình prerender tại build time.
+// ==================================================
+export default async function LoginPage() {
+  await connection();
+
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+        </div>
+      }
+    >
+      <LoginWrapper />
+    </Suspense>
+  );
+}
+</file>
+
 <file path="src/app/layout.js">
+// src/app/layout.js
 import "./globals.css";
+import { Suspense } from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
-export const dynamic = 'force-dynamic';
+
+
+
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
    ============================================================ */
@@ -9192,7 +9227,8 @@ export const metadata = {
   metadataBase: new URL("https://huniuniform.vn"),
 
   title: {
-    default: "HUNI UNIFORM - Đồng Phục Doanh Nghiệp & May Đo Cao Cấp | HDC GROUP VN",
+    default:
+      "HUNI UNIFORM - Đồng Phục Doanh Nghiệp & May Đo Cao Cấp | HDC GROUP VN",
     template: "%s | HUNI UNIFORM",
   },
   description:
@@ -9237,7 +9273,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "HUNI UNIFORM - Đồng Phục Doanh Nghiệp Cao Cấp",
-    description: "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ.",
+    description:
+      "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ.",
     images: ["/images/uniform_polo_corporate.jpg"],
   },
 
@@ -9401,11 +9438,13 @@ export default function RootLayout({ children }) {
       >
         {/* ============================================================
             AUTH PROVIDER — NextAuth SessionProvider
-            Bao quanh toàn bộ app để useSession() hoạt động
+            ✅ Bọc Suspense ở đây (Server Component) để bắt suspension
+            từ SessionProvider trong lúc Next.js prerender trang.
+            Tránh lỗi "Cannot read properties of null (reading 'useState')"
             ============================================================ */}
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <Suspense fallback={null}>
+          <AuthProvider>{children}</AuthProvider>
+        </Suspense>
 
         {/* ============================================================
             JSON-LD STRUCTURED DATA

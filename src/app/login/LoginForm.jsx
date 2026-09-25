@@ -1,12 +1,36 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Loader2, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 
+// ==================================================
+// Component "vỏ" — không gọi useSearchParams trực tiếp,
+// nên an toàn để Next.js prerender phần shell.
+// Suspense được bọc NGAY TẠI ĐÂY, đúng chỗ dùng hook,
+// nên hết lỗi "missing-suspense-with-csr-bailout".
+// ==================================================
 export default function LoginForm() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+        </div>
+      }
+    >
+      <LoginFormInner />
+    </Suspense>
+  );
+}
+
+// ==================================================
+// Component thật — chứa toàn bộ logic + JSX gốc,
+// gọi useSearchParams() ở đây.
+// ==================================================
+function LoginFormInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
