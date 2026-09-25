@@ -10,7 +10,7 @@ export const metadata = {
   title: "Đăng nhập",
   description: "Đăng nhập tài khoản HUNI UNIFORM",
 };
-
+export const dynamic = "force-dynamic";
 export default function LoginPage() {
   return (
     <Suspense
