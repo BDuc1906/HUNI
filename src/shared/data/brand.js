@@ -6,7 +6,8 @@ export const BRAND_INFO = {
   ceo: {
     name: "Bà Nguyễn Thị Thương",
     title: "Founder & CEO HDC GROUP VN / HUNI UNIFORM",
-    image: "/images/ceo_portrait.jpg",
+    image: "/images/CEO.jpg",
+    banner: "/images/tmht.jpg",
     experience: "Gần 10 năm kinh nghiệm trong ngành dệt may & thiết kế đồng phục",
     bio: "Với gần 10 năm kinh nghiệm, HUNI là đơn vị chuyên thiết kế và sản xuất đồng phục theo yêu cầu cho doanh nghiệp, tổ chức và trường học. Sở hữu đội ngũ tay nghề cao cùng hệ thống sản xuất hiện đại, HUNI đáp ứng linh hoạt từ đơn hàng nhỏ đến số lượng lớn, đồng hành cùng khách hàng từ tư vấn, thiết kế đến sản xuất và giao hàng."
   },

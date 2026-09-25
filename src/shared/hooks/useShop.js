@@ -1,1 +1,1 @@
-export { useShop } from "@/context/ShopContext";
+export { useShop } from "@/shared/providers/ShopProvider";

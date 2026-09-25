@@ -102,17 +102,16 @@
 html {
   scroll-behavior: smooth;
   color-scheme: light dark;
-  /* Chuyển overflow-x từ body → html để smooth scroll hoạt động đúng */
   overflow-x: hidden;
 }
 
 body {
   background-color: var(--bg-page);
   color: var(--text-main);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  /* Font self-host qua next/font — không FOUT */
+  font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
-  /* BỎ overflow-x: hidden ở đây (đã chuyển lên html) */
 }
 
 /* Offset cho sticky header khi scroll tới anchor */
@@ -177,4 +176,38 @@ main[id] {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* =========================================================
+   Mobile — chừa chỗ cho bottom action bar cố định
+   ========================================================= */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 64px;
+  }
+
+  /* Tối ưu tap target cho mobile — tránh double-tap zoom */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Smooth scroll trên iOS */
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* =========================================================
+   Image — chống layout shift khi ảnh đang tải
+   ========================================================= */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Next.js Image wrapper không bị dãn */
+[data-nimg] {
+  max-width: 100%;
 }

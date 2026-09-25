@@ -2,7 +2,7 @@
 
 import React from "react";
 import { ThemeProvider } from "@/shared/providers/ThemeProvider";
-import { ShopProvider } from "@/context/ShopContext";
+import { ShopProvider } from "@/shared/providers/ShopProvider";
 
 import Header from "@/shared/components/layout/Header";
 import HeroBanner from "@/features/home/components/HeroBanner";

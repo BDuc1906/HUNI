@@ -16,8 +16,8 @@ export default function FaqSection() {
       <div className="max-w-5xl mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 text-xs font-bold uppercase tracking-wider">
-            <HelpCircle className="w-3.5 h-3.5 text-cyan-600" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold uppercase tracking-wider">
+            <HelpCircle className="w-3.5 h-3.5 text-amber-600" />
             Giải Đáp Thắc Mắc
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
@@ -47,7 +47,7 @@ export default function FaqSection() {
                   </span>
                   <div
                     className={`w-7 h-7 rounded-full bg-white border border-slate-300 flex items-center justify-center shrink-0 transition-transform ${
-                      isOpen ? "rotate-180 bg-cyan-500 text-white border-cyan-500" : "text-slate-600"
+                      isOpen ? "rotate-180 bg-amber-500 text-white border-amber-500" : "text-slate-600"
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -65,19 +65,19 @@ export default function FaqSection() {
         </div>
 
         {/* Support Banner */}
-        <div className="mt-10 p-6 bg-gradient-to-r from-[#071b34] to-[#0d274c] text-white rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-10 p-6 bg-gradient-to-r from-amber-50 via-amber-100/60 to-amber-50 text-[#071b34] rounded-3xl border border-amber-200 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <h4 className="font-extrabold text-base sm:text-lg text-cyan-300">
+            <h4 className="font-extrabold text-base sm:text-lg text-[#071b34]">
               Bạn vẫn còn câu hỏi thắc mắc riêng về đơn hàng?
             </h4>
-            <p className="text-xs text-slate-300 mt-0.5">
+            <p className="text-xs text-slate-600 mt-0.5">
               Đội ngũ chuyên viên tư vấn của HUNI luôn sẵn sàng giải đáp 24/7.
             </p>
           </div>
 
           <a
             href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-            className="px-6 py-3 bg-gradient-to-r from-cyan-400 to-cyan-600 hover:from-cyan-300 hover:to-cyan-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
+            className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-lg flex items-center gap-2 shrink-0 transition-all"
           >
             <PhoneCall className="w-4 h-4" />
             <span>Gọi Ngay: {BRAND_INFO.contact.hotline}</span>

@@ -1,4 +1,7 @@
 export const PRODUCTS = [
+  // ==================================================
+  // NHÓM 1: SẢN PHẨM GỐC
+  // ==================================================
   {
     id: "huni-polo-pro",
     title: "Áo Polo Doanh Nghiệp HUNI Classic Gold",
@@ -46,7 +49,7 @@ export const PRODUCTS = [
     reviewsCount: 96,
     soldCount: "2,800+",
     image: "/images/uniform_corporate_suits.jpg",
-    gallery: ["/images/uniform_corporate_suits.jpg", "/images/ceo_portrait.jpg", "/images/uniform_accessories.jpg"],
+    gallery: ["/images/uniform_corporate_suits.jpg", "/images/CEO.jpg", "/images/uniform_accessories.jpg"],
     price: 1850000,
     originalPrice: 2400000,
     unit: "bộ (Áo vest + Quần âu / Chân váy)",
@@ -214,5 +217,306 @@ export const PRODUCTS = [
       "Thêu logo nhỏ tinh tế ở măng sét cổ tay hoặc ngực áo"
     ],
     description: "Chiếc áo sơ mi đồng phục công sở không thể thiếu cho dân văn phòng và nhân viên kinh doanh."
+  },
+
+  // ==================================================
+  // NHÓM 2: SẢN PHẨM BỔ SUNG (từ ảnh có sẵn)
+  // ==================================================
+  {
+    id: "huni-polo-classic-2",
+    title: "Áo Polo Doanh Nghiệp HUNI Classic Navy",
+    sku: "HN-POLO-02",
+    category: "corporate",
+    badge: "Bán Chạy #2",
+    rating: 4.9,
+    reviewsCount: 112,
+    soldCount: "8,200+",
+    image: "/images/06_polo_01.jpg",
+    gallery: ["/images/06_polo_01.jpg", "/images/06_polo_02.jpg"],
+    price: 175000,
+    originalPrice: 235000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 10, max: 49, price: 175000, label: "10 - 49 áo" },
+      { min: 50, max: 99, price: 145000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 125000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 105000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Pique Cá Sấu Cotton Compact 4 Chiều",
+    colors: [
+      { name: "Xanh Navy", code: "#0A192F" },
+      { name: "Trắng Sữa", code: "#FEFDF9" }
+    ],
+    sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
+    features: ["Vải cá sấu cao cấp", "Thoáng mát", "Bền màu", "Kháng khuẩn"],
+    description: "Áo polo dòng classic với tông màu navy hoàng gia sang trọng cho doanh nghiệp."
+  },
+  {
+    id: "huni-polo-sport",
+    title: "Áo Polo Thể Thao Doanh Nghiệp HUNI Active",
+    sku: "HN-POLO-03",
+    category: "corporate",
+    badge: "Năng Động",
+    rating: 5.0,
+    reviewsCount: 98,
+    soldCount: "5,400+",
+    image: "/images/06_polo_03.jpg",
+    gallery: ["/images/06_polo_03.jpg", "/images/06_polo_04.jpg"],
+    price: 195000,
+    originalPrice: 250000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 10, max: 49, price: 195000, label: "10 - 49 áo" },
+      { min: 50, max: 99, price: 165000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 145000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 125000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Vải Dry-fit Công Nghệ AeroCool",
+    colors: [
+      { name: "Xanh Dương", code: "#1E40AF" },
+      { name: "Đen Thể Thao", code: "#18181B" }
+    ],
+    sizes: ["S", "M", "L", "XL", "2XL"],
+    features: ["Khô nhanh", "Co giãn 4 chiều", "Chống UV", "Thoáng khí"],
+    description: "Áo polo thể thao cho các sự kiện teambuilding, thể thao doanh nghiệp."
+  },
+  {
+    id: "huni-shirt-premium",
+    title: "Áo Sơ Mi Cao Cấp HUNI Premium Executive",
+    sku: "HN-SHIRT-03",
+    category: "corporate",
+    badge: "Cao Cấp",
+    rating: 5.0,
+    reviewsCount: 156,
+    soldCount: "11,200+",
+    image: "/images/05_bestseller_shirts_01.jpg",
+    gallery: ["/images/05_bestseller_shirts_01.jpg", "/images/05_bestseller_shirts_02.jpg"],
+    price: 285000,
+    originalPrice: 380000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 10, max: 49, price: 285000, label: "10 - 49 áo" },
+      { min: 50, max: 99, price: 245000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 215000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 185000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Kate Ý Cao Cấp Chống Nhăn Non-Iron",
+    colors: [
+      { name: "Trắng Tinh Khôi", code: "#FFFFFF" },
+      { name: "Xanh Nhạt", code: "#BAE6FD" },
+      { name: "Hồng Pastel", code: "#FBCFE8" }
+    ],
+    sizes: ["38", "39", "40", "41", "42", "43"],
+    features: ["Chống nhăn Non-Iron", "Sợi dài mịn", "Khuy ngọc trai", "Form slimfit"],
+    description: "Áo sơ mi cao cấp nhất trong bộ sưu tập — dành cho cấp quản lý và lãnh đạo."
+  },
+  {
+    id: "huni-shirt-classic",
+    title: "Áo Sơ Mi Công Sở HUNI Classic Blue",
+    sku: "HN-SHIRT-04",
+    category: "corporate",
+    badge: "Phổ Biến",
+    rating: 4.8,
+    reviewsCount: 89,
+    soldCount: "7,600+",
+    image: "/images/05_bestseller_shirts_03.jpg",
+    gallery: ["/images/05_bestseller_shirts_03.jpg", "/images/05_bestseller_shirts_04.jpg"],
+    price: 235000,
+    originalPrice: 310000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 10, max: 49, price: 235000, label: "10 - 49 áo" },
+      { min: 50, max: 99, price: 205000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 175000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 155000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 100% Cao Cấp",
+    colors: [
+      { name: "Xanh Navy Classic", code: "#1E3A8A" },
+      { name: "Trắng", code: "#FFFFFF" }
+    ],
+    sizes: ["38", "39", "40", "41", "42"],
+    features: ["Thấm hút tốt", "Bền màu", "Form chuẩn Âu", "Dễ phối đồ"],
+    description: "Áo sơ mi công sở classic — lựa chọn số 1 của dân văn phòng."
+  },
+  {
+    id: "huni-golf-pro-2",
+    title: "Bộ Đồng Phục Golf Doanh Nghiệp HUNI Pro Series",
+    sku: "HN-GOLF-02",
+    category: "sport_golf",
+    badge: "Cao Cấp Golf",
+    rating: 5.0,
+    reviewsCount: 145,
+    soldCount: "4,800+",
+    image: "/images/07_corporate_golf_01.jpg",
+    gallery: ["/images/07_corporate_golf_01.jpg", "/images/07_corporate_golf_02.jpg"],
+    price: 385000,
+    originalPrice: 480000,
+    unit: "set (Áo + Quần)",
+    wholesaleTiers: [
+      { min: 5, max: 19, price: 385000, label: "5 - 19 set" },
+      { min: 20, max: 49, price: 345000, label: "20 - 49 set" },
+      { min: 50, max: 99, price: 305000, label: "50 - 99 set" },
+      { min: 100, max: 9999, price: 265000, label: "Từ 100 set trở lên" }
+    ],
+    material: "Poly Spandex Dệt Lỗ Công Nghệ AeroCool",
+    colors: [
+      { name: "Xanh Navy Golf", code: "#0A2540" },
+      { name: "Đen Premium", code: "#18181B" }
+    ],
+    sizes: ["S", "M", "L", "XL", "2XL"],
+    features: ["Co giãn 4 chiều", "Khô nhanh", "Chống UV 50+", "Thoáng khí"],
+    description: "Bộ đồng phục golf doanh nghiệp cao cấp — đồng hành cùng các giải golf doanh nhân."
+  },
+  {
+    id: "huni-golf-dryfit-2",
+    title: "Set Golf Cao Cấp HUNI Masters",
+    sku: "HN-GOLF-03",
+    category: "sport_golf",
+    badge: "Xu Hướng",
+    rating: 4.9,
+    reviewsCount: 87,
+    soldCount: "3,200+",
+    image: "/images/08_golf_event_01.jpg",
+    gallery: ["/images/08_golf_event_01.jpg", "/images/08_golf_event_02.jpg"],
+    price: 425000,
+    originalPrice: 550000,
+    unit: "bộ",
+    wholesaleTiers: [
+      { min: 10, max: 29, price: 425000, label: "10 - 29 bộ" },
+      { min: 30, max: 79, price: 385000, label: "30 - 79 bộ" },
+      { min: 80, max: 199, price: 345000, label: "80 - 199 bộ" },
+      { min: 200, max: 9999, price: 305000, label: "Từ 200 bộ trở lên" }
+    ],
+    material: "Vải Cao Cấp Chống Nắng UPF 50+",
+    colors: [
+      { name: "Trắng Xanh Golf", code: "#F8FAFC" },
+      { name: "Xanh Lá", code: "#15803D" }
+    ],
+    sizes: ["S", "M", "L", "XL", "2XL", "3XL"],
+    features: ["Chống nắng UPF 50+", "Khô nhanh", "Co giãn", "Sang trọng"],
+    description: "Set golf cao cấp cho các giải golf tầm cỡ quốc gia."
+  },
+  {
+    id: "huni-kids-school",
+    title: "Đồng Phục Học Sinh Tiểu Học HUNI Kids",
+    sku: "HN-KID-01",
+    category: "school",
+    badge: "Trẻ Em",
+    rating: 5.0,
+    reviewsCount: 234,
+    soldCount: "22,500+",
+    image: "/images/09_kids_school_01.jpg",
+    gallery: ["/images/09_kids_school_01.jpg", "/images/11_kids_polo_products_01.jpg"],
+    price: 185000,
+    originalPrice: 250000,
+    unit: "bộ",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 185000, label: "20 - 49 bộ" },
+      { min: 50, max: 99, price: 165000, label: "50 - 99 bộ" },
+      { min: 100, max: 299, price: 145000, label: "100 - 299 bộ" },
+      { min: 300, max: 9999, price: 125000, label: "Từ 300 bộ trở lên" }
+    ],
+    material: "Cotton Compact Mềm Mại An Toàn",
+    colors: [
+      { name: "Trắng Xanh", code: "#FFFFFF" },
+      { name: "Xanh Navy Trẻ", code: "#1E40AF" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Mềm mại an toàn cho da trẻ em",
+      "Thấm hút mồ hôi",
+      "Không phai màu",
+      "Đường may chắc chắn"
+    ],
+    description: "Đồng phục học sinh tiểu học chất lượng cao, an toàn cho các bé."
+  },
+  {
+    id: "huni-kids-polo",
+    title: "Áo Polo Trẻ Em HUNI Kids Active",
+    sku: "HN-KID-02",
+    category: "school",
+    badge: "Bán Chạy",
+    rating: 4.9,
+    reviewsCount: 178,
+    soldCount: "15,800+",
+    image: "/images/11_kids_polo_products_01.jpg",
+    gallery: ["/images/11_kids_polo_products_01.jpg", "/images/11_kids_polo_products_02.jpg"],
+    price: 145000,
+    originalPrice: 195000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 145000, label: "20 - 49 áo" },
+      { min: 50, max: 99, price: 125000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 105000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 89000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 4 Chiều",
+    colors: [
+      { name: "Trắng", code: "#FFFFFF" },
+      { name: "Xanh Sky", code: "#60A5FA" },
+      { name: "Hồng", code: "#F472B6" }
+    ],
+    sizes: ["110", "120", "130", "140", "150"],
+    features: ["Mềm mại", "Co giãn 4 chiều", "Bền màu", "Thoáng mát"],
+    description: "Áo polo trẻ em năng động cho các bé trong mọi hoạt động."
+  },
+  {
+    id: "huni-accessories-cap",
+    title: "Mũ Lưỡi Trai Doanh Nghiệp HUNI Cap",
+    sku: "HN-ACC-02",
+    category: "accessories",
+    badge: "Quà Tặng",
+    rating: 5.0,
+    reviewsCount: 92,
+    soldCount: "6,300+",
+    image: "/images/04_culture_accessories_02.jpg",
+    gallery: ["/images/04_culture_accessories_02.jpg", "/images/04_culture_accessories_03.jpg"],
+    price: 125000,
+    originalPrice: 175000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 125000, label: "20 - 49 chiếc" },
+      { min: 50, max: 99, price: 105000, label: "50 - 99 chiếc" },
+      { min: 100, max: 299, price: 89000, label: "100 - 299 chiếc" },
+      { min: 300, max: 9999, price: 75000, label: "Từ 300 chiếc trở lên" }
+    ],
+    material: "Vải Kaki Cotton Nhung Cao Cấp",
+    colors: [
+      { name: "Navy", code: "#0B2042" },
+      { name: "Đen", code: "#18181B" }
+    ],
+    sizes: ["Free Size"],
+    features: ["Thêu nổi 3D", "Khóa đồng", "Lót thoáng khí", "Form chuẩn"],
+    description: "Mũ lưỡi trai thêu logo doanh nghiệp — phụ kiện quà tặng sự kiện hoàn hảo."
+  },
+  {
+    id: "huni-accessories-tote",
+    title: "Túi Tote Canvas Doanh Nghiệp HUNI Eco",
+    sku: "HN-ACC-03",
+    category: "accessories",
+    badge: "Xanh Sạch",
+    rating: 5.0,
+    reviewsCount: 76,
+    soldCount: "4,100+",
+    image: "/images/04_culture_accessories_04.jpg",
+    gallery: ["/images/04_culture_accessories_04.jpg", "/images/04_culture_accessories_05.jpg"],
+    price: 95000,
+    originalPrice: 135000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 30, max: 49, price: 95000, label: "30 - 49 chiếc" },
+      { min: 50, max: 99, price: 79000, label: "50 - 99 chiếc" },
+      { min: 100, max: 299, price: 65000, label: "100 - 299 chiếc" },
+      { min: 300, max: 9999, price: 55000, label: "Từ 300 chiếc trở lên" }
+    ],
+    material: "Canvas Cotton Dày Dặn",
+    colors: [
+      { name: "Be Tự Nhiên", code: "#F5F5DC" },
+      { name: "Đen", code: "#18181B" }
+    ],
+    sizes: ["Free Size"],
+    features: ["In logo 1 mặt", "Quai chắc chắn", "Thân thiện môi trường", "Size lớn"],
+    description: "Túi tote canvas thân thiện môi trường — quà tặng cho hội nghị, sự kiện."
   }
 ];

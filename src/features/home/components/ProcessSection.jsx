@@ -18,7 +18,7 @@ export default function ProcessSection() {
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold uppercase tracking-wider">
             Quy Trình Khép Kín
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
@@ -38,20 +38,20 @@ export default function ProcessSection() {
             return (
               <div
                 key={idx}
-                className="relative bg-slate-50 hover:bg-cyan-50/50 p-6 rounded-3xl border border-slate-200 hover:border-cyan-400 transition-all duration-300 flex flex-col justify-between group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
+                className="relative bg-slate-50 hover:bg-amber-50/50 p-6 rounded-3xl border border-slate-200 hover:border-amber-400 transition-all duration-300 flex flex-col justify-between group shadow-xs hover:shadow-xl transform hover:-translate-y-1"
               >
                 <div>
                   {/* Step Number & Icon */}
                   <div className="flex items-center justify-between mb-5">
-                    <span className="text-2xl font-black text-cyan-500/80 group-hover:text-cyan-600 transition-colors">
+                    <span className="text-2xl font-black text-amber-500/80 group-hover:text-amber-600 transition-colors">
                       {item.step}
                     </span>
-                    <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 group-hover:border-cyan-400 group-hover:bg-cyan-500 group-hover:text-[#071b34] text-slate-800 flex items-center justify-center shadow-sm transition-all">
+                    <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 group-hover:border-amber-400 group-hover:bg-amber-500 group-hover:text-[#071b34] text-slate-800 flex items-center justify-center shadow-sm transition-all">
                       <Icon className="w-5 h-5" />
                     </div>
                   </div>
 
-                  <h3 className="font-extrabold text-[#071b34] text-base mb-2 group-hover:text-cyan-800 transition-colors">
+                  <h3 className="font-extrabold text-[#071b34] text-base mb-2 group-hover:text-amber-800 transition-colors">
                     {item.title}
                   </h3>
 
@@ -60,7 +60,7 @@ export default function ProcessSection() {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-3 border-t border-slate-200/80 text-[11px] text-cyan-700 font-bold flex items-center gap-1 opacity-80 group-hover:opacity-100">
+                <div className="mt-6 pt-3 border-t border-slate-200/80 text-[11px] text-amber-700 font-bold flex items-center gap-1 opacity-80 group-hover:opacity-100">
                   <span>Cam kết đúng tiến độ</span>
                   <ArrowRight className="w-3 h-3" />
                 </div>
