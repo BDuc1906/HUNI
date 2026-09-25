@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { BRAND_INFO, PRODUCTS } from "@/shared/data";
+import UserMenu from "./UserMenu";
 import {
   Phone,
   MapPin,
@@ -132,11 +133,8 @@ export default function Header() {
           MAIN NAVBAR
           ============================================= */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
-        {/* =============================================
-            BRAND LOCKUP — Logo VUÔNG + Divider + Text
-            ============================================= */}
+        {/* Brand Lockup — Logo vuông + Divider + Text */}
         <a href="#" className="flex items-center gap-2 sm:gap-3.5 group shrink-0">
-          {/* Logo VUÔNG hiển thị full ảnh — rounded-lg bo góc nhẹ */}
           <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden border-2 border-amber-400/60 shadow-lg shadow-amber-900/20 bg-[#071b34] flex items-center justify-center transform group-hover:scale-105 transition-transform shrink-0">
             <span className="absolute font-black text-lg text-amber-400 tracking-tighter">
               HN
@@ -149,12 +147,9 @@ export default function Header() {
             />
           </div>
 
-          {/* Divider vàng dọc */}
           <div className="hidden sm:block w-px h-9 sm:h-10 bg-gradient-to-b from-transparent via-amber-400/60 to-transparent shrink-0" />
 
-          {/* Text block */}
           <div className="flex flex-col justify-center min-w-0">
-            {/* Dòng 1: HUNI + UNIFORM badge */}
             <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
               <span className="font-black text-xl sm:text-2xl lg:text-[26px] tracking-[0.05em] text-white leading-none">
                 HUNI
@@ -163,20 +158,14 @@ export default function Header() {
                 UNIFORM
               </span>
             </div>
-
-            {/* Divider ngang vàng nhỏ */}
             <div className="hidden sm:block h-px w-full max-w-[120px] bg-gradient-to-r from-amber-400/60 via-amber-400/30 to-transparent mt-1 sm:mt-1.5" />
-
-            {/* Dòng 2: Subtitle */}
             <span className="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-amber-400/85 font-semibold mt-1 sm:mt-1.5 leading-none">
               Đồng Phục Doanh Nghiệp <span className="text-amber-400/50 mx-0.5">•</span> HDC GROUP VN
             </span>
           </div>
         </a>
 
-        {/* =============================================
-            Desktop Category Dropdown
-            ============================================= */}
+        {/* Desktop Category Dropdown */}
         <div className="hidden lg:block relative">
           <button
             onClick={() => setCategoryMenuOpen((v) => !v)}
@@ -226,9 +215,7 @@ export default function Header() {
           )}
         </div>
 
-        {/* =============================================
-            Desktop Search
-            ============================================= */}
+        {/* Desktop Search */}
         <div className="hidden lg:flex flex-1 max-w-md mx-6 relative">
           <div className="relative w-full">
             <input
@@ -336,6 +323,9 @@ export default function Header() {
               </span>
             )}
           </button>
+
+          {/* ⭐ User Menu — Đăng nhập / Đăng ký / Tài khoản */}
+          <UserMenu />
 
           <button
             onClick={() => setIsQuickQuoteOpen(true)}
@@ -524,7 +514,6 @@ export default function Header() {
           />
 
           <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#071b34] border-l border-slate-800 overflow-y-auto">
-            {/* Drawer header — Logo VUÔNG */}
             <div className="sticky top-0 bg-[#071b34] p-4 border-b border-slate-800 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
                 <div className="relative w-8 h-8 rounded-lg overflow-hidden border-2 border-amber-400/60 bg-[#071b34] flex items-center justify-center">

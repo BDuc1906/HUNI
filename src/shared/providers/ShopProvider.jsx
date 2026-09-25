@@ -233,25 +233,77 @@ export function ShopProvider({ children }) {
   };
 
   // Add placed order
-  const saveOrder = (orderData) => {
-    const newOrder = {
-      id: `HN-${Math.floor(100000 + Math.random() * 900000)}`,
-      createdAt: new Date().toISOString(),
-      items: [...cart],
-      subtotal: cartSubtotal,
-      discount: discountValue,
-      total: cartTotal,
-      voucher: appliedVoucher,
-      status: "Đã tiếp nhận - Chờ duyệt mẫu 3D",
-      ...orderData
-    };
-
-    setOrders((prev) => [newOrder, ...prev]);
-    clearCart();
-    setAppliedVoucher(null);
-    triggerConfetti();
-    return newOrder;
+  // ==================================================
+// Lưu đơn hàng lên API thật (Supabase)
+// ==================================================
+const saveOrder = async (orderData) => {
+  // Map payment method từ UI sang API enum
+  const mapPaymentMethod = (method) => {
+    if (!method) return "vietqr";
+    if (method.includes("VietQR") || method.includes("100%")) return "vietqr";
+    if (method.includes("cọc") || method.includes("30%")) return "deposit30";
+    if (method.includes("mẫu") || method.includes("0đ")) return "freesample";
+    return "vietqr";
   };
+
+  // Chuyển cart items sang format API
+  const apiPayload = {
+    customer: {
+      fullName: orderData.customer.fullName,
+      phone: orderData.customer.phone,
+      email: orderData.customer.email || "",
+      company: orderData.customer.companyName || "",
+      address: orderData.customer.address,
+    },
+    items: cart.map((item) => ({
+      productId: item.product.id,
+      productName: item.product.title,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      color: item.color,
+      size: item.size,
+      customLogo: item.customLogo || undefined,
+    })),
+    paymentMethod: mapPaymentMethod(orderData.paymentMethod),
+    subtotal: cartSubtotal,
+    discount: discountValue,
+    total: cartTotal,
+    notes: orderData.notes || "",
+    vatInfo: orderData.vatInfo || undefined,
+  };
+
+  // Gọi API
+  const response = await fetch("/api/orders", {
+    method: "POST",
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body: JSON.stringify(apiPayload),
+  });
+
+  const result = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.error || "Không thể tạo đơn hàng");
+  }
+
+  // Lưu bản local để tracking
+  const newOrder = {
+    id: result.order.orderNumber,
+    orderNumber: result.order.orderNumber,
+    dbId: result.order.id,
+    total: result.order.total,
+    status: result.order.status,
+    createdAt: new Date().toISOString(),
+    items: [...cart],
+    customer: orderData.customer,
+    ...orderData,
+  };
+
+  setOrders((prev) => [newOrder, ...prev]);
+  clearCart();
+  setAppliedVoucher(null);
+  triggerConfetti();
+  return newOrder;
+};
 
   return (
     <ShopContext.Provider

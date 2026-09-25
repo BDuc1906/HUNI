@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import AuthProvider from "@/shared/providers/AuthProvider";
 
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
@@ -226,7 +227,13 @@ export default function RootLayout({ children }) {
         className="min-h-screen bg-[#f8fafc] text-slate-800 antialiased font-[var(--font-jakarta)]"
         suppressHydrationWarning
       >
-        {children}
+        {/* ============================================================
+            AUTH PROVIDER — NextAuth SessionProvider
+            Bao quanh toàn bộ app để useSession() hoạt động
+            ============================================================ */}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
 
         {/* ============================================================
             JSON-LD STRUCTURED DATA

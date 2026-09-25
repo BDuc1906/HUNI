@@ -15,7 +15,8 @@ import {
   FileText,
   Truck,
   Phone,
-  Sparkles
+  Sparkles,
+  Loader2
 } from "lucide-react";
 
 export default function CheckoutModal() {
@@ -29,6 +30,7 @@ export default function CheckoutModal() {
 
   const [step, setStep] = useState(1);
   const [placedOrder, setPlacedOrder] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   // Form fields
   const [fullName, setFullName] = useState("");
@@ -67,7 +69,10 @@ export default function CheckoutModal() {
     setTimeout(() => setCopiedBank(false), 2000);
   };
 
-  const handleSubmitOrder = (e) => {
+  // ==================================================
+  // Submit đơn hàng qua API thật
+  // ==================================================
+  const handleSubmitOrder = async (e) => {
     e.preventDefault();
 
     if (!fullName.trim() || !phone.trim() || !address.trim()) {
@@ -77,25 +82,44 @@ export default function CheckoutModal() {
 
     const orderData = {
       customer: { fullName, phone, email, address, companyName },
-      vatInfo: needVat ? { taxCode, vatCompanyAddress, vatEmail } : null,
+      vatInfo: needVat
+        ? {
+            taxCode,
+            companyName,
+            companyAddress: vatCompanyAddress,
+            email: vatEmail,
+          }
+        : null,
       paymentMethod:
         paymentMethod === "vietqr"
           ? "Chuyển khoản VietQR 100%"
           : paymentMethod === "deposit30"
           ? `Đặt cọc 30% (${depositAmount.toLocaleString("vi-VN")} đ)`
           : "Đặt lịch may mẫu thử 0đ",
-      notes: orderNotes
+      notes: orderNotes,
     };
 
-    const newOrder = saveOrder(orderData);
-    setPlacedOrder(newOrder);
-    setStep(2);
+    try {
+      setSubmitting(true);
+      const newOrder = await saveOrder(orderData);
+      setPlacedOrder(newOrder);
+      setStep(2);
+    } catch (error) {
+      console.error("[Checkout] Save order error:", error);
+      showToast(
+        error.message || "Không thể gửi đơn. Vui lòng thử lại.",
+        "error"
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleClose = () => {
     setIsCheckoutOpen(false);
     setStep(1);
     setPlacedOrder(null);
+    setSubmitting(false);
   };
 
   return (
@@ -128,6 +152,7 @@ export default function CheckoutModal() {
             onClick={handleClose}
             className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center shrink-0 active:scale-95 transition-transform"
             aria-label="Đóng"
+            disabled={submitting}
           >
             <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -161,7 +186,8 @@ export default function CheckoutModal() {
                     placeholder="Nguyễn Văn A"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                    disabled={submitting}
+                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                   />
                 </div>
 
@@ -175,7 +201,8 @@ export default function CheckoutModal() {
                     placeholder="0984.xxx.xxx"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                    disabled={submitting}
+                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                   />
                 </div>
 
@@ -188,7 +215,8 @@ export default function CheckoutModal() {
                     placeholder="Công ty CP Tập Đoàn..."
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                    disabled={submitting}
+                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                   />
                 </div>
 
@@ -201,7 +229,8 @@ export default function CheckoutModal() {
                     placeholder="email@doanhnghiep.vn"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                    disabled={submitting}
+                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                   />
                 </div>
 
@@ -215,7 +244,8 @@ export default function CheckoutModal() {
                     placeholder="Số nhà, Tòa nhà, Đường, Quận/Huyện, Tỉnh/TP..."
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                    disabled={submitting}
+                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                   />
                 </div>
 
@@ -228,7 +258,8 @@ export default function CheckoutModal() {
                     placeholder="VD: Cần giao trước 20/10, logo thêu màu vàng..."
                     value={orderNotes}
                     onChange={(e) => setOrderNotes(e.target.value)}
-                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 resize-none"
+                    disabled={submitting}
+                    className="w-full px-3 py-2.5 sm:py-2 bg-slate-50 border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 resize-none disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -243,6 +274,7 @@ export default function CheckoutModal() {
                   type="checkbox"
                   checked={needVat}
                   onChange={(e) => setNeedVat(e.target.checked)}
+                  disabled={submitting}
                   className="w-4 h-4 text-amber-600 rounded mt-0.5 shrink-0"
                 />
                 <span className="flex items-center gap-1.5">
@@ -262,7 +294,8 @@ export default function CheckoutModal() {
                       placeholder="010xxxxxxx"
                       value={taxCode}
                       onChange={(e) => setTaxCode(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                      disabled={submitting}
+                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 disabled:opacity-60"
                     />
                   </div>
                   <div>
@@ -274,7 +307,8 @@ export default function CheckoutModal() {
                       placeholder="ketoan@congty.com"
                       value={vatEmail}
                       onChange={(e) => setVatEmail(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                      disabled={submitting}
+                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 disabled:opacity-60"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -286,7 +320,8 @@ export default function CheckoutModal() {
                       placeholder="Địa chỉ theo giấy ĐKKD"
                       value={vatCompanyAddress}
                       onChange={(e) => setVatCompanyAddress(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500"
+                      disabled={submitting}
+                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 focus:outline-none focus:border-amber-500 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -302,12 +337,12 @@ export default function CheckoutModal() {
                 <span>2. Phương Thức Thanh Toán</span>
               </h4>
 
-              {/* Payment options — 1 cột mobile, 3 cột desktop */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-2.5 text-xs mb-4">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("vietqr")}
-                  className={`p-3 rounded-xl sm:rounded-2xl border text-left transition-all active:scale-[0.98] ${
+                  disabled={submitting}
+                  className={`p-3 rounded-xl sm:rounded-2xl border text-left transition-all active:scale-[0.98] disabled:opacity-60 ${
                     paymentMethod === "vietqr"
                       ? "border-amber-500 bg-amber-50 ring-2 ring-amber-500/20"
                       : "border-slate-200 bg-white hover:border-amber-300"
@@ -337,7 +372,8 @@ export default function CheckoutModal() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("deposit30")}
-                  className={`p-3 rounded-xl sm:rounded-2xl border text-left transition-all active:scale-[0.98] ${
+                  disabled={submitting}
+                  className={`p-3 rounded-xl sm:rounded-2xl border text-left transition-all active:scale-[0.98] disabled:opacity-60 ${
                     paymentMethod === "deposit30"
                       ? "border-amber-500 bg-amber-50 ring-2 ring-amber-500/20"
                       : "border-slate-200 bg-white hover:border-amber-300"
@@ -367,7 +403,8 @@ export default function CheckoutModal() {
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("freesample")}
-                  className={`p-3 rounded-xl sm:rounded-2xl border text-left transition-all active:scale-[0.98] ${
+                  disabled={submitting}
+                  className={`p-3 rounded-xl sm:rounded-2xl border text-left transition-all active:scale-[0.98] disabled:opacity-60 ${
                     paymentMethod === "freesample"
                       ? "border-amber-500 bg-amber-50 ring-2 ring-amber-500/20"
                       : "border-slate-200 bg-white hover:border-amber-300"
@@ -395,12 +432,9 @@ export default function CheckoutModal() {
                 </button>
               </div>
 
-              {/* =========================================
-                  VietQR Display Box
-                  ========================================= */}
+              {/* VietQR Display Box */}
               {(paymentMethod === "vietqr" || paymentMethod === "deposit30") && (
                 <div className="p-3 sm:p-4 bg-[#071b34] text-white rounded-xl sm:rounded-2xl border border-amber-500/40 flex flex-col sm:flex-row items-center gap-4">
-                  {/* QR Code */}
                   <div className="bg-white p-2 rounded-xl shrink-0 shadow-lg text-center">
                     <div className="relative w-32 h-32 sm:w-36 sm:h-36 bg-white rounded-lg overflow-hidden">
                       <Image
@@ -417,7 +451,6 @@ export default function CheckoutModal() {
                     </div>
                   </div>
 
-                  {/* Account Info */}
                   <div className="space-y-1.5 text-xs flex-1 min-w-0 w-full">
                     <div className="text-amber-400 font-extrabold text-sm sm:text-base">
                       Số tiền: {currentPayAmount.toLocaleString("vi-VN")} đ
@@ -473,10 +506,20 @@ export default function CheckoutModal() {
 
               <button
                 type="submit"
-                className="w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all transform hover:-translate-y-0.5"
+                disabled={submitting}
+                className="w-full sm:w-auto px-6 sm:px-8 py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all transform hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
               >
-                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>Xác Nhận Đặt Hàng</span>
+                {submitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    <span>Đang gửi đơn...</span>
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <span>Xác Nhận Đặt Hàng</span>
+                  </>
+                )}
               </button>
             </div>
           </form>
@@ -504,31 +547,31 @@ export default function CheckoutModal() {
                 <div className="flex justify-between gap-2">
                   <span className="text-slate-500 shrink-0">Mã đơn hàng:</span>
                   <strong className="text-amber-900 font-black text-xs sm:text-sm text-right">
-                    {placedOrder.id}
+                    {placedOrder.orderNumber || placedOrder.id}
                   </strong>
                 </div>
                 <div className="flex justify-between gap-2">
                   <span className="text-slate-500 shrink-0">Khách hàng:</span>
                   <strong className="text-slate-800 text-right truncate">
-                    {placedOrder.customer.fullName}
+                    {placedOrder.customer?.fullName}
                   </strong>
                 </div>
                 <div className="flex justify-between gap-2">
                   <span className="text-slate-500 shrink-0">Số điện thoại:</span>
                   <strong className="text-slate-800 text-right">
-                    {placedOrder.customer.phone}
+                    {placedOrder.customer?.phone}
                   </strong>
                 </div>
                 <div className="flex justify-between gap-2">
                   <span className="text-slate-500 shrink-0">Tổng thanh toán:</span>
                   <strong className="text-amber-800 font-bold text-right">
-                    {placedOrder.total.toLocaleString("vi-VN")} đ
+                    {(placedOrder.total || 0).toLocaleString("vi-VN")} đ
                   </strong>
                 </div>
                 <div className="flex justify-between items-center gap-2 pt-1.5 border-t border-amber-200">
                   <span className="text-slate-500 shrink-0">Trạng thái:</span>
                   <span className="px-2 py-0.5 rounded-full bg-amber-200 text-amber-900 font-bold text-[10px] text-right">
-                    {placedOrder.status}
+                    {placedOrder.status || "Đã tiếp nhận"}
                   </span>
                 </div>
               </div>

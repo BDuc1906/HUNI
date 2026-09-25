@@ -1,0 +1,172 @@
+// ==================================================
+// HUNI UNIFORM — Database Schema
+// PostgreSQL via Supabase
+// ==================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================================================
+// KHÁCH HÀNG
+// ==================================================
+model Customer {
+  id         String   @id @default(cuid())
+  fullName   String
+  phone      String   @unique
+  email      String?
+  company    String?
+  address    String?
+  taxCode    String?
+  notes      String?
+  orders     Order[]
+  quotes     Quote[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([phone])
+  @@index([email])
+  @@map("customers")
+}
+
+// ==================================================
+// ĐƠN HÀNG
+// ==================================================
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  customerId    String
+  customer      Customer    @relation(fields: [customerId], references: [id])
+  status        OrderStatus @default(PENDING)
+  paymentMethod String
+  subtotal      Int
+  discount      Int         @default(0)
+  total         Int
+  notes         String?
+  vatInfo       Json?
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([orderNumber])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  productName String
+  quantity    Int
+  unitPrice   Int
+  color       String?
+  size        String?
+  customLogo  Json?
+  subtotal    Int
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  QUOTED
+  CONFIRMED
+  PRODUCING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+// ==================================================
+// YÊU CẦU BÁO GIÁ
+// ==================================================
+model Quote {
+  id             String       @id @default(cuid())
+  customerId     String?
+  customer       Customer?    @relation(fields: [customerId], references: [id])
+  fullName       String
+  phone          String
+  email          String?
+  company        String?
+  category       String
+  quantity       Int
+  estimatedPrice Int?
+  notes          String?
+  status         QuoteStatus  @default(NEW)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([status])
+  @@index([phone])
+  @@map("quotes")
+}
+
+enum QuoteStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  CONVERTED
+  CLOSED
+}
+
+// ==================================================
+// SẢN PHẨM
+// ==================================================
+model Product {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  sku            String   @unique
+  title          String
+  description    String   @db.Text
+  category       String
+  material       String?
+  price          Int
+  originalPrice  Int?
+  images         String[]
+  features       String[]
+  colors         Json?
+  sizes          String[]
+  wholesaleTiers Json?
+  published      Boolean  @default(true)
+  featured       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([category])
+  @@index([published])
+  @@map("products")
+}
+// ==================================================
+// NGƯỜI DÙNG / TÀI KHOẢN
+// ==================================================
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  fullName      String
+  phone         String?
+  avatar        String?
+  role          UserRole  @default(CUSTOMER)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
