@@ -1,9 +1,13 @@
+// ==================================================
+// src/app/login/LoginWrapper.jsx
+// Tải động LoginForm — chỉ render ở client (ssr: false)
+// ==================================================
+
 "use client";
 
 import dynamic from "next/dynamic";
 import { Loader2 } from "lucide-react";
 
-// Tải động LoginForm — CHỈ render ở client, bỏ qua hoàn toàn SSR
 const LoginForm = dynamic(() => import("./LoginForm"), {
   ssr: false,
   loading: () => (

@@ -1,8 +1,12 @@
 // ==================================================
+// src/app/login/page.jsx
 // Server Component — Chỉ render wrapper + metadata
+// Sử dụng connection() để buộc route render động
+// (thay thế cho force-dynamic không còn hiệu quả trong Next.js 16)
 // ==================================================
 
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { Loader2 } from "lucide-react";
 import LoginWrapper from "./LoginWrapper";
 
@@ -11,11 +15,14 @@ export const metadata = {
   description: "Đăng nhập tài khoản HUNI UNIFORM",
 };
 
-// Buộc route này là dynamic — không prerender
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ==================================================
+// LoginPage — Server Component
+// await connection() buộc route này phải render động,
+// bỏ qua hoàn toàn quá trình prerender tại build time.
+// ==================================================
+export default async function LoginPage() {
+  await connection();
 
-export default function LoginPage() {
   return (
     <Suspense
       fallback={
