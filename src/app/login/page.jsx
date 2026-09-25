@@ -4,13 +4,17 @@
 
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
-import LoginForm from "./LoginForm";
+import LoginWrapper from "./LoginWrapper";
 
 export const metadata = {
   title: "Đăng nhập",
   description: "Đăng nhập tài khoản HUNI UNIFORM",
 };
+
+// Buộc route này là dynamic — không prerender
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function LoginPage() {
   return (
     <Suspense
@@ -20,7 +24,7 @@ export default function LoginPage() {
         </div>
       }
     >
-      <LoginForm />
+      <LoginWrapper />
     </Suspense>
   );
 }

@@ -1,5 +1,6 @@
 // ==================================================
-// src/middleware.js — Bảo vệ routes
+// src/proxy.js — Bảo vệ routes (Next.js 16 proxy convention)
+// Thay thế cho middleware.js cũ (đã deprecated)
 // ==================================================
 
 import { NextResponse } from "next/server";
