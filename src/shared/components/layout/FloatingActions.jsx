@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { Phone, MessageCircle, ArrowUp, Sparkles } from "lucide-react";
+import ChatWidget from "@/features/chatbot/components/ChatWidget";
 
 export default function FloatingActions() {
   const { setIsQuickQuoteOpen } = useShop();
@@ -57,7 +58,10 @@ export default function FloatingActions() {
           <span className="sr-only">Hotline {BRAND_INFO.contact.hotline}</span>
         </a>
 
-        {/* 4. Scroll to top */}
+        {/* 4. Chat AI — ngay dưới Hotline */}
+        <ChatWidget />
+
+        {/* 5. Scroll to top */}
         {showScrollTop && (
           <button
             onClick={scrollToTop}
@@ -105,12 +109,17 @@ export default function FloatingActions() {
         </div>
       </div>
 
+      {/* Chat AI — mobile, nổi phía trên bottom bar */}
+      <div className="md:hidden fixed bottom-20 right-3 z-30">
+        <ChatWidget />
+      </div>
+
       {/* Scroll to top — mobile, phía trên bottom bar */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
           title="Cuộn lên đầu trang"
-          className="md:hidden fixed bottom-20 right-3 z-30 w-10 h-10 rounded-full bg-[#071b34]/90 backdrop-blur text-amber-400 flex items-center justify-center shadow-lg border border-amber-400/30 active:scale-95 transition-transform"
+          className="md:hidden fixed bottom-20 right-16 z-30 w-10 h-10 rounded-full bg-[#071b34]/90 backdrop-blur text-amber-400 flex items-center justify-center shadow-lg border border-amber-400/30 active:scale-95 transition-transform"
         >
           <ArrowUp className="w-4 h-4" />
         </button>

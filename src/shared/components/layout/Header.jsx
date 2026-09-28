@@ -324,9 +324,7 @@ export default function Header() {
             )}
           </button>
 
-          {/* ⭐ User Menu — Đăng nhập / Đăng ký / Tài khoản */}
-          <UserMenu />
-
+          {/* ⭐ Nút Báo Giá Nhanh — chuyển sang TRÁI UserMenu */}
           <button
             onClick={() => setIsQuickQuoteOpen(true)}
             className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs uppercase tracking-wider rounded-full shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all"
@@ -334,6 +332,9 @@ export default function Header() {
             <Sparkles className="w-4 h-4 fill-current" />
             <span>Báo Giá Nhanh</span>
           </button>
+
+          {/* ⭐ User Menu — chuyển sang PHẢI nút Báo Giá */}
+          <UserMenu />
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

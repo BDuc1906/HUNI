@@ -219,6 +219,8 @@ src/
       auth/
         [...nextauth]/
           route.js
+      chat/
+        route.js
       orders/
         route.js
       quotes/
@@ -229,7 +231,6 @@ src/
         route.js
     login/
       LoginForm.jsx
-      LoginWrapper.jsx
       page.jsx
     register/
       page.jsx
@@ -248,6 +249,9 @@ src/
         ProductCard.jsx
         ProductCatalog.jsx
         ProductDetailModal.jsx
+    chatbot/
+      components/
+        ChatWidget.jsx
     checkout/
       components/
         CheckoutModal.jsx
@@ -325,6 +329,151 @@ test-order.json
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="src/app/api/chat/route.js">
+import { NextResponse } from "next/server";
+import * as shopData from "@/shared/data";
+
+const SYSTEM_PROMPT = `Bạn là trợ lý tư vấn của HUNI UNIFORM (đồng phục doanh nghiệp cao cấp).
+Dưới đây là toàn bộ dữ liệu thương hiệu, sản phẩm, chất liệu vải, quy trình và FAQ (JSON):
+${JSON.stringify(shopData)}
+
+Hãy trả lời khách hàng bằng tiếng Việt, ngắn gọn, thân thiện, dựa CHỈ vào dữ liệu trên.
+Nếu không có thông tin phù hợp, hãy nói sẽ chuyển cho nhân viên tư vấn qua hotline 0984.959.586.`;
+
+export async function POST(req) {
+  const { messages } = await req.json(); // [{ role: "user" | "model", text: string }]
+
+  const contents = [
+    { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
+    { role: "model", parts: [{ text: "Dạ vâng, em đã sẵn sàng tư vấn ạ." }] },
+    ...messages.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
+  ];
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents }),
+    }
+  );
+
+  const json = await res.json();
+  const reply =
+    json?.candidates?.[0]?.content?.parts?.[0]?.text ||
+    "Xin lỗi, em chưa trả lời được câu này. Anh/chị liên hệ hotline 0984.959.586 giúp em nhé.";
+
+  return NextResponse.json({ reply });
+}
+</file>
+
+<file path="src/features/chatbot/components/ChatWidget.jsx">
+"use client";
+
+import { useState } from "react";
+import { Bot, X, Send, Loader2 } from "lucide-react";
+
+export default function ChatWidget() {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const send = async () => {
+    if (!input.trim() || loading) return;
+    const next = [...messages, { role: "user", text: input }];
+    setMessages(next);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: next }),
+      });
+      const data = await res.json();
+      setMessages([...next, { role: "model", text: data.reply }]);
+    } catch {
+      setMessages([...next, { role: "model", text: "Có lỗi xảy ra, vui lòng thử lại." }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {/* Nút bật/tắt — nằm ngay trong cột FloatingActions, không tự định vị riêng */}
+      <button
+        onClick={() => setOpen((o) => !o)}
+        title="Tư vấn AI HUNI"
+        className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-amber-500 to-amber-400 text-[#071b34] flex items-center justify-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
+      >
+        {!open && (
+          <span className="absolute inset-0 rounded-full bg-amber-400 animate-ping opacity-40" />
+        )}
+        {open ? <X className="w-5 h-5 relative" /> : <Bot className="w-5 h-5 relative" />}
+      </button>
+
+      {/* Cửa sổ chat — fixed riêng, chỉ hiện khi bấm mở */}
+      {open && (
+        <div className="fixed z-40 bottom-24 right-4 md:bottom-6 md:right-24 w-[85vw] max-w-80 h-96 bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-amber-400/20">
+          <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] text-white px-4 py-3 flex justify-between items-center shrink-0">
+            <span className="flex items-center gap-2 font-bold text-sm">
+              <Bot className="w-4 h-4 text-amber-400" />
+              Tư vấn HUNI
+            </span>
+            <button onClick={() => setOpen(false)}>
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
+            {messages.length === 0 && (
+              <p className="text-slate-400 text-xs text-center mt-8">
+                Hỏi em về sản phẩm, chất liệu vải, giá cả...
+              </p>
+            )}
+            {messages.map((m, i) => (
+              <div key={i} className={m.role === "user" ? "text-right" : "text-left"}>
+                <span
+                  className={`inline-block px-3 py-2 rounded-xl max-w-[85%] ${
+                    m.role === "user"
+                      ? "bg-amber-400 text-[#071b34]"
+                      : "bg-slate-100 text-slate-800"
+                  }`}
+                >
+                  {m.text}
+                </span>
+              </div>
+            ))}
+            {loading && <Loader2 className="w-4 h-4 animate-spin text-amber-500" />}
+          </div>
+
+          <div className="p-2 border-t flex gap-2 shrink-0">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && send()}
+              placeholder="Nhập câu hỏi..."
+              disabled={loading}
+              className="flex-1 px-3 py-2 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-amber-500"
+            />
+            <button
+              onClick={send}
+              disabled={loading}
+              className="bg-gradient-to-tr from-amber-500 to-amber-400 text-[#071b34] p-2 rounded-xl disabled:opacity-60"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+</file>
 
 <file path="prisma/migrations/20260925053242_init/migration.sql">
 -- CreateEnum
@@ -1025,184 +1174,6 @@ export async function GET(request) {
       { status: 500 }
     );
   }
-}
-</file>
-
-<file path="src/app/login/LoginForm.jsx">
-"use client";
-
-import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
-import { Loader2, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
-
-export default function LoginForm() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/";
-  const registered = searchParams.get("registered") === "1";
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Email hoặc mật khẩu không đúng");
-      } else {
-        router.push(redirect);
-        router.refresh();
-      }
-    } catch (err) {
-      setError("Có lỗi xảy ra. Vui lòng thử lại.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400/60 shadow-lg">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/images/logo.png"
-                alt="HUNI"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-            <div className="text-left">
-              <div className="font-black text-2xl text-white tracking-wider">
-                HUNI
-              </div>
-              <div className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">
-                Uniform
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-amber-400/20">
-          <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] px-6 py-5 border-b border-amber-500/20">
-            <h1 className="text-xl font-black text-white">Đăng nhập</h1>
-            <p className="text-xs text-amber-200/80 mt-1">
-              Chào mừng trở lại HUNI UNIFORM
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="p-6 space-y-4">
-            {/* Success message khi vừa đăng ký */}
-            {registered && (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-xs">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>Đăng ký thành công! Vui lòng đăng nhập.</span>
-              </div>
-            )}
-
-            {/* Error */}
-            {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-rose-800 text-xs">
-                <AlertCircle className="w-4 h-4 shrink-0" />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                Email
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email@example.com"
-                  disabled={loading}
-                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
-                />
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1.5">
-                Mật khẩu
-              </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  disabled={loading}
-                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
-                />
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Đang đăng nhập...</span>
-                </>
-              ) : (
-                <>
-                  <span>Đăng nhập</span>
-                  <ArrowRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
-
-            <div className="text-center pt-2 text-xs text-slate-500">
-              Chưa có tài khoản?{" "}
-              <Link
-                href="/register"
-                className="text-amber-600 hover:text-amber-700 font-bold"
-              >
-                Đăng ký ngay
-              </Link>
-            </div>
-          </form>
-        </div>
-
-        <div className="text-center mt-6">
-          <Link
-            href="/"
-            className="text-xs text-amber-300 hover:text-amber-200 font-medium"
-          >
-            ← Về trang chủ
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
 }
 </file>
 
@@ -2736,50 +2707,6 @@ export const config = {
 };
 </file>
 
-<file path=".gitignore">
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-</file>
-
 <file path="AGENTS.md">
 <!-- BEGIN:nextjs-agent-rules -->
 
@@ -2862,28 +2789,205 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 }
 </file>
 
-<file path="src/app/login/LoginWrapper.jsx">
-// ==================================================
-// src/app/login/LoginWrapper.jsx
-// Tải động LoginForm — chỉ render ở client (ssr: false)
-// ==================================================
-
+<file path="src/app/login/LoginForm.jsx">
 "use client";
 
-import dynamic from "next/dynamic";
-import { Loader2 } from "lucide-react";
+import React, { Suspense, useState } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { Loader2, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 
-const LoginForm = dynamic(() => import("./LoginForm"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
-      <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+// ==================================================
+// Component "vỏ" — không gọi useSearchParams trực tiếp,
+// nên an toàn để Next.js prerender phần shell.
+// Suspense được bọc NGAY TẠI ĐÂY, đúng chỗ dùng hook,
+// nên hết lỗi "missing-suspense-with-csr-bailout".
+// ==================================================
+export default function LoginForm() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+        </div>
+      }
+    >
+      <LoginFormInner />
+    </Suspense>
+  );
+}
+
+// ==================================================
+// Component thật — chứa toàn bộ logic + JSX gốc,
+// gọi useSearchParams() ở đây.
+// ==================================================
+function LoginFormInner() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
+  const registered = searchParams.get("registered") === "1";
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Email hoặc mật khẩu không đúng");
+      } else {
+        router.push(redirect);
+        router.refresh();
+      }
+    } catch (err) {
+      setError("Có lỗi xảy ra. Vui lòng thử lại.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-3 group">
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400/60 shadow-lg">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo.png"
+                alt="HUNI"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+            <div className="text-left">
+              <div className="font-black text-2xl text-white tracking-wider">
+                HUNI
+              </div>
+              <div className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">
+                Uniform
+              </div>
+            </div>
+          </Link>
+        </div>
+
+        {/* Card */}
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-amber-400/20">
+          <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] px-6 py-5 border-b border-amber-500/20">
+            <h1 className="text-xl font-black text-white">Đăng nhập</h1>
+            <p className="text-xs text-amber-200/80 mt-1">
+              Chào mừng trở lại HUNI UNIFORM
+            </p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="p-6 space-y-4">
+            {/* Success message khi vừa đăng ký */}
+            {registered && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-emerald-800 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>Đăng ký thành công! Vui lòng đăng nhập.</span>
+              </div>
+            )}
+
+            {/* Error */}
+            {error && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2 text-rose-800 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <div>
+              <label className="text-xs font-bold text-slate-700 block mb-1.5">
+                Email
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="email@example.com"
+                  disabled={loading}
+                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
+                />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-slate-700 block mb-1.5">
+                Mật khẩu
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  required
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  disabled={loading}
+                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
+                />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Đang đăng nhập...</span>
+                </>
+              ) : (
+                <>
+                  <span>Đăng nhập</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+
+            <div className="text-center pt-2 text-xs text-slate-500">
+              Chưa có tài khoản?{" "}
+              <Link
+                href="/register"
+                className="text-amber-600 hover:text-amber-700 font-bold"
+              >
+                Đăng ký ngay
+              </Link>
+            </div>
+          </form>
+        </div>
+
+        <div className="text-center mt-6">
+          <Link
+            href="/"
+            className="text-xs text-amber-300 hover:text-amber-200 font-medium"
+          >
+            ← Về trang chủ
+          </Link>
+        </div>
+      </div>
     </div>
-  ),
-});
-
-export default function LoginWrapper() {
-  return <LoginForm />;
+  );
 }
 </file>
 
@@ -5865,6 +5969,7 @@ import React, { useState, useEffect } from "react";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { Phone, MessageCircle, ArrowUp, Sparkles } from "lucide-react";
+import ChatWidget from "@/features/chatbot/components/ChatWidget";
 
 export default function FloatingActions() {
   const { setIsQuickQuoteOpen } = useShop();
@@ -5918,7 +6023,10 @@ export default function FloatingActions() {
           <span className="sr-only">Hotline {BRAND_INFO.contact.hotline}</span>
         </a>
 
-        {/* 4. Scroll to top */}
+        {/* 4. Chat AI — ngay dưới Hotline */}
+        <ChatWidget />
+
+        {/* 5. Scroll to top */}
         {showScrollTop && (
           <button
             onClick={scrollToTop}
@@ -5966,12 +6074,17 @@ export default function FloatingActions() {
         </div>
       </div>
 
+      {/* Chat AI — mobile, nổi phía trên bottom bar */}
+      <div className="md:hidden fixed bottom-20 right-3 z-30">
+        <ChatWidget />
+      </div>
+
       {/* Scroll to top — mobile, phía trên bottom bar */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
           title="Cuộn lên đầu trang"
-          className="md:hidden fixed bottom-20 right-3 z-30 w-10 h-10 rounded-full bg-[#071b34]/90 backdrop-blur text-amber-400 flex items-center justify-center shadow-lg border border-amber-400/30 active:scale-95 transition-transform"
+          className="md:hidden fixed bottom-20 right-16 z-30 w-10 h-10 rounded-full bg-[#071b34]/90 backdrop-blur text-amber-400 flex items-center justify-center shadow-lg border border-amber-400/30 active:scale-95 transition-transform"
         >
           <ArrowUp className="w-4 h-4" />
         </button>
@@ -7176,6 +7289,53 @@ export function useShop() {
   }
   return context;
 }
+</file>
+
+<file path=".gitignore">
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+.vercel
+.env*
 </file>
 
 <file path="eslint.config.mjs">
@@ -9163,40 +9323,21 @@ export default function Home() {
 <file path="src/app/login/page.jsx">
 // ==================================================
 // src/app/login/page.jsx
-// Server Component — Chỉ render wrapper + metadata
-// Sử dụng connection() để buộc route render động
-// (thay thế cho force-dynamic không còn hiệu quả trong Next.js 16)
+// Server Component — chỉ render LoginForm + metadata.
+// Không cần connection() hay LoginWrapper/dynamic(ssr:false)
+// nữa: Suspense đã được đặt đúng chỗ bên trong LoginForm.jsx,
+// nên Next.js prerender bình thường mà không lỗi.
 // ==================================================
 
-import { Suspense } from "react";
-import { connection } from "next/server";
-import { Loader2 } from "lucide-react";
-import LoginWrapper from "./LoginWrapper";
+import LoginForm from "./LoginForm";
 
 export const metadata = {
   title: "Đăng nhập",
   description: "Đăng nhập tài khoản HUNI UNIFORM",
 };
 
-// ==================================================
-// LoginPage — Server Component
-// await connection() buộc route này phải render động,
-// bỏ qua hoàn toàn quá trình prerender tại build time.
-// ==================================================
-export default async function LoginPage() {
-  await connection();
-
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
-        </div>
-      }
-    >
-      <LoginWrapper />
-    </Suspense>
-  );
+export default function LoginPage() {
+  return <LoginForm />;
 }
 </file>
 
