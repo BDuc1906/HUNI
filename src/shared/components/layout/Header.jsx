@@ -34,6 +34,21 @@ const catIconMap = {
   PackageCheck: PackageCheck
 };
 
+/* ============================================================
+   TÊN NAV DESKTOP — Giữ tiền tố "Đồng Phục" để khách biết NGAY
+   đây là dịch vụ may đo đồng phục, không phải bán lẻ thời trang.
+   ============================================================ */
+const NAV_SHORT_NAMES = {
+  corporate:    "Đồng Phục Doanh Nghiệp",
+  bespoke_suit: "Đồng Phục May Đo",
+  sport_golf:   "Đồng Phục Golf",
+  school:       "Đồng Phục Trường Học",
+  accessories:  "Phụ Kiện"
+};
+
+// Inline style ép không xuống dòng — mạnh hơn mọi class CSS
+const NOWRAP = { whiteSpace: "nowrap" };
+
 export default function Header() {
   const {
     cartCount,
@@ -133,9 +148,12 @@ export default function Header() {
           MAIN NAVBAR
           ============================================= */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Brand Lockup — Logo vuông + Divider + Text */}
-        <a href="#" className="flex items-center gap-2 sm:gap-3.5 group shrink-0">
-          <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden border-2 border-amber-400/60 shadow-lg shadow-amber-900/20 bg-[#071b34] flex items-center justify-center transform group-hover:scale-105 transition-transform shrink-0">
+        {/* =========================================================
+            BRAND LOCKUP — Không bo tròn, KHÔNG viền
+            ========================================================= */}
+        <a href="#" className="flex items-center gap-2.5 sm:gap-4 group shrink-0">
+          {/* Logo box vuông vức — không viền, không bo */}
+          <div className="relative w-10 h-10 sm:w-12 sm:h-12 overflow-hidden bg-[#071b34] flex items-center justify-center transform group-hover:scale-105 transition-transform shrink-0">
             <span className="absolute font-black text-lg text-amber-400 tracking-tighter">
               HN
             </span>
@@ -147,20 +165,27 @@ export default function Header() {
             />
           </div>
 
+          {/* Divider dọc mảnh */}
           <div className="hidden sm:block w-px h-9 sm:h-10 bg-gradient-to-b from-transparent via-amber-400/60 to-transparent shrink-0" />
 
+          {/* Text lockup */}
           <div className="flex flex-col justify-center min-w-0">
-            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-              <span className="font-black text-xl sm:text-2xl lg:text-[26px] tracking-[0.05em] text-white leading-none">
+            {/* Dòng 1: Tên thương hiệu + chữ UNIFORM phụ, thẳng hàng */}
+            <div className="flex items-baseline gap-1.5 sm:gap-2 leading-none">
+              <span className="font-black text-xl sm:text-2xl lg:text-[26px] tracking-[0.15em] text-white">
                 HUNI
               </span>
-              <span className="hidden sm:inline-flex items-center text-[9px] sm:text-[10px] uppercase tracking-[0.2em] px-1.5 sm:px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400/20 via-amber-400/30 to-amber-400/20 text-amber-300 border border-amber-400/40 font-bold leading-none">
-                UNIFORM
+              <span className="hidden sm:inline text-[10px] sm:text-xs lg:text-[13px] font-semibold text-amber-400/80 tracking-[0.2em] uppercase">
+                Uniform
               </span>
             </div>
-            <div className="hidden sm:block h-px w-full max-w-[120px] bg-gradient-to-r from-amber-400/60 via-amber-400/30 to-transparent mt-1 sm:mt-1.5" />
-            <span className="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-[0.15em] text-amber-400/85 font-semibold mt-1 sm:mt-1.5 leading-none">
-              Đồng Phục Doanh Nghiệp <span className="text-amber-400/50 mx-0.5">•</span> HDC GROUP VN
+
+            {/* Đường kẻ vàng */}
+            <div className="hidden sm:block h-px w-full max-w-[130px] bg-gradient-to-r from-amber-400/60 via-amber-400/30 to-transparent mt-1.5" />
+
+            {/* Dòng 2: Mô tả ngành nghề */}
+            <span className="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-amber-400/85 font-semibold mt-1.5 leading-none">
+              Đồng phục doanh nghiệp cao cấp
             </span>
           </div>
         </a>
@@ -170,9 +195,10 @@ export default function Header() {
           <button
             onClick={() => setCategoryMenuOpen((v) => !v)}
             onBlur={() => setTimeout(() => setCategoryMenuOpen(false), 150)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 font-bold text-sm transition-colors whitespace-nowrap"
+            style={NOWRAP}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 font-bold text-sm transition-colors"
           >
-            <LayoutGrid className="w-4 h-4" />
+            <LayoutGrid className="w-4 h-4 shrink-0" />
             <span>Danh Mục</span>
             <ChevronDown
               className={`w-3.5 h-3.5 transition-transform ${
@@ -184,7 +210,7 @@ export default function Header() {
           {categoryMenuOpen && (
             <div
               onMouseDown={(e) => e.preventDefault()}
-              className="absolute left-0 top-full mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
+              className="absolute left-0 top-full mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
             >
               <button
                 onClick={() => handleSelectCategory("all")}
@@ -324,16 +350,17 @@ export default function Header() {
             )}
           </button>
 
-          {/* ⭐ Nút Báo Giá Nhanh — chuyển sang TRÁI UserMenu */}
+          {/* Nút Báo Giá Nhanh */}
           <button
             onClick={() => setIsQuickQuoteOpen(true)}
+            style={NOWRAP}
             className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs uppercase tracking-wider rounded-full shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all"
           >
-            <Sparkles className="w-4 h-4 fill-current" />
+            <Sparkles className="w-4 h-4 fill-current shrink-0" />
             <span>Báo Giá Nhanh</span>
           </button>
 
-          {/* ⭐ User Menu — chuyển sang PHẢI nút Báo Giá */}
+          {/* User Menu */}
           <UserMenu />
 
           <button
@@ -348,67 +375,71 @@ export default function Header() {
       {/* =============================================
           DESKTOP NAV
           ============================================= */}
-      <nav className="hidden lg:block bg-[#092242] border-t border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm font-medium">
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="px-4 py-2.5 text-amber-300 font-semibold border-b-2 border-amber-400"
-            >
-              Trang Chủ
-            </button>
-            <button
-              onClick={() => handleSelectCategory("all")}
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Tất Cả Sản Phẩm
-            </button>
-            {menuCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => handleSelectCategory(cat.id)}
-                className={`px-4 py-2.5 transition-colors ${
-                  activeCategory === cat.id
-                    ? "text-amber-300 border-b-2 border-amber-400"
-                    : "text-slate-300 hover:text-amber-300"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-            <a
-              href="#ceo-letter-section"
-              className="px-4 py-2.5 text-amber-300 hover:text-amber-200 transition-colors font-semibold flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Thư Mời Hợp Tác
-            </a>
-            <a
-              href="#fabric-guide-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Bảng Vải Cao Cấp
-            </a>
-            <a
-              href="#process-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Quy Trình May
-            </a>
-            <a
-              href="#footer-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Liên Hệ & Xưởng May
-            </a>
-          </div>
+      <nav className="hidden lg:block bg-[#092242] border-t border-slate-800/80 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-2 xl:px-4 flex items-center text-[12px] xl:text-[13px] font-medium min-w-max">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-amber-300 font-semibold border-b-2 border-amber-400 shrink-0"
+          >
+            Trang Chủ
+          </button>
 
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-amber-400" />
-              Hà Nội • Phú Thọ
-            </span>
-          </div>
+          <button
+            onClick={() => handleSelectCategory("all")}
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Tất Cả Sản Phẩm
+          </button>
+
+          {menuCategories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleSelectCategory(cat.id)}
+              style={NOWRAP}
+              className={`px-2.5 xl:px-3 py-2.5 transition-colors shrink-0 ${
+                activeCategory === cat.id
+                  ? "text-amber-300 border-b-2 border-amber-400"
+                  : "text-slate-300 hover:text-amber-300"
+              }`}
+            >
+              {NAV_SHORT_NAMES[cat.id] || cat.name}
+            </button>
+          ))}
+
+          <a
+            href="#ceo-letter-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-amber-300 hover:text-amber-200 transition-colors font-semibold flex items-center gap-1.5 shrink-0"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>Thư Mời Hợp Tác</span>
+          </a>
+
+          <a
+            href="#fabric-guide-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Bảng Vải
+          </a>
+
+          <a
+            href="#process-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Quy Trình May
+          </a>
+
+          <a
+            href="#footer-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Liên Hệ
+          </a>
         </div>
       </nav>
 
@@ -517,7 +548,8 @@ export default function Header() {
           <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#071b34] border-l border-slate-800 overflow-y-auto">
             <div className="sticky top-0 bg-[#071b34] p-4 border-b border-slate-800 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
-                <div className="relative w-8 h-8 rounded-lg overflow-hidden border-2 border-amber-400/60 bg-[#071b34] flex items-center justify-center">
+                {/* Logo box mobile — không viền, không bo */}
+                <div className="relative w-8 h-8 overflow-hidden bg-[#071b34] flex items-center justify-center">
                   <span className="absolute font-black text-sm text-amber-400">HN</span>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -590,6 +622,13 @@ export default function Header() {
                   Quy Trình May Chuẩn 5 Bước
                 </a>
                 <a
+                  href="#gallery-section"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block py-2.5 px-3 rounded-lg text-slate-200 hover:bg-slate-800 transition-colors"
+                >
+                  Album Khách Hàng Thực Tế
+                </a>
+                <a
                   href="#faq-section"
                   onClick={() => setMobileMenuOpen(false)}
                   className="block py-2.5 px-3 rounded-lg text-slate-200 hover:bg-slate-800 transition-colors"
@@ -600,7 +639,7 @@ export default function Header() {
 
               <div className="pt-3 border-t border-slate-800">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                  Danh mục sản phẩm
+                  Dịch vụ may đo đồng phục
                 </span>
                 <div className="space-y-2">
                   <button

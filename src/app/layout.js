@@ -3,8 +3,8 @@ import "./globals.css";
 import { Suspense } from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
-
-
+import { ThemeProvider } from "@/shared/providers/ThemeProvider";
+import { ShopProvider } from "@/shared/providers/ShopProvider";
 
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
@@ -234,13 +234,17 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
       >
         {/* ============================================================
-            AUTH PROVIDER — NextAuth SessionProvider
-            ✅ Bọc Suspense ở đây (Server Component) để bắt suspension
-            từ SessionProvider trong lúc Next.js prerender trang.
-            Tránh lỗi "Cannot read properties of null (reading 'useState')"
+            GLOBAL PROVIDERS — Áp dụng cho MỌI trang
+            ✅ Suspense bọc AuthProvider để bắt suspension khi prerender
+            ✅ ThemeProvider + ShopProvider bọc ngoài để mọi route đều có
+               access vào cart, wishlist, modal state, theme...
             ============================================================ */}
         <Suspense fallback={null}>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <ThemeProvider>
+              <ShopProvider>{children}</ShopProvider>
+            </ThemeProvider>
+          </AuthProvider>
         </Suspense>
 
         {/* ============================================================

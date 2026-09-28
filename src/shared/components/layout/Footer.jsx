@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import {
   Phone,
@@ -189,12 +190,27 @@ export default function Footer() {
           <div>
             © 2026 <strong>HDC GROUP VN - THƯƠNG HIỆU HUNI UNIFORM</strong>. All rights reserved.
           </div>
-          <div className="flex items-center gap-4">
-            <span>Chính sách bảo mật</span>
-            <span>•</span>
-            <span>Chính sách đổi trả 30 ngày</span>
-            <span>•</span>
-            <span>Xuất hóa đơn VAT điện tử</span>
+          <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
+            <Link
+              href="/chinh-sach-bao-mat"
+              className="hover:text-amber-300 transition-colors"
+            >
+              Chính sách bảo mật
+            </Link>
+            <span className="text-slate-700">•</span>
+            <Link
+              href="/chinh-sach-doi-tra"
+              className="hover:text-amber-300 transition-colors"
+            >
+              Chính sách đổi trả 30 ngày
+            </Link>
+            <span className="text-slate-700">•</span>
+            <Link
+              href="/dieu-khoan-su-dung"
+              className="hover:text-amber-300 transition-colors"
+            >
+              Điều khoản sử dụng
+            </Link>
           </div>
         </div>
       </div>

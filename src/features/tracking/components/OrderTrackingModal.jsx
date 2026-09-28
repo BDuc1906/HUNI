@@ -14,52 +14,96 @@ import {
   Phone
 } from "lucide-react";
 
+/* =========================================================
+   Map trạng thái DB → bước trong stepper (0-4)
+   ========================================================= */
+function mapStatusToStep(status) {
+  switch (status) {
+    case "PENDING":
+      return 0;
+    case "QUOTED":
+    case "CONFIRMED":
+      return 1;
+    case "PRODUCING":
+      return 2;
+    case "SHIPPED":
+      return 4;
+    case "COMPLETED":
+      return 4;
+    case "CANCELLED":
+      return 0;
+    default:
+      return 0;
+  }
+}
+
 export default function OrderTrackingModal() {
   const { isOrderTrackingOpen, setIsOrderTrackingOpen, orders } = useShop();
   const [searchInput, setSearchInput] = useState("");
   const [searchedOrder, setSearchedOrder] = useState(null);
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!isOrderTrackingOpen) return null;
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     setSearched(true);
-    const query = searchInput.trim().toUpperCase();
+    setSearchedOrder(null);
 
-    const found = orders.find(
+    const query = searchInput.trim().toUpperCase();
+    if (!query) return;
+
+    // ==================================================
+    // 1. Tìm trong đơn local (đã đặt trên máy này)
+    // ==================================================
+    const localFound = orders.find(
       (o) =>
-        o.id.toUpperCase() === query ||
+        (o.orderNumber || o.id || "").toUpperCase() === query ||
         (o.customer?.phone && o.customer.phone.includes(query))
     );
 
-    if (found) {
-      setSearchedOrder(found);
-    } else {
-      if (query.includes("HN") || query.length >= 4) {
+    if (localFound) {
+      setSearchedOrder({
+        id: localFound.orderNumber || localFound.id,
+        createdAt: localFound.createdAt,
+        customer: localFound.customer,
+        status: localFound.status || "Đã tiếp nhận",
+        currentStep: mapStatusToStep(localFound.status),
+        total: localFound.total,
+        items: localFound.items || []
+      });
+      return;
+    }
+
+    // ==================================================
+    // 2. Query API thật
+    // ==================================================
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `/api/tracking?code=${encodeURIComponent(query)}`
+      );
+      const data = await res.json();
+
+      if (data.success && data.order) {
         setSearchedOrder({
-          id: query.startsWith("HN") ? query : `HN-${query}`,
-          createdAt: new Date().toISOString(),
-          customer: {
-            fullName: "Quý Khách Hàng Doanh Nghiệp",
-            phone: searchInput,
-            companyName: "Công ty Đối Tác HUNI"
-          },
-          status: "Đang sản xuất tại chuyền may",
-          currentStep: 3,
-          total: 8500000,
-          items: [
-            {
-              product: { title: "Áo Polo Doanh Nghiệp HUNI Classic Gold" },
-              quantity: 50,
-              color: "Xanh Navy Hoàng Gia",
-              size: "Size L (25 áo), Size M (25 áo)"
-            }
-          ]
+          id: data.order.orderNumber,
+          createdAt: data.order.createdAt,
+          customer: data.order.customer,
+          status: data.order.status,
+          currentStep: mapStatusToStep(data.order.status),
+          total: data.order.total,
+          items: data.order.items || []
         });
       } else {
         setSearchedOrder(null);
       }
+    } catch (err) {
+      console.error("[tracking] error:", err);
+      setSearchedOrder(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,7 +121,6 @@ export default function OrderTrackingModal() {
         {/* Header */}
         <div className="bg-[#071b34] text-white p-3 sm:p-5 flex items-center justify-between border-b border-amber-500/20 shrink-0">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            {/* Logo TRÒN */}
             <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full aspect-square overflow-hidden border-2 border-amber-400/60 bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0">
               <span className="absolute font-black text-sm text-[#071b34]">HN</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -116,15 +159,17 @@ export default function OrderTrackingModal() {
                 placeholder="Nhập mã đơn (VD: HN-123456) hoặc SĐT..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl sm:rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                disabled={loading}
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl sm:rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 disabled:opacity-60"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
             <button
               type="submit"
-              className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow transition-colors shrink-0 active:scale-[0.98]"
+              disabled={loading}
+              className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow transition-colors shrink-0 active:scale-[0.98] disabled:opacity-60"
             >
-              Tra cứu
+              {loading ? "Đang tra..." : "Tra cứu"}
             </button>
           </form>
 
@@ -163,8 +208,8 @@ export default function OrderTrackingModal() {
 
                 <div className="space-y-2.5 sm:space-y-3">
                   {steps.map((st, i) => {
-                    const isDone = i <= (searchedOrder.currentStep || 2);
-                    const isCurrent = i === (searchedOrder.currentStep || 2);
+                    const isDone = i <= (searchedOrder.currentStep || 0);
+                    const isCurrent = i === (searchedOrder.currentStep || 0);
                     const Icon = st.icon;
 
                     return (

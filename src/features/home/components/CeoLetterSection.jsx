@@ -19,7 +19,10 @@ export default function CeoLetterSection() {
   const { setIsQuickQuoteOpen } = useShop();
 
   return (
-    <section id="ceo-letter-section" className="py-14 sm:py-20 bg-white text-slate-900 relative overflow-hidden border-t border-b border-slate-200">
+    <section
+      id="ceo-letter-section"
+      className="py-14 sm:py-20 bg-white text-slate-900 relative overflow-hidden border-t border-b border-slate-200"
+    >
       {/* Ambient gold glow */}
       <div className="absolute top-1/4 left-10 w-72 sm:w-96 h-72 sm:h-96 bg-amber-50 rounded-full blur-3xl pointer-events-none opacity-60" />
       <div className="absolute bottom-10 right-10 w-72 sm:w-96 h-72 sm:h-96 bg-slate-50 rounded-full blur-3xl pointer-events-none opacity-50" />
@@ -67,67 +70,31 @@ export default function CeoLetterSection() {
             Main Card — 2 columns
             ============================================= */}
         <div className="bg-slate-50 rounded-2xl sm:rounded-3xl border border-slate-200 p-4 sm:p-6 md:p-10 shadow-lg">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
-            {/* Left: CEO Portrait */}
-            <div className="lg:col-span-5 flex flex-col items-center text-center">
-              <div className="relative group w-full max-w-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
+            {/* =========================================
+                Left: CEO Portrait — hiển thị đầy đủ 100% ảnh
+                ========================================= */}
+            <div className="lg:col-span-5">
+              <div className="relative group w-full max-w-md mx-auto">
                 <div className="absolute -inset-1.5 sm:-inset-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-3xl blur-md opacity-30 group-hover:opacity-50 transition duration-500" />
 
-                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl w-full bg-white aspect-[3/4]">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-white">
                   <Image
                     src={BRAND_INFO.ceo.image}
                     alt={BRAND_INFO.ceo.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    width={600}
+                    height={750}
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="w-full h-auto block"
+                    priority
                   />
-
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#071b34] via-[#071b34]/95 to-transparent p-4 sm:p-5 text-white">
-                    <h3 className="text-base sm:text-lg md:text-xl font-black text-amber-300 tracking-wide uppercase">
-                      {BRAND_INFO.ceo.name}
-                    </h3>
-                    <div className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider mt-0.5">
-                      {BRAND_INFO.ceo.title}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contact card */}
-              <div className="mt-4 sm:mt-6 w-full max-w-sm space-y-2 text-left bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm text-[11px] sm:text-xs">
-                <a
-                  href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="flex items-center gap-2.5 sm:gap-3 text-[#071b34] hover:text-amber-600 font-extrabold text-xs sm:text-sm transition-colors"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-bounce" />
-                  </div>
-                  <span className="truncate">Hotline: {BRAND_INFO.contact.hotline}</span>
-                </a>
-
-                <div className="flex items-start gap-2.5 sm:gap-3 text-slate-600 pt-2 border-t border-slate-200">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <strong className="text-[#071b34]">Trụ sở:</strong>{" "}
-                    <span className="text-slate-600">{BRAND_INFO.contact.headquarters}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 sm:gap-3 text-slate-600 pt-2 border-t border-slate-200">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <strong className="text-[#071b34]">VP Hà Nội:</strong>{" "}
-                    <span className="text-slate-600">{BRAND_INFO.contact.branchHanoi}</span>
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Letter Content */}
+            {/* =========================================
+                Right: Letter Content
+                ========================================= */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <div className="space-y-2 sm:space-y-3">
                 <div className="text-[#071b34] font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
@@ -181,6 +148,56 @@ export default function CeoLetterSection() {
                   <Phone className="w-4 h-4 text-amber-600 animate-pulse shrink-0" />
                   <span>Kết nối CEO</span>
                 </a>
+              </div>
+            </div>
+          </div>
+
+          {/* =========================================
+              Contact info — full width, 3 cột
+              ========================================= */}
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <a
+              href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
+              className="flex items-start gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all group"
+            >
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                  Hotline / Zalo
+                </div>
+                <div className="font-extrabold text-[#071b34] text-xs sm:text-sm mt-0.5">
+                  {BRAND_INFO.contact.hotline}
+                </div>
+              </div>
+            </a>
+
+            <div className="flex items-start gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                  Trụ sở chính
+                </div>
+                <div className="font-bold text-[#071b34] text-[11px] sm:text-xs mt-0.5 leading-snug">
+                  {BRAND_INFO.contact.headquarters}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                  Chi nhánh Hà Nội
+                </div>
+                <div className="font-bold text-[#071b34] text-[11px] sm:text-xs mt-0.5 leading-snug">
+                  {BRAND_INFO.contact.branchHanoi}
+                </div>
               </div>
             </div>
           </div>

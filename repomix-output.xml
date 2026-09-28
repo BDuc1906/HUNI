@@ -215,6 +215,8 @@ public/
   window.svg
 src/
   app/
+    account/
+      page.jsx
     api/
       auth/
         [...nextauth]/
@@ -232,7 +234,13 @@ src/
     login/
       LoginForm.jsx
       page.jsx
+    privacy-policy/
+      page.jsx
+    refund-policy/
+      page.jsx
     register/
+      page.jsx
+    terms-of-service/
       page.jsx
     globals.css
     icon.png
@@ -330,41 +338,769 @@ test-order.json
 <files>
 This section contains the contents of the repository's files.
 
+<file path="src/app/account/page.jsx">
+"use client";
+
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import Link from "next/link";
+import { useShop } from "@/shared/providers/ShopProvider";
+import {
+  User,
+  Package,
+  Heart,
+  LogOut,
+  Loader2,
+  Phone
+} from "lucide-react";
+import { BRAND_INFO } from "@/shared/data";
+
+export const dynamic = "force-dynamic";
+
+export default function AccountPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { orders, wishlist } = useShop();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login?redirect=/tai-khoan");
+    }
+  }, [status, router]);
+
+  if (status === "loading" || !session?.user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+      </div>
+    );
+  }
+
+  const user = session.user;
+  const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
+
+  return (
+    <div className="min-h-screen bg-slate-50 py-8 sm:py-12">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] rounded-3xl p-6 sm:p-8 mb-6 sm:mb-8 shadow-xl border border-amber-400/20">
+          <div className="flex items-center gap-4 sm:gap-5">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-[#071b34] font-black text-2xl sm:text-3xl shrink-0 border-4 border-white/20">
+              {initial}
+            </div>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-xl sm:text-2xl font-black text-white truncate">
+                {user.name}
+              </h1>
+              <p className="text-xs sm:text-sm text-amber-200/80 truncate">
+                {user.email}
+              </p>
+            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: "/" })}
+              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl text-xs font-bold transition-colors"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Đăng xuất</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Stats cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <Package className="w-6 h-6 text-amber-600 mb-2" />
+            <div className="text-2xl font-black text-[#071b34]">{orders.length}</div>
+            <div className="text-xs text-slate-500 font-semibold">Đơn hàng đã đặt</div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <Heart className="w-6 h-6 text-rose-500 mb-2" />
+            <div className="text-2xl font-black text-[#071b34]">{wishlist.length}</div>
+            <div className="text-xs text-slate-500 font-semibold">Sản phẩm yêu thích</div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <User className="w-6 h-6 text-emerald-500 mb-2" />
+            <div className="text-2xl font-black text-[#071b34]">
+              {user.role === "ADMIN" ? "Admin" : "Khách"}
+            </div>
+            <div className="text-xs text-slate-500 font-semibold">Vai trò tài khoản</div>
+          </div>
+        </div>
+
+        {/* Recent orders */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 mb-6">
+          <h2 className="font-extrabold text-[#071b34] text-base sm:text-lg mb-4 flex items-center gap-2">
+            <Package className="w-5 h-5 text-amber-600" />
+            Đơn hàng gần đây
+          </h2>
+
+          {orders.length === 0 ? (
+            <div className="text-center py-8 text-slate-400 text-sm">
+              Chưa có đơn hàng nào.
+              <Link
+                href="/#catalog-section"
+                className="block mt-3 text-amber-600 hover:text-amber-700 font-bold text-xs"
+              >
+                → Khám phá sản phẩm
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {orders.slice(0, 5).map((o) => (
+                <div
+                  key={o.id}
+                  className="flex items-center justify-between gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-[#071b34] truncate">
+                      {o.orderNumber || o.id}
+                    </div>
+                    <div className="text-slate-500 text-[11px]">
+                      {new Date(o.createdAt).toLocaleDateString("vi-VN")} •{" "}
+                      {(o.total || 0).toLocaleString("vi-VN")} đ
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] shrink-0">
+                    {o.status || "Đã tiếp nhận"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Contact box */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <h3 className="font-extrabold text-[#071b34] text-sm">
+              Cần hỗ trợ tài khoản?
+            </h3>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Liên hệ chuyên viên HUNI để được hỗ trợ nhanh nhất.
+            </p>
+          </div>
+          <a
+            href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
+            className="px-5 py-2.5 bg-gradient-to-r from-amber-400 to-amber-600 text-[#071b34] font-bold text-xs rounded-xl shadow-md flex items-center gap-2 shrink-0"
+          >
+            <Phone className="w-3.5 h-3.5" />
+            <span>{BRAND_INFO.contact.hotline}</span>
+          </a>
+        </div>
+
+        {/* Back */}
+        <div className="text-center mt-6">
+          <Link
+            href="/"
+            className="text-xs text-slate-500 hover:text-amber-600 font-medium"
+          >
+            ← Về trang chủ
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
 <file path="src/app/api/chat/route.js">
+// ==================================================
+// src/app/api/chat/route.js
+// POST /api/chat — Trợ lý AI tư vấn HUNI
+// Phiên bản: Gemini 2.5 Flash + Retry + Fallback đa model
+// ==================================================
+
 import { NextResponse } from "next/server";
 import * as shopData from "@/shared/data";
 
-const SYSTEM_PROMPT = `Bạn là trợ lý tư vấn của HUNI UNIFORM (đồng phục doanh nghiệp cao cấp).
-Dưới đây là toàn bộ dữ liệu thương hiệu, sản phẩm, chất liệu vải, quy trình và FAQ (JSON):
-${JSON.stringify(shopData)}
+// ==================================================
+// 1. RÚT GỌN DỮ LIỆU — giảm token, tăng tốc
+// ==================================================
+const compactData = {
+  brand: {
+    name: shopData.BRAND_INFO.brandName,
+    parent: shopData.BRAND_INFO.parentCompany,
+    slogan: shopData.BRAND_INFO.slogan,
+    ceo: {
+      name: shopData.BRAND_INFO.ceo.name,
+      title: shopData.BRAND_INFO.ceo.title,
+    },
+    contact: shopData.BRAND_INFO.contact,
+    commitments: shopData.BRAND_INFO.commitments.map((c) => ({
+      title: c.title,
+      desc: c.desc,
+    })),
+    stats: shopData.BRAND_INFO.stats,
+  },
+  categories: shopData.CATEGORIES.filter((c) => c.id !== "all").map((c) => ({
+    id: c.id,
+    name: c.name,
+    desc: c.desc,
+  })),
+  products: shopData.PRODUCTS.map((p) => ({
+    id: p.id,
+    title: p.title,
+    category: p.category,
+    material: p.material,
+    price: p.price,
+    originalPrice: p.originalPrice,
+    unit: p.unit,
+    wholesaleTiers: p.wholesaleTiers?.map((t) => ({
+      range: t.label,
+      price: t.price,
+    })),
+    colors: p.colors?.map((c) => c.name),
+    sizes: p.sizes,
+    features: p.features,
+    description: p.description,
+  })),
+  fabrics: shopData.FABRIC_COMPARISONS,
+  process: shopData.PROCESS_STEPS,
+  faqs: shopData.FAQS,
+};
 
-Hãy trả lời khách hàng bằng tiếng Việt, ngắn gọn, thân thiện, dựa CHỈ vào dữ liệu trên.
-Nếu không có thông tin phù hợp, hãy nói sẽ chuyển cho nhân viên tư vấn qua hotline 0984.959.586.`;
+// ==================================================
+// 2. SYSTEM PROMPT
+// ==================================================
+const SYSTEM_PROMPT = `Bạn là "Huni Assistant" — trợ lý tư vấn bán hàng chuyên nghiệp của HUNI UNIFORM (thương hiệu đồng phục doanh nghiệp cao cấp thuộc HDC GROUP VN).
 
-export async function POST(req) {
-  const { messages } = await req.json(); // [{ role: "user" | "model", text: string }]
+## VAI TRÒ
+Tư vấn khách hàng (chủ yếu là doanh nghiệp, tổ chức, trường học) về sản phẩm đồng phục, chất liệu vải, bảng giá sỉ, quy trình đặt may và chính sách ưu đãi.
 
-  const contents = [
-    { role: "user", parts: [{ text: SYSTEM_PROMPT }] },
-    { role: "model", parts: [{ text: "Dạ vâng, em đã sẵn sàng tư vấn ạ." }] },
-    ...messages.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
-  ];
+## PHONG CÁCH GIAO TIẾP
+- Xưng "em", gọi khách là "anh/chị". Thân thiện, nhiệt tình, chuyên nghiệp.
+- Trả lời NGẮN GỌN, đi thẳng vào vấn đề, không lan man.
+- Câu trả lời lý tưởng: 2-5 câu hoặc 3-5 gạch đầu dòng.
+- Sử dụng emoji phù hợp, tiết chế (tối đa 1-2 emoji/câu trả lời).
 
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    {
+## QUY TẮC NỘI DUNG
+1. **CHỈ** dùng thông tin từ DỮ LIỆU bên dưới. TUYỆT ĐỐI không bịa giá, không bịa sản phẩm, không bịa chính sách.
+2. Khi khách hỏi giá → báo giá theo mốc số lượng (sỉ càng nhiều càng rẻ).
+3. Khi khách hỏi sản phẩm → giới thiệu 1-3 sản phẩm phù hợp nhất, kèm giá và điểm nổi bật.
+4. Khi khách hỏi chất liệu → so sánh ngắn 2-3 loại vải phù hợp nhu cầu.
+5. Khi khách hỏi quy trình → liệt kê 5 bước ngắn gọn.
+6. Khi không có thông tin → nói: "Em chưa có thông tin này, anh/chị vui lòng gọi hotline 0984.959.586 để được tư vấn chi tiết ạ."
+7. Không hứa hẹn những gì không có trong dữ liệu.
+
+## ĐỊNH DẠNG
+- Dùng gạch đầu dòng "-" cho danh sách, tối đa 5 mục.
+- Đơn vị tiền tệ: VNĐ (VD: 155.000đ).
+- KHÔNG dùng markdown phức tạp (###, **, bảng biểu).
+- KHÔNG viết đoạn văn dài quá 5 dòng.
+
+## DỮ LIỆU THƯƠNG HIỆU
+${JSON.stringify(compactData)}`;
+
+// ==================================================
+// 3. DANH SÁCH MODEL — Ưu tiên model ổn định
+// gemini-2.5-flash hiện là model ít bị 503 nhất
+// ==================================================
+const MODEL_CANDIDATES = [
+  "gemini-2.5-flash",
+  "gemini-2.5-flash-lite",
+  "gemini-2.0-flash",
+  "gemini-flash-latest",
+];
+
+// ==================================================
+// 4. CẤU HÌNH GENERATION
+// ==================================================
+const GENERATION_CONFIG = {
+  temperature: 0.65,
+  topP: 0.9,
+  topK: 40,
+  maxOutputTokens: 2048,
+  candidateCount: 1,
+};
+
+const MAX_HISTORY = 10;
+
+// ==================================================
+// 5. GỌI GEMINI VỚI RETRY CHO LỖI 503/429
+// Backoff: 0ms → 500ms → 1500ms
+// ==================================================
+async function callGeminiWithRetry(url, payload, maxRetries = 2) {
+  const DELAYS = [0, 500, 1500];
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    if (attempt > 0) {
+      const wait = DELAYS[attempt] || 1500;
+      console.log(
+        `[chat] ⏳ Đợi ${wait}ms rồi retry (lần ${attempt}/${maxRetries})...`
+      );
+      await new Promise((r) => setTimeout(r, wait));
+    }
+
+    const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents }),
+      body: JSON.stringify(payload),
+    });
+
+    const json = await res.json();
+
+    if (res.ok) return { ok: true, status: res.status, json };
+
+    const isRetryable = res.status === 503 || res.status === 429;
+    const isLastAttempt = attempt === maxRetries;
+
+    if (!isRetryable || isLastAttempt) {
+      return { ok: false, status: res.status, json };
     }
+
+    console.warn(
+      `[chat] ⚠️ Lỗi ${res.status} (${
+        json?.error?.status || "UNKNOWN"
+      }), sẽ thử lại...`
+    );
+  }
+
+  return { ok: false, status: 0, json: null };
+}
+
+// ==================================================
+// 6. POST HANDLER
+// ==================================================
+export async function POST(req) {
+  // ----- Kiểm tra API key -----
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    console.error("[chat] ❌ GEMINI_API_KEY chưa được cấu hình");
+    return NextResponse.json(
+      {
+        reply:
+          "Xin lỗi, hệ thống tư vấn đang bảo trì. Anh/chị vui lòng gọi hotline 0984.959.586 để được hỗ trợ ngay ạ.",
+      },
+      { status: 200 }
+    );
+  }
+
+  try {
+    // ----- Parse & validate request -----
+    const { messages } = await req.json();
+
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return NextResponse.json(
+        { reply: "Anh/chị vui lòng nhập câu hỏi ạ 😊" },
+        { status: 200 }
+      );
+    }
+
+    // ----- Chuẩn hóa lịch sử hội thoại -----
+    const cleanedMessages = messages
+      .filter(
+        (m) => m && typeof m.text === "string" && m.text.trim().length > 0
+      )
+      .slice(-MAX_HISTORY)
+      .map((m) => ({
+        role: m.role === "model" ? "model" : "user",
+        parts: [{ text: m.text.trim().slice(0, 1000) }],
+      }));
+
+    if (cleanedMessages.length === 0) {
+      return NextResponse.json(
+        { reply: "Anh/chị vui lòng nhập câu hỏi ạ 😊" },
+        { status: 200 }
+      );
+    }
+
+    // ----- Chuẩn bị payload gửi Gemini -----
+    const requestPayload = {
+      systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: cleanedMessages,
+      generationConfig: GENERATION_CONFIG,
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
+        {
+          category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+          threshold: "BLOCK_ONLY_HIGH",
+        },
+        {
+          category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+          threshold: "BLOCK_ONLY_HIGH",
+        },
+      ],
+    };
+
+    // ----- Gọi lần lượt các model với retry -----
+    let reply = null;
+    let lastError = null;
+
+    for (const model of MODEL_CANDIDATES) {
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+        console.log(`[chat] 🚀 Thử model: ${model}`);
+
+        const { ok, status, json } = await callGeminiWithRetry(
+          url,
+          requestPayload
+        );
+
+        if (!ok) {
+          lastError = { model, status, body: json };
+          console.warn(
+            `[chat] ⚠️ ${model} thất bại (${status}), chuyển model tiếp...`
+          );
+          continue;
+        }
+
+        const candidate = json?.candidates?.[0];
+        const finishReason = candidate?.finishReason;
+
+        if (finishReason === "SAFETY") {
+          lastError = { model, reason: "SAFETY" };
+          console.warn(`[chat] ⚠️ ${model} bị chặn bởi safety filter`);
+          continue;
+        }
+
+        reply = candidate?.content?.parts?.[0]?.text?.trim() || null;
+
+        if (reply) {
+          console.log(
+            `[chat] ✅ ${model} OK (${reply.length} ký tự, finish: ${
+              finishReason || "STOP"
+            })`
+          );
+          break;
+        }
+
+        lastError = { model, reason: "EMPTY" };
+      } catch (err) {
+        lastError = { model, error: err.message };
+        console.warn(`[chat] ⚠️ ${model} exception:`, err.message);
+      }
+    }
+
+    // ----- Xử lý khi tất cả model thất bại -----
+    if (!reply) {
+      console.error(
+        "[chat] ❌ Tất cả model thất bại:",
+        JSON.stringify(lastError, null, 2)
+      );
+
+      const isTemporary =
+        lastError?.status === 503 || lastError?.status === 429;
+
+      return NextResponse.json(
+        {
+          reply: isTemporary
+            ? "Hệ thống AI đang quá tải tạm thời 😅 Anh/chị thử lại sau 30 giây, hoặc gọi hotline 0984.959.586 để được tư vấn trực tiếp ạ."
+            : "Xin lỗi anh/chị, em đang gặp sự cố kỹ thuật. Anh/chị vui lòng gọi hotline 0984.959.586 để được hỗ trợ ạ 🙏",
+        },
+        { status: 200 }
+      );
+    }
+
+    // ----- Trả kết quả thành công -----
+    return NextResponse.json({ reply });
+  } catch (error) {
+    console.error("[chat] ❌ Lỗi server:", error);
+    return NextResponse.json(
+      {
+        reply:
+          "Xin lỗi anh/chị, em đang gặp sự cố kết nối. Anh/chị vui lòng gọi hotline 0984.959.586 để được hỗ trợ ạ 🙏",
+      },
+      { status: 200 }
+    );
+  }
+}
+</file>
+
+<file path="src/app/privacy-policy/page.jsx">
+import Link from "next/link";
+import { ShieldCheck, ArrowLeft } from "lucide-react";
+
+export const metadata = {
+  title: "Chính Sách Bảo Mật",
+  description: "Chính sách bảo mật thông tin khách hàng của HUNI UNIFORM.",
+};
+
+export default function PrivacyPage() {
+  return (
+    <div className="min-h-screen bg-slate-50 py-10 sm:py-16">
+      <div className="max-w-3xl mx-auto px-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-amber-600 mb-6 font-medium"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Về trang chủ
+        </Link>
+
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#071b34]">
+                Chính Sách Bảo Mật
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Cập nhật lần cuối: 01/01/2026
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-none text-slate-700 space-y-5">
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                1. Mục đích thu thập thông tin
+              </h2>
+              <p className="text-sm leading-relaxed">
+                HUNI UNIFORM (thuộc HDC GROUP VN) thu thập thông tin cá nhân của quý khách
+                nhằm mục đích tư vấn, báo giá, xử lý đơn hàng may đo đồng phục doanh nghiệp,
+                xuất hóa đơn VAT và chăm sóc khách hàng sau bán.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                2. Phạm vi thông tin thu thập
+              </h2>
+              <ul className="list-disc pl-5 text-sm space-y-1">
+                <li>Họ tên, số điện thoại, email liên hệ</li>
+                <li>Tên công ty, mã số thuế, địa chỉ nhận hàng</li>
+                <li>Số đo cơ thể (chỉ với đơn hàng may đo riêng)</li>
+                <li>Lịch sử đặt hàng và yêu cầu báo giá</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                3. Cam kết bảo mật
+              </h2>
+              <p className="text-sm leading-relaxed">
+                HUNI cam kết <strong>không bán, trao đổi hoặc chia sẻ</strong> thông tin
+                khách hàng cho bất kỳ bên thứ ba nào, ngoại trừ trường hợp pháp luật yêu
+                cầu. Mọi dữ liệu được lưu trữ trên hệ thống mã hóa an toàn.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                4. Quyền của khách hàng
+              </h2>
+              <p className="text-sm leading-relaxed">
+                Quý khách có quyền yêu cầu xem, chỉnh sửa hoặc xóa thông tin cá nhân bất
+                kỳ lúc nào bằng cách liên hệ hotline <strong>0984.959.586</strong> hoặc
+                email <strong>dongphuchuni@gmail.com</strong>.
+              </p>
+            </section>
+
+            <section className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+              <p className="text-sm text-slate-700">
+                <strong>Mọi thắc mắc về chính sách bảo mật,</strong> vui lòng liên hệ:
+                <br />
+                📞 Hotline: 0984.959.586
+                <br />
+                ✉️ Email: dongphuchuni@gmail.com
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
   );
+}
+</file>
 
-  const json = await res.json();
-  const reply =
-    json?.candidates?.[0]?.content?.parts?.[0]?.text ||
-    "Xin lỗi, em chưa trả lời được câu này. Anh/chị liên hệ hotline 0984.959.586 giúp em nhé.";
+<file path="src/app/refund-policy/page.jsx">
+import Link from "next/link";
+import { RefreshCw, ArrowLeft } from "lucide-react";
 
-  return NextResponse.json({ reply });
+export const metadata = {
+  title: "Chính Sách Đổi Trả & Bảo Hành",
+  description: "Chính sách đổi trả và bảo hành 30 ngày của HUNI UNIFORM.",
+};
+
+export default function ReturnPolicyPage() {
+  return (
+    <div className="min-h-screen bg-slate-50 py-10 sm:py-16">
+      <div className="max-w-3xl mx-auto px-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-amber-600 mb-6 font-medium"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Về trang chủ
+        </Link>
+
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+              <RefreshCw className="w-6 h-6" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#071b34]">
+                Chính Sách Đổi Trả &amp; Bảo Hành
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Áp dụng từ 01/01/2026
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-none text-slate-700 space-y-5">
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                1. Cam kết bảo hành 1 đổi 1 trong 30 ngày
+              </h2>
+              <p className="text-sm leading-relaxed">
+                HUNI cam kết đổi mới miễn phí 100% nếu sản phẩm có bất kỳ lỗi nào:
+              </p>
+              <ul className="list-disc pl-5 text-sm space-y-1 mt-2">
+                <li>Lỗi đường may, sút chỉ, rách sợi</li>
+                <li>Sai màu sắc so với mẫu đã duyệt</li>
+                <li>Hình in/thêu bị bong tróc</li>
+                <li>Kích cỡ sai so với bảng size đã xác nhận</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                2. Điều kiện đổi trả
+              </h2>
+              <ul className="list-disc pl-5 text-sm space-y-1">
+                <li>Sản phẩm chưa qua sử dụng, chưa qua giặt ủi</li>
+                <li>Còn nguyên tem mác, bao bì gốc</li>
+                <li>Có hóa đơn hoặc mã đơn hàng đi kèm</li>
+                <li>Thời gian trong vòng 30 ngày kể từ ngày nhận hàng</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                3. Hỗ trợ may bổ sung trọn đời
+              </h2>
+              <p className="text-sm leading-relaxed">
+                Với khách hàng doanh nghiệp đã ký hợp đồng dài hạn, HUNI hỗ trợ may bổ sung
+                số lượng ít với đơn giá ưu đãi khi có nhân viên mới, áp dụng trọn đời.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                4. Quy trình đổi trả
+              </h2>
+              <ol className="list-decimal pl-5 text-sm space-y-1">
+                <li>Liên hệ hotline 0984.959.586 hoặc Zalo để thông báo</li>
+                <li>Cung cấp mã đơn hàng và hình ảnh sản phẩm lỗi</li>
+                <li>HUNI xác nhận trong vòng 24 giờ</li>
+                <li>Nhân viên đến nhận sản phẩm lỗi và giao sản phẩm mới</li>
+              </ol>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="src/app/terms-of-service/page.jsx">
+import Link from "next/link";
+import { FileText, ArrowLeft } from "lucide-react";
+
+export const metadata = {
+  title: "Điều Khoản Sử Dụng",
+  description: "Điều khoản sử dụng website HUNI UNIFORM.",
+};
+
+export default function TermsPage() {
+  return (
+    <div className="min-h-screen bg-slate-50 py-10 sm:py-16">
+      <div className="max-w-3xl mx-auto px-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-amber-600 mb-6 font-medium"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          Về trang chủ
+        </Link>
+
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-10">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+              <FileText className="w-6 h-6" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-black text-[#071b34]">
+                Điều Khoản Sử Dụng
+              </h1>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Cập nhật: 01/01/2026
+              </p>
+            </div>
+          </div>
+
+          <div className="max-w-none text-slate-700 space-y-5">
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                1. Chấp nhận điều khoản
+              </h2>
+              <p className="text-sm leading-relaxed">
+                Khi truy cập và sử dụng website <strong>huniuniform.vn</strong>, quý khách
+                đồng ý tuân thủ toàn bộ điều khoản được nêu tại đây.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                2. Quyền sở hữu trí tuệ
+              </h2>
+              <p className="text-sm leading-relaxed">
+                Toàn bộ hình ảnh, thiết kế, nội dung và thương hiệu HUNI UNIFORM thuộc
+                quyền sở hữu của HDC GROUP VN. Nghiêm cấm sao chép, sử dụng cho mục đích
+                thương mại mà không có sự đồng ý bằng văn bản.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                3. Trách nhiệm của khách hàng
+              </h2>
+              <ul className="list-disc pl-5 text-sm space-y-1">
+                <li>Cung cấp thông tin chính xác khi đặt hàng</li>
+                <li>Không sử dụng website vào mục đích bất hợp pháp</li>
+                <li>Không tự ý can thiệp, phá hoại hệ thống</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                4. Giải quyết tranh chấp
+              </h2>
+              <p className="text-sm leading-relaxed">
+                Mọi tranh chấp phát sinh sẽ được giải quyết thông qua thương lượng. Trường
+                hợp không thỏa thuận được, hai bên sẽ đưa vụ việc ra cơ quan có thẩm quyền
+                tại Việt Nam.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+                5. Liên hệ
+              </h2>
+              <p className="text-sm leading-relaxed">
+                Mọi thắc mắc xin liên hệ:
+                <br />
+                📞 Hotline: <strong>0984.959.586</strong>
+                <br />
+                ✉️ Email: <strong>dongphuchuni@gmail.com</strong>
+                <br />
+                🏢 Trụ sở: LK-17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, TP. Việt Trì, Phú Thọ
+              </p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 </file>
 
@@ -1038,21 +1774,78 @@ export async function GET(request) {
 // ==================================================
 
 import { NextResponse } from "next/server";
+import { db } from "@/server/db";
+import {
+  createQuoteSchema,
+  formatZodErrors,
+} from "@/server/validators";
 
 export async function POST(request) {
   try {
     const body = await request.json();
 
-    // TODO: Validate + lưu DB + gửi email
+    // 1. Validate
+    const parseResult = createQuoteSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Dữ liệu không hợp lệ",
+          details: formatZodErrors(parseResult.error),
+        },
+        { status: 400 }
+      );
+    }
 
-    return NextResponse.json({
-      success: true,
-      message: "Yêu cầu báo giá đã được tiếp nhận",
+    const data = parseResult.data;
+
+    // 2. Tìm hoặc tạo customer theo SĐT
+    let customer = await db.customer.findUnique({
+      where: { phone: data.phone },
     });
-  } catch (error) {
-    console.error("Quote API error:", error);
+
+    if (!customer) {
+      customer = await db.customer.create({
+        data: {
+          fullName: data.fullName,
+          phone: data.phone,
+          email: data.email || null,
+          company: data.company || null,
+        },
+      });
+    }
+
+    // 3. Tạo Quote
+    const quote = await db.quote.create({
+      data: {
+        customerId: customer.id,
+        fullName: data.fullName,
+        phone: data.phone,
+        email: data.email || null,
+        company: data.company || null,
+        category: data.category,
+        quantity: data.quantity,
+        estimatedPrice: data.estimatedPrice || null,
+        notes: data.notes || null,
+        status: "NEW",
+      },
+    });
+
     return NextResponse.json(
-      { success: false, error: "Không thể xử lý yêu cầu" },
+      {
+        success: true,
+        message: "Yêu cầu báo giá đã được tiếp nhận",
+        quoteId: quote.id,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("[quotes] POST error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Không thể xử lý yêu cầu. Vui lòng thử lại.",
+      },
       { status: 500 }
     );
   }
@@ -1148,6 +1941,7 @@ export async function POST(request) {
 // ==================================================
 
 import { NextResponse } from "next/server";
+import { db } from "@/server/db";
 
 export async function GET(request) {
   try {
@@ -1161,14 +1955,37 @@ export async function GET(request) {
       );
     }
 
-    // TODO: Query DB theo mã đơn hoặc SĐT
+    const query = code.trim();
+    const upperQuery = query.toUpperCase();
+
+    // Tìm theo orderNumber HOẶC SĐT khách
+    const order = await db.order.findFirst({
+      where: {
+        OR: [
+          { orderNumber: upperQuery },
+          { customer: { phone: query } },
+        ],
+      },
+      include: {
+        customer: true,
+        items: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (!order) {
+      return NextResponse.json({
+        success: true,
+        order: null,
+      });
+    }
 
     return NextResponse.json({
       success: true,
-      order: null,
+      order,
     });
   } catch (error) {
-    console.error("Tracking API error:", error);
+    console.error("[tracking] GET error:", error);
     return NextResponse.json(
       { success: false, error: "Không thể tra cứu" },
       { status: 500 }
@@ -1403,8 +2220,19 @@ const LOCATIONS = [
 export default function MapSection() {
   const [activeLocation, setActiveLocation] = React.useState(LOCATIONS[0]);
   const [copied, setCopied] = React.useState(false);
+  const [mapType, setMapType] = React.useState("hybrid"); // "roadmap" | "hybrid"
 
-  const mapEmbedUrl = `https://www.google.com/maps?q=${activeLocation.lat},${activeLocation.lng}&z=16&hl=vi&output=embed`;
+  // =========================================================
+  // GOOGLE MAPS EMBED API
+  // Yêu cầu: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY (Maps Embed API đã enable)
+  // Fallback: nếu không có API key → dùng embed miễn phí
+  // =========================================================
+  const mapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  const mapEmbedUrl = mapApiKey
+    ? `https://www.google.com/maps/embed/v1/place?key=${mapApiKey}&q=${activeLocation.lat},${activeLocation.lng}&zoom=16&maptype=${mapType}&language=vi`
+    : `https://www.google.com/maps?q=${activeLocation.lat},${activeLocation.lng}&z=16&hl=vi&output=embed`;
+
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${activeLocation.lat},${activeLocation.lng}`;
   const mapsUrl = `https://www.google.com/maps?q=${activeLocation.lat},${activeLocation.lng}`;
 
@@ -1487,18 +2315,17 @@ export default function MapSection() {
         </div>
 
         {/* ============================================
-            MAIN — Map nhỏ + Info liên hệ bên cạnh
-            Grid: Map 5/12 — Info 7/12 trên desktop
+            MAIN — Map + Info
             ============================================ */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
 
           {/* ==========================================
-              LEFT: MAP NHỎ (lg:col-span-5)
+              LEFT: MAP
               ========================================== */}
           <div className="lg:col-span-5">
             <div className="relative rounded-2xl overflow-hidden border-2 border-slate-200 shadow-lg bg-slate-100 h-[300px] sm:h-[350px] lg:h-full lg:min-h-[450px]">
               <iframe
-                key={`${activeLocation.lat}-${activeLocation.lng}`}
+                key={`${activeLocation.lat}-${activeLocation.lng}-${mapType}`}
                 src={mapEmbedUrl}
                 title={`Bản đồ ${activeLocation.name}`}
                 width="100%"
@@ -1510,8 +2337,39 @@ export default function MapSection() {
                 className="absolute inset-0 w-full h-full"
               />
 
+              {/* ==========================================
+                  Toggle layer — Đường phố / Vệ tinh
+                  Chỉ hiển thị khi có API key
+                  ========================================== */}
+              {mapApiKey && (
+                <div className="absolute top-3 right-3 flex items-center gap-1 bg-white/95 backdrop-blur-md rounded-xl p-1 shadow-lg border border-slate-200 z-10">
+                  <button
+                    onClick={() => setMapType("roadmap")}
+                    className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+                      mapType === "roadmap"
+                        ? "bg-[#071b34] text-amber-300"
+                        : "text-slate-600 hover:bg-slate-100"
+                    }`}
+                    title="Xem bản đồ đường phố"
+                  >
+                    🗺️ Đường phố
+                  </button>
+                  <button
+                    onClick={() => setMapType("hybrid")}
+                    className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${
+                      mapType === "hybrid"
+                        ? "bg-[#071b34] text-amber-300"
+                        : "text-slate-600 hover:bg-slate-100"
+                    }`}
+                    title="Xem ảnh vệ tinh"
+                  >
+                    🛰️ Vệ tinh
+                  </button>
+                </div>
+              )}
+
               {/* Badge tên cơ sở */}
-              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md rounded-xl px-3 py-2 shadow-lg border border-slate-200 max-w-[calc(100%-100px)] pointer-events-none">
+              <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md rounded-xl px-3 py-2 shadow-lg border border-slate-200 max-w-[calc(100%-160px)] pointer-events-none">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                   <div className="text-[11px] font-bold text-[#071b34] truncate">
@@ -1534,7 +2392,7 @@ export default function MapSection() {
           </div>
 
           {/* ==========================================
-              RIGHT: INFO LIÊN HỆ (lg:col-span-7)
+              RIGHT: INFO LIÊN HỆ
               ========================================== */}
           <div className="lg:col-span-7">
             <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden h-full flex flex-col">
@@ -2242,10 +3100,7 @@ import {
   LogIn,
   LogOut,
   Package,
-  LayoutDashboard,
-  ChevronDown,
-  Settings,
-  Heart
+  ChevronDown
 } from "lucide-react";
 
 export default function UserMenu() {
@@ -2253,7 +3108,6 @@ export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Click ngoài để đóng dropdown
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -2264,14 +3118,12 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Loading
   if (status === "loading") {
     return (
       <div className="w-9 h-9 rounded-full bg-slate-800/60 border border-slate-700 animate-pulse" />
     );
   }
 
-  // Chưa đăng nhập — hiện nút Đăng nhập + Đăng ký
   if (!session?.user) {
     return (
       <div className="flex items-center gap-1.5 sm:gap-2">
@@ -2288,7 +3140,6 @@ export default function UserMenu() {
         >
           <span>Đăng ký</span>
         </Link>
-        {/* Mobile — chỉ hiện icon */}
         <Link
           href="/login"
           className="sm:hidden p-2 rounded-full bg-slate-800/60 text-amber-300 border border-slate-700"
@@ -2300,10 +3151,8 @@ export default function UserMenu() {
     );
   }
 
-  // Đã đăng nhập
   const user = session.user;
   const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
-  const isAdmin = user.role === "ADMIN";
 
   return (
     <div className="relative" ref={menuRef}>
@@ -2342,15 +3191,9 @@ export default function UserMenu() {
                 </div>
               </div>
             </div>
-            {isAdmin && (
-              <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400/20 border border-amber-400/40 rounded-full text-[10px] font-bold text-amber-300">
-                <LayoutDashboard className="w-2.5 h-2.5" />
-                ADMIN
-              </div>
-            )}
           </div>
 
-          {/* Menu items */}
+          {/* Menu items — chỉ những link đã tồn tại */}
           <div className="p-2">
             <Link
               href="/tai-khoan"
@@ -2361,37 +3204,16 @@ export default function UserMenu() {
               <span>Trang tài khoản</span>
             </Link>
 
-            <Link
-              href="/tai-khoan/don-hang"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
+            <button
+              onClick={() => {
+                setOpen(false);
+                // TODO: mở modal lịch sử đơn hàng khi có
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
             >
               <Package className="w-4 h-4 text-amber-600 shrink-0" />
               <span>Đơn hàng của tôi</span>
-            </Link>
-
-            <Link
-              href="/tai-khoan/yeu-thich"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
-            >
-              <Heart className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>Sản phẩm yêu thích</span>
-            </Link>
-
-            {isAdmin && (
-              <>
-                <div className="h-px bg-slate-100 my-1" />
-                <Link
-                  href="/admin"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-sm font-bold text-amber-800 transition-colors"
-                >
-                  <LayoutDashboard className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>Trang Quản Trị Admin</span>
-                </Link>
-              </>
-            )}
+            </button>
 
             <div className="h-px bg-slate-100 my-1" />
 
@@ -5735,52 +6557,96 @@ import {
   Phone
 } from "lucide-react";
 
+/* =========================================================
+   Map trạng thái DB → bước trong stepper (0-4)
+   ========================================================= */
+function mapStatusToStep(status) {
+  switch (status) {
+    case "PENDING":
+      return 0;
+    case "QUOTED":
+    case "CONFIRMED":
+      return 1;
+    case "PRODUCING":
+      return 2;
+    case "SHIPPED":
+      return 4;
+    case "COMPLETED":
+      return 4;
+    case "CANCELLED":
+      return 0;
+    default:
+      return 0;
+  }
+}
+
 export default function OrderTrackingModal() {
   const { isOrderTrackingOpen, setIsOrderTrackingOpen, orders } = useShop();
   const [searchInput, setSearchInput] = useState("");
   const [searchedOrder, setSearchedOrder] = useState(null);
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!isOrderTrackingOpen) return null;
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     setSearched(true);
-    const query = searchInput.trim().toUpperCase();
+    setSearchedOrder(null);
 
-    const found = orders.find(
+    const query = searchInput.trim().toUpperCase();
+    if (!query) return;
+
+    // ==================================================
+    // 1. Tìm trong đơn local (đã đặt trên máy này)
+    // ==================================================
+    const localFound = orders.find(
       (o) =>
-        o.id.toUpperCase() === query ||
+        (o.orderNumber || o.id || "").toUpperCase() === query ||
         (o.customer?.phone && o.customer.phone.includes(query))
     );
 
-    if (found) {
-      setSearchedOrder(found);
-    } else {
-      if (query.includes("HN") || query.length >= 4) {
+    if (localFound) {
+      setSearchedOrder({
+        id: localFound.orderNumber || localFound.id,
+        createdAt: localFound.createdAt,
+        customer: localFound.customer,
+        status: localFound.status || "Đã tiếp nhận",
+        currentStep: mapStatusToStep(localFound.status),
+        total: localFound.total,
+        items: localFound.items || []
+      });
+      return;
+    }
+
+    // ==================================================
+    // 2. Query API thật
+    // ==================================================
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `/api/tracking?code=${encodeURIComponent(query)}`
+      );
+      const data = await res.json();
+
+      if (data.success && data.order) {
         setSearchedOrder({
-          id: query.startsWith("HN") ? query : `HN-${query}`,
-          createdAt: new Date().toISOString(),
-          customer: {
-            fullName: "Quý Khách Hàng Doanh Nghiệp",
-            phone: searchInput,
-            companyName: "Công ty Đối Tác HUNI"
-          },
-          status: "Đang sản xuất tại chuyền may",
-          currentStep: 3,
-          total: 8500000,
-          items: [
-            {
-              product: { title: "Áo Polo Doanh Nghiệp HUNI Classic Gold" },
-              quantity: 50,
-              color: "Xanh Navy Hoàng Gia",
-              size: "Size L (25 áo), Size M (25 áo)"
-            }
-          ]
+          id: data.order.orderNumber,
+          createdAt: data.order.createdAt,
+          customer: data.order.customer,
+          status: data.order.status,
+          currentStep: mapStatusToStep(data.order.status),
+          total: data.order.total,
+          items: data.order.items || []
         });
       } else {
         setSearchedOrder(null);
       }
+    } catch (err) {
+      console.error("[tracking] error:", err);
+      setSearchedOrder(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -5798,7 +6664,6 @@ export default function OrderTrackingModal() {
         {/* Header */}
         <div className="bg-[#071b34] text-white p-3 sm:p-5 flex items-center justify-between border-b border-amber-500/20 shrink-0">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            {/* Logo TRÒN */}
             <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full aspect-square overflow-hidden border-2 border-amber-400/60 bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0">
               <span className="absolute font-black text-sm text-[#071b34]">HN</span>
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -5837,15 +6702,17 @@ export default function OrderTrackingModal() {
                 placeholder="Nhập mã đơn (VD: HN-123456) hoặc SĐT..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl sm:rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                disabled={loading}
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl sm:rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 disabled:opacity-60"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
             <button
               type="submit"
-              className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow transition-colors shrink-0 active:scale-[0.98]"
+              disabled={loading}
+              className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow transition-colors shrink-0 active:scale-[0.98] disabled:opacity-60"
             >
-              Tra cứu
+              {loading ? "Đang tra..." : "Tra cứu"}
             </button>
           </form>
 
@@ -5884,8 +6751,8 @@ export default function OrderTrackingModal() {
 
                 <div className="space-y-2.5 sm:space-y-3">
                   {steps.map((st, i) => {
-                    const isDone = i <= (searchedOrder.currentStep || 2);
-                    const isCurrent = i === (searchedOrder.currentStep || 2);
+                    const isDone = i <= (searchedOrder.currentStep || 0);
+                    const isCurrent = i === (searchedOrder.currentStep || 0);
                     const Icon = st.icon;
 
                     return (
@@ -6098,6 +6965,7 @@ export default function FloatingActions() {
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import {
   Phone,
@@ -6286,12 +7154,27 @@ export default function Footer() {
           <div>
             © 2026 <strong>HDC GROUP VN - THƯƠNG HIỆU HUNI UNIFORM</strong>. All rights reserved.
           </div>
-          <div className="flex items-center gap-4">
-            <span>Chính sách bảo mật</span>
-            <span>•</span>
-            <span>Chính sách đổi trả 30 ngày</span>
-            <span>•</span>
-            <span>Xuất hóa đơn VAT điện tử</span>
+          <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
+            <Link
+              href="/chinh-sach-bao-mat"
+              className="hover:text-amber-300 transition-colors"
+            >
+              Chính sách bảo mật
+            </Link>
+            <span className="text-slate-700">•</span>
+            <Link
+              href="/chinh-sach-doi-tra"
+              className="hover:text-amber-300 transition-colors"
+            >
+              Chính sách đổi trả 30 ngày
+            </Link>
+            <span className="text-slate-700">•</span>
+            <Link
+              href="/dieu-khoan-su-dung"
+              className="hover:text-amber-300 transition-colors"
+            >
+              Điều khoản sử dụng
+            </Link>
           </div>
         </div>
       </div>
@@ -8224,7 +9107,10 @@ export default function CeoLetterSection() {
   const { setIsQuickQuoteOpen } = useShop();
 
   return (
-    <section id="ceo-letter-section" className="py-14 sm:py-20 bg-white text-slate-900 relative overflow-hidden border-t border-b border-slate-200">
+    <section
+      id="ceo-letter-section"
+      className="py-14 sm:py-20 bg-white text-slate-900 relative overflow-hidden border-t border-b border-slate-200"
+    >
       {/* Ambient gold glow */}
       <div className="absolute top-1/4 left-10 w-72 sm:w-96 h-72 sm:h-96 bg-amber-50 rounded-full blur-3xl pointer-events-none opacity-60" />
       <div className="absolute bottom-10 right-10 w-72 sm:w-96 h-72 sm:h-96 bg-slate-50 rounded-full blur-3xl pointer-events-none opacity-50" />
@@ -8272,67 +9158,31 @@ export default function CeoLetterSection() {
             Main Card — 2 columns
             ============================================= */}
         <div className="bg-slate-50 rounded-2xl sm:rounded-3xl border border-slate-200 p-4 sm:p-6 md:p-10 shadow-lg">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
-            {/* Left: CEO Portrait */}
-            <div className="lg:col-span-5 flex flex-col items-center text-center">
-              <div className="relative group w-full max-w-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
+            {/* =========================================
+                Left: CEO Portrait — hiển thị đầy đủ 100% ảnh
+                ========================================= */}
+            <div className="lg:col-span-5">
+              <div className="relative group w-full max-w-md mx-auto">
                 <div className="absolute -inset-1.5 sm:-inset-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-3xl blur-md opacity-30 group-hover:opacity-50 transition duration-500" />
 
-                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl w-full bg-white aspect-[3/4]">
+                <div className="relative rounded-2xl overflow-hidden border-2 border-amber-400 shadow-2xl bg-white">
                   <Image
                     src={BRAND_INFO.ceo.image}
                     alt={BRAND_INFO.ceo.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 400px"
-                    className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                    width={600}
+                    height={750}
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="w-full h-auto block"
+                    priority
                   />
-
-                  <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#071b34] via-[#071b34]/95 to-transparent p-4 sm:p-5 text-white">
-                    <h3 className="text-base sm:text-lg md:text-xl font-black text-amber-300 tracking-wide uppercase">
-                      {BRAND_INFO.ceo.name}
-                    </h3>
-                    <div className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider mt-0.5">
-                      {BRAND_INFO.ceo.title}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contact card */}
-              <div className="mt-4 sm:mt-6 w-full max-w-sm space-y-2 text-left bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm text-[11px] sm:text-xs">
-                <a
-                  href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="flex items-center gap-2.5 sm:gap-3 text-[#071b34] hover:text-amber-600 font-extrabold text-xs sm:text-sm transition-colors"
-                >
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-bounce" />
-                  </div>
-                  <span className="truncate">Hotline: {BRAND_INFO.contact.hotline}</span>
-                </a>
-
-                <div className="flex items-start gap-2.5 sm:gap-3 text-slate-600 pt-2 border-t border-slate-200">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <strong className="text-[#071b34]">Trụ sở:</strong>{" "}
-                    <span className="text-slate-600">{BRAND_INFO.contact.headquarters}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 sm:gap-3 text-slate-600 pt-2 border-t border-slate-200">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-slate-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <strong className="text-[#071b34]">VP Hà Nội:</strong>{" "}
-                    <span className="text-slate-600">{BRAND_INFO.contact.branchHanoi}</span>
-                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Letter Content */}
+            {/* =========================================
+                Right: Letter Content
+                ========================================= */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <div className="space-y-2 sm:space-y-3">
                 <div className="text-[#071b34] font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
@@ -8386,6 +9236,56 @@ export default function CeoLetterSection() {
                   <Phone className="w-4 h-4 text-amber-600 animate-pulse shrink-0" />
                   <span>Kết nối CEO</span>
                 </a>
+              </div>
+            </div>
+          </div>
+
+          {/* =========================================
+              Contact info — full width, 3 cột
+              ========================================= */}
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <a
+              href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
+              className="flex items-start gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all group"
+            >
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                  Hotline / Zalo
+                </div>
+                <div className="font-extrabold text-[#071b34] text-xs sm:text-sm mt-0.5">
+                  {BRAND_INFO.contact.hotline}
+                </div>
+              </div>
+            </a>
+
+            <div className="flex items-start gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                  Trụ sở chính
+                </div>
+                <div className="font-bold text-[#071b34] text-[11px] sm:text-xs mt-0.5 leading-snug">
+                  {BRAND_INFO.contact.headquarters}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3 p-3 sm:p-4 bg-white rounded-2xl border border-slate-200">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
+                  Chi nhánh Hà Nội
+                </div>
+                <div className="font-bold text-[#071b34] text-[11px] sm:text-xs mt-0.5 leading-snug">
+                  {BRAND_INFO.contact.branchHanoi}
+                </div>
               </div>
             </div>
           </div>
@@ -8517,6 +9417,21 @@ const catIconMap = {
   GraduationCap: GraduationCap,
   PackageCheck: PackageCheck
 };
+
+/* ============================================================
+   TÊN NAV DESKTOP — Giữ tiền tố "Đồng Phục" để khách biết NGAY
+   đây là dịch vụ may đo đồng phục, không phải bán lẻ thời trang.
+   ============================================================ */
+const NAV_SHORT_NAMES = {
+  corporate:    "Đồng Phục Doanh Nghiệp",
+  bespoke_suit: "Đồng Phục May Đo",
+  sport_golf:   "Đồng Phục Golf",
+  school:       "Đồng Phục Trường Học",
+  accessories:  "Phụ Kiện"
+};
+
+// Inline style ép không xuống dòng — mạnh hơn mọi class CSS
+const NOWRAP = { whiteSpace: "nowrap" };
 
 export default function Header() {
   const {
@@ -8654,9 +9569,10 @@ export default function Header() {
           <button
             onClick={() => setCategoryMenuOpen((v) => !v)}
             onBlur={() => setTimeout(() => setCategoryMenuOpen(false), 150)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 font-bold text-sm transition-colors whitespace-nowrap"
+            style={NOWRAP}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/30 text-amber-200 font-bold text-sm transition-colors"
           >
-            <LayoutGrid className="w-4 h-4" />
+            <LayoutGrid className="w-4 h-4 shrink-0" />
             <span>Danh Mục</span>
             <ChevronDown
               className={`w-3.5 h-3.5 transition-transform ${
@@ -8668,7 +9584,7 @@ export default function Header() {
           {categoryMenuOpen && (
             <div
               onMouseDown={(e) => e.preventDefault()}
-              className="absolute left-0 top-full mt-2 w-72 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
+              className="absolute left-0 top-full mt-2 w-80 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-50 p-2"
             >
               <button
                 onClick={() => handleSelectCategory("all")}
@@ -8808,16 +9724,18 @@ export default function Header() {
             )}
           </button>
 
-          {/* ⭐ User Menu — Đăng nhập / Đăng ký / Tài khoản */}
-          <UserMenu />
-
+          {/* Nút Báo Giá Nhanh */}
           <button
             onClick={() => setIsQuickQuoteOpen(true)}
+            style={NOWRAP}
             className="hidden lg:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs uppercase tracking-wider rounded-full shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 transition-all"
           >
-            <Sparkles className="w-4 h-4 fill-current" />
+            <Sparkles className="w-4 h-4 fill-current shrink-0" />
             <span>Báo Giá Nhanh</span>
           </button>
+
+          {/* User Menu */}
+          <UserMenu />
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -8829,69 +9747,74 @@ export default function Header() {
       </div>
 
       {/* =============================================
-          DESKTOP NAV
+          DESKTOP NAV — Bỏ cột phải, thêm overflow-x-auto
+          để không bị đè chữ khi màn hình hẹp
           ============================================= */}
-      <nav className="hidden lg:block bg-[#092242] border-t border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between text-sm font-medium">
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="px-4 py-2.5 text-amber-300 font-semibold border-b-2 border-amber-400"
-            >
-              Trang Chủ
-            </button>
-            <button
-              onClick={() => handleSelectCategory("all")}
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Tất Cả Sản Phẩm
-            </button>
-            {menuCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => handleSelectCategory(cat.id)}
-                className={`px-4 py-2.5 transition-colors ${
-                  activeCategory === cat.id
-                    ? "text-amber-300 border-b-2 border-amber-400"
-                    : "text-slate-300 hover:text-amber-300"
-                }`}
-              >
-                {cat.name}
-              </button>
-            ))}
-            <a
-              href="#ceo-letter-section"
-              className="px-4 py-2.5 text-amber-300 hover:text-amber-200 transition-colors font-semibold flex items-center gap-1.5"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Thư Mời Hợp Tác
-            </a>
-            <a
-              href="#fabric-guide-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Bảng Vải Cao Cấp
-            </a>
-            <a
-              href="#process-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Quy Trình May
-            </a>
-            <a
-              href="#footer-section"
-              className="px-4 py-2.5 text-slate-300 hover:text-amber-300 transition-colors"
-            >
-              Liên Hệ & Xưởng May
-            </a>
-          </div>
+      <nav className="hidden lg:block bg-[#092242] border-t border-slate-800/80 overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-2 xl:px-4 flex items-center text-[12px] xl:text-[13px] font-medium min-w-max">
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-amber-300 font-semibold border-b-2 border-amber-400 shrink-0"
+          >
+            Trang Chủ
+          </button>
 
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-amber-400" />
-              Hà Nội • Phú Thọ
-            </span>
-          </div>
+          <button
+            onClick={() => handleSelectCategory("all")}
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Tất Cả Sản Phẩm
+          </button>
+
+          {menuCategories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => handleSelectCategory(cat.id)}
+              style={NOWRAP}
+              className={`px-2.5 xl:px-3 py-2.5 transition-colors shrink-0 ${
+                activeCategory === cat.id
+                  ? "text-amber-300 border-b-2 border-amber-400"
+                  : "text-slate-300 hover:text-amber-300"
+              }`}
+            >
+              {NAV_SHORT_NAMES[cat.id] || cat.name}
+            </button>
+          ))}
+
+          <a
+            href="#ceo-letter-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-amber-300 hover:text-amber-200 transition-colors font-semibold flex items-center gap-1.5 shrink-0"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>Thư Mời Hợp Tác</span>
+          </a>
+
+          <a
+            href="#fabric-guide-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Bảng Vải
+          </a>
+
+          <a
+            href="#process-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Quy Trình May
+          </a>
+
+          <a
+            href="#footer-section"
+            style={NOWRAP}
+            className="px-2.5 xl:px-3 py-2.5 text-slate-300 hover:text-amber-300 transition-colors shrink-0"
+          >
+            Liên Hệ
+          </a>
         </div>
       </nav>
 
@@ -9083,7 +10006,7 @@ export default function Header() {
 
               <div className="pt-3 border-t border-slate-800">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-3">
-                  Danh mục sản phẩm
+                  Dịch vụ may đo đồng phục
                 </span>
                 <div className="space-y-2">
                   <button

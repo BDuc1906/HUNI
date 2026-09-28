@@ -8,10 +8,7 @@ import {
   LogIn,
   LogOut,
   Package,
-  LayoutDashboard,
-  ChevronDown,
-  Settings,
-  Heart
+  ChevronDown
 } from "lucide-react";
 
 export default function UserMenu() {
@@ -19,7 +16,6 @@ export default function UserMenu() {
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
-  // Click ngoài để đóng dropdown
   useEffect(() => {
     const handler = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -30,14 +26,12 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Loading
   if (status === "loading") {
     return (
       <div className="w-9 h-9 rounded-full bg-slate-800/60 border border-slate-700 animate-pulse" />
     );
   }
 
-  // Chưa đăng nhập — hiện nút Đăng nhập + Đăng ký
   if (!session?.user) {
     return (
       <div className="flex items-center gap-1.5 sm:gap-2">
@@ -54,7 +48,6 @@ export default function UserMenu() {
         >
           <span>Đăng ký</span>
         </Link>
-        {/* Mobile — chỉ hiện icon */}
         <Link
           href="/login"
           className="sm:hidden p-2 rounded-full bg-slate-800/60 text-amber-300 border border-slate-700"
@@ -66,10 +59,8 @@ export default function UserMenu() {
     );
   }
 
-  // Đã đăng nhập
   const user = session.user;
   const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
-  const isAdmin = user.role === "ADMIN";
 
   return (
     <div className="relative" ref={menuRef}>
@@ -108,15 +99,9 @@ export default function UserMenu() {
                 </div>
               </div>
             </div>
-            {isAdmin && (
-              <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 bg-amber-400/20 border border-amber-400/40 rounded-full text-[10px] font-bold text-amber-300">
-                <LayoutDashboard className="w-2.5 h-2.5" />
-                ADMIN
-              </div>
-            )}
           </div>
 
-          {/* Menu items */}
+          {/* Menu items — 2 mục, dùng ?tab= để mở đúng tab */}
           <div className="p-2">
             <Link
               href="/tai-khoan"
@@ -128,36 +113,13 @@ export default function UserMenu() {
             </Link>
 
             <Link
-              href="/tai-khoan/don-hang"
+              href="/tai-khoan?tab=orders"
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
             >
               <Package className="w-4 h-4 text-amber-600 shrink-0" />
               <span>Đơn hàng của tôi</span>
             </Link>
-
-            <Link
-              href="/tai-khoan/yeu-thich"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
-            >
-              <Heart className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>Sản phẩm yêu thích</span>
-            </Link>
-
-            {isAdmin && (
-              <>
-                <div className="h-px bg-slate-100 my-1" />
-                <Link
-                  href="/admin"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-amber-50 text-sm font-bold text-amber-800 transition-colors"
-                >
-                  <LayoutDashboard className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>Trang Quản Trị Admin</span>
-                </Link>
-              </>
-            )}
 
             <div className="h-px bg-slate-100 my-1" />
 
