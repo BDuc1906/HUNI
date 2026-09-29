@@ -36,9 +36,9 @@ export const BRAND_INFO = {
     { id: "warranty",  title: "Đồng Hành Lâu Dài",    desc: "Bảo hành 1 đổi 1 trong 30 ngày cho các lỗi đường kim, mũi chỉ, hình in thêu. Hỗ trợ may bổ sung trọn đời.", icon: "HeartHandshake" }
   ],
   stats: [
-    { value: "10+",      label: "Năm Kinh Nghiệm",        sub: "Khẳng định vị thế dẫn đầu" },
-    { value: "50,000+",  label: "Doanh Nghiệp Tin Tưởng", sub: "Trên khắp 63 tỉnh thành" },
-    { value: "500,000+", label: "Bộ Đồng Phục / Năm",     sub: "Công suất xưởng hiện đại" },
-    { value: "99.8%",    label: "Khách Hàng Hài Lòng",    sub: "Tỷ lệ tái đặt hàng trên 85%" }
+    { value: "10+",      label: "Năm Kinh Nghiệm",       sub: "Đồng hành cùng doanh nghiệp" },
+    { value: "2.500m²",  label: "Xưởng Sản Xuất",         sub: "KCN Thụy Vân, Phú Thọ" },
+    { value: "50.000",   label: "SP/Tháng Công Suất",     sub: "Chuyền may hiện đại" },
+    { value: "63",       label: "Tỉnh Thành Giao Hàng",   sub: "Giao hàng toàn quốc" }
   ]
 };

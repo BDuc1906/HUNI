@@ -101,8 +101,8 @@ export default function FinalCtaSection() {
 
           <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 text-center">
             <TrendingUp className="w-5 h-5 text-amber-400 mx-auto mb-1.5" />
-            <div className="text-xs font-bold text-white">50.000+ KH</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Đã tin dùng</div>
+            <div className="text-xs font-bold text-white">10+ Năm</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Kinh nghiệm dệt may</div>
           </div>
         </div>
       </div>

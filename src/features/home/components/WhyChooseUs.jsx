@@ -31,7 +31,7 @@ export default function WhyChooseUs() {
             Vì Sao Chọn HUNI
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
-            VÌ SAO 50.000+ DOANH NGHIỆP CHỌN HUNI?
+            VÌ SAO DOANH NGHIỆP CHỌN HUNI?
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">
             Chúng tôi không chỉ may đồng phục — chúng tôi đồng hành xây dựng
