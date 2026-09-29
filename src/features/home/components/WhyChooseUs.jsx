@@ -8,7 +8,8 @@ import {
   Scissors,
   BadgePercent,
   Truck,
-  HeartHandshake
+  HeartHandshake,
+  RefreshCw
 } from "lucide-react";
 
 const iconMap = {
@@ -17,7 +18,8 @@ const iconMap = {
   Scissors,
   BadgePercent,
   Truck,
-  HeartHandshake
+  HeartHandshake,
+  RefreshCw
 };
 
 export default function WhyChooseUs() {
@@ -39,7 +41,7 @@ export default function WhyChooseUs() {
           </p>
         </div>
 
-        {/* 6 USP Cards */}
+        {/* 7 USP Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {BRAND_INFO.commitments.map((item) => {
             const Icon = iconMap[item.icon] || ShieldCheck;

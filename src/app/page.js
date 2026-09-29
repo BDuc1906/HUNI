@@ -16,6 +16,8 @@ import WhyChooseUs from "@/features/home/components/WhyChooseUs";
 import FabricGuideSection from "@/features/home/components/FabricGuideSection";
 import SeamlessTechSection from "@/features/home/components/SeamlessTechSection";
 import CulturalHeritageSection from "@/features/home/components/CulturalHeritageSection";
+import KidsSection from "@/features/home/components/KidsSection";
+import GolfSection from "@/features/home/components/GolfSection";
 import ProcessSection from "@/features/home/components/ProcessSection";
 import CeoLetterSection from "@/features/home/components/CeoLetterSection";
 import TestimonialsSection from "@/features/home/components/TestimonialsSection";
@@ -67,6 +69,14 @@ export default function Home() {
 
             <ErrorBoundary name="Hóa tiết văn hóa">
               <CulturalHeritageSection />
+            </ErrorBoundary>
+
+            <ErrorBoundary name="Đồng phục Kids">
+              <KidsSection />
+            </ErrorBoundary>
+
+            <ErrorBoundary name="Đồng phục Golf">
+              <GolfSection />
             </ErrorBoundary>
 
             <ErrorBoundary name="Quy trình">

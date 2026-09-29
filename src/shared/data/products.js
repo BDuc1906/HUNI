@@ -1148,5 +1148,274 @@ export const PRODUCTS = [
       "Có thể thêu logo doanh nghiệp"
     ],
     description: "Cravat lụa tơ tằm họa tiết văn hóa — điểm nhấn tinh tế cho bộ trang phục doanh nhân."
+  },
+  // ==================================================
+  // NHÓM 5: ĐỒNG PHỤC KIDS — BỔ SUNG TỪ CATALOGUE IHDC
+  // ==================================================
+  {
+    id: "hdc-polo-kids-white",
+    title: "Áo Polo Trẻ Em HDC Kids Trắng",
+    sku: "HDC-KID-POLO-WHITE",
+    category: "school",
+    badge: "Best Seller",
+    rating: 5.0,
+    reviewsCount: 145,
+    soldCount: "12,400+",
+    image: "/images/11_kids_polo_products_01.jpg",
+    gallery: [
+      "/images/11_kids_polo_products_01.jpg",
+      "/images/11_kids_polo_products_02.jpg"
+    ],
+    price: 145000,
+    originalPrice: 195000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 145000, label: "20 - 49 áo" },
+      { min: 50, max: 99, price: 125000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 105000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 85000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 4 Chiều Mềm Mại",
+    colors: [
+      { name: "Trắng", code: "#FFFFFF" },
+      { name: "Trắng Sữa", code: "#FEFDF9" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Vải cotton compact 4 chiều mềm mại",
+      "An toàn cho làn da trẻ em",
+      "Cổ bẻ thoải mái không cấn",
+      "Đường may chắc chắn bền bỉ",
+      "Phù hợp mặc hàng ngày và đi học"
+    ],
+    description: "Áo polo trẻ em màu trắng — lựa chọn cơ bản và an toàn cho các bé."
+  },
+  {
+    id: "hdc-polo-kids-navy",
+    title: "Áo Polo Trẻ Em HDC Kids Navy",
+    sku: "HDC-KID-POLO-NAVY",
+    category: "school",
+    badge: "Best Seller",
+    rating: 5.0,
+    reviewsCount: 132,
+    soldCount: "10,800+",
+    image: "/images/11_kids_polo_products_02.jpg",
+    gallery: [
+      "/images/11_kids_polo_products_02.jpg",
+      "/images/11_kids_polo_products_03.jpg"
+    ],
+    price: 145000,
+    originalPrice: 195000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 145000, label: "20 - 49 áo" },
+      { min: 50, max: 99, price: 125000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 105000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 85000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 4 Chiều Mềm Mại",
+    colors: [
+      { name: "Xanh Navy", code: "#1E3A8A" },
+      { name: "Xanh Đen", code: "#0A192F" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Vải cotton compact 4 chiều",
+      "Màu navy thanh lịch, dễ phối",
+      "Thấm hút mồ hôi tốt",
+      "Không phai màu sau nhiều lần giặt",
+      "Phù hợp cho cả bé trai và bé gái"
+    ],
+    description: "Áo polo trẻ em màu navy — lựa chọn thanh lịch cho các bé."
+  },
+  {
+    id: "hdc-polo-kids-red",
+    title: "Áo Polo Trẻ Em HDC Kids Đỏ",
+    sku: "HDC-KID-POLO-RED",
+    category: "school",
+    badge: "Best Seller",
+    rating: 5.0,
+    reviewsCount: 98,
+    soldCount: "7,600+",
+    image: "/images/11_kids_polo_products_03.jpg",
+    gallery: [
+      "/images/11_kids_polo_products_03.jpg",
+      "/images/11_kids_polo_products_04.jpg"
+    ],
+    price: 145000,
+    originalPrice: 195000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 145000, label: "20 - 49 áo" },
+      { min: 50, max: 99, price: 125000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 105000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 85000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 4 Chiều Mềm Mại",
+    colors: [
+      { name: "Đỏ Tươi", code: "#DC2626" },
+      { name: "Đỏ Đô", code: "#991B1B" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Vải cotton compact 4 chiều",
+      "Màu đỏ tươi nổi bật",
+      "Bền màu sau 100 lần giặt",
+      "Co giãn thoải mái vận động",
+      "Phù hợp cho các bé năng động"
+    ],
+    description: "Áo polo trẻ em màu đỏ — lựa chọn nổi bật cho các bé năng động."
+  },
+  {
+    id: "hdc-polo-kids-yellow",
+    title: "Áo Polo Trẻ Em HDC Kids Vàng",
+    sku: "HDC-KID-POLO-YELLOW",
+    category: "school",
+    badge: "Best Seller",
+    rating: 5.0,
+    reviewsCount: 87,
+    soldCount: "6,200+",
+    image: "/images/11_kids_polo_products_04.jpg",
+    gallery: [
+      "/images/11_kids_polo_products_04.jpg",
+      "/images/11_kids_polo_products_05.jpg"
+    ],
+    price: 145000,
+    originalPrice: 195000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 145000, label: "20 - 49 áo" },
+      { min: 50, max: 99, price: 125000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 105000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 85000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 4 Chiều Mềm Mại",
+    colors: [
+      { name: "Vàng Tươi", code: "#FCD34D" },
+      { name: "Vàng Mù Tạt", code: "#D97706" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Vải cotton compact 4 chiều",
+      "Màu vàng tươi vui nhộn",
+      "An toàn cho da nhạy cảm",
+      "Đường may tỉ mỉ",
+      "Phù hợp cho bé trai và bé gái"
+    ],
+    description: "Áo polo trẻ em màu vàng — sắc màu vui nhộn cho các bé yêu."
+  },
+  {
+    id: "hdc-polo-kids-brown",
+    title: "Áo Polo Trẻ Em HDC Kids Nâu",
+    sku: "HDC-KID-POLO-BROWN",
+    category: "school",
+    badge: "Best Seller",
+    rating: 5.0,
+    reviewsCount: 76,
+    soldCount: "5,400+",
+    image: "/images/11_kids_polo_products_05.jpg",
+    gallery: [
+      "/images/11_kids_polo_products_05.jpg",
+      "/images/11_kids_polo_products_01.jpg"
+    ],
+    price: 145000,
+    originalPrice: 195000,
+    unit: "chiếc",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 145000, label: "20 - 49 áo" },
+      { min: 50, max: 99, price: 125000, label: "50 - 99 áo" },
+      { min: 100, max: 299, price: 105000, label: "100 - 299 áo" },
+      { min: 300, max: 9999, price: 85000, label: "Từ 300 áo trở lên" }
+    ],
+    material: "Cotton Compact 4 Chiều Mềm Mại",
+    colors: [
+      { name: "Nâu Đất", code: "#78350F" },
+      { name: "Nâu Nhạt", code: "#A16207" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Vải cotton compact 4 chiều",
+      "Màu nâu đất ấm áp",
+      "Thấm hút mồ hôi tốt",
+      "Không nhăn, dễ giặt",
+      "Phù hợp phong cách trẻ trung"
+    ],
+    description: "Áo polo trẻ em màu nâu — lựa chọn ấm áp cho các bé."
+  },
+  {
+    id: "hdc-kid-vest-set",
+    title: "Bộ Vest Trẻ Em HDC Kids Cao Cấp",
+    sku: "HDC-KID-VEST",
+    category: "school",
+    badge: "Cao Cấp",
+    rating: 5.0,
+    reviewsCount: 68,
+    soldCount: "3,400+",
+    image: "/images/12_kids_bestseller_01.jpg",
+    gallery: [
+      "/images/12_kids_bestseller_01.jpg",
+      "/images/12_kids_bestseller_02.jpg"
+    ],
+    price: 385000,
+    originalPrice: 495000,
+    unit: "bộ (Vest + Chân váy/Quần)",
+    wholesaleTiers: [
+      { min: 10, max: 29, price: 385000, label: "10 - 29 bộ" },
+      { min: 30, max: 79, price: 335000, label: "30 - 79 bộ" },
+      { min: 80, max: 199, price: 295000, label: "80 - 199 bộ" },
+      { min: 200, max: 9999, price: 255000, label: "Từ 200 bộ trở lên" }
+    ],
+    material: "Kate Nhật Cao Cấp Form Chuẩn",
+    colors: [
+      { name: "Navy Đậm", code: "#0A192F" },
+      { name: "Xám Ghi", code: "#334155" }
+    ],
+    sizes: ["110", "120", "130", "140", "150", "160"],
+    features: [
+      "Vải Kate Nhật cao cấp",
+      "Form vest chuẩn quốc tế",
+      "Đường may tỉ mỉ từng chi tiết",
+      "Có cả bộ nam và nữ",
+      "Phù hợp mặc dự lễ, sự kiện"
+    ],
+    description: "Bộ vest trẻ em cao cấp — trang phục lịch lãm cho các bé trong dịp đặc biệt."
+  },
+  {
+    id: "hdc-kid-preschool-set",
+    title: "Đồng Phục Mẫu Giáo HDC Kids Xám",
+    sku: "HDC-KID-PRESCHOOL",
+    category: "school",
+    badge: "Mẫu Giáo",
+    rating: 5.0,
+    reviewsCount: 89,
+    soldCount: "5,800+",
+    image: "/images/12_kids_bestseller_03.jpg",
+    gallery: [
+      "/images/12_kids_bestseller_03.jpg",
+      "/images/12_kids_bestseller_04.jpg"
+    ],
+    price: 245000,
+    originalPrice: 325000,
+    unit: "bộ (Áo + Váy/Quần)",
+    wholesaleTiers: [
+      { min: 20, max: 49, price: 245000, label: "20 - 49 bộ" },
+      { min: 50, max: 99, price: 215000, label: "50 - 99 bộ" },
+      { min: 100, max: 299, price: 185000, label: "100 - 299 bộ" },
+      { min: 300, max: 9999, price: 155000, label: "Từ 300 bộ trở lên" }
+    ],
+    material: "Cotton Compact Mềm Mại An Toàn",
+    colors: [
+      { name: "Xám Ghi", code: "#9CA3AF" },
+      { name: "Xám Đậm", code: "#4B5563" }
+    ],
+    sizes: ["100", "110", "120", "130", "140", "150"],
+    features: [
+      "Vải cotton compact mềm mại",
+      "An toàn cho da bé mẫu giáo",
+      "Thấm hút mồ hôi tốt",
+      "Không phai màu",
+      "Đường may chắc chắn chịu được vận động"
+    ],
+    description: "Đồng phục mẫu giáo màu xám — lựa chọn thanh lịch cho các bé mầm non."
   }
 ];
