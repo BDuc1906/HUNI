@@ -103,7 +103,6 @@ export default function ProductCatalog({ initialCategory }) {
     }).sort((a, b) => {
       if (sortBy === "priceAsc") return a.price - b.price;
       if (sortBy === "priceDesc") return b.price - a.price;
-      if (sortBy === "rating") return b.rating - a.rating;
       if (sortBy === "discount") {
         const discA =
           a.originalPrice && a.originalPrice > a.price
@@ -361,7 +360,6 @@ export default function ProductCatalog({ initialCategory }) {
                 <option value="discount">Giảm giá nhiều nhất</option>
                 <option value="priceAsc">Giá tăng</option>
                 <option value="priceDesc">Giá giảm</option>
-                <option value="rating">5 sao</option>
               </select>
             </div>
 

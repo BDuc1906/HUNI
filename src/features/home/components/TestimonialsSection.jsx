@@ -6,6 +6,8 @@ import { TESTIMONIALS } from "@/shared/data";
 import { Star, Quote, Award } from "lucide-react";
 
 export default function TestimonialsSection() {
+  if (!TESTIMONIALS || TESTIMONIALS.length === 0) return null;
+
   return (
     <section className="py-14 sm:py-20 bg-slate-50 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-3 sm:px-4">

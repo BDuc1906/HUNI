@@ -97,40 +97,12 @@ export async function GET(request) {
         isAuthenticated: Boolean(session?.user?.id),
       });
     } catch (dbErr) {
-      console.warn("Lỗi truy vấn db.review, sử dụng dữ liệu đánh giá mẫu:", dbErr.message);
-
-      // Dữ liệu đánh giá mẫu chất lượng cao cho HUNI
-      const fallbackReviews = [
-        {
-          id: `fb-${productId}-1`,
-          rating: 5,
-          content:
-            "Chất vải rất mịn, đường may tỉ mỉ, form dáng áo may vừa vặn và sang trọng. Doanh nghiệp mình đặt số lượng lớn cho nhân viên, ai cũng rất ưng ý!",
-          createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
-          user: { name: "Nguyễn Minh Tuấn (CTY TechCorp)", avatar: null },
-        },
-        {
-          id: `fb-${productId}-2`,
-          rating: 5,
-          content:
-            "Thời gian giao hàng đúng tiến độ, logo thêu sắc nét từng chi tiết. Đội ngũ HUNI tư vấn size nhiệt tình, hỗ trợ duyệt mẫu vải thực tế chu đáo.",
-          createdAt: new Date(Date.now() - 6 * 86400000).toISOString(),
-          user: { name: "Trần Mai Anh (Ngân hàng VIB)", avatar: null },
-        },
-        {
-          id: `fb-${productId}-3`,
-          rating: 4,
-          content:
-            "Vải co giãn và thoáng mát, thấm hút mồ hôi tốt khi làm việc cả ngày dài. Sau khi giặt máy nhiều lần vẫn giữ nếp phom dáng chuẩn.",
-          createdAt: new Date(Date.now() - 14 * 86400000).toISOString(),
-          user: { name: "Lê Hoàng Phúc (Tập đoàn Hòa Phát)", avatar: null },
-        },
-      ];
+      console.warn("Chưa có cơ sở dữ liệu review hoặc lỗi truy vấn:", dbErr.message);
 
       return NextResponse.json({
-        reviews: fallbackReviews,
-        avgRating: 4.8,
-        total: fallbackReviews.length,
+        reviews: [],
+        avgRating: 0,
+        total: 0,
         canReview: Boolean(session?.user?.id),
         hasOrdered: Boolean(session?.user?.id),
         isAuthenticated: Boolean(session?.user?.id),

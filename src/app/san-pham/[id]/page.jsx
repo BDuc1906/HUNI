@@ -151,18 +151,14 @@ export default async function ProductDetailPage({ params }) {
                   {product.title}
                 </h1>
 
-                <div className="flex items-center gap-3 text-xs">
-                  <div className="flex items-center gap-1 text-amber-500 font-bold">
-                    <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    <span>{product.rating || 5.0}</span>
-                  </div>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-slate-600">
-                    {product.reviewsCount || 48} đánh giá đã xác thực
+                <div className="flex items-center gap-3 text-xs text-slate-600 flex-wrap">
+                  <span className="text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 inline-flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    Bảo hành 30 ngày 1 đổi 1
                   </span>
                   <span className="text-slate-300">•</span>
-                  <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                    Đã may: {product.soldCount || "5,000+"} chiếc
+                  <span className="text-slate-500 font-medium">
+                    May mẫu thử 0đ trước khi sản xuất số lượng lớn
                   </span>
                 </div>
               </div>

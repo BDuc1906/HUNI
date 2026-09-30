@@ -20,7 +20,7 @@ import {
 
 export default function ReviewSection({ productId }) {
   const [reviews, setReviews] = useState([]);
-  const [avgRating, setAvgRating] = useState(5.0);
+  const [avgRating, setAvgRating] = useState(0);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [canReview, setCanReview] = useState(false);
@@ -43,7 +43,7 @@ export default function ReviewSection({ productId }) {
       if (res.ok) {
         const data = await res.json();
         setReviews(data.reviews || []);
-        setAvgRating(data.avgRating ?? 5.0);
+        setAvgRating(data.avgRating ?? 0);
         setTotal(data.total ?? 0);
         setCanReview(Boolean(data.canReview));
         setIsAuthenticated(Boolean(data.isAuthenticated));
@@ -143,15 +143,21 @@ export default function ReviewSection({ productId }) {
               Đánh giá từ khách hàng ({total})
             </h3>
           </div>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-xl font-black text-amber-600">
-              {avgRating.toFixed(1)}
-            </span>
-            {renderStars(avgRating, 5, "w-3.5 h-3.5")}
-            <span className="text-xs text-slate-500 font-medium">
-              (Dựa trên {total} lượt đánh giá thực tế)
-            </span>
-          </div>
+          {total > 0 ? (
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-xl font-black text-amber-600">
+                {avgRating.toFixed(1)}
+              </span>
+              {renderStars(avgRating, 5, "w-3.5 h-3.5")}
+              <span className="text-xs text-slate-500 font-medium">
+                (Dựa trên {total} lượt đánh giá thực tế)
+              </span>
+            </div>
+          ) : (
+            <div className="text-xs text-slate-400 font-medium mt-1">
+              Chưa có lượt đánh giá nào
+            </div>
+          )}
         </div>
 
         {/* Nút mở form đánh giá */}

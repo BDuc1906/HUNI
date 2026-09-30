@@ -281,28 +281,14 @@ export default function ProductDetailModal() {
                 <span className="text-slate-600 line-clamp-1">{product.title}</span>
               </nav>
 
-              {/* Row 1: SKU + Rating + Sold */}
+              {/* Row 1: SKU + Brand authenticity */}
               <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-xs">
                 <span className="text-amber-700 font-bold uppercase tracking-wider">
                   SKU: {product.sku}
                 </span>
-                <div className="flex items-center gap-2.5">
-                  <div className="flex items-center gap-1 text-amber-500">
-                    <Star className="w-3.5 h-3.5 fill-current" />
-                    <span className="font-black text-slate-800 text-[11px] sm:text-sm">
-                      {product.rating}
-                    </span>
-                    <span className="text-slate-400">
-                      ({product.reviewsCount})
-                    </span>
-                  </div>
-                  <span className="w-px h-3.5 bg-slate-200" />
-                  <div className="flex items-center gap-1 text-emerald-700">
-                    <TrendingUp className="w-3.5 h-3.5" />
-                    <span className="font-bold">
-                      Đã bán {product.soldCount || "1.000+"}
-                    </span>
-                  </div>
+                <div className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 font-semibold">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Chính hãng HDC • May đo chuẩn phom</span>
                 </div>
               </div>
 
