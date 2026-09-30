@@ -368,6 +368,8 @@ export function ShopProvider({ children }) {
         setIsOrderTrackingOpen,
         isQuickQuoteOpen,
         setIsQuickQuoteOpen,
+        isQuoteOpen: isQuickQuoteOpen,
+        setIsQuoteOpen: setIsQuickQuoteOpen,
         isCustomizerOpen,
         setIsCustomizerOpen,
         customizerProduct,

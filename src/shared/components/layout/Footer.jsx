@@ -105,13 +105,13 @@ export default function Footer() {
               <li>
                 <Link href="/dong-phuc-doanh-nghiep" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
-                  <span>Đồng phục Polo doanh nghiệp</span>
+                  <span>Đồng phục Polo & Sơ mi</span>
                 </Link>
               </li>
               <li>
                 <Link href="/dong-phuc-may-do" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
-                  <span>Vest & Sơ mi lãnh đạo may đo</span>
+                  <span>Vest & Sơ mi may đo cao cấp</span>
                 </Link>
               </li>
               <li>
@@ -129,14 +129,59 @@ export default function Footer() {
               <li>
                 <Link href="/phu-kien-doanh-nghiep" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
-                  <span>Phụ kiện nón, cặp da, túi quà</span>
+                  <span>Phụ kiện nón, cặp da, quà tặng</span>
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Useful Links & Knowledge Hub */}
+          <div className="lg:col-span-2 space-y-3">
+            <h4 className="font-extrabold text-white text-sm uppercase tracking-wider text-brand-400">
+              Kiến Thức & Tiện Ích
+            </h4>
+            <ul className="space-y-2 text-slate-400">
+              <li>
+                <Link href="/blog" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-brand-400" />
+                  <span>Kiến thức may mặc</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/bao-gia-dong-phuc-cong-ty" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-brand-400" />
+                  <span>Bảng báo giá 2026</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/size-ao-so-mi-nam" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-brand-400" />
+                  <span>Bảng size áo chuẩn</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/bang-vai" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-brand-400" />
+                  <span>Bảng so sánh chất liệu vải</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/quy-trinh-may" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-brand-400" />
+                  <span>Quy trình sản xuất 5 bước</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/so-do-website" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                  <ArrowRight className="w-3 h-3 text-brand-400" />
+                  <span>Sơ đồ website (Sitemap)</span>
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Head Office & Branches */}
-          <div className="lg:col-span-5 space-y-3">
+          <div className="lg:col-span-3 space-y-3">
             <h4 className="font-extrabold text-white text-sm uppercase tracking-wider text-brand-400">
               Hệ Thống Trụ Sở & Showroom
             </h4>
@@ -190,6 +235,13 @@ export default function Footer() {
             © 2026 <strong>HDC GROUP VN - THƯƠNG HIỆU HDC FASHION</strong>. All rights reserved.
           </div>
           <div className="flex items-center gap-3 flex-wrap justify-center sm:justify-end">
+            <Link
+              href="/so-do-website"
+              className="hover:text-brand-300 transition-colors"
+            >
+              Sơ đồ website
+            </Link>
+            <span className="text-slate-700">•</span>
             <Link
               href="/chinh-sach-bao-mat"
               className="hover:text-brand-300 transition-colors"

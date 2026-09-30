@@ -121,6 +121,7 @@ export default function RootLayout({ children }) {
     <html
       lang="vi"
       className={`${jakarta.variable} scroll-smooth`}
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>

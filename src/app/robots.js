@@ -7,7 +7,7 @@ export default function robots() {
         disallow: ["/api/", "/_next/", "/admin/"],
       },
     ],
-    sitemap: "https://huniuniform.vn/sitemap.xml",
-    host: "https://huniuniform.vn",
+    sitemap: "https://hdcfashion.vn/sitemap.xml",
+    host: "https://hdcfashion.vn",
   };
 }

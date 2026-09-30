@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useMemo, useEffect, useTransition } from "react";
 import Image from "next/image";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { PRODUCTS, CATEGORIES } from "@/shared/data";
@@ -25,8 +25,33 @@ const iconMap = {
   PackageCheck: PackageCheck
 };
 
+// Inline SkeletonCard component for transition loading
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col animate-pulse">
+      <div className="h-52 sm:h-64 md:h-72 w-full bg-slate-200" />
+      <div className="p-3 sm:p-4 space-y-3">
+        <div className="flex justify-between items-center">
+          <div className="h-3 w-16 bg-slate-200 rounded" />
+          <div className="h-3 w-12 bg-slate-200 rounded" />
+        </div>
+        <div className="h-4 w-3/4 bg-slate-200 rounded" />
+        <div className="h-3 w-1/2 bg-slate-200 rounded" />
+        <div className="pt-3 border-t border-slate-100 flex justify-between items-end">
+          <div className="space-y-1">
+            <div className="h-4 w-20 bg-slate-200 rounded" />
+            <div className="h-3 w-16 bg-slate-200 rounded" />
+          </div>
+          <div className="h-9 w-9 bg-slate-200 rounded-xl" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ProductCatalog({ initialCategory }) {
   const { activeCategory, setActiveCategory } = useShop();
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (initialCategory) {
@@ -38,6 +63,18 @@ export default function ProductCatalog({ initialCategory }) {
   const [selectedMaterial, setSelectedMaterial] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
   const [priceRange, setPriceRange] = useState("all");
+  const [visibleCount, setVisibleCount] = useState(9);
+
+  // Materials unique list
+  const materialOptions = useMemo(
+    () => [...new Set(PRODUCTS.map((p) => p.material))].sort(),
+    []
+  );
+
+  // Reset visibleCount when any filter or category changes
+  useEffect(() => {
+    setVisibleCount(9);
+  }, [activeCategory, searchFilter, selectedMaterial, priceRange, sortBy]);
 
   // Only real categories (excluding "all")
   const displayCategories = CATEGORIES.filter((c) => c.id !== "all");
@@ -66,17 +103,36 @@ export default function ProductCatalog({ initialCategory }) {
     }).sort((a, b) => {
       if (sortBy === "priceAsc") return a.price - b.price;
       if (sortBy === "priceDesc") return b.price - a.price;
-      if (sortBy === "rating") return b.rating - a.rating;
+      if (sortBy === "discount") {
+        const discA =
+          a.originalPrice && a.originalPrice > a.price
+            ? (a.originalPrice - a.price) / a.originalPrice
+            : 0;
+        const discB =
+          b.originalPrice && b.originalPrice > b.price
+            ? (b.originalPrice - b.price) / b.originalPrice
+            : 0;
+        return discB - discA;
+      }
       return 0;
     });
   }, [activeCategory, selectedMaterial, searchFilter, priceRange, sortBy]);
 
+  const activeFiltersCount = [
+    activeCategory !== "all",
+    searchFilter.trim() !== "",
+    selectedMaterial !== "all",
+    priceRange !== "all",
+  ].filter(Boolean).length;
+
   const resetFilters = () => {
-    setActiveCategory("all");
-    setSearchFilter("");
-    setSelectedMaterial("all");
-    setSortBy("popular");
-    setPriceRange("all");
+    startTransition(() => {
+      setActiveCategory("all");
+      setSearchFilter("");
+      setSelectedMaterial("all");
+      setSortBy("popular");
+      setPriceRange("all");
+    });
   };
 
   const scrollToGrid = () => {
@@ -107,7 +163,7 @@ export default function ProductCatalog({ initialCategory }) {
         {/* =============================================
             Category Cards — Visual selector
             ============================================= */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5 mb-8 sm:mb-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-4 lg:gap-5 mb-8 sm:mb-10">
           {displayCategories.map((cat) => {
             const Icon = iconMap[cat.icon] || Briefcase;
             const isActive = activeCategory === cat.id;
@@ -117,7 +173,9 @@ export default function ProductCatalog({ initialCategory }) {
                 key={cat.id}
                 type="button"
                 onClick={() => {
-                  setActiveCategory(cat.id);
+                  startTransition(() => {
+                    setActiveCategory(cat.id);
+                  });
                   scrollToGrid();
                 }}
                 className={`group relative text-left cursor-pointer rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-2xl transition-all duration-300 border flex flex-col transform hover:-translate-y-1 active:scale-[0.98] ${
@@ -181,19 +239,29 @@ export default function ProductCatalog({ initialCategory }) {
           <div className="pt-4 sm:pt-6 overflow-x-auto -mx-3 sm:mx-0 px-3 sm:px-0">
             <div className="flex items-center gap-2 min-w-max">
               <button
-                onClick={() => setActiveCategory("all")}
+                type="button"
+                onClick={() => {
+                  startTransition(() => {
+                    setActiveCategory("all");
+                  });
+                }}
                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold whitespace-nowrap transition-all active:scale-[0.98] ${
                   activeCategory === "all"
                     ? "bg-[#004f5e] text-brand-300 shadow-md"
                     : "bg-slate-100 hover:bg-slate-200 text-slate-700"
                 }`}
               >
-                Tất cả
+                Tất Cả ({PRODUCTS.length})
               </button>
               {displayCategories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
+                  type="button"
+                  onClick={() => {
+                    startTransition(() => {
+                      setActiveCategory(cat.id);
+                    });
+                  }}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold whitespace-nowrap transition-all active:scale-[0.98] ${
                     activeCategory === cat.id
                       ? "bg-[#004f5e] text-brand-300 shadow-md"
@@ -207,36 +275,68 @@ export default function ProductCatalog({ initialCategory }) {
           </div>
 
           <div className="text-[11px] sm:text-xs text-slate-500 font-medium pt-4 sm:pt-6 shrink-0">
-            Hiển thị <strong className="text-[#004f5e]">{filteredProducts.length}</strong> / {PRODUCTS.length} mẫu
+            Hiển thị <strong className="text-[#004f5e]">{Math.min(visibleCount, filteredProducts.length)}</strong> / {filteredProducts.length} mẫu
           </div>
         </div>
 
         {/* =============================================
             Secondary Filter Bar
             ============================================= */}
-        <div className="bg-slate-50 p-3 sm:p-4 rounded-2xl border border-slate-200 mb-6 sm:mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 text-xs">
+        <div className="bg-slate-50 p-2.5 sm:p-4 rounded-2xl border border-slate-200 mb-6 sm:mb-8 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3 text-xs">
           {/* Quick search */}
-          <div className="relative w-full md:flex-1 md:max-w-xs">
+          <div className="relative w-full lg:max-w-xs shrink-0">
             <input
               type="text"
               placeholder="Lọc theo tên hoặc chất liệu..."
               value={searchFilter}
-              onChange={(e) => setSearchFilter(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                startTransition(() => {
+                  setSearchFilter(val);
+                });
+              }}
               className="w-full pl-8 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 text-xs sm:text-sm"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 sm:gap-2.5 w-full lg:w-auto">
+            {/* Material filter */}
+            <div className="flex items-center gap-1.5 flex-1 sm:flex-initial">
+              <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap hidden xs:inline">Chất liệu:</span>
+              <select
+                value={selectedMaterial}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  startTransition(() => {
+                    setSelectedMaterial(val);
+                  });
+                }}
+                className="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs max-w-full sm:max-w-[150px] truncate"
+              >
+                <option value="all">Tất cả chất liệu</option>
+                {materialOptions.map((mat) => (
+                  <option key={mat} value={mat}>
+                    {mat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* Price filter */}
             <div className="flex items-center gap-1.5 flex-1 sm:flex-initial">
-              <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap">Giá:</span>
+              <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap hidden xs:inline">Giá:</span>
               <select
                 value={priceRange}
-                onChange={(e) => setPriceRange(e.target.value)}
-                className="flex-1 sm:flex-initial bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  startTransition(() => {
+                    setPriceRange(val);
+                  });
+                }}
+                className="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs"
               >
-                <option value="all">Tất cả</option>
+                <option value="all">Tất cả giá</option>
                 <option value="under200">Dưới 200k</option>
                 <option value="200to500">200k - 500k</option>
                 <option value="over500">Trên 500k</option>
@@ -245,44 +345,80 @@ export default function ProductCatalog({ initialCategory }) {
 
             {/* Sort */}
             <div className="flex items-center gap-1.5 flex-1 sm:flex-initial">
-              <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap">Sắp xếp:</span>
+              <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap hidden xs:inline">Sắp xếp:</span>
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="flex-1 sm:flex-initial bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  startTransition(() => {
+                    setSortBy(val);
+                  });
+                }}
+                className="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs"
               >
                 <option value="popular">Phổ biến</option>
+                <option value="discount">Giảm giá nhiều nhất</option>
                 <option value="priceAsc">Giá tăng</option>
                 <option value="priceDesc">Giá giảm</option>
-                <option value="rating">5 sao</option>
               </select>
             </div>
 
             {/* Reset */}
-            {(activeCategory !== "all" ||
-              searchFilter ||
-              selectedMaterial !== "all" ||
-              priceRange !== "all") && (
+            {(activeFiltersCount > 0 || sortBy !== "popular") && (
               <button
+                type="button"
                 onClick={resetFilters}
-                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium flex items-center gap-1 transition-colors text-[11px] sm:text-xs active:scale-[0.98]"
+                className="w-full sm:w-auto justify-center px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium flex items-center gap-1.5 transition-colors text-[11px] sm:text-xs active:scale-[0.98]"
               >
                 <RefreshCw className="w-3 h-3" />
                 <span>Đặt lại</span>
+                {activeFiltersCount > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">
+                    {activeFiltersCount}
+                  </span>
+                )}
               </button>
             )}
           </div>
         </div>
 
         {/* =============================================
-            Product Grid
+            Product Grid / Skeleton Loading
             ============================================= */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+        {isPending ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonCard key={i} />
             ))}
           </div>
+        ) : filteredProducts.length > 0 ? (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6">
+              {filteredProducts.slice(0, visibleCount).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {/* Load-more Pattern */}
+            <div className="mt-8 sm:mt-12 text-center space-y-3">
+              <p className="text-xs text-slate-500 font-medium">
+                Đang xem {Math.min(visibleCount, filteredProducts.length)} / {filteredProducts.length} sản phẩm
+              </p>
+              {visibleCount < filteredProducts.length && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisibleCount((prev) =>
+                      Math.min(prev + 9, filteredProducts.length)
+                    )
+                  }
+                  className="px-6 py-3 bg-[#004f5e] hover:bg-[#003843] text-brand-300 font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all active:scale-[0.98]"
+                >
+                  Xem thêm {Math.min(9, filteredProducts.length - visibleCount)} sản phẩm
+                </button>
+              )}
+            </div>
+          </>
         ) : (
           <div className="text-center py-12 sm:py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-300 p-6 sm:p-8">
             <SlidersHorizontal className="w-8 h-8 sm:w-10 sm:h-10 text-slate-400 mx-auto mb-3" />
@@ -293,6 +429,7 @@ export default function ProductCatalog({ initialCategory }) {
               Không có mẫu đồng phục nào khớp với tiêu chí tìm kiếm hiện tại của bạn.
             </p>
             <button
+              type="button"
               onClick={resetFilters}
               className="px-5 py-2.5 bg-[#004f5e] text-brand-300 font-bold text-xs sm:text-sm rounded-xl shadow hover:bg-slate-800 transition-colors active:scale-[0.98]"
             >

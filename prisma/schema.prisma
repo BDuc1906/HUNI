@@ -158,12 +158,30 @@ model User {
   avatar        String?
   role          UserRole  @default(CUSTOMER)
   lastLoginAt   DateTime?
+  reviews       Review[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([email])
   @@index([role])
   @@map("users")
+}
+
+// ==================================================
+// ĐÁNH GIÁ SẢN PHẨM
+// ==================================================
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  userId    String
+  rating    Int      @db.SmallInt
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([userId])
+  @@map("reviews")
 }
 
 enum UserRole {
