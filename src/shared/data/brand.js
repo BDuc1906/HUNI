@@ -18,7 +18,7 @@ export const BRAND_INFO = {
     website: "hdcfashion.vn",
     zalo: "0984959586",
     email: "dongphuchuni@gmail.com",
-    headquarters: "LK - 17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, Tỉnh Phú Thọ",
+    headquarters: "LK - 17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, Tỉnh Hòa Bình",
     branchHanoi: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội",
     factory: "Xưởng may HDC Fashion 2.500m², KCN Thụy Vân, TP. Việt Trì, Phú Thọ"
   },

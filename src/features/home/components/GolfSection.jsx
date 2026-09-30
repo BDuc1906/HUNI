@@ -102,7 +102,7 @@ export default function GolfSection() {
               </h3>
               <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
                 Giải Golf kỷ niệm 30 năm phong trào Doanh nhân Trẻ Việt Nam đã được tổ chức thành công
-                tại sân Golf Long Biên. Với đồng đảo các Shark tham dự và sự góp mặt của các gương mặt
+                tại sân Golf Long Biên. Với đông đảo các Shark tham dự và sự góp mặt của các gương mặt
                 quen thuộc — <strong className="text-brand-200">anh Đặng Hồng Anh</strong> (Chủ tịch Hội DNT Việt Nam),{" "}
                 <strong className="text-brand-200">anh Đỗ Duy Liên</strong> (Phó Chủ tịch Hội DNT Việt Nam,{" "}
                 Chủ tịch Hội DNT Hòa Bình)... Cùng hàng trăm các Shark trong Hội DNT Việt Nam.

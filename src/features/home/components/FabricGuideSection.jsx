@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import { FABRIC_COMPARISONS } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
 import {
@@ -12,190 +13,101 @@ import {
   Waves,
   Shirt,
   Recycle,
+  CheckCircle2,
+  TableProperties,
+  LayoutGrid
 } from "lucide-react";
 
-// ==================================================
-// CutoutIcon — tự xóa nền TRẮNG của ảnh icon (jpg/png nền trắng)
-// Flood-fill từ mép ảnh nên phần trắng bên trong hình vẽ được giữ nguyên.
-// ==================================================
-function CutoutIcon({ src, className = "" }) {
-  const [url, setUrl] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    const img = new Image();
-    img.onload = () => {
-      const W = img.naturalWidth;
-      const H = img.naturalHeight;
-      const canvas = document.createElement("canvas");
-      canvas.width = W;
-      canvas.height = H;
-      const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      ctx.drawImage(img, 0, 0);
-      let frame;
-      try {
-        frame = ctx.getImageData(0, 0, W, H);
-      } catch {
-        if (!cancelled) setUrl(src); // fallback: dùng ảnh gốc
-        return;
-      }
-      const d = frame.data;
-      const TH = 232; // >= ngưỡng này coi là nền trắng
-      const isBg = (p) =>
-        d[p * 4 + 3] < 10 || (d[p * 4] >= TH && d[p * 4 + 1] >= TH && d[p * 4 + 2] >= TH);
-
-      const bg = new Uint8Array(W * H);
-      const stack = [];
-      const push = (p) => {
-        if (!bg[p] && isBg(p)) {
-          bg[p] = 1;
-          stack.push(p);
-        }
-      };
-      for (let x = 0; x < W; x++) {
-        push(x);
-        push((H - 1) * W + x);
-      }
-      for (let y = 0; y < H; y++) {
-        push(y * W);
-        push(y * W + W - 1);
-      }
-      while (stack.length) {
-        const p = stack.pop();
-        const x = p % W;
-        if (x > 0) push(p - 1);
-        if (x < W - 1) push(p + 1);
-        if (p >= W) push(p - W);
-        if (p < W * (H - 1)) push(p + W);
-      }
-
-      for (let p = 0; p < W * H; p++) {
-        if (bg[p]) {
-          d[p * 4 + 3] = 0;
-          continue;
-        }
-        // làm mờ viền sáng sát nền để không còn quầng trắng
-        const x = p % W;
-        const near =
-          (x > 0 && bg[p - 1]) ||
-          (x < W - 1 && bg[p + 1]) ||
-          (p >= W && bg[p - W]) ||
-          (p < W * (H - 1) && bg[p + W]);
-        if (near) {
-          const m = Math.min(d[p * 4], d[p * 4 + 1], d[p * 4 + 2]);
-          if (m > 190) {
-            d[p * 4 + 3] = Math.max(0, Math.min(255, ((TH - m) / (TH - 190)) * 255));
-          }
-        }
-      }
-      ctx.putImageData(frame, 0, 0);
-      if (!cancelled) setUrl(canvas.toDataURL("image/png"));
-    };
-    img.onerror = () => {
-      if (!cancelled) setUrl(src);
-    };
-    img.src = src;
-    return () => {
-      cancelled = true;
-    };
-  }, [src]);
-
-  if (!url) return null; // chưa xử lý xong → không hiện khung trắng
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={url} alt="" className={className} />;
-}
-
-// ==================================================
 // 5 NGUYÊN LIỆU TỰ NHIÊN
-// - image = ảnh VẢI (icon to, hình tròn)
-// - iconImage = ảnh NGUYÊN LIỆU (cây, lá, hoa — icon nhỏ overlay)
-// ==================================================
 const NATURAL_MATERIALS = [
   {
-    name: "Modal",
+    name: "Sợi Modal",
+    source: "Gỗ sồi Bắc Âu",
     image: "/images/02_materials_02.jpg",
     iconImage: "/images/modal_tree_icon.png",
-    iconPos: { x: 95, y: 80, size: 40 },
+    iconPos: { x: 92, y: 78, size: 42 },
   },
   {
-    name: "Bamboo",
+    name: "Sợi Bamboo",
+    source: "Cây tre tự nhiên",
     image: "/images/02_materials_03.jpg",
     iconImage: "/images/02_materials_04.jpg",
-    iconPos: { x: 84, y: 78, size: 32 },
+    iconPos: { x: 84, y: 76, size: 34 },
   },
   {
     name: "Sợi Bạc Hà",
+    source: "Lá bạc hà hữu cơ",
     image: "/images/02_materials_05.jpg",
     iconImage: "/images/02_materials_06.jpg",
-    iconPos: { x: 78, y: 104, size: 106 },
+    iconPos: { x: 78, y: 98, size: 80 },
   },
   {
     name: "Sợi Sen",
+    source: "Tơ cuống sen",
     image: "/images/02_materials_07.jpg",
     iconImage: "/images/02_materials_08.jpg",
-    iconPos: { x: 82, y: 102, size: 73 },
+    iconPos: { x: 80, y: 98, size: 70 },
   },
   {
     name: "Sợi Chuối",
+    source: "Thân cây chuối",
     image: "/images/02_materials_09.jpg",
     iconImage: "/images/banana_leaf_icon.png",
-    iconPos: { x: 82, y: 78, size: 49, flip: true },
+    iconPos: { x: 82, y: 78, size: 46, flip: true },
   },
 ];
 
-// ==================================================
 // 5 ĐẶC TÍNH CHẤT LIỆU XANH
-// ==================================================
 const GREEN_FEATURES = [
-  { icon: HandHeart, lines: ["Siêu mềm", "mượt"], ring: false },
-  { icon: Layers, lines: ["Bền đẹp, giữ", "màu cực tốt"], ring: true },
-  { icon: Waves, lines: ["Kháng khuẩn,", "thoáng khí"], ring: true },
-  { icon: Shirt, lines: ["Không cần", "là ủi"], ring: false, crossed: true },
-  { icon: Recycle, lines: ["Thân thiện", "môi trường"], ring: true },
+  { icon: HandHeart, title: "Siêu mềm mượt", desc: "Êm dịu với mọi làn da nhạy cảm", ring: false },
+  { icon: Layers, title: "Bền đẹp, giữ màu", desc: "Không phai sau 100 lần giặt", ring: true },
+  { icon: Waves, title: "Kháng khuẩn, thoáng khí", desc: "Khử mùi hôi và thoát nhiệt 3°C", ring: true },
+  { icon: Shirt, title: "Chống nhăn vượt trội", desc: "Hạn chế ủi, giữ form đứng dáng", ring: false, crossed: true },
+  { icon: Recycle, title: "Thân thiện môi trường", desc: "Phân hủy sinh học 100%", ring: true },
 ];
 
 export default function FabricGuideSection() {
   const { setIsQuickQuoteOpen } = useShop();
+  const [mobileView, setMobileView] = useState("cards"); // "cards" | "table"
 
   return (
-    <section id="fabric-guide-section" className="py-16 bg-slate-50 border-t border-slate-200">
-      <div className="max-w-7xl mx-auto px-4">
+    <section id="fabric-guide-section" className="py-16 sm:py-20 bg-slate-50 border-t border-slate-200">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold uppercase tracking-wider">
+        <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-2 sm:space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <Leaf className="w-3.5 h-3.5 text-brand-600" />
-            Cẩm Nang Chất Liệu Vải
+            Cẩm Nang Chất Liệu Xanh 2026
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#004f5e]">
             BẢNG SO SÁNH CHẤT LIỆU VẢI CAO CẤP HDC
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base">
-            HDC sử dụng 100% nguồn vải nhập khẩu chính ngạch, dệt công nghệ kháng khuẩn,
-            thoáng mát và chống co rút sau 100 lần giặt.
+          <p className="text-slate-600 text-xs sm:text-sm md:text-base">
+            HDC tuyển chọn 100% nguồn vải sinh học chính ngạch đạt chuẩn Oeko-Tex Standard 100,
+            ứng dụng dệt phân tử kháng khuẩn, thoáng mát và chống co giãn méo form.
           </p>
         </div>
 
-        {/* ================================================
-            NGUYÊN LIỆU + ĐẶC TÍNH (gộp 1 khối, giống ảnh mẫu)
-            ================================================ */}
+        {/* 5 NGUYÊN LIỆU SINH HỌC */}
         <div className="mb-14 max-w-5xl mx-auto">
-          {/* Hàng 1: 5 hình tròn vải + icon nguyên liệu */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-10 justify-items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-4 sm:gap-x-6 gap-y-8 sm:gap-y-10 justify-items-center">
             {NATURAL_MATERIALS.map((mat, idx) => (
-              <div key={idx} className="flex flex-col items-center text-center">
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32">
-                  <div className="w-full h-full rounded-full overflow-hidden bg-white">
+              <div key={idx} className="flex flex-col items-center text-center group">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 transition-transform duration-300 group-hover:scale-105">
+                  <div className="w-full h-full rounded-full overflow-hidden bg-white border-2 border-brand-200/60 shadow-md">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={mat.image}
                       alt={mat.name}
                       className="w-full h-full object-cover"
-                      style={{ transform: "scale(1.6)", transformOrigin: "center top" }}
+                      style={{ transform: "scale(1.4)", transformOrigin: "center top" }}
+                      loading="lazy"
                     />
                   </div>
-                  {/* Icon nguyên liệu: tâm đặt theo % của hình tròn, size riêng từng icon */}
+
+                  {/* Icon nguyên liệu overlay with CSS mix-blend-multiply (no CPU flood fill lag) */}
                   <div
-                    className="absolute z-10 pointer-events-none"
+                    className="absolute z-10 pointer-events-none drop-shadow-sm"
                     style={{
                       left: `${mat.iconPos.x}%`,
                       top: `${mat.iconPos.y}%`,
@@ -204,39 +116,53 @@ export default function FabricGuideSection() {
                       transform: `translate(-50%, -50%)${mat.iconPos.flip ? " scaleX(-1)" : ""}`,
                     }}
                   >
-                    <CutoutIcon src={mat.iconImage} className="w-full h-full object-contain" />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={mat.iconImage}
+                      alt=""
+                      className="w-full h-full object-contain mix-blend-multiply"
+                      loading="lazy"
+                    />
                   </div>
                 </div>
-                <h4 className="mt-4 text-base sm:text-lg font-medium text-slate-800 leading-tight">
+
+                <h4 className="mt-3 sm:mt-4 text-sm sm:text-base font-bold text-[#004f5e] group-hover:text-brand-600 transition-colors">
                   {mat.name}
                 </h4>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  {mat.source}
+                </p>
               </div>
             ))}
           </div>
 
-          {/* Đường kẻ ngăn cách màu xanh ngọc */}
-          <div className="my-9 h-px w-full bg-brand-600" />
+          {/* Đường phân cách */}
+          <div className="my-8 sm:my-10 h-px w-full bg-gradient-to-r from-transparent via-brand-500/30 to-transparent" />
 
-          {/* Hàng 2: 5 đặc tính — icon line-art xanh ngọc, không khung thẻ */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-x-6 gap-y-8 justify-items-center">
+          {/* 5 Đặc tính chất liệu xanh */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
             {GREEN_FEATURES.map((item, idx) => {
               const Icon = item.icon;
               return (
-                <div key={idx} className="flex flex-col items-center text-center">
+                <div
+                  key={idx}
+                  className="flex flex-col items-center text-center p-3 sm:p-4 rounded-2xl bg-white/70 border border-slate-200/80 hover:border-brand-400 hover:shadow-md transition-all duration-200"
+                >
                   <div
-                    className={`relative w-14 h-14 flex items-center justify-center text-brand-600 ${
-                      item.ring ? "rounded-full border-2 border-brand-600" : ""
+                    className={`relative w-12 h-12 flex items-center justify-center text-brand-600 mb-2.5 ${
+                      item.ring ? "rounded-full border-2 border-brand-500 bg-brand-50/50" : "bg-brand-50/30 rounded-xl"
                     }`}
                   >
-                    <Icon className="w-8 h-8" strokeWidth={1.25} />
+                    <Icon className="w-6 h-6" strokeWidth={1.5} />
                     {item.crossed && (
-                      <span className="absolute w-12 h-[1.5px] bg-brand-600 rotate-[-35deg]" />
+                      <span className="absolute w-10 h-[2px] bg-brand-600 rotate-[-35deg]" />
                     )}
                   </div>
-                  <p className="mt-4 text-sm sm:text-base font-medium text-slate-800 leading-snug">
-                    {item.lines[0]}
-                    <br />
-                    {item.lines[1]}
+                  <h5 className="text-xs sm:text-sm font-bold text-slate-800 leading-tight">
+                    {item.title}
+                  </h5>
+                  <p className="text-[10px] sm:text-[11px] text-slate-500 mt-1 leading-snug">
+                    {item.desc}
                   </p>
                 </div>
               );
@@ -244,34 +170,63 @@ export default function FabricGuideSection() {
           </div>
         </div>
 
-        {/* ================================================
-            FABRIC COMPARISON TABLE
-            ================================================ */}
+        {/* BẢNG SO SÁNH VẢI — Responsive View */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
-          <div className="overflow-x-auto">
+          {/* Header Bar */}
+          <div className="bg-gradient-to-r from-[#004f5e] to-[#00677a] px-4 sm:px-6 py-4 flex items-center justify-between text-white">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-brand-300" />
+              <h3 className="font-extrabold text-sm sm:text-base">
+                Thông Số Kỹ Thuật Các Dòng Vải Chủ Lực
+              </h3>
+            </div>
+
+            {/* Mobile Toggle view button */}
+            <div className="flex sm:hidden items-center gap-1 bg-white/10 p-1 rounded-xl text-[11px]">
+              <button
+                onClick={() => setMobileView("cards")}
+                className={`px-2 py-1 rounded-lg font-bold flex items-center gap-1 ${
+                  mobileView === "cards" ? "bg-white text-[#004f5e]" : "text-white"
+                }`}
+              >
+                <LayoutGrid className="w-3 h-3" /> Dạng Thẻ
+              </button>
+              <button
+                onClick={() => setMobileView("table")}
+                className={`px-2 py-1 rounded-lg font-bold flex items-center gap-1 ${
+                  mobileView === "table" ? "bg-white text-[#004f5e]" : "text-white"
+                }`}
+              >
+                <TableProperties className="w-3 h-3" /> Bảng
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Table View / Mobile Optional */}
+          <div className={`${mobileView === "cards" ? "hidden sm:block" : "block"} overflow-x-auto`}>
             <table className="w-full text-left text-xs sm:text-sm">
-              <thead className="bg-[#004f5e] text-white uppercase text-xs font-extrabold tracking-wider border-b border-brand-500/30">
+              <thead className="bg-slate-50 text-slate-700 uppercase text-[11px] font-extrabold tracking-wider border-b border-slate-200">
                 <tr>
-                  <th className="py-4 px-5">Loại Vải Tiêu Biểu</th>
-                  <th className="py-4 px-5">Đặc Tính Nổi Bật</th>
-                  <th className="py-4 px-5">Phù Hợp Cho</th>
-                  <th className="py-4 px-5">Độ Co Rút</th>
-                  <th className="py-4 px-5 text-center">Độ Thoáng Khí</th>
+                  <th className="py-3.5 px-4 sm:px-5">Loại Vải Tiêu Biểu</th>
+                  <th className="py-3.5 px-4 sm:px-5">Đặc Tính Nổi Bật</th>
+                  <th className="py-3.5 px-4 sm:px-5">Phù Hợp Cho</th>
+                  <th className="py-3.5 px-4 sm:px-5">Độ Co Rút</th>
+                  <th className="py-3.5 px-4 sm:px-5 text-center">Độ Thoáng Khí</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
                 {FABRIC_COMPARISONS.map((fabric, idx) => (
-                  <tr key={idx} className="hover:bg-brand-50/40 transition-colors">
-                    <td className="py-4 px-5 font-bold text-[#004f5e] whitespace-nowrap">
+                  <tr key={idx} className="hover:bg-brand-50/50 transition-colors">
+                    <td className="py-3.5 px-4 sm:px-5 font-bold text-[#004f5e] whitespace-nowrap">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-brand-500" />
                         <span>{fabric.name}</span>
                       </div>
                     </td>
-                    <td className="py-4 px-5 max-w-xs">{fabric.features}</td>
-                    <td className="py-4 px-5 font-semibold text-slate-800">{fabric.usage}</td>
-                    <td className="py-4 px-5 text-brand-700 font-semibold">{fabric.shrinkage}</td>
-                    <td className="py-4 px-5 text-center text-brand-500 font-bold whitespace-nowrap">
+                    <td className="py-3.5 px-4 sm:px-5 max-w-xs">{fabric.features}</td>
+                    <td className="py-3.5 px-4 sm:px-5 font-semibold text-slate-800">{fabric.usage}</td>
+                    <td className="py-3.5 px-4 sm:px-5 text-brand-700 font-semibold">{fabric.shrinkage}</td>
+                    <td className="py-3.5 px-4 sm:px-5 text-center text-brand-600 font-bold whitespace-nowrap">
                       {fabric.breathability}
                     </td>
                   </tr>
@@ -280,25 +235,52 @@ export default function FabricGuideSection() {
             </table>
           </div>
 
+          {/* Mobile Card View (Dễ đọc trên điện thoại) */}
+          {mobileView === "cards" && (
+            <div className="block sm:hidden p-3 space-y-3">
+              {FABRIC_COMPARISONS.map((fabric, idx) => (
+                <div
+                  key={idx}
+                  className="p-3.5 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-2 text-xs"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <span className="font-extrabold text-[#004f5e] text-sm">{fabric.name}</span>
+                    <span className="px-2 py-0.5 rounded-full bg-brand-100 text-brand-700 font-bold text-[10px]">
+                      {fabric.breathability}
+                    </span>
+                  </div>
+                  <div className="text-slate-600">
+                    <strong className="text-slate-800">Đặc tính:</strong> {fabric.features}
+                  </div>
+                  <div className="flex items-center justify-between pt-1 text-[11px]">
+                    <span className="text-slate-500">Phù hợp: <strong className="text-slate-700">{fabric.usage}</strong></span>
+                    <span className="text-brand-700 font-semibold">Co rút: {fabric.shrinkage}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Bottom CTA */}
-          <div className="bg-gradient-to-r from-brand-50 via-brand-100/60 to-brand-50 p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-brand-300/40">
+          <div className="bg-gradient-to-r from-brand-50 via-brand-100/50 to-brand-50 p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-brand-200/80">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white flex items-center justify-center font-bold shadow-md shrink-0">
-                <Sparkles className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white flex items-center justify-center font-bold shadow-md shrink-0">
+                <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h4 className="font-extrabold text-[#004f5e] text-sm sm:text-base">
-                  Quý Doanh Nghiệp Cần Xem Trực Tiếp Bảng Vải Thật?
+                <h4 className="font-extrabold text-[#004f5e] text-xs sm:text-sm md:text-base">
+                  Quý Doanh Nghiệp Cần Trực Tiếp Cảm Nhận Bảng Vải Thật?
                 </h4>
-                <p className="text-xs text-slate-600">
-                  HDC sẽ chuyển phát hỏa tốc tập catalog vải mẫu miễn phí đến tận tay quý công ty.
+                <p className="text-[11px] sm:text-xs text-slate-600">
+                  HDC chuyển phát hỏa tốc tập catalog vải mẫu kèm bảng màu thực tế tận nơi hoàn toàn 0đ.
                 </p>
               </div>
             </div>
 
             <button
+              type="button"
               onClick={() => setIsQuickQuoteOpen(true)}
-              className="px-6 py-3 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all shrink-0 flex items-center gap-2"
+              className="w-full sm:w-auto px-5 sm:px-6 py-3 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg transition-all shrink-0 flex items-center justify-center gap-2 active:scale-[0.98]"
             >
               <Send className="w-4 h-4" />
               <span>Đăng Ký Nhận Bảng Vải 0đ</span>

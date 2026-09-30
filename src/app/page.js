@@ -15,6 +15,7 @@ import GolfSection from "@/features/home/components/GolfSection";
 import ProcessSection from "@/features/home/components/ProcessSection";
 import CeoLetterSection from "@/features/home/components/CeoLetterSection";
 import TestimonialsSection from "@/features/home/components/TestimonialsSection";
+import GallerySection from "@/features/home/components/GallerySection";
 import QuickQuoteSection from "@/features/quote/components/QuickQuoteSection";
 import FaqSection from "@/features/home/components/FaqSection";
 import MapSection from "@/features/home/components/MapSection";
@@ -69,6 +70,10 @@ export default function Home() {
 
       <ErrorBoundary name="Đánh giá khách hàng">
         <TestimonialsSection />
+      </ErrorBoundary>
+
+      <ErrorBoundary name="Hình ảnh thực tế">
+        <GallerySection />
       </ErrorBoundary>
 
       <ErrorBoundary name="Báo giá nhanh">

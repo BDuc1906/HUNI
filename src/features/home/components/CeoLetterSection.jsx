@@ -86,7 +86,6 @@ export default function CeoLetterSection() {
                     height={750}
                     sizes="(max-width: 768px) 100vw, 480px"
                     className="w-full h-auto block"
-                    priority
                   />
                 </div>
               </div>

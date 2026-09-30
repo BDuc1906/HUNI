@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { Star, Heart, Eye, ShoppingCart, Sparkles } from "lucide-react";
 

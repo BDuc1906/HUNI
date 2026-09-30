@@ -71,10 +71,41 @@ export default function ProductCatalog({ initialCategory }) {
     []
   );
 
-  // Reset visibleCount when any filter or category changes
-  useEffect(() => {
+  // Dedicated filter handlers that reset visibleCount without useEffect cascades
+  const updateCategory = (catId) => {
     setVisibleCount(9);
-  }, [activeCategory, searchFilter, selectedMaterial, priceRange, sortBy]);
+    startTransition(() => {
+      setActiveCategory(catId);
+    });
+  };
+
+  const updateSearch = (val) => {
+    setVisibleCount(9);
+    startTransition(() => {
+      setSearchFilter(val);
+    });
+  };
+
+  const updateMaterial = (val) => {
+    setVisibleCount(9);
+    startTransition(() => {
+      setSelectedMaterial(val);
+    });
+  };
+
+  const updatePriceRange = (val) => {
+    setVisibleCount(9);
+    startTransition(() => {
+      setPriceRange(val);
+    });
+  };
+
+  const updateSortBy = (val) => {
+    setVisibleCount(9);
+    startTransition(() => {
+      setSortBy(val);
+    });
+  };
 
   // Only real categories (excluding "all")
   const displayCategories = CATEGORIES.filter((c) => c.id !== "all");
@@ -126,6 +157,7 @@ export default function ProductCatalog({ initialCategory }) {
   ].filter(Boolean).length;
 
   const resetFilters = () => {
+    setVisibleCount(9);
     startTransition(() => {
       setActiveCategory("all");
       setSearchFilter("");
@@ -173,9 +205,7 @@ export default function ProductCatalog({ initialCategory }) {
                 key={cat.id}
                 type="button"
                 onClick={() => {
-                  startTransition(() => {
-                    setActiveCategory(cat.id);
-                  });
+                  updateCategory(cat.id);
                   scrollToGrid();
                 }}
                 className={`group relative text-left cursor-pointer rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-2xl transition-all duration-300 border flex flex-col transform hover:-translate-y-1 active:scale-[0.98] ${
@@ -240,11 +270,7 @@ export default function ProductCatalog({ initialCategory }) {
             <div className="flex items-center gap-2 min-w-max">
               <button
                 type="button"
-                onClick={() => {
-                  startTransition(() => {
-                    setActiveCategory("all");
-                  });
-                }}
+                onClick={() => updateCategory("all")}
                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold whitespace-nowrap transition-all active:scale-[0.98] ${
                   activeCategory === "all"
                     ? "bg-[#004f5e] text-brand-300 shadow-md"
@@ -257,11 +283,7 @@ export default function ProductCatalog({ initialCategory }) {
                 <button
                   key={cat.id}
                   type="button"
-                  onClick={() => {
-                    startTransition(() => {
-                      setActiveCategory(cat.id);
-                    });
-                  }}
+                  onClick={() => updateCategory(cat.id)}
                   className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs md:text-sm font-bold whitespace-nowrap transition-all active:scale-[0.98] ${
                     activeCategory === cat.id
                       ? "bg-[#004f5e] text-brand-300 shadow-md"
@@ -289,12 +311,7 @@ export default function ProductCatalog({ initialCategory }) {
               type="text"
               placeholder="Lọc theo tên hoặc chất liệu..."
               value={searchFilter}
-              onChange={(e) => {
-                const val = e.target.value;
-                startTransition(() => {
-                  setSearchFilter(val);
-                });
-              }}
+              onChange={(e) => updateSearch(e.target.value)}
               className="w-full pl-8 pr-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 text-xs sm:text-sm"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
@@ -306,12 +323,7 @@ export default function ProductCatalog({ initialCategory }) {
               <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap hidden xs:inline">Chất liệu:</span>
               <select
                 value={selectedMaterial}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  startTransition(() => {
-                    setSelectedMaterial(val);
-                  });
-                }}
+                onChange={(e) => updateMaterial(e.target.value)}
                 className="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs max-w-full sm:max-w-[150px] truncate"
               >
                 <option value="all">Tất cả chất liệu</option>
@@ -328,12 +340,7 @@ export default function ProductCatalog({ initialCategory }) {
               <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap hidden xs:inline">Giá:</span>
               <select
                 value={priceRange}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  startTransition(() => {
-                    setPriceRange(val);
-                  });
-                }}
+                onChange={(e) => updatePriceRange(e.target.value)}
                 className="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs"
               >
                 <option value="all">Tất cả giá</option>
@@ -348,12 +355,7 @@ export default function ProductCatalog({ initialCategory }) {
               <span className="text-slate-500 font-medium text-[11px] sm:text-xs whitespace-nowrap hidden xs:inline">Sắp xếp:</span>
               <select
                 value={sortBy}
-                onChange={(e) => {
-                  const val = e.target.value;
-                  startTransition(() => {
-                    setSortBy(val);
-                  });
-                }}
+                onChange={(e) => updateSortBy(e.target.value)}
                 className="w-full sm:w-auto bg-white border border-slate-300 rounded-xl px-2 sm:px-2.5 py-1.5 text-slate-800 font-medium focus:outline-none focus:border-brand-500 text-[11px] sm:text-xs"
               >
                 <option value="popular">Phổ biến</option>

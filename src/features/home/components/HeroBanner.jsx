@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
 import {
@@ -235,11 +236,9 @@ export default function HeroBanner() {
               key={`title-${currentSlide}`}
               className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
             >
-              <h1 className="text-[28px] leading-[1.1] sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[64px] font-black tracking-tight text-white text-balance">
-                {slide.title}
-              </h1>
-              <h1 className="text-[28px] leading-[1.1] sm:text-4xl md:text-5xl lg:text-[56px] xl:text-[64px] font-black tracking-tight text-brand-gradient text-balance">
-                {slide.titleHighlight}
+              <h1 className="text-[28px] leading-[1.12] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance">
+                {slide.title}{" "}
+                <span className="text-brand-gradient block sm:inline">{slide.titleHighlight}</span>
               </h1>
             </div>
 
@@ -288,12 +287,12 @@ export default function HeroBanner() {
                 <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
 
-              <a
+              <Link
                 href={slide.ctaLink}
                 className="px-5 sm:px-7 py-3.5 sm:py-4 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold text-[13px] sm:text-sm rounded-2xl border border-white/30 hover:border-white/50 flex items-center justify-center gap-2 active:scale-[0.98] transition-all whitespace-nowrap"
               >
                 <span>{slide.ctaSecondary}</span>
-              </a>
+              </Link>
 
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
