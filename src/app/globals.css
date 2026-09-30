@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* =========================================================
+   HDC FASHION — BRAND THEME (theo Catalogue 2023-12-28)
+   Màu chủ đạo: Teal #0097B2 (đo trực tiếp từ logo & tiêu đề catalogue)
+   Nền panel: #F6F8FF  |  Nhãn xám lam: #DADFE9  |  Chữ: đen
+   Dùng class Tailwind: bg-brand-500, text-brand-600, border-brand-200 ...
+   ========================================================= */
+@theme {
+  --color-brand-50:  #e6f6f9;
+  --color-brand-100: #ccecf2;
+  --color-brand-200: #99d9e5;
+  --color-brand-300: #66c5d8;
+  --color-brand-400: #33b0cb;
+  --color-brand-500: #0097b2; /* MÀU THƯƠNG HIỆU */
+  --color-brand-600: #007f96;
+  --color-brand-700: #00677a;
+  --color-brand-800: #004f5e;
+  --color-brand-900: #003843;
+  --color-brand-950: #00222a;
+
+  --color-panel: #f6f8ff;   /* nền khung ảnh / thẻ trong catalogue */
+  --color-label: #dadfe9;   /* nhãn xám lam trên ảnh sản phẩm */
+}
+
+/* ---------- Base tokens ---------- */
+@layer base {
+  :root {
+    --bg-page: #f6f8ff;
+    --bg-surface: #ffffff;
+    --bg-card: #ffffff;
+    --text-main: #111827;
+    --text-muted: #52525b;
+    --text-sub: #71717a;
+    --border-color: #e4e4e7;
+    --border-subtle: #f4f4f5;
+  }
+
+  .dark {
+    --bg-page: #00222a;
+    --bg-surface: #003843;
+    --bg-card: #003843;
+    --text-main: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --text-sub: #71717a;
+    --border-color: #00566a;
+    --border-subtle: #003843;
+  }
+}
+
+/* ---------- Scroll behavior ---------- */
+html {
+  scroll-behavior: smooth;
+  color-scheme: light dark;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  /* Font self-host qua next/font — không FOUT */
+  font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Offset cho sticky header khi scroll tới anchor */
+section[id],
+div[id],
+main[id] {
+  scroll-margin-top: 140px;
+}
+
+/* Scrollbar teal thương hiệu */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #0097b2; border-radius: 9999px; }
+.dark ::-webkit-scrollbar-thumb { background: #33b0cb; }
+
+/* =========================================================
+   Custom class — Tiêu đề gradient teal (dùng trên nền tối)
+   ========================================================= */
+.text-brand-gradient {
+  background: linear-gradient(90deg, #33b0cb 0%, #99d9e5 50%, #33b0cb 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Nhãn chữ giãn rộng kiểu "C A T A L O G U E" của catalogue */
+.brand-eyebrow {
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #0097b2;
+}
+
+/* =========================================================
+   Mobile — chừa chỗ cho bottom action bar cố định
+   ========================================================= */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 64px;
+  }
+
+  /* Tối ưu tap target cho mobile — tránh double-tap zoom */
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Smooth scroll trên iOS */
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* =========================================================
+   Image — chống layout shift khi ảnh đang tải
+   ========================================================= */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Next.js Image wrapper không bị dãn */
+[data-nimg] {
+  max-width: 100%;
+}

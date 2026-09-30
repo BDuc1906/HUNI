@@ -1,0 +1,24 @@
+{
+  "customer": {
+    "fullName": "Nguyễn Văn Test",
+    "phone": "0901234567",
+    "email": "test@example.com",
+    "company": "Công ty Test",
+    "address": "123 Đường ABC, Quận 1, TP.HCM"
+  },
+  "items": [
+    {
+      "productId": "huni-polo-pro",
+      "productName": "Áo Polo HUNI Classic",
+      "quantity": 20,
+      "unitPrice": 155000,
+      "color": "Xanh Navy",
+      "size": "L"
+    }
+  ],
+  "paymentMethod": "vietqr",
+  "subtotal": 3100000,
+  "discount": 0,
+  "total": 3100000,
+  "notes": "Test đơn hàng đầu tiên"
+}

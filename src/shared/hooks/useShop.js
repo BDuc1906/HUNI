@@ -1,0 +1,1 @@
+export { useShop } from "@/shared/providers/ShopProvider";
