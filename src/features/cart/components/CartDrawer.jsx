@@ -51,9 +51,9 @@ export default function CartDrawer() {
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
       <div className="relative w-full sm:max-w-md bg-white h-full shadow-2xl flex flex-col justify-between animate-in slide-in-from-right duration-300">
         {/* Header */}
-        <div className="p-3 sm:p-4 bg-[#071b34] text-white flex items-center justify-between border-b border-amber-500/20">
+        <div className="p-3 sm:p-4 bg-[#004f5e] text-white flex items-center justify-between border-b border-brand-500/20">
           <div className="flex items-center gap-2 sm:gap-2.5">
-            <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+            <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-brand-400" />
             <h2 className="font-extrabold text-sm sm:text-base">
               Giỏ Hàng ({cartCount})
             </h2>
@@ -87,7 +87,7 @@ export default function CartDrawer() {
                 <div className="flex-1 min-w-0 flex flex-col justify-between">
                   <div>
                     <div className="flex items-start justify-between gap-1">
-                      <h4 className="font-bold text-[#071b34] text-xs sm:text-sm leading-snug line-clamp-2">
+                      <h4 className="font-bold text-[#004f5e] text-xs sm:text-sm leading-snug line-clamp-2">
                         {item.product.title}
                       </h4>
                       <button
@@ -106,7 +106,7 @@ export default function CartDrawer() {
                         <strong className="text-slate-700">{item.size}</strong>
                       </div>
                       {item.customLogo && (
-                        <div className="text-amber-700 font-semibold bg-amber-50 px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] inline-block border border-amber-200 truncate max-w-full">
+                        <div className="text-brand-700 font-semibold bg-brand-50 px-1.5 sm:px-2 py-0.5 rounded text-[9px] sm:text-[10px] inline-block border border-brand-200 truncate max-w-full">
                           ✓ {item.customLogo.method}
                         </div>
                       )}
@@ -156,7 +156,7 @@ export default function CartDrawer() {
               </p>
               <button
                 onClick={() => setIsCartOpen(false)}
-                className="px-4 py-2 bg-[#071b34] text-amber-300 font-bold text-xs rounded-xl active:scale-95"
+                className="px-4 py-2 bg-[#004f5e] text-brand-300 font-bold text-xs rounded-xl active:scale-95"
               >
                 Khám phá sản phẩm
               </button>
@@ -188,11 +188,11 @@ export default function CartDrawer() {
                   placeholder="Mã ưu đãi (HUNI2026, DOANHNGHIEP)"
                   value={inputVoucher}
                   onChange={(e) => setInputVoucher(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-[11px] sm:text-xs uppercase text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                  className="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-[11px] sm:text-xs uppercase text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500"
                 />
                 <button
                   type="submit"
-                  className="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-amber-300 font-bold text-[11px] sm:text-xs rounded-xl transition-colors active:scale-95 shrink-0"
+                  className="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-brand-300 font-bold text-[11px] sm:text-xs rounded-xl transition-colors active:scale-95 shrink-0"
                 >
                   Áp dụng
                 </button>
@@ -221,8 +221,8 @@ export default function CartDrawer() {
               </div>
 
               <div className="pt-2 border-t border-slate-200 flex items-baseline justify-between">
-                <span className="font-extrabold text-[#071b34] text-xs sm:text-sm">Tổng cộng:</span>
-                <span className="font-black text-[#071b34] text-base sm:text-lg">
+                <span className="font-extrabold text-[#004f5e] text-xs sm:text-sm">Tổng cộng:</span>
+                <span className="font-black text-[#004f5e] text-base sm:text-lg">
                   {cartTotal.toLocaleString("vi-VN")} đ
                 </span>
               </div>
@@ -231,7 +231,7 @@ export default function CartDrawer() {
             {/* Checkout */}
             <button
               onClick={handleProceedToCheckout}
-              className="w-full py-3 sm:py-3.5 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-extrabold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] transition-all"
+              className="w-full py-3 sm:py-3.5 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] transition-all"
             >
               <span>Tiến Hành Đặt Hàng & May Mẫu</span>
               <ArrowRight className="w-4 h-4" />

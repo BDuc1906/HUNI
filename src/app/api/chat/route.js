@@ -1,6 +1,6 @@
 // ==================================================
 // src/app/api/chat/route.js
-// POST /api/chat — Trợ lý AI tư vấn HUNI
+// POST /api/chat — Trợ lý AI tư vấn HDC
 // Phiên bản: Gemini 2.5 Flash + Retry + Fallback đa model
 // ==================================================
 
@@ -56,7 +56,7 @@ const compactData = {
 // ==================================================
 // 2. SYSTEM PROMPT
 // ==================================================
-const SYSTEM_PROMPT = `Bạn là "Huni Assistant" — trợ lý tư vấn bán hàng chuyên nghiệp của HUNI UNIFORM (thương hiệu đồng phục doanh nghiệp cao cấp thuộc HDC GROUP VN).
+const SYSTEM_PROMPT = `Bạn là "HDC Assistant" — trợ lý tư vấn bán hàng chuyên nghiệp của HDC FASHION (thương hiệu đồng phục doanh nghiệp cao cấp thuộc HDC GROUP VN).
 
 ## VAI TRÒ
 Tư vấn khách hàng (chủ yếu là doanh nghiệp, tổ chức, trường học) về sản phẩm đồng phục, chất liệu vải, bảng giá sỉ, quy trình đặt may và chính sách ưu đãi.

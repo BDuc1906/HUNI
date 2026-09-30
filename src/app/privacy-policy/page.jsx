@@ -3,7 +3,7 @@ import { ShieldCheck, ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Chính Sách Bảo Mật",
-  description: "Chính sách bảo mật thông tin khách hàng của HUNI UNIFORM.",
+  description: "Chính sách bảo mật thông tin khách hàng của HDC FASHION.",
 };
 
 export default function PrivacyPage() {
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
       <div className="max-w-3xl mx-auto px-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-amber-600 mb-6 font-medium"
+          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-brand-600 mb-6 font-medium"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Về trang chủ
@@ -20,11 +20,11 @@ export default function PrivacyPage() {
 
         <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-10">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-[#071b34]">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#004f5e]">
                 Chính Sách Bảo Mật
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -35,18 +35,18 @@ export default function PrivacyPage() {
 
           <div className="max-w-none text-slate-700 space-y-5">
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 1. Mục đích thu thập thông tin
               </h2>
               <p className="text-sm leading-relaxed">
-                HUNI UNIFORM (thuộc HDC GROUP VN) thu thập thông tin cá nhân của quý khách
+                HDC FASHION (thuộc HDC GROUP VN) thu thập thông tin cá nhân của quý khách
                 nhằm mục đích tư vấn, báo giá, xử lý đơn hàng may đo đồng phục doanh nghiệp,
                 xuất hóa đơn VAT và chăm sóc khách hàng sau bán.
               </p>
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 2. Phạm vi thông tin thu thập
               </h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
@@ -58,18 +58,18 @@ export default function PrivacyPage() {
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 3. Cam kết bảo mật
               </h2>
               <p className="text-sm leading-relaxed">
-                HUNI cam kết <strong>không bán, trao đổi hoặc chia sẻ</strong> thông tin
+                HDC cam kết <strong>không bán, trao đổi hoặc chia sẻ</strong> thông tin
                 khách hàng cho bất kỳ bên thứ ba nào, ngoại trừ trường hợp pháp luật yêu
                 cầu. Mọi dữ liệu được lưu trữ trên hệ thống mã hóa an toàn.
               </p>
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 4. Quyền của khách hàng
               </h2>
               <p className="text-sm leading-relaxed">
@@ -79,7 +79,7 @@ export default function PrivacyPage() {
               </p>
             </section>
 
-            <section className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+            <section className="p-4 bg-brand-50 rounded-xl border border-brand-200">
               <p className="text-sm text-slate-700">
                 <strong>Mọi thắc mắc về chính sách bảo mật,</strong> vui lòng liên hệ:
                 <br />

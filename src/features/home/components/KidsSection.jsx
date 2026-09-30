@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 // ==================================================
-// 6 LÝ DO CHỌN IHDC KIDS
+// 6 LÝ DO CHỌN HDC KIDS
 // ==================================================
 const KIDS_REASONS = [
   {
@@ -85,11 +85,11 @@ export default function KidsSection() {
             Dòng Sản Phẩm Cho Trẻ Em
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
-            ĐỒNG PHỤC IHDC KIDS
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#004f5e]">
+            ĐỒNG PHỤC HDC KIDS
           </h2>
 
-          <p className="text-lg sm:text-xl md:text-2xl font-bold text-gold-gradient">
+          <p className="text-lg sm:text-xl md:text-2xl font-bold text-brand-gradient">
             Điểm Đến Chất Lượng Cho Học Sinh
           </p>
 
@@ -106,7 +106,7 @@ export default function KidsSection() {
             </div>
             <div>
               <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
-                <strong className="text-[#071b34]">IHDC Fashion</strong> — điểm đến chất lượng cho đồng phục học sinh,
+                <strong className="text-[#004f5e]">HDC Fashion</strong> — điểm đến chất lượng cho đồng phục học sinh,
                 nơi bạn tìm thấy sự hoàn hảo giữa phong cách và chất lượng.
               </p>
               <p className="text-sm sm:text-base text-slate-700 leading-relaxed mt-3">
@@ -119,15 +119,15 @@ export default function KidsSection() {
         </div>
 
         {/* =============================================
-            6 Lý do chọn IHDC Kids
+            6 Lý do chọn HDC Kids
             ============================================= */}
         <div className="mb-10 sm:mb-14">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold uppercase tracking-wider">
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-              Tại Sao Chọn IHDC Kids?
+              Tại Sao Chọn HDC Kids?
             </div>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-[#071b34] mt-3">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-[#004f5e] mt-3">
               6 Lý Do Nhà Trường Tin Chọn
             </h3>
           </div>
@@ -143,7 +143,7 @@ export default function KidsSection() {
                   <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white flex items-center justify-center shadow-md mb-4 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="font-extrabold text-[#071b34] text-base sm:text-lg mb-2 group-hover:text-emerald-700 transition-colors">
+                  <h3 className="font-extrabold text-[#004f5e] text-base sm:text-lg mb-2 group-hover:text-emerald-700 transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -164,8 +164,8 @@ export default function KidsSection() {
               <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
               Hình Ảnh Thực Tế
             </div>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-[#071b34] mt-3">
-              Các Em Học Sinh Trong Bộ Đồng Phục IHDC
+            <h3 className="text-xl sm:text-2xl font-extrabold text-[#004f5e] mt-3">
+              Các Em Học Sinh Trong Bộ Đồng Phục HDC
             </h3>
           </div>
 
@@ -183,7 +183,7 @@ export default function KidsSection() {
                     sizes="(max-width: 640px) 50vw, 25vw"
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#071b34]/70 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#004f5e]/70 via-transparent to-transparent" />
 
                   <div className="absolute bottom-3 left-3 right-3">
                     <div className="text-white text-xs sm:text-sm font-bold">

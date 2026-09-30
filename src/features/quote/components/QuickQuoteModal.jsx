@@ -25,7 +25,7 @@ export default function QuickQuoteModal() {
     }
     setSubmitted(true);
     triggerConfetti();
-    showToast("Đã gửi yêu cầu thành công! HUNI sẽ phản hồi trong 5 phút.");
+    showToast("Đã gửi yêu cầu thành công! HDC sẽ phản hồi trong 5 phút.");
   };
 
   const handleClose = () => {
@@ -39,14 +39,13 @@ export default function QuickQuoteModal() {
         {/* Header */}
         <div className="bg-[#071b34] text-white p-3 sm:p-5 flex items-center justify-between border-b border-amber-500/20 shrink-0">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            {/* Logo TRÒN */}
-            <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full aspect-square overflow-hidden border-2 border-amber-400/60 bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0">
-              <span className="absolute font-black text-sm text-[#071b34]">HN</span>
+            {/* Logo vuông nhỏ gọn — icon.png (đã bỏ chữ "HN" chồng) */}
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 aspect-square rounded-lg overflow-hidden bg-white border border-amber-400/60 shadow-md flex items-center justify-center shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
-                alt="HUNI Logo"
-                className="absolute inset-0 w-full h-full object-cover z-10"
+                src="/images/icon.png"
+                alt="HDC FASHION Logo"
+                className="w-full h-full object-contain p-1"
               />
             </div>
             <div className="min-w-0">
@@ -54,7 +53,7 @@ export default function QuickQuoteModal() {
                 Đăng Ký Báo Giá Nhanh
               </h3>
               <p className="text-[10px] sm:text-xs text-amber-200/80 truncate">
-                HUNI UNIFORM • Phản hồi trong 5 phút
+                HDC FASHION • Phản hồi trong 5 phút
               </p>
             </div>
           </div>
@@ -171,7 +170,7 @@ export default function QuickQuoteModal() {
             </div>
             <h4 className="text-lg sm:text-xl font-bold text-[#071b34]">GỬI YÊU CẦU THÀNH CÔNG!</h4>
             <p className="text-[11px] sm:text-xs text-slate-600 max-w-xs mx-auto">
-              Chuyên viên tư vấn HUNI sẽ liên hệ đến số{" "}
+              Chuyên viên tư vấn HDC sẽ liên hệ đến số{" "}
               <strong>{phone}</strong> trong vòng 5 phút để gửi bảng báo giá kèm mẫu vải.
             </p>
             <button

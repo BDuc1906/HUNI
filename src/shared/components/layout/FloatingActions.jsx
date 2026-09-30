@@ -31,7 +31,7 @@ export default function FloatingActions() {
         {/* 1. Quick Quote Button — chỉ desktop lg+ */}
         <button
           onClick={() => setIsQuickQuoteOpen(true)}
-          className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-extrabold text-xs uppercase shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-amber-300/40"
+          className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs uppercase shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-brand-300/40"
         >
           <Sparkles className="w-4 h-4" />
           <span>Báo Giá May 3 Phút</span>
@@ -42,7 +42,7 @@ export default function FloatingActions() {
           href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
           target="_blank"
           rel="noopener noreferrer"
-          title="Chat Zalo cùng chuyên viên HUNI"
+          title="Chat Zalo cùng chuyên viên HDC"
           className="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
         >
           <MessageCircle className="w-5 h-5" />
@@ -52,7 +52,7 @@ export default function FloatingActions() {
         <a
           href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
           title={`Gọi Hotline tư vấn 24/7: ${BRAND_INFO.contact.hotline}`}
-          className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-amber-500 to-amber-400 text-[#071b34] flex items-center justify-center shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
+          className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-brand-500 to-brand-400 text-white flex items-center justify-center shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
         >
           <Phone className="w-6 h-6 animate-bounce" />
           <span className="sr-only">Hotline {BRAND_INFO.contact.hotline}</span>
@@ -66,7 +66,7 @@ export default function FloatingActions() {
           <button
             onClick={scrollToTop}
             title="Cuộn lên đầu trang"
-            className="w-10 h-10 rounded-full bg-[#071b34] hover:bg-slate-800 text-amber-400 flex items-center justify-center shadow-lg transition-all border border-amber-400/30"
+            className="w-10 h-10 rounded-full bg-[#004f5e] hover:bg-slate-800 text-brand-400 flex items-center justify-center shadow-lg transition-all border border-brand-400/30"
           >
             <ArrowUp className="w-4 h-4" />
           </button>
@@ -83,7 +83,7 @@ export default function FloatingActions() {
             href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
             className="flex flex-col items-center justify-center gap-0.5 py-2.5 active:bg-slate-50 transition-colors"
           >
-            <Phone className="w-5 h-5 text-amber-600" />
+            <Phone className="w-5 h-5 text-brand-600" />
             <span className="text-[11px] font-bold text-slate-800">Gọi ngay</span>
           </a>
 
@@ -101,10 +101,10 @@ export default function FloatingActions() {
           {/* Quick Quote */}
           <button
             onClick={() => setIsQuickQuoteOpen(true)}
-            className="flex flex-col items-center justify-center gap-0.5 py-2.5 active:bg-amber-50 transition-colors"
+            className="flex flex-col items-center justify-center gap-0.5 py-2.5 active:bg-brand-50 transition-colors"
           >
-            <Sparkles className="w-5 h-5 text-amber-600" />
-            <span className="text-[11px] font-bold text-amber-700">Báo giá</span>
+            <Sparkles className="w-5 h-5 text-brand-600" />
+            <span className="text-[11px] font-bold text-brand-700">Báo giá</span>
           </button>
         </div>
       </div>
@@ -119,7 +119,7 @@ export default function FloatingActions() {
         <button
           onClick={scrollToTop}
           title="Cuộn lên đầu trang"
-          className="md:hidden fixed bottom-20 right-16 z-30 w-10 h-10 rounded-full bg-[#071b34]/90 backdrop-blur text-amber-400 flex items-center justify-center shadow-lg border border-amber-400/30 active:scale-95 transition-transform"
+          className="md:hidden fixed bottom-20 right-16 z-30 w-10 h-10 rounded-full bg-[#004f5e]/90 backdrop-blur text-brand-400 flex items-center justify-center shadow-lg border border-brand-400/30 active:scale-95 transition-transform"
         >
           <ArrowUp className="w-4 h-4" />
         </button>

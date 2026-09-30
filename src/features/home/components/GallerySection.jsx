@@ -68,7 +68,7 @@ const ALBUM = [
   },
   {
     src: "/images/08_golf_event_01.jpg",
-    caption: "Giải Golf Doanh Nhân HUNI 2026",
+    caption: "Giải Golf Doanh Nhân HDC 2026",
     client: "CLB Golf Doanh Nhân Hà Nội",
     tag: "Giải Golf",
     span: "col-span-1 row-span-1",
@@ -82,7 +82,7 @@ const ALBUM = [
   },
   {
     src: "/images/08_golf_event_03.jpg",
-    caption: "Trao giải cùng HUNI",
+    caption: "Trao giải cùng HDC",
     client: "Giải Golf Doanh Nghiệp",
     tag: "Sự kiện",
     span: "col-span-1 row-span-1",
@@ -141,16 +141,16 @@ export default function GallerySection() {
             Header
             ============================================= */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-2 sm:space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
-            <Camera className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+            <Camera className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-500" />
             Album Khách Hàng Thực Tế
           </div>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#004f5e]">
             HÌNH ẢNH TỪ ĐỐI TÁC &amp; KHÁCH HÀNG
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">
-            Hơn <strong className="text-[#071b34]">50.000+ doanh nghiệp, tổ chức, trường học</strong>{" "}
-            đã tin dùng đồng phục HUNI. Cùng xem những khoảnh khắc đáng nhớ của họ.
+            Hơn <strong className="text-[#004f5e]">50.000+ doanh nghiệp, tổ chức, trường học</strong>{" "}
+            đã tin dùng đồng phục HDC. Cùng xem những khoảnh khắc đáng nhớ của họ.
           </p>
         </div>
 
@@ -162,7 +162,7 @@ export default function GallerySection() {
             <button
               key={idx}
               onClick={() => openLightbox(idx)}
-              className={`group relative rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 hover:border-amber-400 shadow-sm hover:shadow-xl transition-all ${item.span}`}
+              className={`group relative rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-xl transition-all ${item.span}`}
             >
               <Image
                 src={item.src}
@@ -174,10 +174,10 @@ export default function GallerySection() {
               />
 
               {/* Overlay gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#071b34] via-[#071b34]/40 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#004f5e] via-[#004f5e]/40 to-transparent opacity-70 group-hover:opacity-90 transition-opacity" />
 
               {/* Tag */}
-              <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-amber-400 text-[#071b34] font-bold text-[10px] sm:text-[11px] shadow-md">
+              <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-brand-400 text-white font-bold text-[10px] sm:text-[11px] shadow-md">
                 {item.tag}
               </div>
 
@@ -186,7 +186,7 @@ export default function GallerySection() {
                 <div className="text-white font-bold text-[11px] sm:text-sm leading-tight line-clamp-2">
                   {item.caption}
                 </div>
-                <div className="text-amber-200/90 text-[10px] sm:text-[11px] mt-0.5 line-clamp-1">
+                <div className="text-brand-200/90 text-[10px] sm:text-[11px] mt-0.5 line-clamp-1">
                   {item.client}
                 </div>
               </div>
@@ -199,11 +199,11 @@ export default function GallerySection() {
             ============================================= */}
         <div className="mt-6 sm:mt-8 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-[11px] sm:text-xs font-medium">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 text-brand-500 shrink-0" />
             <span>Muốn đồng phục công ty bạn xuất hiện tại đây?</span>
             <a
               href="#final-cta-section"
-              className="text-amber-700 hover:text-amber-800 font-bold hover:underline"
+              className="text-brand-700 hover:text-brand-800 font-bold hover:underline"
             >
               Đặt ngay →
             </a>
@@ -269,13 +269,13 @@ export default function GallerySection() {
 
             {/* Caption overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 bg-gradient-to-t from-black/90 to-transparent">
-              <div className="inline-block px-2.5 py-0.5 rounded-full bg-amber-400 text-[#071b34] font-bold text-[11px] mb-2">
+              <div className="inline-block px-2.5 py-0.5 rounded-full bg-brand-400 text-white font-bold text-[11px] mb-2">
                 {ALBUM[lightboxIndex].tag}
               </div>
               <div className="text-white font-bold text-base sm:text-lg">
                 {ALBUM[lightboxIndex].caption}
               </div>
-              <div className="text-amber-200/80 text-xs sm:text-sm mt-0.5">
+              <div className="text-brand-200/80 text-xs sm:text-sm mt-0.5">
                 {ALBUM[lightboxIndex].client}
               </div>
             </div>

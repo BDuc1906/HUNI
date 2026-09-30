@@ -33,8 +33,8 @@ export default function AccountPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+        <div className="min-h-screen bg-gradient-to-br from-[#004f5e] via-[#00677a] to-[#003843] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-brand-400 animate-spin" />
         </div>
       }
     >
@@ -74,8 +74,8 @@ function AccountInner() {
 
   if (status === "loading" || !session?.user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
+      <div className="min-h-screen bg-gradient-to-br from-[#004f5e] via-[#00677a] to-[#003843] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-brand-400 animate-spin" />
       </div>
     );
   }
@@ -105,16 +105,16 @@ function AccountInner() {
         {/* =============================================
             Header chào mừng
             ============================================= */}
-        <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-amber-400/20">
+        <div className="bg-gradient-to-r from-[#004f5e] to-[#00677a] rounded-2xl sm:rounded-3xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-brand-400/20">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-[#071b34] font-black text-xl sm:text-2xl shrink-0 border-4 border-white/20">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-black text-xl sm:text-2xl shrink-0 border-4 border-white/20">
               {initial}
             </div>
             <div className="min-w-0 flex-1">
               <h1 className="text-base sm:text-xl font-black text-white truncate">
                 Xin chào, {user.name || "bạn"}!
               </h1>
-              <p className="text-[11px] sm:text-sm text-amber-200/80 truncate">
+              <p className="text-[11px] sm:text-sm text-brand-200/80 truncate">
                 {user.email}
               </p>
             </div>
@@ -141,7 +141,7 @@ function AccountInner() {
                   onClick={() => handleTabChange(tab.id)}
                   className={`flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
                     active
-                      ? "bg-gradient-to-r from-amber-400 to-amber-600 text-[#071b34] shadow-md"
+                      ? "bg-gradient-to-r from-brand-400 to-brand-600 text-white shadow-md"
                       : "text-slate-600 hover:bg-slate-100"
                   }`}
                 >
@@ -164,9 +164,9 @@ function AccountInner() {
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-xs text-slate-500 hover:text-amber-600 font-medium"
+            className="text-xs text-slate-500 hover:text-brand-600 font-medium"
           >
-            ← Về trang chủ HUNI
+            ← Về trang chủ HDC
           </Link>
         </div>
       </div>
@@ -214,9 +214,9 @@ function InfoTab({ user }) {
     <div className="space-y-4">
       {/* Card thông tin cá nhân */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-4 sm:px-5 py-3.5 bg-gradient-to-r from-[#071b34] to-[#0a2540] flex items-center justify-between gap-3">
+        <div className="px-4 sm:px-5 py-3.5 bg-gradient-to-r from-[#004f5e] to-[#00677a] flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+            <div className="w-8 h-8 rounded-lg bg-brand-400/20 border border-brand-400/40 flex items-center justify-center text-brand-300 shrink-0">
               <User className="w-4 h-4" />
             </div>
             <div className="text-white font-extrabold text-sm sm:text-base truncate">
@@ -226,7 +226,7 @@ function InfoTab({ user }) {
           {!editing && (
             <button
               onClick={handleStartEdit}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 font-bold text-[11px] rounded-lg transition-colors shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-brand-500/20 hover:bg-brand-500/30 border border-brand-400/40 text-brand-200 font-bold text-[11px] rounded-lg transition-colors shrink-0"
             >
               <Pencil className="w-3 h-3" />
               <span>Chỉnh sửa</span>
@@ -273,7 +273,7 @@ function InfoTab({ user }) {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-200"
                 />
               </div>
               <div>
@@ -285,14 +285,14 @@ function InfoTab({ user }) {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="0984.xxx.xxx"
-                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                  className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-200"
                 />
               </div>
               <div className="flex items-center gap-2 pt-1">
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs rounded-xl shadow-md disabled:opacity-60"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-bold text-xs rounded-xl shadow-md disabled:opacity-60"
                 >
                   {saving ? (
                     <>
@@ -323,8 +323,8 @@ function InfoTab({ user }) {
 
       {/* Card bảo mật */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="px-4 sm:px-5 py-3.5 bg-gradient-to-r from-[#071b34] to-[#0a2540] flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-amber-400/20 border border-amber-400/40 flex items-center justify-center text-amber-300 shrink-0">
+        <div className="px-4 sm:px-5 py-3.5 bg-gradient-to-r from-[#004f5e] to-[#00677a] flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-brand-400/20 border border-brand-400/40 flex items-center justify-center text-brand-300 shrink-0">
             <Lock className="w-4 h-4" />
           </div>
           <div className="text-white font-extrabold text-sm sm:text-base">
@@ -338,14 +338,14 @@ function InfoTab({ user }) {
             onClick={() =>
               alert("Tính năng đổi mật khẩu sẽ ra mắt ở phiên bản tiếp theo.")
             }
-            className="w-full flex items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200 hover:border-amber-400 hover:bg-amber-50/40 transition-colors group"
+            className="w-full flex items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-200 hover:border-brand-400 hover:bg-brand-50/40 transition-colors group"
           >
             <div className="flex items-center gap-3 text-left">
-              <div className="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+              <div className="w-9 h-9 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center shrink-0 group-hover:bg-brand-500 group-hover:text-white transition-colors">
                 <Lock className="w-4 h-4" />
               </div>
               <div>
-                <div className="text-sm font-bold text-[#071b34]">
+                <div className="text-sm font-bold text-[#004f5e]">
                   Đổi mật khẩu
                 </div>
                 <div className="text-[11px] text-slate-500 mt-0.5">
@@ -368,14 +368,14 @@ function InfoRow({ icon: Icon, label, value, isLast }) {
         !isLast ? "border-b border-slate-100" : ""
       }`}
     >
-      <div className="w-9 h-9 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+      <div className="w-9 h-9 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
         <Icon className="w-4 h-4" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="text-[10px] uppercase font-bold tracking-wider text-slate-500">
           {label}
         </div>
-        <div className="text-sm font-bold text-[#071b34] mt-0.5 break-words">
+        <div className="text-sm font-bold text-[#004f5e] mt-0.5 break-words">
           {value || "—"}
         </div>
       </div>
@@ -387,8 +387,8 @@ function InfoRow({ icon: Icon, label, value, isLast }) {
    TAB 2 — ĐƠN HÀNG
    ========================================================= */
 const STATUS_MAP = {
-  PENDING: { label: "Chờ xác nhận", color: "amber" },
-  QUOTED: { label: "Đã báo giá", color: "amber" },
+  PENDING: { label: "Chờ xác nhận", color: "brand" },
+  QUOTED: { label: "Đã báo giá", color: "brand" },
   CONFIRMED: { label: "Đã xác nhận", color: "blue" },
   PRODUCING: { label: "Đang sản xuất", color: "blue" },
   SHIPPED: { label: "Đang giao hàng", color: "purple" },
@@ -397,7 +397,7 @@ const STATUS_MAP = {
 };
 
 const COLOR_CLASSES = {
-  amber: "bg-amber-100 text-amber-800 border-amber-200",
+  brand: "bg-brand-100 text-brand-800 border-brand-200",
   blue: "bg-blue-100 text-blue-800 border-blue-200",
   purple: "bg-purple-100 text-purple-800 border-purple-200",
   emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
@@ -445,7 +445,7 @@ function OrdersTab() {
               onClick={() => setFilter(f.id)}
               className={`px-3 py-1.5 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all shrink-0 ${
                 filter === f.id
-                  ? "bg-[#071b34] text-amber-300"
+                  ? "bg-[#004f5e] text-brand-300"
                   : "bg-slate-100 hover:bg-slate-200 text-slate-700"
               }`}
             >
@@ -461,7 +461,7 @@ function OrdersTab() {
           <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-8 h-8 text-slate-400" />
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-[#071b34]">
+          <h3 className="text-base sm:text-lg font-bold text-[#004f5e]">
             {filter !== "all"
               ? "Không có đơn hàng trong mục này"
               : "Bạn chưa có đơn hàng nào"}
@@ -469,11 +469,11 @@ function OrdersTab() {
           <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-5">
             {filter !== "all"
               ? "Thử chọn bộ lọc khác để xem các đơn hàng khác."
-              : "Khám phá các mẫu đồng phục cao cấp của HUNI và bắt đầu đặt may ngay hôm nay."}
+              : "Khám phá các mẫu đồng phục cao cấp của HDC và bắt đầu đặt may ngay hôm nay."}
           </p>
           <Link
             href="/#catalog-section"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs rounded-xl shadow-md"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-bold text-xs rounded-xl shadow-md"
           >
             <ShoppingBag className="w-3.5 h-3.5" />
             <span>Khám phá sản phẩm</span>
@@ -493,7 +493,7 @@ function OrdersTab() {
 function OrderCard({ order }) {
   const status = STATUS_MAP[order.status] || {
     label: order.status || "Đã tiếp nhận",
-    color: "amber",
+    color: "brand",
   };
   const badgeClass = COLOR_CLASSES[status.color];
 
@@ -508,11 +508,11 @@ function OrderCard({ order }) {
   const itemCount = order.items?.length || 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:border-amber-400 hover:shadow-md transition-all">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:border-brand-400 hover:shadow-md transition-all">
       <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-xs">
           <span className="text-slate-500">Mã đơn:</span>
-          <strong className="text-amber-800 font-black">
+          <strong className="text-brand-800 font-black">
             {order.orderNumber || order.id}
           </strong>
         </div>
@@ -538,7 +538,7 @@ function OrderCard({ order }) {
               </span>
             ))}
             {itemCount > 2 && (
-              <span className="text-amber-700 font-bold">
+              <span className="text-brand-700 font-bold">
                 {" "}
                 +{itemCount - 2} sản phẩm khác
               </span>
@@ -546,7 +546,7 @@ function OrderCard({ order }) {
           </div>
         )}
 
-        <div className="mt-2 text-sm font-black text-[#071b34]">
+        <div className="mt-2 text-sm font-black text-[#004f5e]">
           {(order.total || 0).toLocaleString("vi-VN")} đ
         </div>
       </div>
@@ -567,7 +567,7 @@ function WishlistTab() {
         <div className="w-16 h-16 rounded-full bg-rose-50 flex items-center justify-center mx-auto mb-4">
           <Heart className="w-8 h-8 text-rose-400" />
         </div>
-        <h3 className="text-base sm:text-lg font-bold text-[#071b34]">
+        <h3 className="text-base sm:text-lg font-bold text-[#004f5e]">
           Chưa có sản phẩm yêu thích
         </h3>
         <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto mt-2 mb-5">
@@ -575,7 +575,7 @@ function WishlistTab() {
         </p>
         <Link
           href="/#catalog-section"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs rounded-xl shadow-md"
+          className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-bold text-xs rounded-xl shadow-md"
         >
           <ShoppingBag className="w-3.5 h-3.5" />
           <span>Khám phá sản phẩm</span>

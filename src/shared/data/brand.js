@@ -1,25 +1,26 @@
 export const BRAND_INFO = {
-  brandName: "HUNI UNIFORM",
+  brandName: "HDC FASHION",
   parentCompany: "HDC GROUP VN",
   brandSubtitle: "Đồng Phục Doanh Nghiệp & May Đo Cao Cấp",
-  slogan: "HUNI - Đồng hành cùng doanh nghiệp, nâng tầm thương hiệu qua từng bộ đồng phục!",
+  slogan: "Phong cách tạo thành công",
   ceo: {
     name: "Bà Nguyễn Thị Thương",
-    title: "Founder & CEO HDC GROUP VN / HUNI UNIFORM",
+    title: "Founder & CEO HDC GROUP VN / HDC FASHION",
     image: "/images/CEO.jpg",
     banner: "/images/tmht.jpg",
     experience: "Gần 10 năm kinh nghiệm trong ngành dệt may & thiết kế đồng phục",
-    bio: "Với gần 10 năm kinh nghiệm, HUNI là đơn vị chuyên thiết kế và sản xuất đồng phục theo yêu cầu cho doanh nghiệp, tổ chức và trường học. Sở hữu đội ngũ tay nghề cao cùng hệ thống sản xuất hiện đại, HUNI đáp ứng linh hoạt từ đơn hàng nhỏ đến số lượng lớn, đồng hành cùng khách hàng từ tư vấn, thiết kế đến sản xuất và giao hàng."
+    bio: "Với gần 10 năm kinh nghiệm, HDC là đơn vị chuyên thiết kế và sản xuất đồng phục theo yêu cầu cho doanh nghiệp, tổ chức và trường học. Sở hữu đội ngũ tay nghề cao cùng hệ thống sản xuất hiện đại, HDC đáp ứng linh hoạt từ đơn hàng nhỏ đến số lượng lớn, đồng hành cùng khách hàng từ tư vấn, thiết kế đến sản xuất và giao hàng."
   },
   contact: {
     hotline: "0984.959.586",
     hotlineDisplay: "0984.959.586",
     hotlineRaw: "0984959586",
+    website: "hdcfashion.vn",
     zalo: "0984959586",
     email: "dongphuchuni@gmail.com",
     headquarters: "LK - 17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, Tỉnh Phú Thọ",
-    branchHanoi: "Khu đô thị An Khánh, TP. Hà Nội",
-    factory: "Xưởng may HUNI Uniform 2.500m², KCN Thụy Vân, TP. Việt Trì, Phú Thọ"
+    branchHanoi: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội",
+    factory: "Xưởng may HDC Fashion 2.500m², KCN Thụy Vân, TP. Việt Trì, Phú Thọ"
   },
   bankInfo: {
     bankName: "MB Bank (Ngân hàng Quân Đội)",

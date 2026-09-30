@@ -10,7 +10,7 @@ import LoginForm from "./LoginForm";
 
 export const metadata = {
   title: "Đăng nhập",
-  description: "Đăng nhập tài khoản HUNI UNIFORM",
+  description: "Đăng nhập tài khoản HDC FASHION",
 };
 
 export default function LoginPage() {

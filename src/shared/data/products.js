@@ -473,7 +473,7 @@ export const PRODUCTS = [
   // ==================================================
   {
     id: "huni-polo-pro",
-    title: "Áo Polo Doanh Nghiệp HUNI Classic Gold",
+    title: "Áo Polo Doanh Nghiệp HDC Classic Gold",
     sku: "HN-POLO-01",
     category: "corporate",
     badge: "Bán Chạy Nhất",
@@ -506,11 +506,11 @@ export const PRODUCTS = [
       "Kháng khuẩn ion bạc, chống mùi mồ hôi cả ngày làm việc",
       "Miễn phí in/thêu logo công ty 1 vị trí từ 30 áo"
     ],
-    description: "Dòng áo polo đồng phục doanh nghiệp cao cấp được HUNI thiết kế riêng cho các công ty, tập đoàn muốn xây dựng hình ảnh chuyên nghiệp, năng động và chỉn chu."
+    description: "Dòng áo polo đồng phục doanh nghiệp cao cấp được HDC thiết kế riêng cho các công ty, tập đoàn muốn xây dựng hình ảnh chuyên nghiệp, năng động và chỉn chu."
   },
   {
     id: "huni-suit-bespoke",
-    title: "Bộ Vest Doanh Nhân & Lãnh Đạo HUNI Royal Bespoke",
+    title: "Bộ Vest Doanh Nhân & Lãnh Đạo HDC Royal Bespoke",
     sku: "HN-SUIT-01",
     category: "bespoke_suit",
     badge: "May Đo Cao Cấp",
@@ -546,7 +546,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-golf-dryfit",
-    title: "Set Đồng Phục Golf & Pickleball HUNI AeroCool Pro",
+    title: "Set Đồng Phục Golf & Pickleball HDC AeroCool Pro",
     sku: "HN-GOLF-01",
     category: "sport_golf",
     badge: "Xu Hướng 2026",
@@ -582,7 +582,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-school-elite",
-    title: "Bộ Đồng Phục Học Sinh & Giáo Viên HUNI Elite School",
+    title: "Bộ Đồng Phục Học Sinh & Giáo Viên HDC Elite School",
     sku: "HN-SCH-01",
     category: "school",
     badge: "Chuẩn Quốc Tế",
@@ -617,7 +617,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-accessories-pack",
-    title: "Bộ Phụ Kiện Doanh Nghiệp HUNI Branding VIP Pack",
+    title: "Bộ Phụ Kiện Doanh Nghiệp HDC Branding VIP Pack",
     sku: "HN-ACC-01",
     category: "accessories",
     badge: "Quà Tặng Đối Tác",
@@ -643,7 +643,7 @@ export const PRODUCTS = [
     ],
     sizes: ["Free Size Tùy Chỉnh Khóa Đồng"],
     features: [
-      "Mũ lưỡi trai thêu nổi 3D thương hiệu HUNI / Doanh nghiệp",
+      "Mũ lưỡi trai thêu nổi 3D thương hiệu HDC / Doanh nghiệp",
       "Cặp táp doanh nhân đựng laptop 14-15.6 inch chống sốc",
       "Túi giấy cao cấp ép kim nhũ vàng trao tặng sự kiện",
       "Cà vạt dệt thoi gân chìm sang trọng kèm hộp quà nắp nam châm",
@@ -653,7 +653,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-shirt-bamboo",
-    title: "Áo Sơ Mi Công Sở Sợi Tre Bamboo Kháng Khuẩn HUNI Executive",
+    title: "Áo Sơ Mi Công Sở Sợi Tre Bamboo Kháng Khuẩn HDC Executive",
     sku: "HN-SHIRT-02",
     category: "corporate",
     badge: "Chống Nhăn Tự Nhiên",
@@ -693,7 +693,7 @@ export const PRODUCTS = [
   // ==================================================
   {
     id: "huni-polo-classic-2",
-    title: "Áo Polo Doanh Nghiệp HUNI Classic Navy",
+    title: "Áo Polo Doanh Nghiệp HDC Classic Navy",
     sku: "HN-POLO-02",
     category: "corporate",
     badge: "Bán Chạy #2",
@@ -722,7 +722,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-polo-sport",
-    title: "Áo Polo Thể Thao Doanh Nghiệp HUNI Active",
+    title: "Áo Polo Thể Thao Doanh Nghiệp HDC Active",
     sku: "HN-POLO-03",
     category: "corporate",
     badge: "Năng Động",
@@ -751,7 +751,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-shirt-premium",
-    title: "Áo Sơ Mi Cao Cấp HUNI Premium Executive",
+    title: "Áo Sơ Mi Cao Cấp HDC Premium Executive",
     sku: "HN-SHIRT-03",
     category: "corporate",
     badge: "Cao Cấp",
@@ -781,7 +781,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-shirt-classic",
-    title: "Áo Sơ Mi Công Sở HUNI Classic Blue",
+    title: "Áo Sơ Mi Công Sở HDC Classic Blue",
     sku: "HN-SHIRT-04",
     category: "corporate",
     badge: "Phổ Biến",
@@ -810,7 +810,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-golf-pro-2",
-    title: "Bộ Đồng Phục Golf Doanh Nghiệp HUNI Pro Series",
+    title: "Bộ Đồng Phục Golf Doanh Nghiệp HDC Pro Series",
     sku: "HN-GOLF-02",
     category: "sport_golf",
     badge: "Cao Cấp Golf",
@@ -839,7 +839,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-golf-dryfit-2",
-    title: "Set Golf Cao Cấp HUNI Masters",
+    title: "Set Golf Cao Cấp HDC Masters",
     sku: "HN-GOLF-03",
     category: "sport_golf",
     badge: "Xu Hướng",
@@ -868,7 +868,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-kids-school",
-    title: "Đồng Phục Học Sinh Tiểu Học HUNI Kids",
+    title: "Đồng Phục Học Sinh Tiểu Học HDC Kids",
     sku: "HN-KID-01",
     category: "school",
     badge: "Trẻ Em",
@@ -902,7 +902,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-kids-polo",
-    title: "Áo Polo Trẻ Em HUNI Kids Active",
+    title: "Áo Polo Trẻ Em HDC Kids Active",
     sku: "HN-KID-02",
     category: "school",
     badge: "Bán Chạy",
@@ -937,7 +937,7 @@ export const PRODUCTS = [
   // ==================================================
   {
     id: "huni-accessories-cap",
-    title: "Mũ Lưỡi Trai Doanh Nghiệp HUNI Cap",
+    title: "Mũ Lưỡi Trai Doanh Nghiệp HDC Cap",
     sku: "HN-ACC-02",
     category: "accessories",
     badge: "Quà Tặng",
@@ -966,7 +966,7 @@ export const PRODUCTS = [
   },
   {
     id: "huni-accessories-tote",
-    title: "Túi Tote Canvas Doanh Nghiệp HUNI Eco",
+    title: "Túi Tote Canvas Doanh Nghiệp HDC Eco",
     sku: "HN-ACC-03",
     category: "accessories",
     badge: "Xanh Sạch",
@@ -1150,7 +1150,7 @@ export const PRODUCTS = [
     description: "Cravat lụa tơ tằm họa tiết văn hóa — điểm nhấn tinh tế cho bộ trang phục doanh nhân."
   },
   // ==================================================
-  // NHÓM 5: ĐỒNG PHỤC KIDS — BỔ SUNG TỪ CATALOGUE IHDC
+  // NHÓM 5: ĐỒNG PHỤC KIDS — BỔ SUNG TỪ CATALOGUE HDC
   // ==================================================
   {
     id: "hdc-polo-kids-white",

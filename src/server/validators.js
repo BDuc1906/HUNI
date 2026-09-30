@@ -46,6 +46,10 @@ export const loginSchema = z.object({
 
 // ==================================================
 // ORDER VALIDATOR
+// ⚠️ LƯU Ý BẢO MẬT:
+// - KHÔNG nhận subtotal/discount/total từ client
+// - Server tự tính lại từ productId + quantity + voucherCode
+// - Client gửi unitPrice chỉ để so sánh, server sẽ reject nếu lệch
 // ==================================================
 export const createOrderSchema = z.object({
   customer: z.object({
@@ -60,29 +64,37 @@ export const createOrderSchema = z.object({
   items: z
     .array(
       z.object({
-        productId: z.string().min(1),
-        productName: z.string().min(1),
-        quantity: z.number().int().min(5, "Số lượng tối thiểu 5"),
+        productId: z.string().min(1, "Thiếu productId"),
+        productName: z.string().min(1).max(300),
+        quantity: z
+          .number()
+          .int()
+          .min(5, "Số lượng tối thiểu 5")
+          .max(100000, "Số lượng quá lớn"),
+        // Client gửi lên — server chỉ dùng để so sánh, KHÔNG tin
         unitPrice: z.number().int().min(0),
         color: z.union([z.string(), z.undefined(), z.null()]).optional(),
         size: z.union([z.string(), z.undefined(), z.null()]).optional(),
         customLogo: z.any().optional(),
       })
     )
-    .min(1, "Phải có ít nhất 1 sản phẩm"),
+    .min(1, "Phải có ít nhất 1 sản phẩm")
+    .max(50, "Tối đa 50 sản phẩm trong 1 đơn"),
+  // Voucher — server validate lại
+  voucherCode: z
+    .union([z.string().max(50), z.undefined(), z.null()])
+    .optional()
+    .transform((val) => val || null),
   paymentMethod: z.enum(["vietqr", "deposit30", "freesample"]),
-  subtotal: z.number().int().min(0),
-  discount: z.number().int().min(0).default(0),
-  total: z.number().int().min(0),
   notes: z
     .union([z.string().max(500), z.undefined(), z.null()])
     .transform((val) => val || ""),
   vatInfo: z
     .union([
       z.object({
-        taxCode: z.string(),
-        companyName: z.string().optional(),
-        companyAddress: z.string(),
+        taxCode: z.string().min(1).max(50),
+        companyName: z.string().max(200).optional(),
+        companyAddress: z.string().min(1).max(500),
         email: z.string().email(),
       }),
       z.null(),
@@ -101,7 +113,14 @@ export const createQuoteSchema = z.object({
   company: z
     .union([z.string().max(200), z.undefined(), z.null()])
     .transform((val) => val || ""),
-  category: z.enum(["polo", "shirt", "suit", "golf", "school", "accessories"]),
+  category: z.enum([
+    "polo",
+    "shirt",
+    "suit",
+    "golf",
+    "school",
+    "accessories",
+  ]),
   quantity: z.number().int().min(10, "Số lượng tối thiểu 10"),
   estimatedPrice: z.number().int().min(0).optional(),
   notes: z

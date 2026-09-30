@@ -55,7 +55,7 @@ export default function Home() {
               <ProductCatalog />
             </ErrorBoundary>
 
-            <ErrorBoundary name="Vì sao chọn HUNI">
+            <ErrorBoundary name="Vì sao chọn HDC">
               <WhyChooseUs />
             </ErrorBoundary>
 

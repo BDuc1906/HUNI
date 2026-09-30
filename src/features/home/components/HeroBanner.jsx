@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
@@ -9,244 +9,422 @@ import {
   PhoneCall,
   ArrowRight,
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
-  Scissors
+  Pause,
+  Play,
 } from "lucide-react";
+
+// ============================================================
+// SLIDES DATA — mỗi slide có ảnh + text + CTA riêng
+// ============================================================
+const SLIDES = [
+  {
+    image: "/images/uniform_corporate_suits.jpg",
+    eyebrow: "Đẳng Cấp Lãnh Đạo",
+    title: "NÂNG TẦM THƯƠNG HIỆU",
+    titleHighlight: "CÙNG HDC FASHION",
+    subtitle: "Vest doanh nhân may đo chuẩn Ý",
+    description:
+      "Bộ sưu tập Vest & Sơ mi cao cấp dành riêng cho Ban lãnh đạo, cấp quản lý. Đo ni tận nơi bởi đội ngũ thợ may 15+ năm kinh nghiệm.",
+    highlight: "Vest doanh nhân",
+    ctaPrimary: "Nhận Báo Giá & May Mẫu 0đ",
+    ctaSecondary: "Xem Bộ Sưu Tập Vest",
+    ctaLink: "/dong-phuc-may-do",
+  },
+  {
+    image: "/images/uniform_polo_corporate.jpg",
+    eyebrow: "Bán Chạy Nhất 2026",
+    title: "ÁO POLO DOANH NGHIỆP",
+    titleHighlight: "HDC CLASSIC",
+    subtitle: "Vải cá sấu Cotton Compact 4 chiều",
+    description:
+      "Dòng áo Polo đồng phục chủ lực được hơn 50.000+ doanh nghiệp tin dùng. Vải kháng khuẩn ion bạc, co giãn 4 chiều, bền màu sau 100 lần giặt.",
+    highlight: "Polo Classic",
+    ctaPrimary: "Đặt Polo Doanh Nghiệp",
+    ctaSecondary: "Xem Bảng Màu & Size",
+    ctaLink: "/dong-phuc-doanh-nghiep",
+  },
+  {
+    image: "/images/uniform_sport_golf.jpg",
+    eyebrow: "Công Nghệ AeroCool",
+    title: "ĐỒNG PHỤC CÁC GIẢI",
+    titleHighlight: "THỂ THAO & GOLF",
+    subtitle: "Golf, Pickleball, Marathon, Team building",
+    description:
+      "Công nghệ làm mát AeroCool hạ nhiệt cơ thể 3°C. Chống tia UV UPF 50+. Co giãn 4 chiều cho cú swing chuẩn xác.",
+    highlight: "Golf & Thể thao",
+    ctaPrimary: "Đặt Đồng Phục Golf",
+    ctaSecondary: "Xem Ảnh Giải Đấu",
+    ctaLink: "/dong-phuc-the-thao",
+  },
+  {
+    image: "/images/uniform_school_students.jpg",
+    eyebrow: "Chuẩn Quốc Tế",
+    title: "ĐỒNG PHỤC",
+    titleHighlight: "TRƯỜNG HỌC CAO CẤP",
+    subtitle: "Học sinh các cấp, sinh viên, giáo viên",
+    description:
+      "Chuẩn phom dáng quốc tế, vải mềm mại an toàn cho làn da học sinh. Váy xếp ly có quần lót an toàn. Huy hiệu trường thêu Tajima sắc sảo.",
+    highlight: "Trường học",
+    ctaPrimary: "Nhận Báo Giá Trường Học",
+    ctaSecondary: "Xem Album Thực Tế",
+    ctaLink: "/dong-phuc-truong-hoc",
+  },
+];
+
+// ============================================================
+// CHECKLIST — điểm mạnh chung cho mọi slide
+// ============================================================
+const CHECKLIST = [
+  "Thiết kế 3D miễn phí",
+  "May mẫu thử 0 đồng",
+  "Hỗ trợ đo tận nơi",
+  "Chiết khấu sỉ cực cao",
+  "Bảo hành 1 đổi 1",
+  "Giao hàng toàn quốc",
+];
+
+// ============================================================
+// SLIDE DURATION (ms)
+// ============================================================
+const SLIDE_DURATION = 5500;
+const TRANSITION_DURATION = 700; // phải khớp với duration-700 trong className
 
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
-  const slides = [
-    {
-      title: "Đồng Phục Doanh Nhân & Doanh Nghiệp",
-      sub: "Vest may đo cao cấp & Sơ mi form chuẩn Ý",
-      image: "/images/uniform_corporate_suits.jpg",
-      badge: "Đẳng Cấp Lãnh Đạo"
-    },
-    {
-      title: "Áo Polo Doanh Nghiệp HUNI Classic",
-      sub: "Vải cá sấu Cotton Compact 4 chiều kháng khuẩn",
-      image: "/images/uniform_polo_corporate.jpg",
-      badge: "Bán Chạy Nhất"
-    },
-    {
-      title: "Đồng Phục Các Giải Thể Thao",
-      sub: "Golf, Pickleball, Marathon, Teambuilding năng động",
-      image: "/images/uniform_sport_golf.jpg",
-      badge: "Công Nghệ AeroCool"
-    },
-    {
-      title: "Đồng Phục Học Sinh & Giáo Viên",
-      sub: "Chuẩn form quốc tế, thanh lịch và bền bỉ",
-      image: "/images/uniform_school_students.jpg",
-      badge: "Trường Học Chuẩn Quốc Tế"
-    }
-  ];
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  const [activeSlide, setActiveSlide] = useState(0);
+  // Touch handling
+  const touchStartXRef = useRef(0);
+  const touchEndXRef = useRef(0);
 
+  // ============================================================
+  // NAVIGATION
+  // ============================================================
+  const goToSlide = useCallback((index) => {
+    const total = SLIDES.length;
+    setCurrentSlide(((index % total) + total) % total);
+    setProgress(0);
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    setProgress(0);
+  }, []);
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setProgress(0);
+  }, []);
+
+  // ============================================================
+  // AUTO-PLAY + PROGRESS BAR
+  // ============================================================
   useEffect(() => {
+    if (isPaused) return;
+
+    const startTime = Date.now();
+    const tickInterval = 50; // update progress mỗi 50ms
+
     const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
-    }, 4500);
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
+      setProgress(percent);
+
+      if (elapsed >= SLIDE_DURATION) {
+        nextSlide();
+      }
+    }, tickInterval);
+
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [currentSlide, isPaused, nextSlide]);
+
+  // ============================================================
+  // KEYBOARD NAVIGATION
+  // ============================================================
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (e.key === "ArrowLeft") prevSlide();
+      if (e.key === "ArrowRight") nextSlide();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [nextSlide, prevSlide]);
+
+  // ============================================================
+  // TOUCH / SWIPE HANDLERS
+  // ============================================================
+  const handleTouchStart = (e) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchEndXRef.current = e.touches[0].clientX;
+    setIsPaused(true);
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndXRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartXRef.current - touchEndXRef.current;
+    const SWIPE_THRESHOLD = 50;
+
+    if (Math.abs(diff) > SWIPE_THRESHOLD) {
+      if (diff > 0) nextSlide();
+      else prevSlide();
+    }
+
+    setTimeout(() => setIsPaused(false), 3000);
+  };
+
+  const slide = SLIDES[currentSlide];
 
   return (
-    <section className="relative bg-white text-slate-900 pt-6 sm:pt-10 pb-12 sm:pb-16 overflow-hidden border-b border-slate-200">
-      {/* Subtle gold ambient glows */}
-      <div className="absolute top-0 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-amber-50 rounded-full blur-3xl pointer-events-none opacity-60" />
-      <div className="absolute bottom-10 left-10 w-60 sm:w-80 h-60 sm:h-80 bg-slate-50 rounded-full blur-3xl pointer-events-none opacity-50" />
+    <section className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900">
+      {/* ============================================
+          SLIDES — TRƯỢT NGANG (translateX)
+          Container chứa tất cả slides xếp hàng ngang
+          ============================================ */}
+      <div
+        className="absolute inset-0 flex transition-transform ease-out"
+        style={{
+          transform: `translateX(-${currentSlide * 100}%)`,
+          transitionDuration: `${TRANSITION_DURATION}ms`,
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {SLIDES.map((s, idx) => (
+          <div
+            key={idx}
+            className="relative w-full h-full flex-shrink-0"
+            aria-hidden={idx !== currentSlide}
+          >
+            {/* Background Image */}
+            <Image
+              src={s.image}
+              alt={s.title + " " + s.titleHighlight}
+              fill
+              sizes="100vw"
+              quality={90}
+              priority={idx === 0}
+              className="object-cover object-center"
+            />
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
-          {/* =============================================
-              LEFT COLUMN
-              ============================================= */}
-          <div className="lg:col-span-7 space-y-4 sm:space-y-6">
-            {/* Top Badge */}
-            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-[11px] sm:text-xs md:text-sm font-semibold">
-              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
-              <span className="truncate">HDC GROUP VN • THƯƠNG HIỆU HUNI UNIFORM</span>
+            {/* Gradient Overlay — tối 2 bên, sáng giữa */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/95 via-[#00222a]/70 to-[#00222a]/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#00222a]/80 via-transparent to-[#00222a]/40" />
+          </div>
+        ))}
+      </div>
+
+      {/* ============================================
+          CONTENT OVERLAY — Text + CTA
+          ============================================ */}
+      <div className="relative z-10 h-full flex flex-col justify-center">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+          <div className="max-w-2xl">
+            {/* Eyebrow badge */}
+            <div
+              key={`eyebrow-${currentSlide}`}
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+              <span>{slide.eyebrow}</span>
             </div>
 
-            {/* Main Title */}
-            <div className="space-y-2">
-              <h1 className="text-[26px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-[#071b34]">
-                NÂNG TẦM{" "}
-                <span className="text-gold-gradient">THƯƠNG HIỆU</span>
-                <br />
-                CÙNG HUNI UNIFORM
+            {/* Title */}
+            <div
+              key={`title-${currentSlide}`}
+              className="space-y-1 mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
+            >
+              <h1 className="text-[32px] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white">
+                {slide.title}
               </h1>
-              <p className="text-slate-600 font-medium text-sm sm:text-base lg:text-lg italic">
-                &ldquo;{BRAND_INFO.slogan}&rdquo;
-              </p>
+              <h1 className="text-[32px] leading-[1.1] sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-brand-gradient">
+                {slide.titleHighlight}
+              </h1>
             </div>
 
-            {/* Description */}
-            <p className="text-slate-600 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-2xl">
-              Chuyên tư vấn, thiết kế độc quyền và may đo đồng phục cao cấp cho{" "}
-              <strong className="text-[#071b34] font-bold">
-                doanh nghiệp, tổ chức và trường học
-              </strong>
-              . Sản xuất trực tiếp tại xưởng với quy mô 2.500m², cam kết chất lượng vượt trội,
-              giá gốc tận xưởng và may mẫu duyệt form 0đ.
+            {/* Subtitle */}
+            <p
+              key={`sub-${currentSlide}`}
+              className="text-brand-300 font-medium text-sm sm:text-base lg:text-lg italic mb-4 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-100"
+            >
+              &ldquo;{slide.subtitle}&rdquo;
             </p>
 
-            {/* Checklist */}
-            <div className="grid grid-cols-2 gap-2 sm:gap-2.5 pt-1 sm:pt-2 text-[11px] sm:text-xs md:text-sm font-medium text-slate-700">
-              {[
-                "Thiết kế 3D miễn phí",
-                "May mẫu thử 0 đồng",
-                "Hỗ trợ đo tận nơi",
-                "Chiết khấu sỉ cực cao",
-                "Bảo hành 1 đổi 1 30 ngày",
-                "Giao hàng toàn quốc"
-              ].map((txt) => (
-                <div key={txt} className="flex items-start gap-1.5 sm:gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0 mt-0.5" />
-                  <span className="leading-tight">{txt}</span>
+            {/* Description */}
+            <p
+              key={`desc-${currentSlide}`}
+              className="text-slate-200 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-6 sm:mb-8 animate-in fade-in slide-in-from-left-4 duration-500 delay-150"
+            >
+              {slide.description}
+            </p>
+
+            {/* Checklist — desktop only */}
+            <div
+              key={`check-${currentSlide}`}
+              className="hidden md:grid grid-cols-2 gap-x-6 gap-y-2 mb-8 max-w-xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
+            >
+              {CHECKLIST.map((item) => (
+                <div
+                  key={item}
+                  className="flex items-center gap-2 text-xs lg:text-sm text-slate-100 font-medium"
+                >
+                  <CheckCircle2 className="w-4 h-4 text-brand-400 shrink-0" />
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
 
-            {/* CTA */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 pt-2 sm:pt-3">
+            {/* CTA Buttons */}
+            <div
+              key={`cta-${currentSlide}`}
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 animate-in fade-in slide-in-from-left-4 duration-500 delay-300"
+            >
               <button
                 onClick={() => setIsQuickQuoteOpen(true)}
-                className="px-5 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-extrabold text-[13px] sm:text-sm md:text-base rounded-2xl shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2 sm:gap-2.5 transition-all transform hover:-translate-y-1 active:scale-[0.98]"
+                className="px-5 sm:px-7 py-3.5 sm:py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-[13px] sm:text-sm rounded-2xl shadow-2xl shadow-brand-500/40 flex items-center justify-center gap-2 transform hover:-translate-y-1 active:scale-[0.98] transition-all"
               >
-                <span>Nhận Báo Giá &amp; May Mẫu 0đ</span>
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+                <span>{slide.ctaPrimary}</span>
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </button>
 
               <a
-                href="#catalog-section"
-                className="px-5 sm:px-6 py-3 sm:py-4 bg-transparent hover:bg-slate-50 text-[#071b34] font-semibold text-[13px] sm:text-sm md:text-base rounded-2xl border-2 border-[#071b34] flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+                href={slide.ctaLink}
+                className="px-5 sm:px-7 py-3.5 sm:py-4 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold text-[13px] sm:text-sm rounded-2xl border border-white/30 hover:border-white/50 flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
               >
-                <span>Xem Bộ Sưu Tập</span>
-                <ChevronRight className="w-4 h-4 shrink-0" />
+                <span>{slide.ctaSecondary}</span>
               </a>
 
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="px-3 sm:px-4 py-2.5 sm:py-4 text-[#071b34] hover:text-amber-600 font-bold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 transition-colors"
+                className="px-3 sm:px-4 py-3 text-white hover:text-brand-300 font-bold text-[13px] sm:text-sm flex items-center justify-center gap-2 transition-colors"
               >
-                <PhoneCall className="w-4 h-4 text-amber-500 animate-bounce shrink-0" />
-                <span>{BRAND_INFO.contact.hotline}</span>
+                <PhoneCall className="w-4 h-4 text-brand-400 animate-pulse shrink-0" />
+                <span className="hidden sm:inline">
+                  {BRAND_INFO.contact.hotline}
+                </span>
+                <span className="sm:hidden">Gọi ngay</span>
               </a>
             </div>
+          </div>
+        </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 pt-4 sm:pt-6 border-t border-slate-200">
+        {/* ============================================
+            STATS BAR — Gắn đáy màn hình
+            ============================================ */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a] to-transparent pt-8 pb-6 sm:pb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
               {BRAND_INFO.stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="bg-slate-50 p-2.5 sm:p-3 rounded-xl border border-slate-200"
+                  className="bg-white/5 backdrop-blur-md border border-white/10 hover:border-brand-400/40 rounded-xl sm:rounded-2xl p-2.5 sm:p-3 lg:p-4 transition-colors"
                 >
-                  <div className="text-lg sm:text-xl md:text-2xl font-black text-amber-600 leading-tight">
+                  <div className="text-lg sm:text-2xl lg:text-3xl font-black text-brand-400 leading-tight">
                     {stat.value}
                   </div>
-                  <div className="text-[11px] sm:text-xs font-semibold text-[#071b34] leading-tight mt-0.5">
+                  <div className="text-[10px] sm:text-xs lg:text-sm font-bold text-white mt-1 leading-tight">
                     {stat.label}
                   </div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-500 truncate mt-0.5">
+                  <div className="hidden sm:block text-[10px] lg:text-xs text-slate-400 truncate mt-0.5">
                     {stat.sub}
                   </div>
                 </div>
               ))}
             </div>
           </div>
+        </div>
+      </div>
 
-          {/* =============================================
-              RIGHT COLUMN — Showcase Slider
-              ============================================= */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              {/* Gold frame glow */}
-              <div className="absolute -inset-1 sm:-inset-1.5 bg-gradient-to-r from-amber-400 to-amber-600 rounded-3xl blur-md opacity-25" />
+      {/* ============================================
+          ARROWS NAVIGATION — Chỉ hiện trên desktop
+          ============================================ */}
+      <button
+        onClick={prevSlide}
+        aria-label="Slide trước"
+        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:border-white/40 text-white items-center justify-center transition-all active:scale-95 z-20"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
 
-              <div className="relative bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-2xl">
-                {/* Slider */}
-                <div className="relative h-64 sm:h-80 md:h-96 w-full overflow-hidden bg-slate-100">
-                  <Image
-                    src={slides[activeSlide].image}
-                    alt={slides[activeSlide].title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 40vw"
-                    className="object-cover object-top transition-all duration-700"
-                    priority
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#071b34]/70 via-transparent to-transparent" />
+      <button
+        onClick={nextSlide}
+        aria-label="Slide sau"
+        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:border-white/40 text-white items-center justify-center transition-all active:scale-95 z-20"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
 
-                  {/* Top badge */}
-                  <div className="absolute top-3 sm:top-4 left-3 sm:left-4 px-2.5 sm:px-3 py-0.5 sm:py-1 bg-gradient-to-r from-amber-400 to-amber-500 text-[#071b34] font-black text-[10px] sm:text-xs uppercase tracking-wider rounded-full shadow-lg">
-                    {slides[activeSlide].badge}
-                  </div>
+      {/* ============================================
+          BOTTOM CONTROLS — Dots + Play/Pause + Counter
+          ============================================ */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-3">
+        {/* Play/Pause */}
+        <button
+          onClick={() => setIsPaused((p) => !p)}
+          aria-label={isPaused ? "Tiếp tục slideshow" : "Tạm dừng slideshow"}
+          className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all active:scale-95"
+        >
+          {isPaused ? (
+            <Play className="w-4 h-4 fill-current" />
+          ) : (
+            <Pause className="w-4 h-4 fill-current" />
+          )}
+        </button>
 
-                  {/* Slide details */}
-                  <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4 right-3 sm:right-4 p-3 sm:p-4 bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl border border-slate-200 shadow-lg">
-                    <h3 className="text-sm sm:text-base md:text-lg font-bold text-[#071b34] leading-tight">
-                      {slides[activeSlide].title}
-                    </h3>
-                    <p className="text-[11px] sm:text-xs text-amber-700 font-semibold mt-0.5">
-                      {slides[activeSlide].sub}
-                    </p>
-                  </div>
-                </div>
+        {/* Counter */}
+        <div className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold tabular-nums">
+          {String(currentSlide + 1).padStart(2, "0")}{" "}
+          <span className="text-white/50">/</span>{" "}
+          {String(SLIDES.length).padStart(2, "0")}
+        </div>
+      </div>
 
-                {/* Indicators + CEO link */}
-                <div className="p-2.5 sm:p-3 bg-slate-50 flex items-center justify-between border-t border-slate-200 text-xs gap-2">
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    {slides.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setActiveSlide(idx)}
-                        className={`h-1.5 sm:h-2 rounded-full transition-all ${
-                          activeSlide === idx
-                            ? "w-5 sm:w-6 bg-amber-500"
-                            : "w-1.5 sm:w-2 bg-slate-300 hover:bg-slate-400"
-                        }`}
-                        title={`Xem slide ${idx + 1}`}
-                        aria-label={`Xem slide ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
+      {/* Dots — Căn giữa, phía trên stats bar */}
+      <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {SLIDES.map((_, idx) => {
+          const active = idx === currentSlide;
+          return (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              aria-label={`Đến slide ${idx + 1}`}
+              className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
+                active
+                  ? "w-10 sm:w-14 bg-white/30"
+                  : "w-2 sm:w-3 bg-white/40 hover:bg-white/60"
+              }`}
+            >
+              {active && (
+                <span
+                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full"
+                  style={{
+                    width: `${progress}%`,
+                    transition: isPaused ? "none" : "width 50ms linear",
+                  }}
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
 
-                  <a
-                    href="#ceo-letter-section"
-                    className="flex items-center gap-1.5 sm:gap-2 text-slate-600 hover:text-[#071b34] text-[10px] sm:text-xs font-medium min-w-0"
-                  >
-                    <div className="relative w-5 h-5 sm:w-6 sm:h-6 rounded-full overflow-hidden border border-amber-400 shrink-0">
-                      <Image
-                        src={BRAND_INFO.ceo.image}
-                        alt={BRAND_INFO.ceo.name}
-                        fill
-                        sizes="24px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <span className="truncate hidden sm:inline">Thư ngỏ CEO Nguyễn Thị Thương</span>
-                    <span className="truncate sm:hidden">CEO HUNI</span>
-                    <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500 shrink-0" />
-                  </a>
-                </div>
-              </div>
-
-              {/* Floating tag */}
-              <div className="absolute -bottom-3 sm:-bottom-5 left-2 sm:left-4 bg-white p-2.5 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xl flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
-                  <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-                <div>
-                  <div className="text-[11px] sm:text-xs font-bold text-[#071b34]">May Đo Tận Nơi</div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-500">
-                    Thợ may 15 năm kinh nghiệm
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      {/* ============================================
+          Slide label — góc dưới trái, hiện trên desktop
+          ============================================ */}
+      <div className="hidden lg:block absolute bottom-28 left-4 sm:left-6 z-20 max-w-xs">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1">
+          Đang xem
+        </div>
+        <div className="text-white text-sm font-bold leading-tight">
+          {slide.highlight}
         </div>
       </div>
     </section>

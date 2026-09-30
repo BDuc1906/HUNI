@@ -38,7 +38,7 @@ const SEAMLESS_COLORS = [
   { name: "Xám Ghi", code: "#9CA3AF" },
   { name: "Hồng Pastel", code: "#F4C2C2" },
   { name: "Xanh Navy", code: "#1E3A8A" },
-  { name: "Trắng Sữa", code: "#F8FAFC" },
+  { name: "Trắng Sữa", code: "#f6f8ff" },
   { name: "Xanh Sky", code: "#78A6C8" }
 ];
 
@@ -68,21 +68,21 @@ export default function SeamlessTechSection() {
       id="seamless-tech-section"
       className="py-16 sm:py-20 bg-white border-t border-slate-200 relative overflow-hidden"
     >
-      <div className="absolute top-0 right-1/4 w-80 h-80 bg-amber-50 rounded-full blur-3xl pointer-events-none opacity-60" />
+      <div className="absolute top-0 right-1/4 w-80 h-80 bg-brand-50 rounded-full blur-3xl pointer-events-none opacity-60" />
       <div className="absolute bottom-0 left-1/4 w-80 h-80 bg-slate-50 rounded-full blur-3xl pointer-events-none opacity-50" />
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2 sm:space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-500" />
             Công Nghệ Độc Quyền HDC Fashion
           </div>
 
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#071b34]">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#004f5e]">
             CÔNG NGHỆ SAEMLESS
           </h2>
 
-          <p className="text-lg sm:text-xl md:text-2xl font-bold text-gold-gradient">
+          <p className="text-lg sm:text-xl md:text-2xl font-bold text-brand-gradient">
             Sơ Mi Không Đường May
           </p>
 
@@ -98,15 +98,15 @@ export default function SeamlessTechSection() {
             return (
               <div
                 key={idx}
-                className="group bg-white p-5 sm:p-6 rounded-2xl border-2 border-slate-200 hover:border-amber-400 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
+                className="group bg-white p-5 sm:p-6 rounded-2xl border-2 border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-[#071b34] flex items-center justify-center shadow-md mb-4 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-400 to-brand-600 text-white flex items-center justify-center shadow-md mb-4 group-hover:scale-110 transition-transform">
                   <Icon className="w-6 h-6" />
                 </div>
 
                 <div className="flex items-start gap-2 mb-2">
                   <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                  <h3 className="font-extrabold text-[#071b34] text-base sm:text-lg leading-tight group-hover:text-amber-700 transition-colors">
+                  <h3 className="font-extrabold text-[#004f5e] text-base sm:text-lg leading-tight group-hover:text-brand-700 transition-colors">
                     {item.title}
                   </h3>
                 </div>
@@ -123,7 +123,7 @@ export default function SeamlessTechSection() {
           {SEAMLESS_IMAGES.map((item, idx) => (
             <div
               key={idx}
-              className="group bg-white rounded-2xl border border-slate-200 hover:border-amber-400 shadow-sm hover:shadow-xl overflow-hidden transition-all duration-300"
+              className="group bg-white rounded-2xl border border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-xl overflow-hidden transition-all duration-300"
             >
               <div className="relative h-56 sm:h-64 w-full overflow-hidden bg-slate-100">
                 <Image
@@ -133,11 +133,11 @@ export default function SeamlessTechSection() {
                   sizes="(max-width: 640px) 100vw, 33vw"
                   className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#071b34]/70 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#004f5e]/70 via-transparent to-transparent" />
 
                 <div className="absolute bottom-3 left-3 right-3 text-white">
                   <div className="text-sm font-bold">{item.label}</div>
-                  <div className="text-[11px] text-amber-200 font-medium">{item.desc}</div>
+                  <div className="text-[11px] text-brand-200 font-medium">{item.desc}</div>
                 </div>
               </div>
             </div>
@@ -147,8 +147,8 @@ export default function SeamlessTechSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
           <div className="lg:col-span-7 bg-slate-50 rounded-2xl border border-slate-200 p-5 sm:p-6">
             <div className="flex items-center gap-2 mb-4">
-              <Palette className="w-4 h-4 text-amber-600 shrink-0" />
-              <h3 className="font-extrabold text-[#071b34] text-sm sm:text-base">
+              <Palette className="w-4 h-4 text-brand-600 shrink-0" />
+              <h3 className="font-extrabold text-[#004f5e] text-sm sm:text-base">
                 Bảng Màu Sơ Mi Seamless Có Sẵn
               </h3>
             </div>
@@ -157,7 +157,7 @@ export default function SeamlessTechSection() {
               {SEAMLESS_COLORS.map((color, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 hover:border-amber-400 transition-colors"
+                  className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200 hover:border-brand-400 transition-colors"
                 >
                   <span
                     className="w-7 h-7 rounded-full border-2 border-slate-300 shadow-sm shrink-0"
@@ -175,8 +175,8 @@ export default function SeamlessTechSection() {
             </p>
           </div>
 
-          <div className="lg:col-span-5 bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] rounded-2xl border border-amber-500/30 p-5 sm:p-6 flex flex-col justify-center text-white relative overflow-hidden">
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="lg:col-span-5 bg-gradient-to-br from-[#004f5e] via-[#00677a] to-[#003843] rounded-2xl border border-brand-500/30 p-5 sm:p-6 flex flex-col justify-center text-white relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
 
             <h3 className="font-extrabold text-base sm:text-lg md:text-xl mb-2 relative z-10">
               Trải Nghiệm Công Nghệ Seamless
@@ -190,7 +190,7 @@ export default function SeamlessTechSection() {
             <div className="space-y-2 relative z-10">
               <button
                 onClick={() => setIsQuickQuoteOpen(true)}
-                className="w-full py-3 px-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-xs sm:text-sm rounded-xl shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all transform hover:-translate-y-0.5"
+                className="w-full py-3 px-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-black text-xs sm:text-sm rounded-xl shadow-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all transform hover:-translate-y-0.5"
               >
                 <Sparkles className="w-4 h-4 shrink-0" />
                 <span>Nhận Báo Giá Seamless</span>
@@ -199,9 +199,9 @@ export default function SeamlessTechSection() {
 
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="w-full py-3 px-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-amber-400/60 font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+                className="w-full py-3 px-4 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-brand-400/60 font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
               >
-                <Phone className="w-4 h-4 text-amber-400 animate-pulse shrink-0" />
+                <Phone className="w-4 h-4 text-brand-400 animate-pulse shrink-0" />
                 <span className="truncate">Hotline: {BRAND_INFO.contact.hotline}</span>
               </a>
             </div>

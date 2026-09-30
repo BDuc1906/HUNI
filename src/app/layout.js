@@ -1,7 +1,7 @@
 // src/app/layout.js
 import "./globals.css";
 import { Suspense } from "react";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Roboto } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
 import { ThemeProvider } from "@/shared/providers/ThemeProvider";
 import { ShopProvider } from "@/shared/providers/ShopProvider";
@@ -9,9 +9,10 @@ import { ShopProvider } from "@/shared/providers/ShopProvider";
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
    ============================================================ */
-const jakarta = Plus_Jakarta_Sans({
+// Catalogue HDC Fashion dùng sans-serif đậm (dạng Roboto). Giữ tên biến --font-jakarta để không phải sửa nơi khác.
+const jakarta = Roboto({
   subsets: ["latin", "latin-ext", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "700", "900"],
   variable: "--font-jakarta",
   display: "swap",
   preload: true,
@@ -21,39 +22,50 @@ const jakarta = Plus_Jakarta_Sans({
    METADATA — SEO đầy đủ + Favicon icons
    ============================================================ */
 export const metadata = {
-  metadataBase: new URL("https://huniuniform.vn"),
+  metadataBase: new URL("https://hdcfashion.vn"),
 
+  // ✅ Title rút gọn — không bị cắt trên tab trình duyệt
   title: {
-    default:
-      "HUNI UNIFORM - Đồng Phục Doanh Nghiệp & May Đo Cao Cấp | HDC GROUP VN",
-    template: "%s | HUNI UNIFORM",
+    default: "HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp",
+    template: "%s | HDC FASHION",
   },
   description:
-    "HDC GROUP VN - Thương hiệu HUNI Uniform do CEO Nguyễn Thị Thương sáng lập. Chuyên tư vấn, thiết kế độc quyền và may đo đồng phục doanh nghiệp, trường học, thể thao golf cao cấp. Xưởng sản xuất trực tiếp 2.500m², hotline: 0984.959.586.",
+    "HDC GROUP VN - Thương hiệu HDC Fashion do CEO Nguyễn Thị Thương sáng lập. Chuyên tư vấn, thiết kế độc quyền và may đo đồng phục doanh nghiệp, trường học, thể thao golf cao cấp. Xưởng sản xuất trực tiếp 2.500m², hotline: 0984.959.586.",
   keywords:
-    "đồng phục huni, huni uniform, đồng phục doanh nghiệp, may đo đồng phục, áo polo đồng phục, vest doanh nhân, hdc group vn, nguyễn thị thương, đồng phục phú thọ, đồng phục hà nội",
-  authors: [{ name: "HDC GROUP VN - HUNI UNIFORM" }],
+    "đồng phục hdc, hdc fashion, hdcfashion, phong cách tạo thành công, đồng phục doanh nghiệp, may đo đồng phục, áo polo đồng phục, vest doanh nhân, hdc group vn, nguyễn thị thương, đồng phục phú thọ, đồng phục hà nội",
+  authors: [{ name: "HDC GROUP VN - HDC FASHION" }],
   creator: "HDC GROUP VN",
-  publisher: "HUNI UNIFORM",
+  publisher: "HDC FASHION",
   formatDetection: { telephone: true, address: true, email: true },
 
-  /* ---------- ICONS — Favicon HUNI ---------- */
+  /* ============================================================
+     ICONS — Dùng icon trong /images/icon.png
+     ✅ Tập trung 1 chỗ — dễ quản lý
+     ============================================================ */
   icons: {
     icon: [
-      { url: "/icon.png", type: "image/png", sizes: "512x512" },
-      { url: "/icon.png", type: "image/png", sizes: "any" },
+      { url: "/images/icon.png", type: "image/png", sizes: "512x512" },
+      { url: "/images/icon.png", type: "image/png", sizes: "192x192" },
+      { url: "/images/icon.png", type: "image/png", sizes: "any" },
     ],
-    apple: { url: "/icon.png", sizes: "180x180", type: "image/png" },
-    shortcut: "/icon.png",
+    apple: { url: "/images/icon.png", sizes: "180x180", type: "image/png" },
+    shortcut: "/images/icon.png",
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/images/icon.png",
+        color: "#0097b2",
+      },
+    ],
   },
 
   /* ---------- Open Graph ---------- */
   openGraph: {
     type: "website",
     locale: "vi_VN",
-    url: "https://huniuniform.vn",
-    siteName: "HUNI UNIFORM",
-    title: "HUNI UNIFORM - Nâng Tầm Thương Hiệu Cùng Đồng Phục Cao Cấp",
+    url: "https://hdcfashion.vn",
+    siteName: "HDC FASHION",
+    title: "HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp",
     description:
       "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ, thiết kế 3D miễn phí. Hotline 0984.959.586",
     images: [
@@ -61,7 +73,7 @@ export const metadata = {
         url: "/images/uniform_polo_corporate.jpg",
         width: 1200,
         height: 630,
-        alt: "HUNI UNIFORM - Đồng Phục Doanh Nghiệp Cao Cấp",
+        alt: "HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp",
       },
     ],
   },
@@ -69,7 +81,7 @@ export const metadata = {
   /* ---------- Twitter Card ---------- */
   twitter: {
     card: "summary_large_image",
-    title: "HUNI UNIFORM - Đồng Phục Doanh Nghiệp Cao Cấp",
+    title: "HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp",
     description:
       "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ.",
     images: ["/images/uniform_polo_corporate.jpg"],
@@ -95,7 +107,7 @@ export const viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#071b34",
+  themeColor: "#0097b2",
 };
 
 /* ============================================================
@@ -230,7 +242,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        className="min-h-screen bg-[#f8fafc] text-slate-800 antialiased font-[var(--font-jakarta)]"
+        className="min-h-screen bg-[#f6f8ff] text-slate-800 antialiased font-[var(--font-jakarta)]"
         suppressHydrationWarning
       >
         {/* ============================================================
@@ -256,14 +268,15 @@ export default function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
-              name: "HUNI UNIFORM",
+              name: "HDC FASHION",
               alternateName: "HDC GROUP VN",
               description:
                 "Chuyên thiết kế và may đo đồng phục doanh nghiệp, trường học, thể thao golf cao cấp.",
-              image: "https://huniuniform.vn/images/uniform_polo_corporate.jpg",
+              image: "https://hdcfashion.vn/images/uniform_polo_corporate.jpg",
+              logo: "https://hdcfashion.vn/images/icon.png",
               telephone: "+84984959586",
               email: "dongphuchuni@gmail.com",
-              url: "https://huniuniform.vn",
+              url: "https://hdcfashion.vn",
               priceRange: "100.000đ - 5.000.000đ",
               address: {
                 "@type": "PostalAddress",

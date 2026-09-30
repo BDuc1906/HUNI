@@ -119,23 +119,23 @@ export default function OrderTrackingModal() {
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
       <div className="relative w-full max-w-2xl bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 max-h-[95vh] flex flex-col">
         {/* Header */}
-        <div className="bg-[#071b34] text-white p-3 sm:p-5 flex items-center justify-between border-b border-amber-500/20 shrink-0">
+        <div className="bg-[#004f5e] text-white p-3 sm:p-5 flex items-center justify-between border-b border-brand-500/20 shrink-0">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full aspect-square overflow-hidden border-2 border-amber-400/60 bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shrink-0">
-              <span className="absolute font-black text-sm text-[#071b34]">HN</span>
+            {/* Logo — icon.png căn giữa hoàn hảo */}
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 aspect-square rounded-lg overflow-hidden bg-white ring-1 ring-brand-200 flex items-center justify-center shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
-                alt="HUNI Logo"
-                className="absolute inset-0 w-full h-full object-cover z-10"
+                src="/images/icon.png"
+                alt="HDC Logo"
+                className="w-full h-full object-contain p-1"
               />
             </div>
             <div className="min-w-0">
               <h3 className="font-extrabold text-sm sm:text-lg truncate">
                 Tra Cứu Tiến Độ Đơn May
               </h3>
-              <p className="text-[10px] sm:text-xs text-amber-200/80 truncate">
-                HỆ THỐNG QUẢN LÝ SẢN XUẤT HUNI
+              <p className="text-[10px] sm:text-xs text-brand-200/80 truncate">
+                HỆ THỐNG QUẢN LÝ SẢN XUẤT HDC
               </p>
             </div>
           </div>
@@ -160,14 +160,14 @@ export default function OrderTrackingModal() {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 disabled={loading}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl sm:rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 disabled:opacity-60"
+                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl sm:rounded-2xl text-xs sm:text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 disabled:opacity-60"
               />
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow transition-colors shrink-0 active:scale-[0.98] disabled:opacity-60"
+              className="px-6 py-3 bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-bold text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow transition-colors shrink-0 active:scale-[0.98] disabled:opacity-60"
             >
               {loading ? "Đang tra..." : "Tra cứu"}
             </button>
@@ -177,11 +177,11 @@ export default function OrderTrackingModal() {
           {searched && searchedOrder ? (
             <div className="space-y-5 sm:space-y-6">
               {/* Order Info Card */}
-              <div className="p-3 sm:p-4 bg-amber-50 rounded-xl sm:rounded-2xl border border-amber-200 text-xs text-slate-700 space-y-2">
+              <div className="p-3 sm:p-4 bg-brand-50 rounded-xl sm:rounded-2xl border border-brand-200 text-xs text-slate-700 space-y-2">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <span className="text-slate-500">Mã đơn: </span>
-                    <strong className="text-amber-900 font-black text-sm">
+                    <strong className="text-brand-900 font-black text-sm">
                       {searchedOrder.id}
                     </strong>
                   </div>
@@ -190,7 +190,7 @@ export default function OrderTrackingModal() {
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 border-t border-amber-200">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1 border-t border-brand-200">
                   <div>
                     Khách hàng: <strong>{searchedOrder.customer?.fullName}</strong>
                   </div>
@@ -217,7 +217,7 @@ export default function OrderTrackingModal() {
                         key={i}
                         className={`flex items-start gap-2.5 sm:gap-3 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border transition-all ${
                           isCurrent
-                            ? "bg-amber-50/80 border-amber-400 ring-2 ring-amber-500/20"
+                            ? "bg-brand-50/80 border-brand-400 ring-2 ring-brand-500/20"
                             : isDone
                             ? "bg-emerald-50/40 border-emerald-200 text-slate-700"
                             : "bg-slate-50 border-slate-200 opacity-50"
@@ -231,10 +231,10 @@ export default function OrderTrackingModal() {
                           <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-[11px] sm:text-xs font-bold text-[#071b34] flex items-center justify-between gap-2">
+                          <div className="text-[11px] sm:text-xs font-bold text-[#004f5e] flex items-center justify-between gap-2">
                             <span className="truncate">{st.title}</span>
                             {isCurrent && (
-                              <span className="text-[9px] sm:text-[10px] bg-amber-400 text-black px-1.5 sm:px-2 py-0.5 rounded-full font-bold animate-pulse shrink-0">
+                              <span className="text-[9px] sm:text-[10px] bg-brand-400 text-black px-1.5 sm:px-2 py-0.5 rounded-full font-bold animate-pulse shrink-0">
                                 Đang làm
                               </span>
                             )}
@@ -252,7 +252,7 @@ export default function OrderTrackingModal() {
                 Cần hỗ trợ gấp? Gọi hotline xưởng:{" "}
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="font-bold text-amber-700 hover:underline"
+                  className="font-bold text-brand-700 hover:underline"
                 >
                   {BRAND_INFO.contact.hotline}
                 </a>
@@ -268,7 +268,7 @@ export default function OrderTrackingModal() {
               </p>
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-500 text-[#071b34] font-bold text-xs rounded-xl mt-2 active:scale-95 transition-transform"
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-500 text-white font-bold text-xs rounded-xl mt-2 active:scale-95 transition-transform"
               >
                 <Phone className="w-3.5 h-3.5" />
                 <span>Gọi: {BRAND_INFO.contact.hotline}</span>
@@ -276,7 +276,7 @@ export default function OrderTrackingModal() {
             </div>
           ) : (
             <div className="text-center py-4 sm:py-6 text-[11px] sm:text-xs text-slate-400">
-              Nhập mã đơn hoặc SĐT đã đăng ký để tra cứu tiến độ sản xuất tại chuyền may HUNI.
+              Nhập mã đơn hoặc SĐT đã đăng ký để tra cứu tiến độ sản xuất tại chuyền may HDC.
             </div>
           )}
         </div>

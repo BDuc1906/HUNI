@@ -1,85 +1,35 @@
 @import "tailwindcss";
 
 /* =========================================================
-   HUNI UNIFORM — NAVY & GOLD THEME
-   Phong cách navy hoàng gia + vàng gold sang trọng
-   Đồng bộ với banner CEO Nguyễn Thị Thương
+   HDC FASHION — BRAND THEME (theo Catalogue 2023-12-28)
+   Màu chủ đạo: Teal #0097B2 (đo trực tiếp từ logo & tiêu đề catalogue)
+   Nền panel: #F6F8FF  |  Nhãn xám lam: #DADFE9  |  Chữ: đen
+   Dùng class Tailwind: bg-brand-500, text-brand-600, border-brand-200 ...
    ========================================================= */
-
-/* ---------- TẦNG 1: Ánh xạ palette Tailwind ---------- */
 @theme {
-  /* ---------- Cyan → GOLD ---------- */
-  --color-cyan-50:  #fdf9ed;
-  --color-cyan-100: #faf0d0;
-  --color-cyan-200: #f5e0a1;
-  --color-cyan-300: #eccb6a;
-  --color-cyan-400: #d4af37;
-  --color-cyan-500: #c9a227;
-  --color-cyan-600: #a8861d;
-  --color-cyan-700: #856a17;
-  --color-cyan-800: #5f4b10;
-  --color-cyan-900: #3d300a;
-  --color-cyan-950: #1f1805;
+  --color-brand-50:  #e6f6f9;
+  --color-brand-100: #ccecf2;
+  --color-brand-200: #99d9e5;
+  --color-brand-300: #66c5d8;
+  --color-brand-400: #33b0cb;
+  --color-brand-500: #0097b2; /* MÀU THƯƠNG HIỆU */
+  --color-brand-600: #007f96;
+  --color-brand-700: #00677a;
+  --color-brand-800: #004f5e;
+  --color-brand-900: #003843;
+  --color-brand-950: #00222a;
 
-  /* ---------- Blue → NAVY ---------- */
-  --color-blue-50:  #f0f4f9;
-  --color-blue-100: #d9e3ef;
-  --color-blue-200: #b3c7df;
-  --color-blue-300: #7f9ec5;
-  --color-blue-400: #4a6fa5;
-  --color-blue-500: #1e4976;
-  --color-blue-600: #133763;
-  --color-blue-700: #0a2540;
-  --color-blue-800: #071b34;
-  --color-blue-900: #04121f;
-  --color-blue-950: #020a14;
-
-  /* ---------- Sky → NAVY nhạt ---------- */
-  --color-sky-50:  #f0f4f9;
-  --color-sky-100: #d9e3ef;
-  --color-sky-200: #b3c7df;
-  --color-sky-300: #7f9ec5;
-  --color-sky-400: #4a6fa5;
-  --color-sky-500: #1e4976;
-  --color-sky-600: #133763;
-  --color-sky-700: #0a2540;
-
-  /* ---------- Indigo / Teal → Navy / Gold ---------- */
-  --color-indigo-400: #4a6fa5;
-  --color-indigo-500: #1e4976;
-  --color-indigo-600: #133763;
-  --color-teal-400:   #d4af37;
-  --color-teal-500:   #c9a227;
-  --color-teal-600:   #a8861d;
-
-  /* ---------- Emerald → GOLD ---------- */
-  --color-emerald-50:  #fdf9ed;
-  --color-emerald-100: #faf0d0;
-  --color-emerald-200: #f5e0a1;
-  --color-emerald-300: #eccb6a;
-  --color-emerald-400: #d4af37;
-  --color-emerald-500: #c9a227;
-  --color-emerald-600: #a8861d;
-  --color-emerald-700: #856a17;
-  --color-emerald-800: #5f4b10;
-  --color-emerald-900: #3d300a;
-  --color-emerald-950: #1f1805;
-
-  /* ---------- Amber → GOLD ---------- */
-  --color-amber-300: #eccb6a;
-  --color-amber-400: #d4af37;
-  --color-amber-500: #c9a227;
-  --color-amber-600: #a8861d;
-  --color-amber-700: #856a17;
+  --color-panel: #f6f8ff;   /* nền khung ảnh / thẻ trong catalogue */
+  --color-label: #dadfe9;   /* nhãn xám lam trên ảnh sản phẩm */
 }
 
 /* ---------- Base tokens ---------- */
 @layer base {
   :root {
-    --bg-page: #f8fafc;
+    --bg-page: #f6f8ff;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
-    --text-main: #0a2540;
+    --text-main: #111827;
     --text-muted: #52525b;
     --text-sub: #71717a;
     --border-color: #e4e4e7;
@@ -87,14 +37,14 @@
   }
 
   .dark {
-    --bg-page: #071b34;
-    --bg-surface: #0a2540;
-    --bg-card: #0a2540;
+    --bg-page: #00222a;
+    --bg-surface: #003843;
+    --bg-card: #003843;
     --text-main: #f4f4f5;
     --text-muted: #a1a1aa;
     --text-sub: #71717a;
-    --border-color: #133763;
-    --border-subtle: #0a2540;
+    --border-color: #00566a;
+    --border-subtle: #003843;
   }
 }
 
@@ -121,61 +71,28 @@ main[id] {
   scroll-margin-top: 140px;
 }
 
-/* Scrollbar vàng gold */
+/* Scrollbar teal thương hiệu */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #c9a227; border-radius: 9999px; }
-.dark ::-webkit-scrollbar-thumb { background: #d4af37; }
+::-webkit-scrollbar-thumb { background: #0097b2; border-radius: 9999px; }
+.dark ::-webkit-scrollbar-thumb { background: #33b0cb; }
 
 /* =========================================================
-   TẦNG 2 — Tinh chỉnh navy cho khớp banner CEO
+   Custom class — Tiêu đề gradient teal (dùng trên nền tối)
    ========================================================= */
-
-/* Navy rất đậm — top bar Header */
-[class*="bg-[#040e1c]"] { background-color: #04121f !important; }
-
-/* Navy chính — Header, Footer, các section tối */
-[class*="bg-[#071b34]"] { background-color: #071b34 !important; }
-
-/* Navy vừa — CEO section, modal header */
-[class*="bg-[#0b2042]"],
-[class*="bg-[#0c2444]"],
-[class*="bg-[#092242]"] { background-color: #0a2540 !important; }
-
-/* Navy nhạt — placeholder, hover state */
-[class*="bg-[#0d274c]"],
-[class*="bg-[#0e2c56]"],
-[class*="bg-[#12335e]"] { background-color: #133763 !important; }
-
-/* Navy tối hơn — variant */
-[class*="bg-[#081f3d]"],
-[class*="bg-[#0a192f]"] { background-color: #071b34 !important; }
-
-/* Text navy */
-[class*="text-[#071b34]"] { color: #071b34 !important; }
-[class*="text-[#040e1c]"] { color: #04121f !important; }
-
-/* Border navy */
-[class*="border-[#071b34]"] { border-color: #071b34 !important; }
-
-/* Gradient navy */
-[class*="from-[#071b34]"] { --tw-gradient-from: #071b34 !important; }
-[class*="from-[#040e1c]"] { --tw-gradient-from: #04121f !important; }
-[class*="from-[#0b2042]"] { --tw-gradient-from: #0a2540 !important; }
-[class*="via-[#092448]"]  { --tw-gradient-via:  #0a2540 !important; }
-[class*="via-[#0d274c]"]  { --tw-gradient-via:  #133763 !important; }
-[class*="to-[#0a192f]"]   { --tw-gradient-to:   #071b34 !important; }
-[class*="to-[#040e1c]"]   { --tw-gradient-to:   #04121f !important; }
-[class*="to-[#0e2c56]"]   { --tw-gradient-to:   #133763 !important; }
-
-/* =========================================================
-   Custom class — Tiêu đề gradient vàng gold
-   ========================================================= */
-.text-gold-gradient {
-  background: linear-gradient(90deg, #d4af37 0%, #f0d77b 50%, #d4af37 100%);
+.text-brand-gradient {
+  background: linear-gradient(90deg, #33b0cb 0%, #99d9e5 50%, #33b0cb 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Nhãn chữ giãn rộng kiểu "C A T A L O G U E" của catalogue */
+.brand-eyebrow {
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #0097b2;
 }
 
 /* =========================================================

@@ -38,13 +38,13 @@ export function ShopProvider({ children }) {
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const savedCart = localStorage.getItem("huni_cart");
+      const savedCart = localStorage.getItem("hdc_cart");
       if (savedCart) setCart(JSON.parse(savedCart));
 
-      const savedWishlist = localStorage.getItem("huni_wishlist");
+      const savedWishlist = localStorage.getItem("hdc_wishlist");
       if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
 
-      const savedOrders = localStorage.getItem("huni_orders");
+      const savedOrders = localStorage.getItem("hdc_orders");
       if (savedOrders) setOrders(JSON.parse(savedOrders));
     } catch (e) {
       console.error("Error reading localStorage", e);
@@ -54,7 +54,7 @@ export function ShopProvider({ children }) {
   // Sync cart to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem("huni_cart", JSON.stringify(cart));
+      localStorage.setItem("hdc_cart", JSON.stringify(cart));
     } catch (e) {
       console.error("Error saving cart", e);
     }
@@ -63,7 +63,7 @@ export function ShopProvider({ children }) {
   // Sync wishlist to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem("huni_wishlist", JSON.stringify(wishlist));
+      localStorage.setItem("hdc_wishlist", JSON.stringify(wishlist));
     } catch (e) {
       console.error("Error saving wishlist", e);
     }
@@ -72,7 +72,7 @@ export function ShopProvider({ children }) {
   // Sync orders to localStorage
   useEffect(() => {
     try {
-      localStorage.setItem("huni_orders", JSON.stringify(orders));
+      localStorage.setItem("hdc_orders", JSON.stringify(orders));
     } catch (e) {
       console.error("Error saving orders", e);
     }
@@ -90,14 +90,18 @@ export function ShopProvider({ children }) {
     const {
       color = product.colors?.[0]?.name || "Tiêu chuẩn",
       size = product.sizes?.[0] || "L",
-      customLogo = null
+      customLogo = null,
     } = options;
 
     const unitPrice = calculateTierPrice(product, quantity);
-    const cartItemId = `${product.id}-${color}-${size}-${customLogo ? "custom" : "standard"}`;
+    const cartItemId = `${product.id}-${color}-${size}-${
+      customLogo ? "custom" : "standard"
+    }`;
 
     setCart((prevCart) => {
-      const existingIndex = prevCart.findIndex((item) => item.cartItemId === cartItemId);
+      const existingIndex = prevCart.findIndex(
+        (item) => item.cartItemId === cartItemId
+      );
       if (existingIndex > -1) {
         const updated = [...prevCart];
         const newQty = updated[existingIndex].quantity + quantity;
@@ -105,7 +109,7 @@ export function ShopProvider({ children }) {
         updated[existingIndex] = {
           ...updated[existingIndex],
           quantity: newQty,
-          unitPrice: newUnitPrice
+          unitPrice: newUnitPrice,
         };
         return updated;
       } else {
@@ -118,8 +122,8 @@ export function ShopProvider({ children }) {
             color,
             size,
             customLogo,
-            unitPrice
-          }
+            unitPrice,
+          },
         ];
       }
     });
@@ -139,7 +143,7 @@ export function ShopProvider({ children }) {
           return {
             ...item,
             quantity: newQty,
-            unitPrice: newUnitPrice
+            unitPrice: newUnitPrice,
           };
         }
         return item;
@@ -148,7 +152,9 @@ export function ShopProvider({ children }) {
   };
 
   const removeFromCart = (cartItemId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.cartItemId !== cartItemId));
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.cartItemId !== cartItemId)
+    );
     showToast("Đã xóa khỏi giỏ hàng", "info");
   };
 
@@ -170,14 +176,20 @@ export function ShopProvider({ children }) {
     });
   };
 
-  // Apply discount code
+  // ==================================================
+  // APPLY VOUCHER — Client-side UI preview
+  // ⚠️ BẢO MẬT: Đây chỉ là preview. Server sẽ validate lại.
+  // Nếu client bị hack, server vẫn reject và trả về lỗi.
+  // ==================================================
   const applyVoucher = (code) => {
     const trimmed = (code || "").trim().toUpperCase();
+
     if (trimmed === "HUNI2026") {
       setAppliedVoucher({
         code: "HUNI2026",
         discountPercent: 5,
-        label: "Giảm 5% toàn bộ đơn hàng"
+        maxDiscount: 5000000,
+        label: "Giảm 5% toàn bộ đơn hàng",
       });
       showToast("Áp dụng mã HUNI2026 (-5%) thành công");
       return true;
@@ -185,7 +197,8 @@ export function ShopProvider({ children }) {
       setAppliedVoucher({
         code: "DOANHNGHIEP",
         discountAmount: 200000,
-        label: "Tặng 200.000đ may mẫu thử"
+        minSubtotal: 5000000,
+        label: "Tặng 200.000đ may mẫu thử",
       });
       showToast("Áp dụng mã DOANHNGHIEP (-200k) thành công");
       return true;
@@ -201,7 +214,10 @@ export function ShopProvider({ children }) {
     showToast("Đã xóa mã ưu đãi", "info");
   };
 
-  // Cart Subtotal Calculation
+  // ==================================================
+  // CART CALCULATIONS — client-side preview
+  // Server sẽ tính lại khi tạo đơn, đây chỉ là UI
+  // ==================================================
   const cartSubtotal = cart.reduce((total, item) => {
     const logoCost = item.customLogo ? 15000 : 0;
     return total + (item.unitPrice + logoCost) * item.quantity;
@@ -210,9 +226,22 @@ export function ShopProvider({ children }) {
   let discountValue = 0;
   if (appliedVoucher) {
     if (appliedVoucher.discountPercent) {
-      discountValue = Math.round((cartSubtotal * appliedVoucher.discountPercent) / 100);
+      discountValue = Math.round(
+        (cartSubtotal * appliedVoucher.discountPercent) / 100
+      );
+      if (appliedVoucher.maxDiscount) {
+        discountValue = Math.min(discountValue, appliedVoucher.maxDiscount);
+      }
     } else if (appliedVoucher.discountAmount) {
-      discountValue = Math.min(cartSubtotal, appliedVoucher.discountAmount);
+      // Check minSubtotal cho fixed voucher
+      if (
+        appliedVoucher.minSubtotal &&
+        cartSubtotal < appliedVoucher.minSubtotal
+      ) {
+        discountValue = 0;
+      } else {
+        discountValue = Math.min(cartSubtotal, appliedVoucher.discountAmount);
+      }
     }
   }
 
@@ -225,85 +254,93 @@ export function ShopProvider({ children }) {
       confetti({
         particleCount: 80,
         spread: 60,
-        origin: { y: 0.6 }
+        origin: { y: 0.6 },
       });
     } catch (e) {
       // ignore
     }
   };
 
-  // Add placed order
   // ==================================================
-// Lưu đơn hàng lên API thật (Supabase)
-// ==================================================
-const saveOrder = async (orderData) => {
-  // Map payment method từ UI sang API enum
-  const mapPaymentMethod = (method) => {
-    if (!method) return "vietqr";
-    if (method.includes("VietQR") || method.includes("100%")) return "vietqr";
-    if (method.includes("cọc") || method.includes("30%")) return "deposit30";
-    if (method.includes("mẫu") || method.includes("0đ")) return "freesample";
-    return "vietqr";
+  // LƯU ĐƠN HÀNG LÊN API (ĐÃ BẢO MẬT)
+  // - KHÔNG gửi subtotal/discount/total từ client
+  // - CHỈ gửi voucherCode, server tự tính discount
+  // - Server trả về giá chính xác sau khi verify
+  // ==================================================
+  const saveOrder = async (orderData) => {
+    // Map payment method từ UI sang API enum
+    const mapPaymentMethod = (method) => {
+      if (!method) return "vietqr";
+      if (method.includes("VietQR") || method.includes("100%")) return "vietqr";
+      if (method.includes("cọc") || method.includes("30%")) return "deposit30";
+      if (method.includes("mẫu") || method.includes("0đ")) return "freesample";
+      return "vietqr";
+    };
+
+    // Payload gửi lên — KHÔNG có subtotal/discount/total
+    const apiPayload = {
+      customer: {
+        fullName: orderData.customer.fullName,
+        phone: orderData.customer.phone,
+        email: orderData.customer.email || "",
+        company: orderData.customer.companyName || "",
+        address: orderData.customer.address,
+      },
+      items: cart.map((item) => ({
+        productId: item.product.id,
+        productName: item.product.title,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice, // server sẽ verify lại
+        color: item.color,
+        size: item.size,
+        customLogo: item.customLogo || undefined,
+      })),
+      // Voucher — server validate lại
+      voucherCode: appliedVoucher?.code || null,
+      paymentMethod: mapPaymentMethod(orderData.paymentMethod),
+      notes: orderData.notes || "",
+      vatInfo: orderData.vatInfo || undefined,
+    };
+
+    // Gọi API
+    const response = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify(apiPayload),
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      // Nếu là lỗi voucher → xóa voucher đã áp dụng để user biết
+      if (result.field === "voucherCode") {
+        setAppliedVoucher(null);
+      }
+      throw new Error(result.error || "Không thể tạo đơn hàng");
+    }
+
+    // Server trả về giá chính xác — dùng giá này cho local order
+    const newOrder = {
+      id: result.order.orderNumber,
+      orderNumber: result.order.orderNumber,
+      dbId: result.order.id,
+      subtotal: result.order.subtotal,
+      discount: result.order.discount,
+      total: result.order.total,
+      status: result.order.status,
+      voucherApplied: result.order.voucherApplied,
+      createdAt: new Date().toISOString(),
+      items: [...cart],
+      customer: orderData.customer,
+      ...orderData,
+    };
+
+    setOrders((prev) => [newOrder, ...prev]);
+    clearCart();
+    setAppliedVoucher(null);
+    triggerConfetti();
+    return newOrder;
   };
-
-  // Chuyển cart items sang format API
-  const apiPayload = {
-    customer: {
-      fullName: orderData.customer.fullName,
-      phone: orderData.customer.phone,
-      email: orderData.customer.email || "",
-      company: orderData.customer.companyName || "",
-      address: orderData.customer.address,
-    },
-    items: cart.map((item) => ({
-      productId: item.product.id,
-      productName: item.product.title,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice,
-      color: item.color,
-      size: item.size,
-      customLogo: item.customLogo || undefined,
-    })),
-    paymentMethod: mapPaymentMethod(orderData.paymentMethod),
-    subtotal: cartSubtotal,
-    discount: discountValue,
-    total: cartTotal,
-    notes: orderData.notes || "",
-    vatInfo: orderData.vatInfo || undefined,
-  };
-
-  // Gọi API
-  const response = await fetch("/api/orders", {
-    method: "POST",
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-    body: JSON.stringify(apiPayload),
-  });
-
-  const result = await response.json();
-
-  if (!result.success) {
-    throw new Error(result.error || "Không thể tạo đơn hàng");
-  }
-
-  // Lưu bản local để tracking
-  const newOrder = {
-    id: result.order.orderNumber,
-    orderNumber: result.order.orderNumber,
-    dbId: result.order.id,
-    total: result.order.total,
-    status: result.order.status,
-    createdAt: new Date().toISOString(),
-    items: [...cart],
-    customer: orderData.customer,
-    ...orderData,
-  };
-
-  setOrders((prev) => [newOrder, ...prev]);
-  clearCart();
-  setAppliedVoucher(null);
-  triggerConfetti();
-  return newOrder;
-};
 
   return (
     <ShopContext.Provider
@@ -344,12 +381,12 @@ const saveOrder = async (orderData) => {
         saveOrder,
         showToast,
         getProductTierPrice: calculateTierPrice,
-        triggerConfetti
+        triggerConfetti,
       }}
     >
       {children}
 
-      {/* Clean Minimalist Toast Notification */}
+      {/* Toast Notification */}
       {toast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] transition-all duration-200">
           <div

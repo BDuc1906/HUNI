@@ -21,7 +21,7 @@ export default function ThemeToggle({ className = "" }) {
       className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-colors border border-neutral-300 dark:border-neutral-700 bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700 text-neutral-800 dark:text-neutral-200 ${className}`}
     >
       {theme === "dark" ? (
-        <Sun className="w-4 h-4 text-amber-400" />
+        <Sun className="w-4 h-4 text-brand-400" />
       ) : (
         <Moon className="w-4 h-4 text-neutral-700" />
       )}

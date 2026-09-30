@@ -55,48 +55,48 @@ export default function QuickQuoteSection() {
     }
     setSubmitted(true);
     triggerConfetti();
-    showToast("Đã gửi yêu cầu báo giá thành công! HUNI sẽ liên hệ trong 5 phút.");
+    showToast("Đã gửi yêu cầu báo giá thành công! HDC sẽ liên hệ trong 5 phút.");
   };
 
   return (
     <section id="quick-quote-section" className="py-20 bg-slate-50 border-t border-slate-200 relative overflow-hidden">
-      {/* Subtle gold ambient glow */}
-      <div className="absolute top-0 right-1/4 w-80 h-80 bg-amber-50 rounded-full blur-3xl pointer-events-none opacity-70" />
+      {/* Subtle brand ambient glow */}
+      <div className="absolute top-0 right-1/4 w-80 h-80 bg-brand-50 rounded-full blur-3xl pointer-events-none opacity-70" />
 
       <div className="max-w-7xl mx-auto px-4 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* LEFT — Description */}
           <div className="lg:col-span-5 space-y-5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold uppercase tracking-wider">
-              <Calculator className="w-3.5 h-3.5 text-amber-600" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold uppercase tracking-wider">
+              <Calculator className="w-3.5 h-3.5 text-brand-600" />
               Công Cụ Báo Giá Nhanh
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-black leading-tight text-[#071b34]">
+            <h2 className="text-3xl sm:text-4xl font-black leading-tight text-[#004f5e]">
               TÍNH GIÁ ĐỒNG PHỤC DỰ KIẾN TRONG{" "}
-              <span className="text-gold-gradient">3 PHÚT</span>
+              <span className="text-brand-gradient">3 PHÚT</span>
             </h2>
 
             <p className="text-slate-600 text-sm leading-relaxed">
-              Nhận dự toán chi phí chi tiết theo quy mô công ty. HUNI hỗ trợ xuất hóa đơn VAT,
+              Nhận dự toán chi phí chi tiết theo quy mô công ty. HDC hỗ trợ xuất hóa đơn VAT,
               ký hợp đồng điện tử và cam kết giá gốc tận xưởng may không qua bất kỳ khâu trung gian nào.
             </p>
 
             <div className="space-y-3 pt-2">
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700">
-                <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold">
+                <div className="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0 font-bold">
                   ✓
                 </div>
                 <span>Tặng 100% chi phí thiết kế phối cảnh 3D bộ nhận diện</span>
               </div>
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700">
-                <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold">
+                <div className="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0 font-bold">
                   ✓
                 </div>
                 <span>May áo mẫu thật gửi tận văn phòng thẩm định chất lượng vải</span>
               </div>
               <div className="flex items-center gap-3 text-xs sm:text-sm text-slate-700">
-                <div className="w-6 h-6 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center shrink-0 font-bold">
+                <div className="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0 font-bold">
                   ✓
                 </div>
                 <span>Cử chuyên viên mang bảng size hoặc đến đo tận nơi</span>
@@ -106,25 +106,25 @@ export default function QuickQuoteSection() {
             <div className="pt-4 border-t border-slate-200 flex items-center gap-4 text-xs">
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="flex items-center gap-2 text-[#071b34] hover:text-amber-600 font-bold transition-colors"
+                className="flex items-center gap-2 text-[#004f5e] hover:text-brand-600 font-bold transition-colors"
               >
-                <Phone className="w-4 h-4 text-amber-500 animate-bounce" />
+                <Phone className="w-4 h-4 text-brand-500 animate-bounce" />
                 <span>Hotline tư vấn 24/7: {BRAND_INFO.contact.hotline}</span>
               </a>
             </div>
           </div>
 
-          {/* RIGHT — Interactive Calculator Card (white with gold border) */}
+          {/* RIGHT — Interactive Calculator Card (white with brand border) */}
           <div className="lg:col-span-7">
             <div className="bg-white rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-8 relative">
               {/* Gold top accent line */}
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 rounded-t-3xl" />
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-t-3xl" />
 
               {!submitted ? (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {/* Select Category */}
                   <div>
-                    <label className="text-xs font-bold text-[#071b34] block mb-2">
+                    <label className="text-xs font-bold text-[#004f5e] block mb-2">
                       1. Chọn Dòng Đồng Phục:
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -141,8 +141,8 @@ export default function QuickQuoteSection() {
                           onClick={() => setCategory(item.id)}
                           className={`p-2.5 rounded-xl border text-center font-bold transition-all ${
                             category === item.id
-                              ? "bg-gradient-to-r from-amber-400 to-amber-500 text-[#071b34] border-amber-500 shadow-md"
-                              : "bg-slate-50 border-slate-200 text-slate-700 hover:border-amber-300 hover:bg-amber-50/50"
+                              ? "bg-gradient-to-r from-brand-400 to-brand-500 text-white border-brand-500 shadow-md"
+                              : "bg-slate-50 border-slate-200 text-slate-700 hover:border-brand-300 hover:bg-brand-50/50"
                           }`}
                         >
                           {item.label}
@@ -154,8 +154,8 @@ export default function QuickQuoteSection() {
                   {/* Quantity Slider */}
                   <div>
                     <div className="flex items-center justify-between text-xs font-bold mb-2">
-                      <span className="text-[#071b34]">2. Số Lượng Áo Dự Kiến:</span>
-                      <span className="text-base text-amber-600 font-black">{quantity} sản phẩm</span>
+                      <span className="text-[#004f5e]">2. Số Lượng Áo Dự Kiến:</span>
+                      <span className="text-base text-brand-600 font-black">{quantity} sản phẩm</span>
                     </div>
                     <input
                       type="range"
@@ -164,7 +164,7 @@ export default function QuickQuoteSection() {
                       step="10"
                       value={quantity}
                       onChange={(e) => setQuantity(parseInt(e.target.value))}
-                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-500"
                     />
                     <div className="flex justify-between text-[10px] text-slate-500 mt-1">
                       <span>10 chiếc</span>
@@ -176,7 +176,7 @@ export default function QuickQuoteSection() {
 
                   {/* Fabric Option */}
                   <div>
-                    <label className="text-xs font-bold text-[#071b34] block mb-2">
+                    <label className="text-xs font-bold text-[#004f5e] block mb-2">
                       3. Nhu Cầu Về Chất Liệu:
                     </label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -191,8 +191,8 @@ export default function QuickQuoteSection() {
                           onClick={() => setFabric(f.id)}
                           className={`p-2 rounded-xl border text-center font-semibold transition-all ${
                             fabric === f.id
-                              ? "border-amber-500 bg-amber-50 text-amber-800"
-                              : "border-slate-200 bg-white text-slate-600 hover:border-amber-300"
+                              ? "border-brand-500 bg-brand-50 text-brand-800"
+                              : "border-slate-200 bg-white text-slate-600 hover:border-brand-300"
                           }`}
                         >
                           {f.label}
@@ -201,17 +201,17 @@ export default function QuickQuoteSection() {
                     </div>
                   </div>
 
-                  {/* Estimated Output Banner — light gray bg, gold text */}
-                  <div className="p-4 bg-slate-50 rounded-2xl border border-amber-200 flex items-center justify-between">
+                  {/* Estimated Output Banner — light gray bg, brand text */}
+                  <div className="p-4 bg-slate-50 rounded-2xl border border-brand-200 flex items-center justify-between">
                     <div>
                       <div className="text-[11px] text-slate-500">Đơn giá sỉ ước tính:</div>
-                      <div className="text-lg font-black text-amber-600">
+                      <div className="text-lg font-black text-brand-600">
                         ~{unitPrice.toLocaleString("vi-VN")} đ/sp
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="text-[11px] text-slate-500">Tổng ngân sách dự toán:</div>
-                      <div className="text-xl font-black text-[#071b34]">
+                      <div className="text-xl font-black text-[#004f5e]">
                         ~{totalPrice.toLocaleString("vi-VN")} đ
                       </div>
                     </div>
@@ -225,15 +225,15 @@ export default function QuickQuoteSection() {
                       </label>
                       <input
                         type="text"
-                        placeholder="VD: Công ty TNHH HUNI..."
+                        placeholder="VD: Công ty TNHH HDC..."
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-200"
                       />
                     </div>
                     <div>
                       <label className="font-bold text-slate-700 block mb-1">
-                        Số Điện Thoại / Zalo <span className="text-amber-600">*</span>:
+                        Số Điện Thoại / Zalo <span className="text-brand-600">*</span>:
                       </label>
                       <input
                         type="tel"
@@ -241,15 +241,15 @@ export default function QuickQuoteSection() {
                         placeholder="0984.xxx.xxx"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-slate-800 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-200"
                       />
                     </div>
                   </div>
 
-                  {/* Submit Button — gold gradient */}
+                  {/* Submit Button — brand gradient */}
                   <button
                     type="submit"
-                    className="w-full py-4 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-2xl shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
+                    className="w-full py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-black text-sm rounded-2xl shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 transition-all"
                   >
                     <Send className="w-4 h-4" />
                     <span>Gửi Yêu Cầu Báo Giá Kèm File Phối Cảnh 3D</span>
@@ -257,17 +257,17 @@ export default function QuickQuoteSection() {
                 </form>
               ) : (
                 <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto">
+                  <div className="w-16 h-16 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center mx-auto">
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
-                  <h3 className="text-xl font-bold text-[#071b34]">YÊU CẦU ĐÃ ĐƯỢC TIẾP NHẬN!</h3>
+                  <h3 className="text-xl font-bold text-[#004f5e]">YÊU CẦU ĐÃ ĐƯỢC TIẾP NHẬN!</h3>
                   <p className="text-sm text-slate-600 max-w-md mx-auto">
-                    Chuyên viên báo giá HUNI Uniform sẽ gửi file dự toán chi tiết và liên hệ số{" "}
-                    <strong className="text-amber-700">{phone}</strong> trong vòng 5 - 10 phút.
+                    Chuyên viên báo giá HDC Fashion sẽ gửi file dự toán chi tiết và liên hệ số{" "}
+                    <strong className="text-brand-700">{phone}</strong> trong vòng 5 - 10 phút.
                   </p>
                   <button
                     onClick={() => setSubmitted(false)}
-                    className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-[#071b34] rounded-xl text-xs font-bold transition-colors"
+                    className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-[#004f5e] rounded-xl text-xs font-bold transition-colors"
                   >
                     Tính giá cho dự án khác
                   </button>

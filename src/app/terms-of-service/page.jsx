@@ -3,7 +3,7 @@ import { FileText, ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Điều Khoản Sử Dụng",
-  description: "Điều khoản sử dụng website HUNI UNIFORM.",
+  description: "Điều khoản sử dụng website HDC FASHION.",
 };
 
 export default function TermsPage() {
@@ -12,7 +12,7 @@ export default function TermsPage() {
       <div className="max-w-3xl mx-auto px-4">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-amber-600 mb-6 font-medium"
+          className="inline-flex items-center gap-2 text-xs text-slate-500 hover:text-brand-600 mb-6 font-medium"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Về trang chủ
@@ -20,11 +20,11 @@ export default function TermsPage() {
 
         <div className="bg-white rounded-3xl border border-slate-200 shadow-lg p-6 sm:p-10">
           <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+            <div className="w-12 h-12 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
               <FileText className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-[#071b34]">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#004f5e]">
                 Điều Khoản Sử Dụng
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -35,28 +35,28 @@ export default function TermsPage() {
 
           <div className="max-w-none text-slate-700 space-y-5">
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 1. Chấp nhận điều khoản
               </h2>
               <p className="text-sm leading-relaxed">
-                Khi truy cập và sử dụng website <strong>huniuniform.vn</strong>, quý khách
+                Khi truy cập và sử dụng website <strong>hdcfashion.vn</strong>, quý khách
                 đồng ý tuân thủ toàn bộ điều khoản được nêu tại đây.
               </p>
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 2. Quyền sở hữu trí tuệ
               </h2>
               <p className="text-sm leading-relaxed">
-                Toàn bộ hình ảnh, thiết kế, nội dung và thương hiệu HUNI UNIFORM thuộc
+                Toàn bộ hình ảnh, thiết kế, nội dung và thương hiệu HDC FASHION thuộc
                 quyền sở hữu của HDC GROUP VN. Nghiêm cấm sao chép, sử dụng cho mục đích
                 thương mại mà không có sự đồng ý bằng văn bản.
               </p>
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 3. Trách nhiệm của khách hàng
               </h2>
               <ul className="list-disc pl-5 text-sm space-y-1">
@@ -67,7 +67,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 4. Giải quyết tranh chấp
               </h2>
               <p className="text-sm leading-relaxed">
@@ -78,7 +78,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="font-extrabold text-[#071b34] text-base mb-2">
+              <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 5. Liên hệ
               </h2>
               <p className="text-sm leading-relaxed">

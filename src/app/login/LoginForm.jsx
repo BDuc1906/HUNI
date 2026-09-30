@@ -72,20 +72,20 @@ function LoginFormInner() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-3 group">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-amber-400/60 shadow-lg">
+            <div className="relative w-14 h-14 aspect-square overflow-hidden rounded-lg bg-white flex items-center justify-center shadow-lg shrink-0">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
-                alt="HUNI"
-                className="absolute inset-0 w-full h-full object-cover"
+                src="/images/icon.png"
+                alt="HDC FASHION Logo"
+                className="w-full h-full object-contain p-1.5"
               />
             </div>
             <div className="text-left">
               <div className="font-black text-2xl text-white tracking-wider">
-                HUNI
+                HDC
               </div>
-              <div className="text-[10px] uppercase tracking-widest text-amber-400 font-bold">
-                Uniform
+              <div className="text-[10px] uppercase tracking-widest text-brand-400 font-bold">
+                Fashion
               </div>
             </div>
           </Link>
@@ -96,7 +96,7 @@ function LoginFormInner() {
           <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] px-6 py-5 border-b border-amber-500/20">
             <h1 className="text-xl font-black text-white">Đăng nhập</h1>
             <p className="text-xs text-amber-200/80 mt-1">
-              Chào mừng trở lại HUNI UNIFORM
+              Chào mừng trở lại HDC FASHION
             </p>
           </div>
 
