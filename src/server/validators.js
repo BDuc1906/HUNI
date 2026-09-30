@@ -1,4 +1,4 @@
-﻿// ==================================================
+// ==================================================
 // src/server/validators.js
 // ==================================================
 
@@ -24,6 +24,7 @@ const optionalEmail = z
     z.undefined(),
     z.null(),
   ])
+  .optional()
   .transform((val) => val || "");
 
 // ==================================================
@@ -58,6 +59,7 @@ export const createOrderSchema = z.object({
     email: optionalEmail,
     company: z
       .union([z.string().max(200), z.undefined(), z.null()])
+      .optional()
       .transform((val) => val || ""),
     address: z.string().min(1, "Vui lòng nhập địa chỉ"),
   }),
@@ -88,6 +90,7 @@ export const createOrderSchema = z.object({
   paymentMethod: z.enum(["vietqr", "deposit30", "freesample"]),
   notes: z
     .union([z.string().max(500), z.undefined(), z.null()])
+    .optional()
     .transform((val) => val || ""),
   vatInfo: z
     .union([
@@ -112,6 +115,7 @@ export const createQuoteSchema = z.object({
   email: optionalEmail,
   company: z
     .union([z.string().max(200), z.undefined(), z.null()])
+    .optional()
     .transform((val) => val || ""),
   category: z.enum([
     "polo",
@@ -125,6 +129,7 @@ export const createQuoteSchema = z.object({
   estimatedPrice: z.number().int().min(0).optional(),
   notes: z
     .union([z.string().max(500), z.undefined(), z.null()])
+    .optional()
     .transform((val) => val || ""),
 });
 
