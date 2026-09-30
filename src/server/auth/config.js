@@ -7,6 +7,11 @@ import bcrypt from "bcryptjs";
 import { db } from "@/server/db";
 
 export const authConfig = {
+  secret:
+    process.env.NEXTAUTH_SECRET ||
+    process.env.AUTH_SECRET ||
+    "hdc-fashion-secret-key-2026-super-secure-production-hash-789xyz",
+  trustHost: true,
   pages: {
     signIn: "/login",
     error: "/login",

@@ -83,6 +83,7 @@ const MAIN_NAV = [
   },
   { label: "Bảng Vải", href: "/bang-vai" },
   { label: "Quy Trình", href: "/quy-trinh-may" },
+  { label: "Kiến Thức", href: "/blog" },
   { label: "Liên Hệ", href: "/lien-he" },
 ];
 
