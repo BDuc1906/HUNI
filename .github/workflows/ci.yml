@@ -1,0 +1,100 @@
+name: Backend CI & Quality Gate
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_ENV: test
+  DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/huni_ci?schema=public"
+  DIRECT_URL: "postgresql://postgres:postgres@localhost:5432/huni_ci?schema=public"
+  NEXTAUTH_SECRET: "ci-secret-key-32-chars-minimum-token-string"
+  AUTH_SECRET: "ci-secret-key-32-chars-minimum-token-string"
+  NEXTAUTH_URL: "http://localhost:3000"
+  AUTH_TRUST_HOST: "true"
+
+jobs:
+  lint-and-schema:
+    name: Lint & Schema Validation
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Validate Prisma Schema
+        run: npx prisma validate
+
+      - name: Run ESLint
+        run: npm run lint
+
+  test-suite:
+    name: Vitest Backend & Integration Tests
+    runs-on: ubuntu-latest
+    needs: [lint-and-schema]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Automated Tests
+        run: npm test
+
+  build-verification:
+    name: Next.js Production Build
+    runs-on: ubuntu-latest
+    needs: [test-suite]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: "npm"
+
+      - name: Cache Next.js Build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Next.js Production Bundle
+        run: npm run build
