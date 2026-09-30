@@ -49,13 +49,13 @@ export default function ProductDetailGallery({
 
       {/* Danh sách ảnh thumbnails nếu có nhiều ảnh */}
       {allImages.length > 1 && (
-        <div className="flex items-center gap-3 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 scrollbar-none">
           {allImages.map((img, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => setSelectedImg(img)}
-              className={`relative w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
+              className={`relative w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
                 selectedImg === img
                   ? "border-amber-500 ring-2 ring-amber-500/30 scale-105"
                   : "border-slate-200 opacity-70 hover:opacity-100"
@@ -74,8 +74,8 @@ export default function ProductDetailGallery({
       )}
 
       {/* Cam kết thương hiệu */}
-      <div className="grid grid-cols-2 gap-3 pt-2">
-        <div className="p-3 bg-white rounded-2xl border border-slate-200/70 flex items-center gap-2.5">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-1 sm:pt-2">
+        <div className="p-2.5 sm:p-3 bg-white rounded-2xl border border-slate-200/70 flex items-center gap-2 sm:gap-2.5">
           <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
             <Award className="w-4 h-4" />
           </div>

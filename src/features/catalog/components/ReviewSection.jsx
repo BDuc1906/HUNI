@@ -192,9 +192,9 @@ export default function ReviewSection({ productId }) {
       {canReview && isFormOpen && (
         <form
           onSubmit={handleSubmit}
-          className="p-4 bg-amber-50/60 rounded-xl border border-amber-200/80 space-y-3"
+          className="p-3.5 sm:p-4 bg-amber-50/60 rounded-xl border border-amber-200/80 space-y-3"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <span className="text-xs font-bold text-slate-800">
               Chất lượng sản phẩm & Dịch vụ:
             </span>
@@ -206,7 +206,7 @@ export default function ReviewSection({ productId }) {
                   onClick={() => setRating(star)}
                   onMouseEnter={() => setHoverRating(star)}
                   onMouseLeave={() => setHoverRating(0)}
-                  className="p-1 transition-transform active:scale-125 focus:outline-none"
+                  className="p-1.5 touch-manipulation min-w-[34px] min-h-[34px] flex items-center justify-center transition-transform active:scale-125 focus:outline-none"
                 >
                   <Star
                     className={`w-5 h-5 ${
@@ -217,7 +217,7 @@ export default function ReviewSection({ productId }) {
                   />
                 </button>
               ))}
-              <span className="text-xs font-bold text-amber-800 ml-1.5">
+              <span className="text-xs font-bold text-amber-800 ml-1.5 whitespace-nowrap">
                 {hoverRating || rating}/5 sao
               </span>
             </div>
@@ -283,14 +283,14 @@ export default function ReviewSection({ productId }) {
         <div className="space-y-3 divide-y divide-slate-100">
           {reviews.map((rev) => (
             <div key={rev.id} className="pt-3 first:pt-0 space-y-1.5">
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
                 <div className="flex items-center gap-2.5">
                   {/* Initials Avatar */}
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 text-white font-bold text-[11px] flex items-center justify-center shadow-xs shrink-0">
                     {getInitials(rev.user?.name)}
                   </div>
                   <div>
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5 flex-wrap">
                       <span className="font-bold text-xs text-slate-800">
                         {rev.user?.name || "Khách hàng"}
                       </span>
@@ -309,11 +309,11 @@ export default function ReviewSection({ productId }) {
                 </div>
 
                 {/* Rating stars */}
-                <div>{renderStars(rev.rating, 5, "w-3 h-3")}</div>
+                <div className="pl-9 sm:pl-0">{renderStars(rev.rating, 5, "w-3 h-3")}</div>
               </div>
 
               {/* Review Content */}
-              <p className="text-xs text-slate-600 leading-relaxed pl-9">
+              <p className="text-xs text-slate-600 leading-relaxed pl-0 sm:pl-9 mt-1 sm:mt-0">
                 {rev.content}
               </p>
             </div>

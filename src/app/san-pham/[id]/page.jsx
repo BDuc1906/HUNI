@@ -93,12 +93,12 @@ export default async function ProductDetailPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="min-h-screen bg-[#f8fafc] py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="min-h-screen bg-[#f8fafc] py-4 sm:py-8 md:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-5 sm:space-y-8">
           {/* Breadcrumb Navigation */}
           <nav
             aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs text-slate-500 flex-wrap"
+            className="flex items-center gap-2 text-xs text-slate-500 flex-wrap overflow-x-auto whitespace-nowrap scrollbar-none py-0.5"
           >
             <Link
               href="/"
@@ -106,23 +106,23 @@ export default async function ProductDetailPage({ params }) {
             >
               Trang chủ
             </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <Link
               href="/#catalog"
               className="hover:text-amber-700 transition-colors font-medium"
             >
               Sản phẩm
             </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span className="text-slate-600 font-medium">{categoryName}</span>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span className="text-slate-900 font-bold line-clamp-1">
               {product.title}
             </span>
           </nav>
 
           {/* Main 2-column Layout */}
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-12 items-start">
             {/* Cột trái: Gallery ảnh & Cam kết */}
             <div className="md:col-span-5 lg:col-span-5 md:sticky md:top-24">
               <ProductDetailGallery
@@ -135,9 +135,9 @@ export default async function ProductDetailPage({ params }) {
             </div>
 
             {/* Cột phải: Thông tin sản phẩm, Bảng giá sỉ, CTA */}
-            <div className="md:col-span-7 lg:col-span-7 space-y-6">
+            <div className="md:col-span-7 lg:col-span-7 space-y-5 sm:space-y-6">
               {/* Tiêu đề & Mã SKU */}
-              <div className="space-y-2 border-b border-slate-200 pb-5">
+              <div className="space-y-2 border-b border-slate-200 pb-4 sm:pb-5">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 inline-block">
                     {categoryName}
@@ -147,7 +147,7 @@ export default async function ProductDetailPage({ params }) {
                   </span>
                 </div>
 
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 tracking-tight leading-tight">
                   {product.title}
                 </h1>
 
@@ -168,13 +168,13 @@ export default async function ProductDetailPage({ params }) {
               </div>
 
               {/* Khối giá bán lẻ */}
-              <div className="p-4 sm:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
+              <div className="p-3.5 sm:p-5 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
                 <div>
                   <span className="text-xs text-slate-500 block mb-1">
                     Giá may mẫu / Đơn hàng nhỏ (từ 10 chiếc):
                   </span>
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-2xl sm:text-3xl font-black text-amber-600">
+                  <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
+                    <span className="text-xl sm:text-2xl md:text-3xl font-black text-amber-600">
                       {product.price.toLocaleString("vi-VN")}đ
                     </span>
                     {product.originalPrice && product.originalPrice > product.price && (
@@ -187,7 +187,7 @@ export default async function ProductDetailPage({ params }) {
                 </div>
 
                 {discountPct > 0 && (
-                  <div className="text-xs font-bold text-rose-600 bg-rose-50 px-3 py-1 rounded-xl border border-rose-200 self-start sm:self-auto">
+                  <div className="text-xs font-bold text-rose-600 bg-rose-50 px-2.5 sm:px-3 py-1 rounded-xl border border-rose-200 self-start sm:self-auto">
                     Tiết kiệm {discountPct}% cho đơn hàng lớn
                   </div>
                 )}
