@@ -4,14 +4,16 @@
 
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 const NOTIFY_EMAIL = process.env.ORDER_NOTIFICATION_EMAIL;
 
 // ==================================================
 // Gửi email thông báo đơn hàng mới cho admin
 // ==================================================
 export async function sendOrderNotificationEmail(order) {
-  if (!process.env.RESEND_API_KEY) {
+  if (!resend || !process.env.RESEND_API_KEY) {
     console.warn("[mailer] RESEND_API_KEY chưa cấu hình — bỏ qua gửi email");
     return null;
   }
@@ -94,7 +96,7 @@ export async function sendOrderNotificationEmail(order) {
 // Gửi email xác nhận cho khách (nếu có email)
 // ==================================================
 export async function sendCustomerConfirmationEmail(order) {
-  if (!process.env.RESEND_API_KEY || !order.customer.email) return null;
+  if (!resend || !process.env.RESEND_API_KEY || !order?.customer?.email) return null;
 
   const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">

@@ -103,34 +103,34 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-slate-400">
               <li>
-                <a href="#catalog-section" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                <Link href="/dong-phuc-doanh-nghiep" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
                   <span>Đồng phục Polo doanh nghiệp</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                <Link href="/dong-phuc-may-do" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
                   <span>Vest & Sơ mi lãnh đạo may đo</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                <Link href="/dong-phuc-the-thao" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
                   <span>Đồng phục Golf & Pickleball</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                <Link href="/dong-phuc-truong-hoc" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
                   <span>Đồng phục học sinh & giáo viên</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#catalog-section" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                <Link href="/phu-kien-doanh-nghiep" className="hover:text-brand-300 transition-colors flex items-center gap-1.5">
                   <ArrowRight className="w-3 h-3 text-brand-400" />
                   <span>Phụ kiện nón, cặp da, túi quà</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
