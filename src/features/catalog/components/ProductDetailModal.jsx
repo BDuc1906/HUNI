@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import Image from "next/image";
 import { useShop } from "@/shared/providers/ShopProvider";
-import { BRAND_INFO } from "@/shared/data";
+import { BRAND_INFO, CATEGORIES } from "@/shared/data";
 import {
   X,
   Star,
@@ -19,8 +19,12 @@ import {
   TrendingUp,
   Package,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  Share2
 } from "lucide-react";
+
+const ReviewSection = lazy(() => import("./ReviewSection"));
 
 export default function ProductDetailModal() {
   const {
@@ -32,7 +36,10 @@ export default function ProductDetailModal() {
     setCustomizerProduct,
     setIsCartOpen,
     showToast,
-    triggerConfetti
+    triggerConfetti,
+    setActiveCategory,
+    setIsQuoteOpen,
+    setIsQuickQuoteOpen
   } = useShop();
 
   const [selectedColor, setSelectedColor] = useState("");
@@ -40,6 +47,7 @@ export default function ProductDetailModal() {
   const [quantity, setQuantity] = useState(20);
   const [selectedImage, setSelectedImage] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
+  const [openTab, setOpenTab] = useState(null);
 
   useEffect(() => {
     if (quickViewProduct) {
@@ -48,6 +56,7 @@ export default function ProductDetailModal() {
       setSelectedImage(quickViewProduct.image);
       setImageIndex(0);
       setQuantity(20);
+      setOpenTab(null);
     }
   }, [quickViewProduct]);
 
@@ -63,6 +72,14 @@ export default function ProductDetailModal() {
   const regularTotalPrice = product.price * quantity;
   const currentTotalPrice = currentUnitPrice * quantity;
   const savings = Math.max(0, regularTotalPrice - currentTotalPrice);
+
+  const nextTier = product.wholesaleTiers?.find(
+    (tier) => quantity < tier.min
+  );
+
+  const catName =
+    CATEGORIES.find((c) => c.id === product.category)?.name ||
+    product.category;
 
   const shortMaterial = (() => {
     const m = product.material || "";
@@ -246,6 +263,24 @@ export default function ProductDetailModal() {
           <div className="md:col-span-7 flex flex-col bg-white">
             {/* Padding-top lớn để chừa chỗ cho nút X */}
             <div className="pt-12 sm:pt-14 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 overflow-y-auto space-y-3.5 sm:space-y-4">
+              {/* Mini Breadcrumb */}
+              <nav className="text-[10px] text-slate-400 flex items-center gap-1 flex-wrap mb-1">
+                <span>Sản phẩm</span>
+                <span>›</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory(product.category);
+                    setQuickViewProduct(null);
+                  }}
+                  className="hover:text-brand-600 transition-colors font-medium"
+                >
+                  {catName}
+                </button>
+                <span>›</span>
+                <span className="text-slate-600 line-clamp-1">{product.title}</span>
+              </nav>
+
               {/* Row 1: SKU + Rating + Sold */}
               <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-xs">
                 <span className="text-amber-700 font-bold uppercase tracking-wider">
@@ -326,6 +361,36 @@ export default function ProductDetailModal() {
                     );
                   })}
                 </div>
+
+                {/* Savings Progress Bar */}
+                {product.wholesaleTiers && product.wholesaleTiers.length > 0 && (
+                  nextTier ? (
+                    <div className="mt-2.5 p-2.5 bg-emerald-50 rounded-xl border border-emerald-200">
+                      <div className="flex justify-between text-[10px] text-emerald-700 font-semibold mb-1.5">
+                        <span>Thêm {nextTier.min - quantity} chiếc nữa</span>
+                        <span>→ giá {nextTier.price.toLocaleString("vi-VN")}đ/chiếc</span>
+                      </div>
+                      <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-emerald-500 rounded-full transition-all"
+                          style={{
+                            width: `${Math.min(
+                              100,
+                              Math.max(0, Math.round((quantity / nextTier.min) * 100))
+                            )}%`,
+                          }}
+                        />
+                      </div>
+                      <div className="text-[10px] text-emerald-600 mt-1 font-medium">
+                        💰 Tiết kiệm thêm {Math.max(0, (currentUnitPrice - nextTier.price) * nextTier.min).toLocaleString("vi-VN")}đ nếu đặt đủ {nextTier.min} chiếc
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mt-2.5 p-2 bg-emerald-50 rounded-xl border border-emerald-200 text-center text-[11px] text-emerald-700 font-bold">
+                      🎉 Bạn đang nhận mức giá sỉ tốt nhất!
+                    </div>
+                  )
+                )}
               </div>
 
               {/* Màu sắc */}
@@ -406,6 +471,100 @@ export default function ProductDetailModal() {
                 </div>
               )}
 
+              {/* ACCORDION ĐẶC ĐIỂM SẢN PHẨM */}
+              <div className="border border-slate-200 rounded-2xl overflow-hidden divide-y divide-slate-200 text-xs">
+                {/* Tab 1: Đặc điểm nổi bật */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setOpenTab(openTab === "features" ? null : "features")}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 flex items-center justify-between font-bold text-slate-800 transition-colors"
+                  >
+                    <span>✦ Đặc điểm nổi bật</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-slate-500 transition-transform ${
+                        openTab === "features" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {openTab === "features" && (
+                    <div className="p-3 bg-white space-y-2">
+                      {product.features && product.features.length > 0 ? (
+                        product.features.map((feat, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-slate-700 text-[11px] sm:text-xs">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                            <span>{feat}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <p className="text-slate-500 text-[11px]">Đường may tỉ mỉ, phom dáng chuẩn quốc tế, bền đẹp theo thời gian.</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Tab 2: Hướng dẫn bảo quản */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setOpenTab(openTab === "care" ? null : "care")}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 flex items-center justify-between font-bold text-slate-800 transition-colors"
+                  >
+                    <span>🧺 Hướng dẫn bảo quản</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-slate-500 transition-transform ${
+                        openTab === "care" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {openTab === "care" && (
+                    <div className="p-3 bg-white text-slate-700 text-[11px] sm:text-xs leading-relaxed">
+                      {product.material?.includes("Kate")
+                        ? "Giặt máy ≤30°C, không tẩy, ủi mặt trái"
+                        : product.material?.includes("Seamless")
+                        ? "Giặt tay hoặc máy chế độ nhẹ, không vắt mạnh"
+                        : product.material?.includes("Wool")
+                        ? "Giặt khô, ủi qua vải lót, bảo quản nơi thoáng mát"
+                        : "Giặt máy ≤40°C, phơi nơi thoáng, không phơi trực tiếp nắng gắt"}
+                    </div>
+                  )}
+                </div>
+
+                {/* Tab 3: Chính sách */}
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setOpenTab(openTab === "policy" ? null : "policy")}
+                    className="w-full px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100 flex items-center justify-between font-bold text-slate-800 transition-colors"
+                  >
+                    <span>🛡️ Chính sách</span>
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 text-slate-500 transition-transform ${
+                        openTab === "policy" ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  {openTab === "policy" && (
+                    <div className="p-3 bg-white space-y-1.5 text-slate-700 text-[11px] sm:text-xs">
+                      <div>✓ Bảo hành 30 ngày lỗi sản xuất</div>
+                      <div>✓ Đổi trả trong 7 ngày nếu lỗi</div>
+                      <div>✓ Giao hàng toàn quốc, theo dõi đơn realtime</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Đánh giá & Phản hồi thực tế (Prompt C) */}
+              <Suspense
+                fallback={
+                  <div className="p-4 text-center text-xs text-slate-400 bg-slate-50 rounded-2xl border border-slate-200">
+                    Đang tải đánh giá sản phẩm...
+                  </div>
+                }
+              >
+                <ReviewSection productId={product.id} />
+              </Suspense>
+
               {/* Số lượng + Tính giá */}
               <div className="p-3 bg-amber-50/60 rounded-2xl border border-amber-200">
                 <div className="flex items-center justify-between gap-3 mb-2.5">
@@ -484,6 +643,39 @@ export default function ProductDetailModal() {
                   <Phone className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                   <span className="sm:hidden md:inline">Tư vấn</span>
                 </a>
+
+                {/* Share Button */}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const url = window.location.origin + '/san-pham/' + product.id;
+                      await navigator.clipboard.writeText(url);
+                      showToast("Đã sao chép link sản phẩm!", "success");
+                    } catch (err) {
+                      showToast("Đã xảy ra lỗi sao chép link", "error");
+                    }
+                  }}
+                  title="Chia sẻ sản phẩm"
+                  className="flex sm:flex-none items-center justify-center gap-2 px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl font-bold text-xs transition-colors active:scale-[0.98] shrink-0"
+                >
+                  <Share2 className="w-3.5 h-3.5 text-brand-600" />
+                </button>
+
+                {/* Nút Yêu cầu Báo Giá B2B (khi quantity >= 100) */}
+                {quantity >= 100 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (typeof setIsQuoteOpen === "function") setIsQuoteOpen(true);
+                      else if (typeof setIsQuickQuoteOpen === "function") setIsQuickQuoteOpen(true);
+                      setQuickViewProduct(null);
+                    }}
+                    className="flex-1 py-2.5 px-3 rounded-xl bg-[#004f5e] hover:bg-[#003843] text-brand-300 border border-brand-400/40 font-black text-[11px] sm:text-xs flex items-center justify-center gap-1.5 transition-colors active:scale-[0.98]"
+                  >
+                    <span>📋 Báo Giá B2B</span>
+                  </button>
+                )}
 
                 <button
                   onClick={handleOpenCustomizer}

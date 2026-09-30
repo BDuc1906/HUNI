@@ -17,6 +17,16 @@ export default function ProductCard({ product }) {
 
   const isFavorite = wishlist.includes(product.id);
 
+  const discountPct =
+    product.originalPrice && product.originalPrice > product.price
+      ? Math.round((1 - product.price / product.originalPrice) * 100)
+      : 0;
+
+  const nextTier =
+    product.wholesaleTiers && product.wholesaleTiers.length >= 2
+      ? product.wholesaleTiers[1]
+      : null;
+
   const lowestPrice = product.wholesaleTiers?.length
     ? product.wholesaleTiers[product.wholesaleTiers.length - 1].price
     : product.price;
@@ -47,9 +57,16 @@ export default function ProductCard({ product }) {
               {product.badge}
             </span>
           )}
-          <span className="px-2 py-0.5 rounded-full bg-brand-600/90 text-white font-semibold text-[9px] sm:text-[10px] shadow-sm">
-            May mẫu 0đ
-          </span>
+          <div className="flex items-center gap-1">
+            <span className="px-2 py-0.5 rounded-full bg-brand-600/90 text-white font-semibold text-[9px] sm:text-[10px] shadow-sm">
+              May mẫu 0đ
+            </span>
+            {discountPct > 0 && (
+              <span className="px-2 py-0.5 rounded-full bg-rose-500 text-white font-black text-[9px] sm:text-[10px] shadow-sm">
+                -{discountPct}%
+              </span>
+            )}
+          </div>
         </div>
 
         <button
@@ -144,17 +161,46 @@ export default function ProductCard({ product }) {
             <div className="text-[10px] sm:text-[11px] text-brand-700 font-bold mt-0.5 truncate">
               Sỉ: {lowestPrice.toLocaleString("vi-VN")} đ/{product.unit}
             </div>
+            {nextTier && (
+              <div className="text-[10px] text-emerald-600 font-medium mt-0.5 truncate">
+                🏷️ Đặt từ {nextTier.min} chiếc → giá chỉ {nextTier.price.toLocaleString("vi-VN")}đ
+              </div>
+            )}
           </div>
 
           <button
             onClick={(e) => {
               e.stopPropagation();
-              addToCart(product, 10);
+              setQuickViewProduct(product);
             }}
-            title="Thêm vào giỏ"
+            title="Xem & Đặt hàng"
             className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 hover:bg-brand-500 text-brand-400 hover:text-[#004f5e] flex items-center justify-center shadow-md transition-colors shrink-0"
           >
             <ShoppingCart className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Mobile action buttons */}
+        <div className="flex md:hidden items-center gap-2 mt-2 pt-2 border-t border-slate-100">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setQuickViewProduct(product);
+            }}
+            className="flex-1 py-1.5 px-2 bg-slate-100 active:bg-[#004f5e] active:text-white text-slate-800 text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-colors"
+          >
+            <Eye className="w-3 h-3 text-brand-500" />
+            <span>Xem chi tiết</span>
+          </button>
+          <button
+            type="button"
+            onClick={handleOpenCustomizer}
+            title="Mô phỏng logo"
+            className="py-1.5 px-2.5 bg-brand-500 active:bg-brand-600 text-white text-xs font-bold rounded-lg flex items-center justify-center gap-1 transition-colors"
+          >
+            <Sparkles className="w-3 h-3" />
+            <span className="text-[11px]">Logo</span>
           </button>
         </div>
       </div>
