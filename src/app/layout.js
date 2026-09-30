@@ -5,6 +5,7 @@ import { Roboto } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
 import { ThemeProvider } from "@/shared/providers/ThemeProvider";
 import { ShopProvider } from "@/shared/providers/ShopProvider";
+import AppShell from "@/shared/components/layout/AppShell";
 
 /* ============================================================
    FONT — Self-host, không FOUT, tự preload
@@ -254,7 +255,9 @@ export default function RootLayout({ children }) {
         <Suspense fallback={null}>
           <AuthProvider>
             <ThemeProvider>
-              <ShopProvider>{children}</ShopProvider>
+              <ShopProvider>
+                <AppShell>{children}</AppShell>
+              </ShopProvider>
             </ThemeProvider>
           </AuthProvider>
         </Suspense>

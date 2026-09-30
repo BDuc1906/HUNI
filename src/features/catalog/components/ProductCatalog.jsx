@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Image from "next/image";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { PRODUCTS, CATEGORIES } from "@/shared/data";
@@ -25,8 +25,15 @@ const iconMap = {
   PackageCheck: PackageCheck
 };
 
-export default function ProductCatalog() {
+export default function ProductCatalog({ initialCategory }) {
   const { activeCategory, setActiveCategory } = useShop();
+
+  useEffect(() => {
+    if (initialCategory) {
+      setActiveCategory(initialCategory);
+    }
+  }, [initialCategory, setActiveCategory]);
+
   const [searchFilter, setSearchFilter] = useState("");
   const [selectedMaterial, setSelectedMaterial] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
