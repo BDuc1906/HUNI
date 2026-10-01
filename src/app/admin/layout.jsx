@@ -12,15 +12,11 @@ export const metadata = {
 };
 
 export default async function AdminLayout({ children }) {
-  // 1. Kiểm tra xác thực và phân quyền RBAC
+  // 1. Kiểm tra xác thực (chỉ ép buộc khi REQUIRE_ADMIN_AUTH=true)
   const session = await auth().catch(() => null);
-  const isBypass =
-    process.env.NODE_ENV !== "production" ||
-    process.env.ADMIN_PREVIEW_MODE === "true";
-
-  if (!isBypass) {
+  if (process.env.REQUIRE_ADMIN_AUTH === "true") {
     if (!session?.user) {
-      redirect("/login?callbackUrl=/admin");
+      redirect("/login?redirect=/admin");
     }
 
     if (session.user.role !== "ADMIN") {

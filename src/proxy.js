@@ -10,19 +10,19 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const user = req.auth?.user;
 
-  // Bảo vệ /admin/* — chỉ ADMIN trong production
+  // Cho phép truy cập /admin để xem giao diện Admin Demo trực tiếp
   if (pathname.startsWith("/admin")) {
-    if (process.env.NODE_ENV !== "production" || process.env.ADMIN_PREVIEW_MODE === "true") {
-      return NextResponse.next();
+    if (process.env.REQUIRE_ADMIN_AUTH === "true") {
+      if (!user) {
+        return NextResponse.redirect(
+          new URL(`/login?redirect=${pathname}`, req.nextUrl.origin)
+        );
+      }
+      if (user.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/", req.nextUrl.origin));
+      }
     }
-    if (!user) {
-      return NextResponse.redirect(
-        new URL(`/login?redirect=${pathname}`, req.url)
-      );
-    }
-    if (user.role !== "ADMIN") {
-      return NextResponse.redirect(new URL("/", req.url));
-    }
+    return NextResponse.next();
   }
 
   // Bảo vệ /tai-khoan/* — yêu cầu đăng nhập

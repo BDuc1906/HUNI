@@ -6,6 +6,11 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { db } from "@/server/db";
 
+// Tránh lỗi chuyển hướng về localhost khi chạy trên Vercel do biến môi trường NEXTAUTH_URL bị copy nhầm
+if (process.env.VERCEL_URL && process.env.NEXTAUTH_URL?.includes("localhost")) {
+  delete process.env.NEXTAUTH_URL;
+}
+
 export const authConfig = {
   secret:
     process.env.NEXTAUTH_SECRET ||
