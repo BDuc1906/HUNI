@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import PageHeroSlider from "@/shared/components/PageHeroSlider";
 import {
   Phone,
   Mail,
@@ -272,9 +271,80 @@ export default function ContactView() {
   return (
     <div className="bg-slate-50 min-h-screen">
       {/* ========================================================
-          HERO SLIDER — Trượt ảnh slidebar giống trang chủ
+          HERO BANNER — Thiết kế sắc sảo, không dùng slidebar
           ======================================================== */}
-      <PageHeroSlider category="contact" breadcrumb="Liên Hệ & Hỗ Trợ Doanh Nghiệp" />
+      <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-12 sm:py-16 md:py-20 border-b border-brand-400/20 relative overflow-hidden">
+        {/* Glow ambient effects */}
+        <div className="absolute top-0 right-10 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          {/* Breadcrumbs */}
+          <nav className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-5">
+            <Link href="/" className="hover:text-white transition-colors">
+              Trang Chủ
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+            <span className="text-white font-semibold">Liên Hệ &amp; Hỗ Trợ Doanh Nghiệp</span>
+          </nav>
+
+          <div className="max-w-3xl">
+            {/* Top pill badge */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider mb-4 border border-brand-400/30">
+              <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
+              <span>Trung Tâm Hỗ Trợ Doanh Nghiệp 24/7 • Phản Hồi Trong 5 Phút</span>
+            </div>
+
+            {/* Main title */}
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight mb-4">
+              KẾT NỐI VỚI{" "}
+              <span className="text-brand-300">ĐỘI NGŨ CHUYÊN GIA HDC FASHION</span>
+            </h1>
+
+            <p className="text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed mb-8">
+              Hơn 50.000+ tập đoàn và doanh nghiệp đã tin chọn HDC. Chúng tôi sẵn sàng đồng hành từ khâu chọn chất liệu, phối màu nhận diện, thiết kế 3D cho đến may mẫu thử 0đ duyệt form trước khi may đồng loạt.
+            </p>
+
+            {/* Quick Action Badges */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <a
+                href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
+              >
+                <Phone className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
+                <div className="text-[11px] text-slate-300 font-medium">Hotline 24/7</div>
+                <div className="text-sm sm:text-base font-bold text-white truncate">{BRAND_INFO.contact.hotline}</div>
+              </a>
+
+              <a
+                href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
+              >
+                <MessageCircle className="w-5 h-5 text-blue-300 mb-2 group-hover:scale-110 transition-transform" />
+                <div className="text-[11px] text-slate-300 font-medium">Chat Zalo OA</div>
+                <div className="text-sm sm:text-base font-bold text-white">Phản hồi tức thì</div>
+              </a>
+
+              <a
+                href={`mailto:${BRAND_INFO.contact.email}`}
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
+              >
+                <Mail className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
+                <div className="text-[11px] text-slate-300 font-medium">Email Doanh Nghiệp</div>
+                <div className="text-xs sm:text-sm font-bold text-white truncate">{BRAND_INFO.contact.email}</div>
+              </a>
+
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15">
+                <Clock className="w-5 h-5 text-brand-300 mb-2" />
+                <div className="text-[11px] text-slate-300 font-medium">Giờ Làm Việc</div>
+                <div className="text-xs sm:text-sm font-bold text-white">08:00 - 18:00 (T2-T7)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ========================================================
           MAIN INTERACTION SECTION — FORM & SUPPORT INFO
