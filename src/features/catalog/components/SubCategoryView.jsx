@@ -10,7 +10,6 @@ import ProductCard from "./ProductCard";
 import WhyChooseUs from "@/features/home/components/WhyChooseUs";
 import QuickQuoteSection from "@/features/quote/components/QuickQuoteSection";
 import {
-  ChevronRight,
   Sparkles,
   ShieldCheck,
   CheckCircle2,
@@ -84,22 +83,6 @@ export default function SubCategoryView({ fullPath, hubSlug, hubTitle, initialCa
 
   const displayProducts = relevantProducts.length > 0 ? relevantProducts : PRODUCTS.slice(0, 6);
 
-  // Xây dựng breadcrumbs
-  const pathParts = fullPath.split("/").filter(Boolean);
-  const breadcrumbs = [
-    { label: "Trang Chủ", href: "/" },
-  ];
-  let accumulated = "";
-  pathParts.forEach((part, index) => {
-    accumulated += `/${part}`;
-    const matched = SITE_TREE.find((t) => t.path === accumulated);
-    breadcrumbs.push({
-      label: matched?.label || part,
-      href: accumulated,
-      isCurrent: index === pathParts.length - 1,
-    });
-  });
-
   return (
     <>
       {/* ============================================================
@@ -110,22 +93,6 @@ export default function SubCategoryView({ fullPath, hubSlug, hubTitle, initialCa
         <div className="absolute right-0 top-0 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-4 sm:mb-6 flex-wrap">
-            {breadcrumbs.map((bc, idx) => (
-              <React.Fragment key={bc.href}>
-                {idx > 0 && <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />}
-                {bc.isCurrent ? (
-                  <span className="text-white font-bold">{bc.label}</span>
-                ) : (
-                  <Link href={bc.href} className="hover:text-white transition-colors">
-                    {bc.label}
-                  </Link>
-                )}
-              </React.Fragment>
-            ))}
-          </nav>
-
           <div className="max-w-3xl">
             {/* Badges */}
             <div className="flex items-center gap-2 flex-wrap mb-4">

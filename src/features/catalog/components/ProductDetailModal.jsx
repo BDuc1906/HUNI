@@ -263,24 +263,6 @@ export default function ProductDetailModal() {
           <div className="md:col-span-7 flex flex-col bg-white">
             {/* Padding-top lớn để chừa chỗ cho nút X */}
             <div className="pt-12 sm:pt-14 px-4 sm:px-5 pb-4 sm:pb-5 flex-1 overflow-y-auto space-y-3.5 sm:space-y-4">
-              {/* Mini Breadcrumb */}
-              <nav className="text-[10px] text-slate-400 flex items-center gap-1 flex-wrap mb-1">
-                <span>Sản phẩm</span>
-                <span>›</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveCategory(product.category);
-                    setQuickViewProduct(null);
-                  }}
-                  className="hover:text-brand-600 transition-colors font-medium"
-                >
-                  {catName}
-                </button>
-                <span>›</span>
-                <span className="text-slate-600 line-clamp-1">{product.title}</span>
-              </nav>
-
               {/* Row 1: SKU + Brand authenticity */}
               <div className="flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-xs">
                 <span className="text-amber-700 font-bold uppercase tracking-wider">

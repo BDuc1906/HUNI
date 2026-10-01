@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 60" width="220" height="60">
+  <defs>
+    <linearGradient id="sun_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F37021" />
+      <stop offset="100%" stop-color="#C23616" />
+    </linearGradient>
+  </defs>
+  <!-- Sun Group Emblem -->
+  <g transform="translate(12, 10)">
+    <circle cx="18" cy="20" r="14" fill="url(#sun_grad)" />
+    <path d="M18 2 L22 10 L14 10 Z M18 38 L22 30 L14 30 Z M2 20 L10 16 L10 24 Z M34 20 L26 16 L26 24 Z" fill="#F37021" />
+  </g>
+  <!-- Text -->
+  <text x="56" y="32" font-family="'Segoe UI', Roboto, Arial, sans-serif" font-weight="900" font-size="20" fill="#2C2C2C" letter-spacing="-0.3">SUN GROUP</text>
+  <text x="57" y="44" font-family="'Segoe UI', Roboto, Arial, sans-serif" font-weight="600" font-size="7.5" fill="#F37021" letter-spacing="1">NGƯỜI KHAI MỞ</text>
+</svg>

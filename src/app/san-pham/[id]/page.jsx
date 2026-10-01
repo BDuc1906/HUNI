@@ -12,7 +12,6 @@ import ProductDetailOrderCTA from "@/features/catalog/components/ProductDetailOr
 import ReviewSection from "@/features/catalog/components/ReviewSection";
 import {
   CheckCircle2,
-  ChevronRight,
   Sparkles,
   ShieldCheck,
   Truck,
@@ -95,32 +94,6 @@ export default async function ProductDetailPage({ params }) {
 
       <div className="min-h-screen bg-[#f8fafc] py-4 sm:py-8 md:py-12">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-5 sm:space-y-8">
-          {/* Breadcrumb Navigation */}
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs text-slate-500 flex-wrap overflow-x-auto whitespace-nowrap scrollbar-none py-0.5"
-          >
-            <Link
-              href="/"
-              className="hover:text-amber-700 transition-colors font-medium"
-            >
-              Trang chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <Link
-              href="/#catalog"
-              className="hover:text-amber-700 transition-colors font-medium"
-            >
-              Sản phẩm
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="text-slate-600 font-medium">{categoryName}</span>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="text-slate-900 font-bold line-clamp-1">
-              {product.title}
-            </span>
-          </nav>
-
           {/* Main 2-column Layout */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 lg:gap-12 items-start">
             {/* Cột trái: Gallery ảnh & Cam kết */}

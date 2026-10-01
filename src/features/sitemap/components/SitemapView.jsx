@@ -155,15 +155,6 @@ export default function SitemapView() {
   return (
     <div className="min-h-screen bg-slate-50 py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Breadcrumb Navigation */}
-        <nav className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 mb-6">
-          <Link href="/" className="hover:text-brand-600 transition-colors">
-            Trang Chủ
-          </Link>
-          <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-          <span className="text-brand-800 font-bold">Sơ Đồ Website & Kiến Trúc SEO</span>
-        </nav>
-
         {/* Header Hero */}
         <div className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] rounded-3xl p-6 sm:p-10 text-white shadow-xl mb-8 relative overflow-hidden">
           <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />

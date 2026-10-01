@@ -13,7 +13,6 @@ import { PRODUCTS, BRAND_INFO } from "@/shared/data";
 import ProductCard from "@/features/catalog/components/ProductCard";
 import ErrorBoundary from "@/shared/components/ErrorBoundary";
 import {
-  ChevronRight,
   Sparkles,
   ShieldCheck,
   CheckCircle2,
@@ -80,33 +79,6 @@ export default function CategorySubPage({ categoryInfo, slugArray }) {
           ============================================= */}
       <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-10 sm:py-14 border-b border-brand-400/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* Breadcrumbs chuẩn SEO */}
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-4 overflow-x-auto whitespace-nowrap scrollbar-none py-1"
-          >
-            <Link href="/" className="hover:text-white transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
-
-            {parentCat && (
-              <>
-                <Link
-                  href={parentCat.url}
-                  className="hover:text-white transition-colors"
-                >
-                  {parentCat.shortTitle || parentCat.title}
-                </Link>
-                <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
-              </>
-            )}
-
-            <span className="text-white font-bold">
-              {categoryInfo.shortTitle || categoryInfo.title}
-            </span>
-          </nav>
-
           <div className="max-w-3xl space-y-3 sm:space-y-4">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider border border-brand-400/30">
               <Tag className="w-3.5 h-3.5" />

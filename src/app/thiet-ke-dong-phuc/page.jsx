@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import {
-  ChevronRight,
   Sparkles,
   Palette,
   ShieldCheck,
@@ -52,22 +51,6 @@ export default function ThietKeDongPhucPage() {
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-300/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-4 sm:mb-6">
-            <Link href="/" className="hover:text-white transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400" />
-            <Link
-              href="/dong-phuc-doanh-nghiep"
-              className="hover:text-white transition-colors"
-            >
-              Sản Phẩm
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400" />
-            <span className="text-white font-semibold">Tự Thiết Kế & Gửi Mẫu</span>
-          </nav>
-
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider mb-4 border border-brand-400/30">
               <Sparkles className="w-3.5 h-3.5" />

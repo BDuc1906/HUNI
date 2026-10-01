@@ -8,7 +8,6 @@ import Link from "next/link";
 import { SITE_HIERARCHY } from "@/shared/data/siteHierarchy";
 import { BRAND_INFO } from "@/shared/data";
 import {
-  ChevronRight,
   Clock,
   User,
   Share2,
@@ -94,24 +93,6 @@ export default async function BlogPostPage({ params }) {
 
       <div className="min-h-screen bg-[#f8fafc] py-6 sm:py-10">
         <article className="max-w-4xl mx-auto px-4 sm:px-6 space-y-8">
-          {/* Breadcrumbs */}
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 overflow-x-auto whitespace-nowrap scrollbar-none py-1"
-          >
-            <Link href="/" className="hover:text-amber-700 transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <Link href="/blog" className="hover:text-amber-700 transition-colors">
-              Blog Kiến Thức
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <span className="text-slate-800 font-bold line-clamp-1">
-              {article.shortTitle}
-            </span>
-          </nav>
-
           {/* Article Header */}
           <header className="space-y-4 border-b border-slate-200 pb-6">
             <div className="flex items-center gap-2">

@@ -550,15 +550,6 @@ export default function PageHeroSlider({
           ============================================ */}
       <div className="relative z-10 h-full flex flex-col justify-center pointer-events-none">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pointer-events-auto">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs text-brand-200/90 mb-3 sm:mb-4">
-            <Link href="/" className="hover:text-white transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
-            <span className="text-white font-semibold">{breadcrumb}</span>
-          </nav>
-
           <div className="max-w-3xl">
             {/* Eyebrow badge */}
             <div

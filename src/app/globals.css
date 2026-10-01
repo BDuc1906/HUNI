@@ -142,13 +142,15 @@ img {
   }
 }
 
-.animate-marquee-infinite {
+.animate-marquee-infinite,
+.animate-marquee {
   display: flex;
   width: max-content;
   animation: marquee-scroll 28s linear infinite;
 }
 
-.animate-marquee-infinite:hover {
+.animate-marquee-infinite:hover,
+.animate-marquee:hover {
   animation-play-state: paused;
 }
 
