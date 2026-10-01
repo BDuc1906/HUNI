@@ -8,12 +8,15 @@ import { useShop } from "@/shared/providers/ShopProvider";
 import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
-// SLIDES DATA — 5 slides
+// SLIDES DATA — 5 slides full màn hình (bỏ fit contain)
 // ============================================================
 const SLIDES = [
+  // ============================================
+  // SLIDE 1: CHẤT LIỆU XANH
+  // ============================================
   {
-    image: "/images/catalogue-2026-hero.jpg",
-    position: "top",
+    image: "/images/02_materials_01.jpg",
+    position: "center",
     eyebrow: "Bộ Sưu Tập 2026",
     title: "CHẤT LIỆU XANH",
     titleHighlight: "BỀN VỮNG",
@@ -24,34 +27,13 @@ const SLIDES = [
     ctaSecondary: "Báo Giá Ngay",
     ctaLink: "/bang-vai",
   },
+
+  // ============================================
+  // SLIDE 2: THỂ THAO & GOLF
+  // ============================================
   {
-    image: "/images/uniform_corporate_suits.jpg",
-    fit: "contain",
+    image: "/images/08_golf_event_01.jpg",
     position: "center",
-    eyebrow: "Đẳng Cấp Lãnh Đạo",
-    title: "NÂNG TẦM THƯƠNG HIỆU",
-    titleHighlight: "CÙNG HDC FASHION",
-    subtitle: "Vest doanh nhân may đo chuẩn Ý",
-    description:
-      "Bộ sưu tập Vest & Sơ mi cao cấp dành riêng cho Ban lãnh đạo, cấp quản lý. Đo ni tận nơi bởi đội ngũ thợ may nhiều năm kinh nghiệm.",
-    ctaPrimary: "Nhận Báo Giá 0đ",
-    ctaSecondary: "Xem BST Vest",
-    ctaLink: "/dong-phuc-may-do",
-  },
-  {
-    image: "/images/06_polo_01.jpg",
-    eyebrow: "Bán Chạy Nhất 2026",
-    title: "ÁO POLO DOANH NGHIỆP",
-    titleHighlight: "HDC CLASSIC",
-    subtitle: "Vải cá sấu Cotton Compact 4 chiều",
-    description:
-      "Dòng áo Polo đồng phục chủ lực được nhiều doanh nghiệp tin dùng. Vải kháng khuẩn ion bạc, co giãn 4 chiều, bền màu sau 100 lần giặt.",
-    ctaPrimary: "Đặt Polo Ngay",
-    ctaSecondary: "Xem Bảng Màu",
-    ctaLink: "/dong-phuc-doanh-nghiep",
-  },
-  {
-    image: "/images/uniform_sport_golf.jpg",
     eyebrow: "Công Nghệ AeroCool",
     title: "ĐỒNG PHỤC CÁC GIẢI",
     titleHighlight: "THỂ THAO & GOLF",
@@ -62,8 +44,30 @@ const SLIDES = [
     ctaSecondary: "Xem Ảnh Giải",
     ctaLink: "/dong-phuc-the-thao",
   },
+
+  // ============================================
+  // SLIDE 3: POLO DOANH NGHIỆP — ĐÃ BỎ CONTAIN
+  // ============================================
   {
-    image: "/images/uniform_school_students.jpg",
+    image: "/images/06_polo_01.jpg",
+    position: "center",       // ← Không còn fit: "contain"
+    eyebrow: "Bán Chạy Nhất 2026",
+    title: "ÁO POLO DOANH NGHIỆP",
+    titleHighlight: "HDC CLASSIC",
+    subtitle: "Vải cá sấu Cotton Compact 4 chiều",
+    description:
+      "Dòng áo Polo đồng phục chủ lực được nhiều doanh nghiệp tin dùng. Vải kháng khuẩn ion bạc, co giãn 4 chiều, bền màu sau 100 lần giặt.",
+    ctaPrimary: "Đặt Polo Ngay",
+    ctaSecondary: "Xem Bảng Màu",
+    ctaLink: "/dong-phuc-doanh-nghiep",
+  },
+
+  // ============================================
+  // SLIDE 4: TRƯỜNG HỌC
+  // ============================================
+  {
+    image: "/images/09_kids_school_03.jpg",
+    position: "center",
     eyebrow: "Chuẩn Quốc Tế",
     title: "ĐỒNG PHỤC TRƯỜNG HỌC",
     titleHighlight: "CAO CẤP",
@@ -72,6 +76,23 @@ const SLIDES = [
       "Chuẩn phom dáng quốc tế, vải mềm mại an toàn cho làn da học sinh. Váy xếp ly có quần lót an toàn. Huy hiệu trường thêu Tajima sắc sảo.",
     ctaPrimary: "Báo Giá Trường",
     ctaSecondary: "Xem Album",
+    ctaLink: "/dong-phuc-truong-hoc",
+  },
+
+  // ============================================
+  // SLIDE 5: KIDS
+  // ============================================
+  {
+    image: "/images/10_kids_why_02.jpg",
+    position: "center",
+    eyebrow: "Dòng Sản Phẩm Trẻ Em",
+    title: "ĐỒNG PHỤC HDC KIDS",
+    titleHighlight: "VUI NHỘN & AN TOÀN",
+    subtitle: "Điểm đến chất lượng cho học sinh",
+    description:
+      "Vải cotton mềm mại an toàn cho làn da trẻ nhỏ. Bền màu sau 100 lần giặt, thấm hút mồ hôi tốt, thoải mái vận động cả ngày dài.",
+    ctaPrimary: "Báo Giá Kids",
+    ctaSecondary: "Xem Mẫu",
     ctaLink: "/dong-phuc-truong-hoc",
   },
 ];
@@ -99,7 +120,6 @@ export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [progress, setProgress] = useState(0);
 
   const sectionRef = useRef(null);
   const touchStartXRef = useRef(0);
@@ -113,40 +133,31 @@ export default function HeroBanner() {
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
     setCurrentSlide(((index % total) + total) % total);
-    setProgress(0);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-    setProgress(0);
   }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-    setProgress(0);
   }, []);
 
   // ============================================================
-  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây & Cập nhật thanh timing
+  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây
   // ============================================================
   useEffect(() => {
-    const startTime = Date.now();
     const timer = setInterval(() => {
-      if (isPausedRef.current) return;
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(percent);
-
-      if (elapsed >= SLIDE_DURATION) {
-        nextSlide();
+      if (!isPausedRef.current) {
+        setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
       }
-    }, 50);
+    }, SLIDE_DURATION);
 
     return () => clearInterval(timer);
-  }, [currentSlide, nextSlide]);
+  }, []);
 
   // ============================================================
-  // KEYBOARD NAVIGATION — Desktop dùng ← →
+  // KEYBOARD NAVIGATION
   // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
@@ -158,7 +169,7 @@ export default function HeroBanner() {
   }, [nextSlide, prevSlide]);
 
   // ============================================================
-  // TOUCH SWIPE — Native event listener với passive: false
+  // TOUCH SWIPE
   // ============================================================
   useEffect(() => {
     const el = sectionRef.current;
@@ -231,20 +242,7 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0"
             aria-hidden={idx !== currentSlide}
           >
-            {/* Nền mờ khi fit="contain" — 2 bên có nền blur từ chính ảnh */}
-            {s.fit === "contain" && (
-              <Image
-                src={s.image}
-                alt=""
-                aria-hidden="true"
-                fill
-                sizes="100vw"
-                quality={75}
-                className="object-cover object-center scale-110 blur-2xl opacity-80"
-              />
-            )}
-
-            {/* Ảnh chính */}
+            {/* Ảnh chính — object-cover tràn full */}
             <Image
               src={s.image}
               alt={s.title + " " + s.titleHighlight}
@@ -252,58 +250,12 @@ export default function HeroBanner() {
               sizes="100vw"
               quality={90}
               priority={idx === 0}
-              className={`${
-                s.fit === "contain" ? "object-contain" : "object-cover"
-              } ${POSITION_CLASS[s.position || "center"]}`}
+              loading={idx === 0 ? undefined : "eager"}
+              className={`object-cover ${POSITION_CLASS[s.position || "center"]}`}
             />
 
-            {/* Gradient overlay — chỉ khi có text */}
-            {!s.hideText && (
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent pointer-events-none">
-                {/* Thanh tiến độ timing chuyển slidebar chạy ngang dưới đáy thẻ */}
-                <div className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none">
-                  <div className="h-1 bg-white/20 w-full overflow-hidden">
-                    <div
-                      className="h-full bg-brand-400 transition-all duration-75 ease-linear"
-                      style={{ width: `${progress}%` }}
-                    />
-                  </div>
-                </div>
-
-                {/* Phần hiển thị timing chuyển slidebar dưới đáy thẻ */}
-                <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
-                  {SLIDES.map((_, dotIdx) => {
-                    const active = dotIdx === currentSlide;
-
-                    return (
-                      <button
-                        key={dotIdx}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          goToSlide(dotIdx);
-                        }}
-                        aria-label={`Đến slide ${dotIdx + 1}`}
-                        className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
-                          active
-                            ? "w-10 sm:w-14 bg-white/40 shadow-sm"
-                            : "w-2.5 sm:w-3 bg-white/50 hover:bg-white/80"
-                        }`}
-                      >
-                        {active && (
-                          <span
-                            className="absolute inset-y-0 left-0 bg-brand-400 rounded-full h-full"
-                            style={{
-                              width: `${progress}%`,
-                              transition: "width 50ms linear",
-                            }}
-                          />
-                        )}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
           </div>
         ))}
       </div>
@@ -311,70 +263,62 @@ export default function HeroBanner() {
       {/* ============================================
           CONTENT OVERLAY
           ============================================ */}
-      <div
-        className={`relative z-10 h-full flex flex-col pointer-events-none ${
-          slide.hideText ? "justify-end" : "justify-center"
-        }`}
-      >
+      <div className="relative z-10 h-full flex flex-col pointer-events-none justify-center">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-40 sm:pb-48 lg:pb-44 pointer-events-auto">
           <div className="max-w-3xl">
-            {!slide.hideText && (
-              <>
-                {/* Eyebrow */}
+            {/* Eyebrow */}
+            <div
+              key={`eyebrow-${currentSlide}`}
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
+              <span>{slide.eyebrow}</span>
+            </div>
+
+            {/* TITLE */}
+            <div
+              key={`title-${currentSlide}`}
+              className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
+            >
+              <h1 className="text-[28px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance drop-shadow-lg">
+                {slide.title}
+              </h1>
+              <h2 className="text-[26px] leading-[1.15] sm:text-3xl md:text-4xl lg:text-[48px] xl:text-[54px] font-black tracking-tight text-brand-gradient text-balance drop-shadow-lg mt-1 sm:mt-1.5">
+                {slide.titleHighlight}
+              </h2>
+            </div>
+
+            {/* Subtitle */}
+            <p
+              key={`sub-${currentSlide}`}
+              className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
+            >
+              &ldquo;{slide.subtitle}&rdquo;
+            </p>
+
+            {/* Description */}
+            <p
+              key={`desc-${currentSlide}`}
+              className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
+            >
+              {slide.description}
+            </p>
+
+            {/* Checklist */}
+            <div
+              key={`check-${currentSlide}`}
+              className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
+            >
+              {CHECKLIST.map((item) => (
                 <div
-                  key={`eyebrow-${currentSlide}`}
-                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
+                  key={item}
+                  className="flex items-center gap-2 text-xs lg:text-sm text-white font-medium whitespace-nowrap drop-shadow"
                 >
-                  <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
-                  <span>{slide.eyebrow}</span>
+                  <CheckCircle2 className="w-4 h-4 text-brand-300 shrink-0" />
+                  <span>{item}</span>
                 </div>
-
-                {/* TITLE — 2 dòng */}
-                <div
-                  key={`title-${currentSlide}`}
-                  className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
-                >
-                  <h1 className="text-[28px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance drop-shadow-lg">
-                    {slide.title}
-                  </h1>
-                  <h2 className="text-[26px] leading-[1.15] sm:text-3xl md:text-4xl lg:text-[48px] xl:text-[54px] font-black tracking-tight text-brand-gradient text-balance drop-shadow-lg mt-1 sm:mt-1.5">
-                    {slide.titleHighlight}
-                  </h2>
-                </div>
-
-                {/* Subtitle */}
-                <p
-                  key={`sub-${currentSlide}`}
-                  className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
-                >
-                  &ldquo;{slide.subtitle}&rdquo;
-                </p>
-
-                {/* Description */}
-                <p
-                  key={`desc-${currentSlide}`}
-                  className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
-                >
-                  {slide.description}
-                </p>
-
-                {/* Checklist */}
-                <div
-                  key={`check-${currentSlide}`}
-                  className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
-                >
-                  {CHECKLIST.map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-center gap-2 text-xs lg:text-sm text-white font-medium whitespace-nowrap drop-shadow"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-brand-300 shrink-0" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </>
-            )}
+              ))}
+            </div>
 
             {/* CTA */}
             <div
@@ -407,9 +351,7 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* ============================================
-            STATS BAR
-            ============================================ */}
+        {/* STATS BAR */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
@@ -434,6 +376,25 @@ export default function HeroBanner() {
         </div>
       </div>
 
+      {/* DOTS NAVIGATION */}
+      <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {SLIDES.map((_, idx) => {
+          const active = idx === currentSlide;
+
+          return (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              aria-label={`Đến slide ${idx + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                active
+                  ? "w-10 sm:w-14 bg-brand-400"
+                  : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
+              }`}
+            />
+          );
+        })}
+      </div>
     </section>
   );
 }

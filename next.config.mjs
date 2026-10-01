@@ -7,7 +7,7 @@ const nextConfig = {
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
     formats: ["image/avif", "image/webp"],
-    qualities: [75, 80, 85, 90],
+    qualities: [75, 80, 85, 90, 100],
     minimumCacheTTL: 60 * 60 * 24 * 60,
   },
 
