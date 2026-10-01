@@ -17,9 +17,11 @@ import { Sparkles, ArrowRight, Zap, Package } from "lucide-react";
 // 📝 CÁCH ĐÁNH DẤU SP MỚI:
 //   → Mở src/shared/data/products.js
 //   → Thêm vào SP: isNewArrival: true
+//
+// 📐 LAYOUT: 4 sản phẩm / 1 hàng trên desktop (không xuống dòng)
 // ============================================================
 
-const NEW_ARRIVALS_COUNT = 6;
+const NEW_ARRIVALS_COUNT = 4;
 
 export default function NewArrivalsSection() {
   // ============================================================
@@ -59,7 +61,8 @@ export default function NewArrivalsSection() {
         {/* NỘI DUNG */}
         {hasData ? (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+            {/* GRID 4 SẢN PHẨM — 1 HÀNG TRÊN DESKTOP */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               {newArrivals.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

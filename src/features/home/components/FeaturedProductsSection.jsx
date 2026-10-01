@@ -18,9 +18,11 @@ import { Sparkles, ArrowRight, Award, Package } from "lucide-react";
 //   → Mở src/shared/data/products.js
 //   → Thêm vào SP: isBestseller: true
 //   → Hoặc thêm: monthlySales: 250
+//
+// 📐 LAYOUT: 4 sản phẩm / 1 hàng trên desktop (không xuống dòng)
 // ============================================================
 
-const FEATURED_COUNT = 6;
+const FEATURED_COUNT = 4;
 
 export default function FeaturedProductsSection() {
   // ============================================================
@@ -65,12 +67,12 @@ export default function FeaturedProductsSection() {
         </div>
 
         {/* ============================================
-            NỘI DUNG — Có data → Grid, Chưa có → Placeholder
+            NỘI DUNG — Có data → Grid 4 SP, Chưa có → Placeholder
             ============================================ */}
         {hasData ? (
           <>
-            {/* GRID 6 SẢN PHẨM */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+            {/* GRID 4 SẢN PHẨM — 1 HÀNG TRÊN DESKTOP */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
               {featuredProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
