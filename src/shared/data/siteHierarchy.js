@@ -632,6 +632,7 @@ export const SITE_HIERARCHY = {
     { url: "/lien-he", title: "Liên Hệ & Hệ Thống Showroom HDC", priority: 0.9, changeFrequency: "monthly" },
     { url: "/bang-vai", title: "Bảng So Sánh Chất Liệu Vải", priority: 0.75, changeFrequency: "monthly" },
     { url: "/quy-trinh-may", title: "Quy Trình May Chuẩn 5 Bước", priority: 0.7, changeFrequency: "monthly" },
+    { url: "/thiet-ke-dong-phuc", title: "Tự Thiết Kế Đồng Phục & Gửi Mẫu (Studio 2D)", priority: 0.95, changeFrequency: "weekly" },
     { url: "/so-do-website", title: "Sơ Đồ Website (HTML Sitemap)", priority: 0.5, changeFrequency: "weekly" },
 
     // 17 Category URLs (Hub & Sub-cats)
