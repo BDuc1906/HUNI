@@ -9,11 +9,12 @@ import {
   ArrowRight,
   BookOpen,
   Calendar,
+  User,
 } from "lucide-react";
 
 // ============================================================
-// TIN TỨC / BLOG — Hiển thị 3 bài viết mới nhất
-// Data từ SITE_HIERARCHY.blogs → tự cập nhật khi thêm bài mới
+// NEWS SECTION — Blog / Tin tức trên trang chủ
+// Tự động lấy 3 bài MỚI NHẤT từ SITE_HIERARCHY.blogs
 // ============================================================
 
 const FEATURED_BLOG_COUNT = 3;
@@ -21,12 +22,7 @@ const FEATURED_BLOG_COUNT = 3;
 export default function NewsSection() {
   const blogs = SITE_HIERARCHY?.blogs || [];
 
-  // Nếu chưa có blog → ẩn section
-  if (blogs.length === 0) {
-    return null;
-  }
-
-  // Lấy 3 bài mới nhất (đảo ngược thứ tự)
+  // Lấy 3 bài mới nhất (sort theo publishedAt giảm dần)
   const latestBlogs = [...blogs]
     .sort((a, b) => {
       const dateA = new Date(a.publishedAt || 0);
@@ -35,10 +31,12 @@ export default function NewsSection() {
     })
     .slice(0, FEATURED_BLOG_COUNT);
 
+  const hasData = latestBlogs.length > 0;
+
   return (
     <section
       id="news-section"
-      className="py-14 sm:py-20 bg-white border-t border-slate-200"
+      className="py-14 sm:py-20 bg-slate-50 border-t border-slate-200"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
         {/* ============================================
@@ -72,69 +70,100 @@ export default function NewsSection() {
         </div>
 
         {/* ============================================
-            GRID 3 BÀI VIẾT
+            BLOG GRID hoặc PLACEHOLDER
             ============================================ */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-          {latestBlogs.map((article) => (
+        {hasData ? (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+              {latestBlogs.map((article) => (
+                <Link
+                  key={article.slug}
+                  href={article.url}
+                  className="group bg-white rounded-2xl border border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden"
+                >
+                  {/* Top gradient bar */}
+                  <div className="h-1.5 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600" />
+
+                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      {/* Badge + Read time */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <span className="px-2.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold">
+                          {article.categoryBadge}
+                        </span>
+                        <span className="text-[10px] text-slate-400 flex items-center gap-1 shrink-0">
+                          <Clock className="w-3 h-3" />
+                          {article.readTime}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-extrabold text-[#004f5e] text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-700 transition-colors line-clamp-2 min-h-[2.5em]">
+                        {article.title}
+                      </h3>
+
+                      {/* Summary */}
+                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
+                        {article.summary}
+                      </p>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                      <div className="flex items-center gap-1 text-slate-400 min-w-0 truncate">
+                        <User className="w-3 h-3 shrink-0" />
+                        <span className="truncate">
+                          {article.author?.split("(")[0].trim() || "HDC"}
+                        </span>
+                      </div>
+                      <span className="text-brand-700 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform shrink-0">
+                        Đọc tiếp
+                        <ArrowRight className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Mobile CTA */}
+            <div className="mt-8 text-center sm:hidden">
+              <Link
+                href="/blog"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#004f5e] hover:bg-slate-800 text-brand-300 font-bold text-xs rounded-xl shadow-md transition-colors"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>Xem tất cả bài viết</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </>
+        ) : (
+          /* Placeholder khi chưa có blog */
+          <div className="bg-white rounded-3xl border-2 border-dashed border-slate-300 p-8 sm:p-12 text-center max-w-2xl mx-auto">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-brand-50 border border-brand-200 text-brand-600 flex items-center justify-center mx-auto mb-4">
+              <Newspaper className="w-8 h-8 sm:w-10 sm:h-10" />
+            </div>
+
+            <h3 className="text-lg sm:text-xl font-extrabold text-[#004f5e] mb-2">
+              Blog Đang Được Cập Nhật
+            </h3>
+
+            <p className="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed mb-5">
+              Các bài viết về kiến thức đồng phục đang được chuẩn bị. Vui lòng
+              quay lại sau.
+            </p>
+
             <Link
-              key={article.slug}
-              href={article.url}
-              className="group bg-white rounded-2xl border border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden"
+              href="/blog"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs sm:text-sm rounded-xl shadow-lg transform hover:-translate-y-0.5 active:scale-[0.98] transition-all whitespace-nowrap"
             >
-              {/* Body */}
-              <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  {/* Badge + Read time */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="px-2.5 py-0.5 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-[10px] font-bold">
-                      {article.categoryBadge}
-                    </span>
-                    <span className="text-[10px] text-slate-400 flex items-center gap-1 shrink-0">
-                      <Clock className="w-3 h-3" />
-                      {article.readTime}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="font-extrabold text-[#004f5e] text-sm sm:text-base leading-snug mb-2 group-hover:text-brand-700 transition-colors line-clamp-2">
-                    {article.title}
-                  </h3>
-
-                  {/* Summary */}
-                  <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
-                    {article.summary}
-                  </p>
-                </div>
-
-                {/* Footer */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                  <div className="flex items-center gap-1 text-slate-400">
-                    <Calendar className="w-3 h-3" />
-                    <span>{article.publishedAt}</span>
-                  </div>
-                  <span className="text-brand-700 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    Đọc tiếp
-                    <ArrowRight className="w-3 h-3" />
-                  </span>
-                </div>
-              </div>
+              <BookOpen className="w-4 h-4 shrink-0" />
+              <span>Vào trang Blog</span>
+              <ArrowRight className="w-4 h-4 shrink-0" />
             </Link>
-          ))}
-        </div>
-
-        {/* ============================================
-            CTA mobile — Xem tất cả
-            ============================================ */}
-        <div className="mt-8 text-center sm:hidden">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#004f5e] hover:bg-slate-800 text-brand-300 font-bold text-xs rounded-xl shadow-md transition-colors"
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Xem tất cả bài viết</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
