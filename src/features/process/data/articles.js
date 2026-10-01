@@ -1,3 +1,23 @@
+export const processRelatedLinks = {
+  process: [
+    { href: "/cach-thiet-ke-logo-ao-dong-phuc", label: "Cách thiết kế logo áo đồng phục" },
+    { href: "/xu-huong-dong-phuc-2026", label: "Xu hướng đồng phục 2026" },
+  ],
+  quote: [
+    { href: "/quy-trinh-may-dong-phuc-doanh-nghiep", label: "Quy trình may đồng phục doanh nghiệp" },
+    { href: "/cach-thiet-ke-logo-ao-dong-phuc", label: "Cách thiết kế logo áo đồng phục" },
+    { href: "/xu-huong-dong-phuc-2026", label: "Xu hướng đồng phục 2026" },
+  ],
+  logo: [
+    { href: "/quy-trinh-may-dong-phuc-doanh-nghiep", label: "Quy trình may đồng phục doanh nghiệp" },
+    { href: "/xu-huong-dong-phuc-2026", label: "Xu hướng đồng phục 2026" },
+  ],
+  trend: [
+    { href: "/quy-trinh-may-dong-phuc-doanh-nghiep", label: "Quy trình may đồng phục doanh nghiệp" },
+    { href: "/cach-thiet-ke-logo-ao-dong-phuc", label: "Cách thiết kế logo áo đồng phục" },
+  ],
+};
+
 export const logoArticle = {
   title: "CÁCH THIẾT KẾ LOGO ÁO ĐỒNG PHỤC",
   subtitle: "Những nguyên tắc giúp logo nổi bật và đồng bộ với nhận diện thương hiệu.",
@@ -7,6 +27,7 @@ export const logoArticle = {
   ctaTitle: "BẠN CẦN TƯ VẤN THIẾT KẾ LOGO?",
   ctaDescription: "Gửi yêu cầu nhận diện và số lượng dự kiến để đội ngũ HDC đề xuất vị trí, kích thước và phương án in/thêu phù hợp.",
   ctaLabel: "Nhận tư vấn",
+  relatedLinks: processRelatedLinks.logo,
   topics: [
     {
       title: "Xác định vị trí logo",
@@ -57,6 +78,7 @@ export const trendArticle = {
   ctaTitle: "BẠN MUỐN LÊN PHƯƠNG ÁN ĐỒNG PHỤC 2026?",
   ctaDescription: "HDC Fashion hỗ trợ tư vấn mẫu, chất liệu và phương án ngân sách phù hợp với doanh nghiệp của bạn.",
   ctaLabel: "Nhận tư vấn đồng phục",
+  relatedLinks: processRelatedLinks.trend,
   topics: [
     { title: "Thiết kế tối giản", paragraphs: ["Bố cục tối giản với các mảng màu sạch, đường cắt tinh gọn và chi tiết vừa đủ tiếp tục được ưa chuộng. Cách tiếp cận này giúp mẫu áo dễ sử dụng lâu dài và phù hợp với nhiều vị trí công việc."], bullets: ["Giảm chi tiết trang trí không cần thiết.", "Ưu tiên phom dáng linh hoạt, dễ vận động.", "Tập trung vào đường may và hoàn thiện bề mặt."], image: "/images/uniform_corporate_suits.jpg" },
     { title: "Màu sắc nhận diện thương hiệu", paragraphs: ["Màu đồng phục không chỉ cần đẹp mà còn phải liên kết rõ ràng với hệ thống nhận diện. Thay vì phủ toàn bộ màu thương hiệu, nhiều doanh nghiệp chọn dùng màu chủ đạo ở cổ áo, bo tay, nẹp hoặc đường viền."], bullets: ["Dùng bảng màu thương hiệu làm điểm xuất phát.", "Bảo đảm độ tương phản với logo.", "Kiểm tra màu trên vải thật trước khi duyệt."], image: "/images/02_materials_08.jpg" },

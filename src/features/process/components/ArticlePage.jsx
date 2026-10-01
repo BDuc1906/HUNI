@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle2, List, Sparkles } from "lucide-react";
 import ModuleBreadcrumb from "./ModuleBreadcrumb";
 
 export default function ArticlePage({ article }) {
-  const { title, subtitle, heroImage, heroAlt, intro, topics, ctaTitle, ctaDescription, ctaLabel } = article;
+  const { title, subtitle, heroImage, heroAlt, intro, topics, ctaTitle, ctaDescription, ctaLabel, relatedLinks } = article;
 
   return (
     <>
@@ -51,6 +51,18 @@ export default function ArticlePage({ article }) {
                 </section>
               ))}
             </div>
+            {relatedLinks?.length > 0 && (
+              <nav aria-label="Bài viết liên quan" className="mt-12 border-t border-slate-200 pt-8">
+                <h2 className="text-xl font-black text-[#004f5e]">Bài viết liên quan</h2>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {relatedLinks.map((link) => (
+                    <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center rounded-xl border border-brand-200 bg-brand-50 px-4 py-2 text-sm font-bold text-brand-700 transition hover:border-brand-300 hover:bg-brand-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500">
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </nav>
+            )}
           </div>
         </div>
 
