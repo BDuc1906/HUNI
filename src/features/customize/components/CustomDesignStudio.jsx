@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useId } from "react";
+import React, { useState, useId, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -26,6 +26,12 @@ import {
   Layers,
   ChevronDown,
   X,
+  Plus,
+  Minus,
+  Ruler,
+  Users,
+  User,
+  Info,
 } from "lucide-react";
 import GarmentCanvas, { LOGO_POSITIONS } from "./GarmentCanvas";
 import { quotesService } from "@/shared/services/apiClient";
@@ -170,6 +176,63 @@ const QUANTITY_TIERS = [
   { min: 500, max: 100000, discountRate: 0.28, label: "500+ áo (Giảm 28% giá xưởng)", multiplier: 0.72 },
 ];
 
+// ====================================================
+// BẢNG THÔNG SỐ SIZE CHUẨN HDC FASHION
+// ====================================================
+export const SIZE_SPECS_MEN = [
+  { size: "S", weight: "50 - 57 kg", height: "1m55 - 1m62", chest: "88 - 92 cm", shoulder: "42 cm", length: "66 cm" },
+  { size: "M", weight: "58 - 65 kg", height: "1m63 - 1m69", chest: "92 - 96 cm", shoulder: "44 cm", length: "68 cm" },
+  { size: "L", weight: "66 - 73 kg", height: "1m70 - 1m75", chest: "96 - 100 cm", shoulder: "46 cm", length: "70 cm" },
+  { size: "XL", weight: "74 - 82 kg", height: "1m75 - 1m80", chest: "100 - 106 cm", shoulder: "48 cm", length: "72 cm" },
+  { size: "2XL", weight: "83 - 90 kg", height: "1m78 - 1m85", chest: "106 - 112 cm", shoulder: "50 cm", length: "74 cm" },
+  { size: "3XL", weight: "91 - 100 kg", height: "1m80 - 1m90", chest: "112 - 120 cm", shoulder: "52 cm", length: "76 cm" },
+];
+
+export const SIZE_SPECS_WOMEN = [
+  { size: "S", weight: "42 - 47 kg", height: "1m50 - 1m55", chest: "80 - 84 cm", shoulder: "36 cm", length: "58 cm" },
+  { size: "M", weight: "48 - 53 kg", height: "1m55 - 1m60", chest: "84 - 88 cm", shoulder: "38 cm", length: "60 cm" },
+  { size: "L", weight: "54 - 59 kg", height: "1m60 - 1m65", chest: "88 - 92 cm", shoulder: "40 cm", length: "62 cm" },
+  { size: "XL", weight: "60 - 66 kg", height: "1m63 - 1m68", chest: "92 - 96 cm", shoulder: "42 cm", length: "64 cm" },
+  { size: "2XL", weight: "67 - 75 kg", height: "1m65 - 1m72", chest: "96 - 102 cm", shoulder: "44 cm", length: "66 cm" },
+];
+
+export const SIZE_SPECS_UNISEX = [
+  { size: "S", weight: "45 - 53 kg", height: "1m50 - 1m60" },
+  { size: "M", weight: "54 - 63 kg", height: "1m60 - 1m68" },
+  { size: "L", weight: "64 - 72 kg", height: "1m68 - 1m75" },
+  { size: "XL", weight: "73 - 82 kg", height: "1m75 - 1m80" },
+  { size: "2XL", weight: "83 - 90 kg", height: "1m80 - 1m85" },
+  { size: "3XL", weight: "91 - 100 kg", height: "1m80 - 1m90" },
+];
+
+// Phân bổ size chuẩn theo thông số nhân sự doanh nghiệp Việt Nam
+const SIZE_PRESETS = {
+  split: {
+    30: {
+      men: { S: 0, M: 5, L: 8, XL: 5, "2XL": 0, "3XL": 0 },
+      women: { S: 2, M: 6, L: 4, XL: 0, "2XL": 0 },
+    },
+    50: {
+      men: { S: 0, M: 8, L: 12, XL: 8, "2XL": 2, "3XL": 0 },
+      women: { S: 3, M: 10, L: 5, XL: 2, "2XL": 0 },
+    },
+    100: {
+      men: { S: 2, M: 18, L: 25, XL: 12, "2XL": 3, "3XL": 0 },
+      women: { S: 5, M: 20, L: 12, XL: 3, "2XL": 0 },
+    },
+    200: {
+      men: { S: 5, M: 35, L: 50, XL: 25, "2XL": 5, "3XL": 0 },
+      women: { S: 10, M: 40, L: 25, XL: 5, "2XL": 0 },
+    },
+  },
+  unisex: {
+    30: { S: 3, M: 10, L: 12, XL: 5, "2XL": 0, "3XL": 0 },
+    50: { S: 5, M: 15, L: 20, XL: 8, "2XL": 2, "3XL": 0 },
+    100: { S: 10, M: 30, L: 40, XL: 15, "2XL": 5, "3XL": 0 },
+    200: { S: 20, M: 60, L: 80, XL: 30, "2XL": 10, "3XL": 0 },
+  },
+};
+
 export default function CustomDesignStudio() {
   const customColorInputId = useId();
   // Tab chế độ: "interactive" (Studio tự thiết kế) | "upload_file" (Gửi file mẫu có sẵn)
@@ -194,9 +257,24 @@ export default function CustomDesignStudio() {
   const [logoScale, setLogoScale] = useState(100);
   const [selectedMethod, setSelectedMethod] = useState("theu_tajima");
 
-  // Vải & Số lượng
+  // Vải may
   const [selectedFabricId, setSelectedFabricId] = useState("cvc_pique");
-  const [quantity, setQuantity] = useState(50);
+
+  // ====================================================
+  // HỆ THỐNG PHÂN BỔ NHIỀU KÍCH CỠ (MULTI-SIZE MATRIX)
+  // ====================================================
+  // sizeMode: "split" (Nam & Nữ riêng) | "unisex" (Form chung) | "quick" (Nhập nhanh tổng)
+  const [sizeMode, setSizeMode] = useState("split");
+  const [menSizes, setMenSizes] = useState({ S: 0, M: 10, L: 15, XL: 10, "2XL": 5, "3XL": 0 });
+  const [womenSizes, setWomenSizes] = useState({ S: 5, M: 15, L: 10, XL: 5, "2XL": 0 });
+  const [unisexSizes, setUnisexSizes] = useState({ S: 5, M: 15, L: 20, XL: 15, "2XL": 5, "3XL": 0 });
+  const [quickQuantity, setQuickQuantity] = useState(50);
+  const [sendSizeChartLater, setSendSizeChartLater] = useState(false);
+  const [requestFittingKit, setRequestFittingKit] = useState(false);
+
+  // Modal Bảng Thông Số Size
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
+  const [sizeGuideTab, setSizeGuideTab] = useState("men");
 
   // State cho Chế độ 2: Gửi File Bản Vẽ Có Sẵn
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -205,6 +283,7 @@ export default function CustomDesignStudio() {
   const [uploadBudget, setUploadBudget] = useState("standard"); // "budget" | "standard" | "vip"
   const [uploadTimeline, setUploadTimeline] = useState("standard"); // "urgent" | "standard" | "relaxed"
   const [uploadNotes, setUploadNotes] = useState("");
+  const [uploadRequestFittingKit, setUploadRequestFittingKit] = useState(false);
 
   // Modal gửi thông tin & nhận báo giá
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
@@ -231,20 +310,145 @@ export default function CustomDesignStudio() {
     EMBROIDERY_METHODS[0];
 
   // ====================================================
-  // TÍNH TOÁN GIÁ SỈ & CHIẾT KHẤU
+  // TỔNG HỢP SỐ LƯỢNG VÀ PHÂN BỔ KÍCH CỠ
+  // ====================================================
+  const menTotal = useMemo(
+    () => Object.values(menSizes).reduce((acc, q) => acc + (Number(q) || 0), 0),
+    [menSizes]
+  );
+  const womenTotal = useMemo(
+    () => Object.values(womenSizes).reduce((acc, q) => acc + (Number(q) || 0), 0),
+    [womenSizes]
+  );
+  const unisexTotal = useMemo(
+    () => Object.values(unisexSizes).reduce((acc, q) => acc + (Number(q) || 0), 0),
+    [unisexSizes]
+  );
+
+  const totalInteractiveQuantity = useMemo(() => {
+    if (sizeMode === "split") return menTotal + womenTotal;
+    if (sizeMode === "unisex") return unisexTotal;
+    return Math.max(0, Number(quickQuantity) || 0);
+  }, [sizeMode, menTotal, womenTotal, unisexTotal, quickQuantity]);
+
+  // Handler cập nhật số lượng từng size (+ / -)
+  const handleUpdateSize = (gender, sizeKey, delta) => {
+    if (gender === "men") {
+      setMenSizes((prev) => {
+        const current = Number(prev[sizeKey] || 0);
+        return { ...prev, [sizeKey]: Math.max(0, current + delta) };
+      });
+    } else if (gender === "women") {
+      setWomenSizes((prev) => {
+        const current = Number(prev[sizeKey] || 0);
+        return { ...prev, [sizeKey]: Math.max(0, current + delta) };
+      });
+    } else if (gender === "unisex") {
+      setUnisexSizes((prev) => {
+        const current = Number(prev[sizeKey] || 0);
+        return { ...prev, [sizeKey]: Math.max(0, current + delta) };
+      });
+    }
+  };
+
+  // Handler nhập trực tiếp số lượng vào input
+  const handleSetDirectSize = (gender, sizeKey, val) => {
+    const num = Math.max(0, parseInt(val, 10) || 0);
+    if (gender === "men") {
+      setMenSizes((prev) => ({ ...prev, [sizeKey]: num }));
+    } else if (gender === "women") {
+      setWomenSizes((prev) => ({ ...prev, [sizeKey]: num }));
+    } else if (gender === "unisex") {
+      setUnisexSizes((prev) => ({ ...prev, [sizeKey]: num }));
+    }
+  };
+
+  // Handler áp dụng tỉ lệ chia size chuẩn doanh nghiệp
+  const handleApplyPreset = (targetQty) => {
+    if (sizeMode === "split") {
+      const preset = SIZE_PRESETS.split[targetQty];
+      if (preset) {
+        setMenSizes({ ...preset.men });
+        setWomenSizes({ ...preset.women });
+      }
+    } else if (sizeMode === "unisex") {
+      const preset = SIZE_PRESETS.unisex[targetQty];
+      if (preset) {
+        setUnisexSizes({ ...preset });
+      }
+    } else {
+      setQuickQuantity(targetQty);
+    }
+  };
+
+  // Handler đặt lại toàn bộ size về 0 để nhập từ đầu
+  const handleResetSizes = () => {
+    if (sizeMode === "split") {
+      setMenSizes({ S: 0, M: 0, L: 0, XL: 0, "2XL": 0, "3XL": 0 });
+      setWomenSizes({ S: 0, M: 0, L: 0, XL: 0, "2XL": 0 });
+    } else if (sizeMode === "unisex") {
+      setUnisexSizes({ S: 0, M: 0, L: 0, XL: 0, "2XL": 0, "3XL": 0 });
+    } else {
+      setQuickQuantity(0);
+    }
+  };
+
+  // Chuỗi tóm tắt phân bổ size ngắn gọn gửi theo Quote (< 100 ký tự)
+  const getSizeSummaryText = () => {
+    if (sizeMode === "split") {
+      const activeMen = Object.entries(menSizes)
+        .filter(([, q]) => Number(q) > 0)
+        .map(([s, q]) => `${s}:${q}`);
+      const activeWomen = Object.entries(womenSizes)
+        .filter(([, q]) => Number(q) > 0)
+        .map(([s, q]) => `${s}:${q}`);
+
+      const parts = [];
+      if (activeMen.length > 0) parts.push(`Nam[${activeMen.join(",")}]`);
+      if (activeWomen.length > 0) parts.push(`Nữ[${activeWomen.join(",")}]`);
+      let summary =
+        parts.length > 0
+          ? parts.join(" ")
+          : `Tổng ${totalInteractiveQuantity} áo`;
+      if (requestFittingKit) summary += " (+Thử size)";
+      return summary;
+    } else if (sizeMode === "unisex") {
+      const activeUnisex = Object.entries(unisexSizes)
+        .filter(([, q]) => Number(q) > 0)
+        .map(([s, q]) => `${s}:${q}`);
+      let summary =
+        activeUnisex.length > 0
+          ? `Unisex[${activeUnisex.join(",")}]`
+          : `Tổng ${totalInteractiveQuantity} áo`;
+      if (requestFittingKit) summary += " (+Thử size)";
+      return summary;
+    } else {
+      let summary = sendSizeChartLater
+        ? `Tổng ${quickQuantity} áo (gửi bảng size sau)`
+        : `Tổng ${quickQuantity} áo`;
+      if (requestFittingKit) summary += " (+Thử size)";
+      return summary;
+    }
+  };
+
+  // ====================================================
+  // TÍNH TOÁN GIÁ SỈ & CHIẾT KHẤU THEO TỔNG SỐ LƯỢNG
   // ====================================================
   const calculatePrice = () => {
+    const activeQty = Math.max(1, totalInteractiveQuantity);
     const tier =
-      QUANTITY_TIERS.find((t) => quantity >= t.min && quantity <= t.max) ||
-      QUANTITY_TIERS[2];
+      QUANTITY_TIERS.find((t) => activeQty >= t.min && activeQty <= t.max) ||
+      (activeQty < 10
+        ? QUANTITY_TIERS[0]
+        : QUANTITY_TIERS[QUANTITY_TIERS.length - 1]);
     const baseWithFabric =
       currentGarment.basePrice + (currentFabric?.priceAdj || 0);
     const methodExtra = currentMethod?.extraCost || 0;
     const unitPrice = Math.round(
       (baseWithFabric * tier.multiplier + methodExtra) / 1000
     ) * 1000;
-    const totalPrice = unitPrice * quantity;
-    const originalPrice = (baseWithFabric + methodExtra) * 1.25 * quantity;
+    const totalPrice = unitPrice * activeQty;
+    const originalPrice = (baseWithFabric + methodExtra) * 1.25 * activeQty;
     const savings = Math.max(0, originalPrice - totalPrice);
 
     return {
@@ -252,6 +456,7 @@ export default function CustomDesignStudio() {
       totalPrice,
       savings,
       tier,
+      activeQty,
     };
   };
 
@@ -324,6 +529,13 @@ export default function CustomDesignStudio() {
       return;
     }
 
+    if (activeTab === "interactive" && totalInteractiveQuantity < 10) {
+      setSubmitError(
+        "Số lượng đặt may tối thiểu là 10 áo để đảm bảo quy trình dệt nhuộm & in thêu vi tính. Vui lòng chọn thêm số lượng."
+      );
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -335,23 +547,25 @@ export default function CustomDesignStudio() {
 
       if (activeTab === "interactive") {
         category = currentGarment.categoryKey || "polo";
-        finalQty = Math.max(10, quantity);
+        finalQty = Math.max(10, totalInteractiveQuantity);
         estPrice = pricing.totalPrice;
 
         const colorName =
           COLOR_SWATCHES.find((c) => c.hex.toLowerCase() === selectedColor.toLowerCase())?.name ||
           selectedColor;
         const posName = LOGO_POSITIONS[logoPosition]?.name || logoPosition;
+        const sizeStr = getSizeSummaryText();
 
         // Giữ cấu trúc ghi chú ngắn gọn, súc tích (dưới 500 ký tự per contract)
-        structuredNotes = `[Studio 2D] Áo: ${currentGarment.name} | Màu: ${colorName} (${selectedColor}) | Vải: ${currentFabric.name} | Vị trí logo: ${posName} | Kỹ thuật: ${currentMethod.shortName} | Tên logo/file: ${uploadedLogoName || brandText || "Logo Cty"}${generalNotes ? " | Yêu cầu: " + generalNotes.trim() : ""}`;
+        structuredNotes = `[Studio 2D] Áo: ${currentGarment.name} | Màu: ${colorName} (${selectedColor}) | Vải: ${currentFabric.name} | Size: ${sizeStr} | In/thêu: ${currentMethod.shortName} (${posName})${uploadedLogoName ? " | Logo: " + uploadedLogoName : ""}${generalNotes ? " | Y/c: " + generalNotes.trim() : ""}`;
       } else {
         category = uploadCategory || "polo";
         finalQty = Math.max(10, uploadQuantity);
         estPrice = 0;
 
         const fileNames = uploadedFiles.map((f) => f.name).join(", ");
-        structuredNotes = `[Gửi Mẫu Thiết Kế] Ngân sách: ${uploadBudget} | Tiến độ: ${uploadTimeline} | File đính kèm: ${fileNames || "Chưa chọn file"} | Yêu cầu: ${uploadNotes || generalNotes || "Tư vấn báo giá"}`;
+        const fittingNote = uploadRequestFittingKit ? " | Có y/c thử size tại VP" : "";
+        structuredNotes = `[Gửi Mẫu Thiết Kế] Ngân sách: ${uploadBudget} | Tiến độ: ${uploadTimeline}${fittingNote} | File: ${fileNames || "Chưa chọn file"} | Yêu cầu: ${uploadNotes || generalNotes || "Tư vấn báo giá"}`;
       }
 
       // Đảm bảo không quá 500 ký tự theo validation của createQuoteSchema
@@ -377,6 +591,14 @@ export default function CustomDesignStudio() {
           quoteId: res.data?.quoteId || res.quoteId || "HDC-" + Date.now().toString().slice(-6),
           category: currentGarment.name,
           quantity: finalQty,
+          sizeSummary:
+            activeTab === "interactive"
+              ? getSizeSummaryText()
+              : `${finalQty} áo`,
+          requestFittingKit:
+            activeTab === "interactive"
+              ? requestFittingKit
+              : uploadRequestFittingKit,
           pricing: activeTab === "interactive" ? pricing : null,
         });
       } else {
@@ -956,32 +1178,42 @@ export default function CustomDesignStudio() {
               </div>
             </div>
 
-            {/* BƯỚC 4: CHẤT LIỆU VẢI & BÁO GIÁ SỈ TỰ ĐỘNG */}
-            <div className="bg-slate-900/90 rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-4">
+            {/* BƯỚC 4: CHẤT LIỆU VẢI & PHÂN BỔ KÍCH CỠ & BÁO GIÁ SỈ */}
+            <div className="bg-slate-900/90 rounded-3xl p-5 sm:p-6 border border-slate-800 shadow-xl space-y-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-6 h-6 rounded-full bg-brand-500 text-slate-950 font-black text-xs flex items-center justify-center">
                     4
                   </span>
                   <h3 className="font-extrabold text-white text-base sm:text-lg">
-                    Chất Liệu Vải & Báo Giá Sỉ
+                    Chất Liệu & Phân Bổ Kích Cỡ
                   </h3>
                 </div>
-                <Link
-                  href="/bang-vai"
-                  target="_blank"
-                  className="text-xs text-brand-300 hover:underline flex items-center gap-1"
+                <button
+                  type="button"
+                  onClick={() => setIsSizeGuideOpen(true)}
+                  className="text-xs text-brand-300 hover:text-brand-200 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-brand-500/10 hover:bg-brand-500/20 border border-brand-400/30 transition-all font-semibold"
                 >
-                  <Layers className="w-3.5 h-3.5" />
-                  Xem chi tiết bảng vải
-                </Link>
+                  <Ruler className="w-3.5 h-3.5" />
+                  <span>Bảng Thông Số Size Chuẩn</span>
+                </button>
               </div>
 
               {/* Lựa chọn chất liệu vải cho dòng áo */}
               <div className="space-y-2">
-                <label className="text-xs text-slate-400 font-medium block">
-                  Dòng vải may khuyên dùng cho {currentGarment.name}:
-                </label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-slate-400 font-medium block">
+                    Dòng vải may khuyên dùng cho {currentGarment.name}:
+                  </label>
+                  <Link
+                    href="/bang-vai"
+                    target="_blank"
+                    className="text-[11px] text-brand-300 hover:underline flex items-center gap-1"
+                  >
+                    <Layers className="w-3 h-3" />
+                    Xem bảng vải
+                  </Link>
+                </div>
                 <div className="space-y-2">
                   {currentGarment.fabrics.map((fabric) => {
                     const isSelected = fabric.id === selectedFabricId;
@@ -1022,48 +1254,373 @@ export default function CustomDesignStudio() {
                 </div>
               </div>
 
-              {/* Slider số lượng đặt may */}
-              <div className="space-y-2 pt-3 border-t border-slate-800">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-300 font-semibold">
-                    Số lượng đặt may dự kiến:
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg font-black text-brand-300 font-mono">
-                      {quantity}
-                    </span>
-                    <span className="text-xs text-slate-400">áo</span>
+              {/* KHU VỰC PHÂN BỔ KÍCH CỠ */}
+              <div className="pt-4 border-t border-slate-800 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <h4 className="text-sm font-extrabold text-white flex items-center gap-2">
+                      <Users className="w-4 h-4 text-brand-400" />
+                      Phân Bổ Kích Cỡ Đặt May
+                    </h4>
+                    <p className="text-[11px] text-slate-400">
+                      Chọn số lượng từng size hoặc nhập nhanh rồi gửi danh sách sau
+                    </p>
+                  </div>
+
+                  {/* Chuyển chế độ chọn size */}
+                  <div className="grid grid-cols-3 gap-1 p-1 bg-slate-800/90 rounded-xl border border-slate-700/60 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setSizeMode("split")}
+                      className={`px-2.5 py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1 ${
+                        sizeMode === "split"
+                          ? "bg-brand-500 text-white shadow-sm"
+                          : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <Users className="w-3 h-3" />
+                      <span>Nam & Nữ</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSizeMode("unisex")}
+                      className={`px-2.5 py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1 ${
+                        sizeMode === "unisex"
+                          ? "bg-brand-500 text-white shadow-sm"
+                          : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <User className="w-3 h-3" />
+                      <span>Unisex</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSizeMode("quick")}
+                      className={`px-2.5 py-1.5 rounded-lg font-bold transition-all flex items-center justify-center gap-1 ${
+                        sizeMode === "quick"
+                          ? "bg-brand-500 text-white shadow-sm"
+                          : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      <Sliders className="w-3 h-3" />
+                      <span>Nhập Nhanh</span>
+                    </button>
                   </div>
                 </div>
 
-                <input
-                  type="range"
-                  min="10"
-                  max="500"
-                  step="5"
-                  value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-400"
-                />
+                {/* Chế độ 1: Phân bổ Nam & Nữ riêng */}
+                {sizeMode === "split" && (
+                  <div className="space-y-4">
+                    {/* BẢNG SIZE NAM */}
+                    <div className="bg-slate-800/40 p-3.5 sm:p-4 rounded-2xl border border-slate-800 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center">
+                            <User className="w-3.5 h-3.5" />
+                          </div>
+                          <span className="text-xs font-bold text-white uppercase tracking-wider">
+                            Size Áo Nam (Form Suông Chuẩn Công Sở)
+                          </span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-xs font-black font-mono">
+                          {menTotal} áo
+                        </span>
+                      </div>
 
-                {/* Phím bấm chọn nhanh số lượng */}
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {[20, 30, 50, 100, 200, 500].map((qty) => (
-                    <button
-                      key={qty}
-                      type="button"
-                      onClick={() => setQuantity(qty)}
-                      className={`px-3 py-1 rounded-xl text-xs font-semibold border transition-all ${
-                        quantity === qty
-                          ? "bg-brand-500 text-white border-brand-400"
-                          : "bg-slate-800 text-slate-400 border-slate-700 hover:text-white"
-                      }`}
-                    >
-                      {qty} áo
-                    </button>
-                  ))}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                        {SIZE_SPECS_MEN.map((spec) => {
+                          const qty = menSizes[spec.size] || 0;
+                          return (
+                            <div
+                              key={`men-${spec.size}`}
+                              className={`p-2.5 rounded-xl border text-center transition-all ${
+                                qty > 0
+                                  ? "bg-sky-500/10 border-sky-400/50 shadow-sm"
+                                  : "bg-slate-900/60 border-slate-800 opacity-85 hover:opacity-100"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-black text-sm text-white">{spec.size}</span>
+                                <span className="text-[10px] text-slate-400 font-medium">
+                                  {spec.weight.split(" ")[0]}-{spec.weight.split(" ")[2]}kg
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateSize("men", spec.size, -1)}
+                                  disabled={qty <= 0}
+                                  className="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-20 text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                                  aria-label={`Giảm size Nam ${spec.size}`}
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="5000"
+                                  value={qty === 0 ? "" : qty}
+                                  placeholder="0"
+                                  onChange={(e) => handleSetDirectSize("men", spec.size, e.target.value)}
+                                  className="w-8 text-center font-black font-mono text-xs text-sky-300 bg-transparent focus:outline-none"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateSize("men", spec.size, 1)}
+                                  className="w-6 h-6 rounded bg-slate-800 hover:bg-sky-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all"
+                                  aria-label={`Tăng size Nam ${spec.size}`}
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* BẢNG SIZE NỮ */}
+                    <div className="bg-slate-800/40 p-3.5 sm:p-4 rounded-2xl border border-slate-800 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-lg bg-pink-500/10 text-pink-400 border border-pink-500/20 flex items-center justify-center">
+                            <User className="w-3.5 h-3.5" />
+                          </div>
+                          <span className="text-xs font-bold text-white uppercase tracking-wider">
+                            Size Áo Nữ (Form Chiết Eo Tôn Dáng)
+                          </span>
+                        </div>
+                        <span className="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 text-xs font-black font-mono">
+                          {womenTotal} áo
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                        {SIZE_SPECS_WOMEN.map((spec) => {
+                          const qty = womenSizes[spec.size] || 0;
+                          return (
+                            <div
+                              key={`women-${spec.size}`}
+                              className={`p-2.5 rounded-xl border text-center transition-all ${
+                                qty > 0
+                                  ? "bg-pink-500/10 border-pink-400/50 shadow-sm"
+                                  : "bg-slate-900/60 border-slate-800 opacity-85 hover:opacity-100"
+                              }`}
+                            >
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="font-black text-sm text-white">{spec.size}</span>
+                                <span className="text-[10px] text-slate-400 font-medium">
+                                  {spec.weight.split(" ")[0]}-{spec.weight.split(" ")[2]}kg
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateSize("women", spec.size, -1)}
+                                  disabled={qty <= 0}
+                                  className="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-20 text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                                  aria-label={`Giảm size Nữ ${spec.size}`}
+                                >
+                                  <Minus className="w-3 h-3" />
+                                </button>
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max="5000"
+                                  value={qty === 0 ? "" : qty}
+                                  placeholder="0"
+                                  onChange={(e) => handleSetDirectSize("women", spec.size, e.target.value)}
+                                  className="w-8 text-center font-black font-mono text-xs text-pink-300 bg-transparent focus:outline-none"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleUpdateSize("women", spec.size, 1)}
+                                  className="w-6 h-6 rounded bg-slate-800 hover:bg-pink-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all"
+                                  aria-label={`Tăng size Nữ ${spec.size}`}
+                                >
+                                  <Plus className="w-3 h-3" />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Chế độ 2: Form Unisex chung */}
+                {sizeMode === "unisex" && (
+                  <div className="bg-slate-800/40 p-3.5 sm:p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center">
+                          <Users className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="text-xs font-bold text-white uppercase tracking-wider">
+                          Size Unisex Chung (Sự kiện / Thể thao / Teambuilding)
+                        </span>
+                      </div>
+                      <span className="px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-300 text-xs font-black font-mono">
+                        {unisexTotal} áo
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                      {SIZE_SPECS_UNISEX.map((spec) => {
+                        const qty = unisexSizes[spec.size] || 0;
+                        return (
+                          <div
+                            key={`unisex-${spec.size}`}
+                            className={`p-2.5 rounded-xl border text-center transition-all ${
+                              qty > 0
+                                ? "bg-brand-500/10 border-brand-400/50 shadow-sm"
+                                : "bg-slate-900/60 border-slate-800 opacity-85 hover:opacity-100"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="font-black text-sm text-white">{spec.size}</span>
+                              <span className="text-[10px] text-slate-400 font-medium">
+                                {spec.weight.split(" ")[0]}-{spec.weight.split(" ")[2]}kg
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between bg-slate-900 rounded-lg p-0.5 border border-slate-700">
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateSize("unisex", spec.size, -1)}
+                                disabled={qty <= 0}
+                                className="w-6 h-6 rounded bg-slate-800 hover:bg-slate-700 disabled:opacity-20 text-slate-300 hover:text-white flex items-center justify-center transition-all"
+                                aria-label={`Giảm size Unisex ${spec.size}`}
+                              >
+                                <Minus className="w-3 h-3" />
+                              </button>
+                              <input
+                                type="number"
+                                min="0"
+                                max="5000"
+                                value={qty === 0 ? "" : qty}
+                                placeholder="0"
+                                onChange={(e) => handleSetDirectSize("unisex", spec.size, e.target.value)}
+                                className="w-8 text-center font-black font-mono text-xs text-brand-300 bg-transparent focus:outline-none"
+                              />
+                              <button
+                                type="button"
+                                onClick={() => handleUpdateSize("unisex", spec.size, 1)}
+                                className="w-6 h-6 rounded bg-slate-800 hover:bg-brand-500 hover:text-slate-950 text-slate-300 flex items-center justify-center transition-all"
+                                aria-label={`Tăng size Unisex ${spec.size}`}
+                              >
+                                <Plus className="w-3 h-3" />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Chế độ 3: Nhập nhanh tổng số */}
+                {sizeMode === "quick" && (
+                  <div className="bg-slate-800/40 p-4 rounded-2xl border border-slate-800 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-slate-300 font-semibold">
+                        Nhập nhanh tổng số lượng áo:
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          min="10"
+                          max="10000"
+                          value={quickQuantity}
+                          onChange={(e) => setQuickQuantity(Math.max(0, Number(e.target.value)))}
+                          className="w-20 px-2 py-1 rounded-lg bg-slate-900 border border-slate-700 text-center font-black font-mono text-brand-300 text-base focus:outline-none focus:border-brand-400"
+                        />
+                        <span className="text-xs text-slate-400">áo</span>
+                      </div>
+                    </div>
+
+                    <input
+                      type="range"
+                      min="10"
+                      max="500"
+                      step="5"
+                      value={quickQuantity}
+                      onChange={(e) => setQuickQuantity(Number(e.target.value))}
+                      className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-brand-400"
+                    />
+
+                    <label className="flex items-start gap-2.5 pt-1 text-xs text-slate-300 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={sendSizeChartLater}
+                        onChange={(e) => setSendSizeChartLater(e.target.checked)}
+                        className="mt-0.5 rounded border-slate-700 bg-slate-900 text-brand-500 focus:ring-0 cursor-pointer"
+                      />
+                      <span>
+                        Tôi sẽ gửi danh sách phân bổ size chi tiết qua Zalo / file Excel sau khi duyệt maket thiết kế 3D.
+                      </span>
+                    </label>
+                  </div>
+                )}
+
+                {/* HÀNG NÚT CHIA NHANH & ĐẶT VỀ 0 */}
+                <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[11px] text-slate-400 font-medium mr-1">
+                      Tỉ lệ chuẩn Cty:
+                    </span>
+                    {[30, 50, 100, 200].map((qty) => (
+                      <button
+                        key={qty}
+                        type="button"
+                        onClick={() => handleApplyPreset(qty)}
+                        className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 hover:border-brand-400/60 hover:text-white transition-all"
+                      >
+                        {qty} áo
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleResetSizes}
+                    className="px-2.5 py-1 rounded-lg text-xs text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-slate-700/60 transition-all flex items-center gap-1"
+                  >
+                    <Trash2 className="w-3 h-3" />
+                    <span>Đặt lại về 0</span>
+                  </button>
+                </div>
+
+                {/* DỊCH VỤ THỬ SIZE TẬN VĂN PHÒNG MIỄN PHÍ */}
+                <div className="p-3.5 rounded-2xl bg-amber-400/5 border border-amber-400/25">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={requestFittingKit}
+                      onChange={(e) => setRequestFittingKit(e.target.checked)}
+                      className="mt-0.5 w-4 h-4 rounded border-amber-400/40 bg-slate-900 text-brand-500 focus:ring-0 cursor-pointer"
+                    />
+                    <div>
+                      <span className="text-xs font-bold text-amber-300 block">
+                        Đăng ký mượn bộ áo mẫu đủ size (S - 3XL) đến văn phòng thử trực tiếp (Miễn phí 100%)
+                      </span>
+                      <span className="text-[11px] text-slate-400 block mt-0.5">
+                        Chuyên viên mang tận nơi để từng nhân viên mặc thử phom dáng và chọn size vừa vặn trước khi may hàng loạt.
+                      </span>
+                    </div>
+                  </label>
                 </div>
               </div>
+
+              {/* CẢNH BÁO NẾU DƯỚI 10 ÁO */}
+              {totalInteractiveQuantity < 10 && (
+                <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center gap-2.5 text-xs text-amber-300">
+                  <Info className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span>
+                    Số lượng tối thiểu của xưởng là <strong>10 áo</strong> để đảm bảo dây chuyền dệt nhuộm và thêu vi tính. Hiện có: <strong>{totalInteractiveQuantity} áo</strong>.
+                  </span>
+                </div>
+              )}
 
               {/* HỘP TÍNH GIÁ VÀ QUÀ TẶNG DOANH NGHIỆP */}
               <div className="bg-gradient-to-br from-brand-950/60 to-slate-950 rounded-2xl p-4 sm:p-5 border border-brand-500/30 space-y-3">
@@ -1082,11 +1639,26 @@ export default function CustomDesignStudio() {
 
                   <div className="text-left sm:text-right">
                     <span className="text-xs text-slate-400 block">
-                      Tổng ngân sách dự kiến:
+                      Tổng ngân sách ({totalInteractiveQuantity} áo):
                     </span>
                     <span className="text-lg sm:text-xl font-black text-white font-mono">
                       {pricing.totalPrice.toLocaleString("vi-VN")} đ
                     </span>
+                  </div>
+                </div>
+
+                {/* Chi tiết phân bổ tóm tắt & chiết khấu */}
+                <div className="flex items-center justify-between text-xs text-slate-300 pt-0.5 flex-wrap gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-slate-400">Cơ cấu size:</span>
+                    <strong className="text-brand-300 font-medium">
+                      {sizeMode === "split" && `Nam: ${menTotal} áo | Nữ: ${womenTotal} áo`}
+                      {sizeMode === "unisex" && `Form Unisex: ${unisexTotal} áo`}
+                      {sizeMode === "quick" && `Tổng ${quickQuantity} áo (gửi size sau)`}
+                    </strong>
+                  </div>
+                  <div className="px-2 py-0.5 rounded-lg bg-brand-500/10 text-brand-300 border border-brand-400/30 text-[11px] font-semibold">
+                    {pricing.tier.label}
                   </div>
                 </div>
 
@@ -1115,7 +1687,8 @@ export default function CustomDesignStudio() {
               <button
                 type="button"
                 onClick={handleOpenSubmitModal}
-                className="w-full py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98]"
+                disabled={totalInteractiveQuantity < 10}
+                className="w-full py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98]"
               >
                 <Sparkles className="w-5 h-5 text-slate-950" />
                 <span>Gửi Thiết Kế & Nhận Báo Giá 3D Chính Thức (0đ)</span>
@@ -1287,6 +1860,25 @@ export default function CustomDesignStudio() {
             />
           </div>
 
+          <div className="p-3.5 rounded-2xl bg-amber-400/5 border border-amber-400/25">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={uploadRequestFittingKit}
+                onChange={(e) => setUploadRequestFittingKit(e.target.checked)}
+                className="mt-0.5 w-4 h-4 rounded border-amber-400/40 bg-slate-900 text-brand-500 focus:ring-0 cursor-pointer"
+              />
+              <div>
+                <span className="text-xs font-bold text-amber-300 block">
+                  Đăng ký mượn bộ áo mẫu đủ size (S - 3XL) đến văn phòng thử trực tiếp (Miễn phí 100%)
+                </span>
+                <span className="text-[11px] text-slate-400 block mt-0.5">
+                  Chuyên viên HDC sẽ mang đầy đủ mẫu vải và bộ áo mẫu thực tế đến tư vấn & đo đạc trực tiếp.
+                </span>
+              </div>
+            </label>
+          </div>
+
           <button
             type="button"
             onClick={handleOpenSubmitModal}
@@ -1358,9 +1950,23 @@ export default function CustomDesignStudio() {
                     <strong className="text-white">{submitSuccess.category}</strong>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Số lượng dự kiến:</span>
+                    <span className="text-slate-400">Số lượng:</span>
                     <strong className="text-white">{submitSuccess.quantity} chiếc</strong>
                   </div>
+                  {submitSuccess.sizeSummary && (
+                    <div className="flex flex-col gap-1 border-t border-slate-700/60 pt-2">
+                      <span className="text-slate-400">Cơ cấu size đặt may:</span>
+                      <span className="px-2.5 py-1.5 rounded-xl bg-slate-900/90 text-brand-300 font-mono text-[11px] border border-slate-700">
+                        {submitSuccess.sizeSummary}
+                      </span>
+                    </div>
+                  )}
+                  {submitSuccess.requestFittingKit && (
+                    <div className="flex items-center gap-2 p-2 rounded-xl bg-amber-400/10 border border-amber-400/25 text-amber-300 text-[11px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <span>Đã đăng ký mang bộ áo mẫu đủ size đến văn phòng thử trực tiếp</span>
+                    </div>
+                  )}
                   {submitSuccess.pricing && (
                     <div className="flex justify-between border-t border-slate-700/60 pt-2">
                       <span className="text-slate-400">Ngân sách ước tính:</span>
@@ -1502,6 +2108,128 @@ export default function CustomDesignStudio() {
                 </div>
               </form>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ====================================================
+          MODAL BẢNG THÔNG SỐ SIZE CHUẨN HDC FASHION
+          ==================================================== */}
+      {isSizeGuideOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+          <div className="relative w-full max-w-2xl bg-slate-900 rounded-3xl shadow-2xl border border-brand-500/40 overflow-hidden animate-in fade-in zoom-in-95">
+            {/* Header Modal */}
+            <div className="bg-[#004f5e] p-4 sm:p-5 text-white flex items-center justify-between border-b border-brand-400/30">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-brand-400/20 border border-brand-400/40 flex items-center justify-center text-brand-300 shrink-0">
+                  <Ruler className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-sm sm:text-base">
+                    Bảng Thông Số Size Đồng Phục Chuẩn HDC
+                  </h3>
+                  <p className="text-[11px] text-brand-200">
+                    Áp dụng cho Áo Polo, Sơ Mi, Áo Thun & Thể Thao Doanh Nghiệp
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsSizeGuideOpen(false)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-4 sm:p-6 space-y-4">
+              {/* Tab giới tính */}
+              <div className="grid grid-cols-2 gap-2 p-1 bg-slate-800 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setSizeGuideTab("men")}
+                  className={`py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    sizeGuideTab === "men"
+                      ? "bg-sky-600 text-white shadow"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <User className="w-3.5 h-3.5" />
+                  Bảng Size Nam (Form Suông)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSizeGuideTab("women")}
+                  className={`py-2 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                    sizeGuideTab === "women"
+                      ? "bg-pink-600 text-white shadow"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <User className="w-3.5 h-3.5" />
+                  Bảng Size Nữ (Form Chiết Eo)
+                </button>
+              </div>
+
+              {/* Bảng so sánh thông số */}
+              <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-slate-950/60">
+                <table className="w-full text-xs text-left text-slate-300">
+                  <thead className="text-[11px] uppercase bg-slate-800/80 text-brand-300 font-bold border-b border-slate-700">
+                    <tr>
+                      <th className="px-3.5 py-3">Size</th>
+                      <th className="px-3.5 py-3">Cân Nặng</th>
+                      <th className="px-3.5 py-3">Chiều Cao</th>
+                      <th className="px-3.5 py-3">Vòng Ngực</th>
+                      <th className="px-3.5 py-3">Rộng Vai</th>
+                      <th className="px-3.5 py-3">Dài Áo</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 font-mono">
+                    {(sizeGuideTab === "men" ? SIZE_SPECS_MEN : SIZE_SPECS_WOMEN).map((row) => (
+                      <tr key={row.size} className="hover:bg-slate-800/40 transition-colors">
+                        <td className="px-3.5 py-2.5 font-sans font-black text-white text-sm">
+                          {row.size}
+                        </td>
+                        <td className="px-3.5 py-2.5 text-amber-300 font-semibold">{row.weight}</td>
+                        <td className="px-3.5 py-2.5">{row.height}</td>
+                        <td className="px-3.5 py-2.5">{row.chest}</td>
+                        <td className="px-3.5 py-2.5 text-slate-400">{row.shoulder}</td>
+                        <td className="px-3.5 py-2.5 text-slate-400">{row.length}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Lời khuyên từ chuyên gia HDC */}
+              <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/80 space-y-2 text-xs text-slate-300">
+                <div className="flex items-center gap-2 text-amber-400 font-bold">
+                  <Sparkles className="w-4 h-4" />
+                  <span>Lời Khuyên Từ Trưởng Phòng Thiết Kế & Kỹ Thuật HDC:</span>
+                </div>
+                <ul className="list-disc pl-5 space-y-1 text-slate-400 text-[11px]">
+                  <li>
+                    Nếu số đo chiều cao và cân nặng ở 2 size khác nhau, quý khách nên ưu tiên chọn theo <strong>cân nặng</strong> để vòng ngực và bụng cử động dễ chịu.
+                  </li>
+                  <li>
+                    Nhân sự thích mặc rộng rãi hoặc môi trường làm việc vận động nhiều nên chọn <strong>tăng lên 1 size</strong>.
+                  </li>
+                  <li>
+                    HDC hỗ trợ may đo riêng cho nhân sự có vóc dáng đặc biệt hoặc Big Size từ <strong>4XL đến 5XL</strong>.
+                  </li>
+                </ul>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsSizeGuideOpen(false)}
+                className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-all border border-slate-700"
+              >
+                Đã Hiểu, Quay Lại Chọn Số Lượng
+              </button>
+            </div>
           </div>
         </div>
       )}
