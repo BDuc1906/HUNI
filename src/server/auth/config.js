@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import { db } from "@/server/db";
 
 export const authConfig = {
+  secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "hdc-uniform-fashion-secret-key-2026-secure-random",
   pages: {
     signIn: "/login",
     error: "/login",

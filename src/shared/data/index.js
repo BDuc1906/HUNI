@@ -6,3 +6,5 @@ export * from "./fabrics";
 export * from "./process";
 export * from "./testimonials";
 export * from "./faqs";
+export * from "./siteArchitecture";
+export * from "./blogData";

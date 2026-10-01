@@ -41,13 +41,22 @@ export default function LienHePage() {
               Bạn cần tư vấn chất liệu, nhận báo giá sỉ cho doanh nghiệp hoặc đặt lịch may áo mẫu thử miễn phí? Chúng tôi luôn sẵn sàng hỗ trợ bạn nhanh chóng nhất.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-2">
+              <a
+                href="#map-section"
+                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-brand-300/40 transition-all group"
+              >
+                <MapPin className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
+                <div className="text-xs text-brand-200 font-bold uppercase tracking-wider">VP Công ty (Hà Nội)</div>
+                <div className="text-sm sm:text-base font-extrabold text-white">Số 6, Kim Đồng, Hoàng Mai, Hà Nội</div>
+              </a>
+
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
                 className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-4 border border-white/15 transition-all group"
               >
                 <Phone className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
-                <div className="text-xs text-slate-300">Hotline / Zalo</div>
+                <div className="text-xs text-slate-300">Hotline / Zalo 24/7</div>
                 <div className="text-base sm:text-lg font-bold text-white">{BRAND_INFO.contact.hotline}</div>
               </a>
 

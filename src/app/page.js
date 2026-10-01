@@ -5,7 +5,7 @@ import ErrorBoundary from "@/shared/components/ErrorBoundary";
 
 import HeroBanner from "@/features/home/components/HeroBanner";
 import TrustBar from "@/features/home/components/TrustBar";
-import ProductCatalog from "@/features/catalog/components/ProductCatalog";
+import HomeProductShowcase from "@/features/home/components/HomeProductShowcase";
 import WhyChooseUs from "@/features/home/components/WhyChooseUs";
 import FabricGuideSection from "@/features/home/components/FabricGuideSection";
 import SeamlessTechSection from "@/features/home/components/SeamlessTechSection";
@@ -31,8 +31,8 @@ export default function Home() {
         <TrustBar />
       </ErrorBoundary>
 
-      <ErrorBoundary name="Sản phẩm">
-        <ProductCatalog />
+      <ErrorBoundary name="Sản phẩm tiêu biểu">
+        <HomeProductShowcase />
       </ErrorBoundary>
 
       <ErrorBoundary name="Vì sao chọn HDC">

@@ -141,8 +141,9 @@ export default function ProductCard({ product }) {
                 </span>
               )}
             </div>
-            <div className="text-[10px] sm:text-[11px] text-brand-700 font-bold mt-0.5 truncate">
-              Sỉ: {lowestPrice.toLocaleString("vi-VN")} đ/{product.unit}
+            <div className="text-[10px] sm:text-[11px] text-brand-700 font-extrabold mt-0.5 truncate flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Giá sỉ từ: {lowestPrice.toLocaleString("vi-VN")} đ/{product.unit}</span>
             </div>
           </div>
 
@@ -151,10 +152,11 @@ export default function ProductCard({ product }) {
               e.stopPropagation();
               addToCart(product, 10);
             }}
-            title="Thêm vào giỏ"
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-900 hover:bg-brand-500 text-brand-400 hover:text-[#004f5e] flex items-center justify-center shadow-md transition-colors shrink-0"
+            title="Nhận báo giá sỉ & thêm vào danh sách"
+            className="h-9 sm:h-10 px-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all shrink-0"
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Báo Giá Sỉ</span>
           </button>
         </div>
       </div>

@@ -28,16 +28,7 @@ export default function FloatingActions() {
           DESKTOP / TABLET — Floating stack bên phải
           ============================================= */}
       <div className="hidden md:flex fixed bottom-6 right-5 z-30 flex-col items-end gap-3 pointer-events-auto">
-        {/* 1. Quick Quote Button — chỉ desktop lg+ */}
-        <button
-          onClick={() => setIsQuickQuoteOpen(true)}
-          className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs uppercase shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-brand-300/40"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Báo Giá May 3 Phút</span>
-        </button>
-
-        {/* 2. Zalo */}
+        {/* 1. Zalo */}
         <a
           href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
           target="_blank"

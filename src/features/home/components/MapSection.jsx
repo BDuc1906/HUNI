@@ -19,9 +19,26 @@ import {
 } from "lucide-react";
 
 /* =========================================================
-   LOCATIONS — Dùng tọa độ GPS để marker đỏ chính xác
+   LOCATIONS — VP Hà Nội là địa điểm mặc định theo yêu cầu
    ========================================================= */
 const LOCATIONS = [
+  {
+    id: "branch-hanoi",
+    icon: MapPin,
+    label: "VP Công ty (Hà Nội)",
+    name: "VP CÔNG TY HDC FASHION — HÀ NỘI",
+    address: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội",
+    addressFull: "Số 6, Kim Đồng, Phường Giáp Bát, Quận Hoàng Mai, Hà Nội, Việt Nam",
+    phone: "0984.959.586",
+    email: "dongphuchuni@gmail.com",
+    hours: "Thứ 2 - Thứ 7: 8:00 - 18:00",
+    hoursDetail: "Có chỗ đỗ ô tô rộng rãi, tư vấn & mang mẫu vải tận nơi",
+    note: "Văn phòng giao dịch chính & Showroom tiếp khách doanh nghiệp tại Hà Nội — Trưng bày đầy đủ mẫu áo sơ mi, polo, vest và bảng vải.",
+    query: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội",
+    lat: 20.987309,
+    lng: 105.843587,
+    embedUrl: "https://maps.google.com/maps?q=S%E1%BB%91%206%20Kim%20%C4%90%E1%BB%93ng%2C%20Gi%C3%A1p%20B%C3%A1t%2C%20Ho%C3%A0ng%20Mai%2C%20H%C3%A0%20N%E1%BB%99i&t=&z=16&ie=UTF8&iwloc=&output=embed"
+  },
   {
     id: "headquarters",
     icon: Building2,
@@ -35,21 +52,9 @@ const LOCATIONS = [
     hoursDetail: "Chủ nhật nghỉ (có hẹn trước cho đoàn đông)",
     note: "Trụ sở chính — văn phòng giao dịch & showroom trưng bày mẫu vải",
     lat: 21.3095,
-    lng: 105.0654
-  },
-  {
-    id: "branch-hanoi",
-    icon: MapPin,
-    label: "Văn phòng Hà Nội",
-    name: "VP Hà Nội — HDC FASHION",
-    address: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội",
-    addressFull: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội, Việt Nam",
-    phone: "0984.959.586",
-    email: "dongphuchuni@gmail.com",
-    hours: "Thứ 2 - Thứ 7: 8:00 - 18:00",
-    hoursDetail: "Hỗ trợ đo đạc tận nơi trong nội thành",
-    note: "Văn phòng đại diện — tiếp khách doanh nghiệp khu vực Hà Nội",
-    query: "Số 6, Kim Đồng, Hoàng Mai, Hà Nội"
+    lng: 105.0654,
+    query: "LK-17 Dự án Dạ Hợp, Phường Hòa Bình, TP. Việt Trì, Phú Thọ",
+    embedUrl: "https://maps.google.com/maps?q=D%E1%BB%B1%20%C3%A1n%20D%E1%BA%A1%20H%E1%BB%A3p%2C%20H%C3%B2a%20B%C3%ACnh%2C%20Vi%E1%BB%87t%20Tr%C3%AC%2C%20Ph%C3%BA%20Th%E1%BB%8D&t=&z=16&ie=UTF8&iwloc=&output=embed"
   },
   {
     id: "factory",
@@ -64,14 +69,16 @@ const LOCATIONS = [
     hoursDetail: "Công suất 50.000 sản phẩm / tháng",
     note: "Xưởng may trực tiếp — tham quan được khi có hẹn trước",
     lat: 21.2816,
-    lng: 105.4230
+    lng: 105.4230,
+    query: "KCN Thụy Vân, Việt Trì, Phú Thọ",
+    embedUrl: "https://maps.google.com/maps?q=KCN%20Th%E1%BB%A5y%20V%C3%A2n%2C%20Vi%E1%BB%87t%20Tr%C3%AC%2C%20Ph%C3%BA%20Th%E1%BB%8D&t=&z=16&ie=UTF8&iwloc=&output=embed"
   }
 ];
 
 export default function MapSection() {
   const [activeLocation, setActiveLocation] = React.useState(LOCATIONS[0]);
   const [copied, setCopied] = React.useState(false);
-  const [mapType, setMapType] = React.useState("hybrid"); // "roadmap" | "hybrid"
+  const [mapType, setMapType] = React.useState("roadmap"); // "roadmap" | "hybrid"
 
   // =========================================================
   // GOOGLE MAPS EMBED API
@@ -87,10 +94,10 @@ export default function MapSection() {
 
   const mapEmbedUrl = mapApiKey
     ? `https://www.google.com/maps/embed/v1/place?key=${mapApiKey}&q=${mapQuery}&zoom=16&maptype=${mapType}&language=vi`
-    : `https://www.google.com/maps?q=${mapQuery}&z=16&hl=vi&output=embed`;
+    : (activeLocation.embedUrl || `https://maps.google.com/maps?q=${mapQuery}&z=16&hl=vi&output=embed`);
 
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
-  const mapsUrl = `https://www.google.com/maps?q=${mapQuery}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(activeLocation.addressFull);
