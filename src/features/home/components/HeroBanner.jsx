@@ -5,7 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
+import {
+  Sparkles,
+  PhoneCall,
+  ArrowRight,
+  CheckCircle2,
+  Pause,
+  Play,
+} from "lucide-react";
 
 // ============================================================
 // SLIDES DATA — 5 slides
@@ -85,6 +92,8 @@ const CHECKLIST = [
 ];
 
 const TRANSITION_DURATION = 700;
+const SLIDE_DURATION = 6000; // 6 giây / slide
+const SWIPE_THRESHOLD = 50;
 
 const POSITION_CLASS = {
   top: "object-top",
@@ -92,18 +101,14 @@ const POSITION_CLASS = {
   bottom: "object-bottom",
 };
 
-// Ngưỡng vuốt tối thiểu (px) để chuyển slide
-const SWIPE_THRESHOLD = 50;
-
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // Ref của <section> cha để gắn native touch listeners
   const sectionRef = useRef(null);
-
-  // Lưu trữ tọa độ touch
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
   const isSwipingRef = useRef(false);
@@ -114,15 +119,38 @@ export default function HeroBanner() {
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
     setCurrentSlide(((index % total) + total) % total);
+    setProgress(0);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    setProgress(0);
   }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setProgress(0);
   }, []);
+
+  // ============================================================
+  // AUTO-PLAY + PROGRESS BAR
+  // ============================================================
+  useEffect(() => {
+    if (isPaused) return;
+
+    const startTime = Date.now();
+    const timer = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
+      setProgress(percent);
+
+      if (elapsed >= SLIDE_DURATION) {
+        nextSlide();
+      }
+    }, 50);
+
+    return () => clearInterval(timer);
+  }, [currentSlide, isPaused, nextSlide]);
 
   // ============================================================
   // KEYBOARD NAVIGATION
@@ -138,7 +166,6 @@ export default function HeroBanner() {
 
   // ============================================================
   // TOUCH SWIPE — Native event listener với passive: false
-  // ⭐ Đây là fix chính để vuốt hoạt động trên mobile
   // ============================================================
   useEffect(() => {
     const el = sectionRef.current;
@@ -148,43 +175,33 @@ export default function HeroBanner() {
       touchStartXRef.current = e.touches[0].clientX;
       touchStartYRef.current = e.touches[0].clientY;
       isSwipingRef.current = false;
+      setIsPaused(true); // Tạm dừng auto-play khi user chạm
     };
 
     const onTouchMove = (e) => {
       const dx = e.touches[0].clientX - touchStartXRef.current;
       const dy = e.touches[0].clientY - touchStartYRef.current;
 
-      // Xác định user đang vuốt NGANG (swipe slide)
-      // hay cuộn DỌC (để browser xử lý bình thường)
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
         isSwipingRef.current = true;
-
-        // Chặn browser scroll khi đang swipe slide
-        if (e.cancelable) {
-          e.preventDefault();
-        }
+        if (e.cancelable) e.preventDefault();
       }
     };
 
     const onTouchEnd = (e) => {
-      if (!isSwipingRef.current) return;
-
       const dx = e.changedTouches[0].clientX - touchStartXRef.current;
 
-      if (Math.abs(dx) > SWIPE_THRESHOLD) {
-        if (dx < 0) {
-          // Vuốt sang trái → next
-          nextSlide();
-        } else {
-          // Vuốt sang phải → prev
-          prevSlide();
-        }
+      if (isSwipingRef.current && Math.abs(dx) > SWIPE_THRESHOLD) {
+        if (dx < 0) nextSlide();
+        else prevSlide();
       }
 
       isSwipingRef.current = false;
+
+      // Resume auto-play sau 3 giây kể từ khi user ngừng tương tác
+      setTimeout(() => setIsPaused(false), 3000);
     };
 
-    // ⚠️ Quan trọng: touchmove phải có passive: false để preventDefault() hoạt động
     el.addEventListener("touchstart", onTouchStart, { passive: true });
     el.addEventListener("touchmove", onTouchMove, { passive: false });
     el.addEventListener("touchend", onTouchEnd, { passive: true });
@@ -220,7 +237,6 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0"
             aria-hidden={idx !== currentSlide}
           >
-            {/* Nền mờ khi fit="contain" */}
             {s.fit === "contain" && (
               <Image
                 src={s.image}
@@ -233,7 +249,6 @@ export default function HeroBanner() {
               />
             )}
 
-            {/* Ảnh chính */}
             <Image
               src={s.image}
               alt={s.title + " " + s.titleHighlight}
@@ -246,7 +261,6 @@ export default function HeroBanner() {
               } ${POSITION_CLASS[s.position || "center"]}`}
             />
 
-            {/* Gradient overlay */}
             {!s.hideText && (
               <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
             )}
@@ -266,7 +280,6 @@ export default function HeroBanner() {
           <div className="max-w-3xl">
             {!slide.hideText && (
               <>
-                {/* Eyebrow */}
                 <div
                   key={`eyebrow-${currentSlide}`}
                   className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
@@ -275,7 +288,6 @@ export default function HeroBanner() {
                   <span>{slide.eyebrow}</span>
                 </div>
 
-                {/* TITLE */}
                 <div
                   key={`title-${currentSlide}`}
                   className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
@@ -288,7 +300,6 @@ export default function HeroBanner() {
                   </h2>
                 </div>
 
-                {/* Subtitle */}
                 <p
                   key={`sub-${currentSlide}`}
                   className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
@@ -296,7 +307,6 @@ export default function HeroBanner() {
                   &ldquo;{slide.subtitle}&rdquo;
                 </p>
 
-                {/* Description */}
                 <p
                   key={`desc-${currentSlide}`}
                   className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
@@ -304,7 +314,6 @@ export default function HeroBanner() {
                   {slide.description}
                 </p>
 
-                {/* Checklist */}
                 <div
                   key={`check-${currentSlide}`}
                   className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
@@ -322,7 +331,6 @@ export default function HeroBanner() {
               </>
             )}
 
-            {/* CTA */}
             <div
               key={`cta-${currentSlide}`}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-left-4 duration-500 delay-300"
@@ -353,9 +361,7 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* ============================================
-            STATS BAR
-            ============================================ */}
+        {/* STATS BAR */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
@@ -381,9 +387,21 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          COUNTER — Góc trên phải
+          TOP-RIGHT: Nút Play/Pause + Counter
           ============================================ */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-3">
+        <button
+          onClick={() => setIsPaused((p) => !p)}
+          aria-label={isPaused ? "Tiếp tục slideshow" : "Tạm dừng slideshow"}
+          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition-all active:scale-95"
+        >
+          {isPaused ? (
+            <Play className="w-4 h-4 fill-current" />
+          ) : (
+            <Pause className="w-4 h-4 fill-current" />
+          )}
+        </button>
+
         <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
           {String(currentSlide + 1).padStart(2, "0")}{" "}
           <span className="text-white/60">/</span>{" "}
@@ -392,7 +410,7 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          DOTS NAVIGATION
+          DOTS NAVIGATION — Có progress bar bên trong
           ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {SLIDES.map((_, idx) => {
@@ -403,12 +421,22 @@ export default function HeroBanner() {
               key={idx}
               onClick={() => goToSlide(idx)}
               aria-label={`Đến slide ${idx + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
+              className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
                 active
-                  ? "w-10 sm:w-14 bg-brand-400"
+                  ? "w-10 sm:w-14 bg-white/40"
                   : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
               }`}
-            />
+            >
+              {active && (
+                <span
+                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full"
+                  style={{
+                    width: `${progress}%`,
+                    transition: isPaused ? "none" : "width 50ms linear",
+                  }}
+                />
+              )}
+            </button>
           );
         })}
       </div>
