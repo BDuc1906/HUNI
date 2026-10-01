@@ -1,24 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import {
-  Sparkles,
-  PhoneCall,
-  ArrowRight,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-} from "lucide-react";
+import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
 // SLIDES DATA — 5 slides
-// Title tách 2 dòng: title (trắng) + titleHighlight (xanh)
 // ============================================================
 const SLIDES = [
   {
@@ -29,7 +19,6 @@ const SLIDES = [
     subtitle: "Tinh hoa thiên nhiên Việt Nam",
     description:
       "5 chất liệu tự nhiên độc quyền: Modal, Bamboo, Sợi Bạc Hà, Sợi Sen, Sợi Chuối. Kết hợp công nghệ Seamless không đường may + họa tiết văn hóa Việt.",
-    highlight: "BST Chất liệu xanh 2026",
     ctaPrimary: "Xem Bảng Vải",
     ctaSecondary: "Báo Giá Ngay",
     ctaLink: "/bang-vai",
@@ -42,7 +31,6 @@ const SLIDES = [
     subtitle: "Vest doanh nhân may đo chuẩn Ý",
     description:
       "Bộ sưu tập Vest & Sơ mi cao cấp dành riêng cho Ban lãnh đạo, cấp quản lý. Đo ni tận nơi bởi đội ngũ thợ may nhiều năm kinh nghiệm.",
-    highlight: "Vest doanh nhân",
     ctaPrimary: "Nhận Báo Giá 0đ",
     ctaSecondary: "Xem BST Vest",
     ctaLink: "/dong-phuc-may-do",
@@ -55,7 +43,6 @@ const SLIDES = [
     subtitle: "Vải cá sấu Cotton Compact 4 chiều",
     description:
       "Dòng áo Polo đồng phục chủ lực được nhiều doanh nghiệp tin dùng. Vải kháng khuẩn ion bạc, co giãn 4 chiều, bền màu sau 100 lần giặt.",
-    highlight: "Polo Classic",
     ctaPrimary: "Đặt Polo Ngay",
     ctaSecondary: "Xem Bảng Màu",
     ctaLink: "/dong-phuc-doanh-nghiep",
@@ -68,7 +55,6 @@ const SLIDES = [
     subtitle: "Golf, Pickleball, Marathon, Team building",
     description:
       "Công nghệ làm mát AeroCool hạ nhiệt cơ thể 3°C. Chống tia UV UPF 50+. Co giãn 4 chiều cho cú swing chuẩn xác.",
-    highlight: "Golf & Thể thao",
     ctaPrimary: "Đặt Golf Ngay",
     ctaSecondary: "Xem Ảnh Giải",
     ctaLink: "/dong-phuc-the-thao",
@@ -81,7 +67,6 @@ const SLIDES = [
     subtitle: "Học sinh các cấp, sinh viên, giáo viên",
     description:
       "Chuẩn phom dáng quốc tế, vải mềm mại an toàn cho làn da học sinh. Váy xếp ly có quần lót an toàn. Huy hiệu trường thêu Tajima sắc sảo.",
-    highlight: "Trường học",
     ctaPrimary: "Báo Giá Trường",
     ctaSecondary: "Xem Album",
     ctaLink: "/dong-phuc-truong-hoc",
@@ -97,54 +82,35 @@ const CHECKLIST = [
   "Giao toàn quốc",
 ];
 
-const SLIDE_DURATION = 6000;
 const TRANSITION_DURATION = 700;
 
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const touchStartXRef = useRef(0);
   const touchEndXRef = useRef(0);
 
+  // ============================================================
+  // NAVIGATION HANDLERS — Chỉ trượt bằng tay
+  // ============================================================
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
     setCurrentSlide(((index % total) + total) % total);
-    setProgress(0);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-    setProgress(0);
   }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-    setProgress(0);
   }, []);
 
-  // Auto-play + progress
-  useEffect(() => {
-    if (isPaused) return;
-
-    const startTime = Date.now();
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(percent);
-
-      if (elapsed >= SLIDE_DURATION) {
-        nextSlide();
-      }
-    }, 50);
-
-    return () => clearInterval(timer);
-  }, [currentSlide, isPaused, nextSlide]);
-
-  // Keyboard
+  // ============================================================
+  // KEYBOARD NAVIGATION — Desktop dùng ← →
+  // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowLeft") prevSlide();
@@ -154,11 +120,12 @@ export default function HeroBanner() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [nextSlide, prevSlide]);
 
-  // Touch
+  // ============================================================
+  // TOUCH SWIPE — Mobile
+  // ============================================================
   const handleTouchStart = (e) => {
     touchStartXRef.current = e.touches[0].clientX;
     touchEndXRef.current = e.touches[0].clientX;
-    setIsPaused(true);
   };
 
   const handleTouchMove = (e) => {
@@ -171,7 +138,6 @@ export default function HeroBanner() {
       if (diff > 0) nextSlide();
       else prevSlide();
     }
-    setTimeout(() => setIsPaused(false), 3000);
   };
 
   const slide = SLIDES[currentSlide];
@@ -229,19 +195,14 @@ export default function HeroBanner() {
               <span>{slide.eyebrow}</span>
             </div>
 
-            {/* ============================================
-                TITLE — Tách 2 dòng: trắng trên, xanh dưới
-                ============================================ */}
+            {/* TITLE — 2 dòng */}
             <div
               key={`title-${currentSlide}`}
               className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
             >
-              {/* Dòng 1 — Trắng */}
               <h1 className="text-[28px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance drop-shadow-lg">
                 {slide.title}
               </h1>
-
-              {/* Dòng 2 — Xanh */}
               <h2 className="text-[26px] leading-[1.15] sm:text-3xl md:text-4xl lg:text-[48px] xl:text-[54px] font-black tracking-tight text-brand-gradient text-balance drop-shadow-lg mt-1 sm:mt-1.5">
                 {slide.titleHighlight}
               </h2>
@@ -337,37 +298,10 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Arrows desktop */}
-      <button
-        onClick={prevSlide}
-        aria-label="Slide trước"
-        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 hover:border-white/50 text-white items-center justify-center transition-all active:scale-95 z-20"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        aria-label="Slide sau"
-        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 hover:border-white/50 text-white items-center justify-center transition-all active:scale-95 z-20"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* Top-right controls */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-3">
-        <button
-          onClick={() => setIsPaused((p) => !p)}
-          aria-label={isPaused ? "Tiếp tục slideshow" : "Tạm dừng slideshow"}
-          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition-all active:scale-95"
-        >
-          {isPaused ? (
-            <Play className="w-4 h-4 fill-current" />
-          ) : (
-            <Pause className="w-4 h-4 fill-current" />
-          )}
-        </button>
-
+      {/* ============================================
+          COUNTER — Góc trên phải (01 / 05)
+          ============================================ */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
         <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
           {String(currentSlide + 1).padStart(2, "0")}{" "}
           <span className="text-white/60">/</span>{" "}
@@ -375,7 +309,9 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Dots navigation */}
+      {/* ============================================
+          DOTS NAVIGATION — Bấm để chuyển slide
+          ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {SLIDES.map((_, idx) => {
           const active = idx === currentSlide;
@@ -385,34 +321,14 @@ export default function HeroBanner() {
               key={idx}
               onClick={() => goToSlide(idx)}
               aria-label={`Đến slide ${idx + 1}`}
-              className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 ${
                 active
-                  ? "w-10 sm:w-14 bg-white/40"
+                  ? "w-10 sm:w-14 bg-brand-400"
                   : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
               }`}
-            >
-              {active && (
-                <span
-                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full"
-                  style={{
-                    width: `${progress}%`,
-                    transition: isPaused ? "none" : "width 50ms linear",
-                  }}
-                />
-              )}
-            </button>
+            />
           );
         })}
-      </div>
-
-      {/* Label góc dưới trái */}
-      <div className="hidden lg:block absolute bottom-28 left-4 sm:left-6 z-20 max-w-xs">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-brand-300 mb-1 whitespace-nowrap drop-shadow">
-          Đang xem
-        </div>
-        <div className="text-white text-sm font-bold leading-tight drop-shadow">
-          {slide.highlight}
-        </div>
       </div>
     </section>
   );
