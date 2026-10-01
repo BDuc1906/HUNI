@@ -37,20 +37,20 @@ export default function UserMenu() {
       <div className="flex items-center gap-1.5 sm:gap-2">
         <Link
           href="/login"
-          className="hidden sm:flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-bold text-brand-300 hover:text-brand-200 border border-brand-400/40 hover:border-brand-400 rounded-full transition-colors"
+          className="hidden sm:flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-extrabold text-slate-700 hover:text-brand-800 bg-slate-50 hover:bg-brand-50/80 border border-slate-200 hover:border-brand-500 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-brand-500/10 group"
         >
-          <LogIn className="w-3.5 h-3.5" />
+          <LogIn className="w-3.5 h-3.5 text-brand-600 group-hover:text-brand-700 transition-colors" />
           <span>Đăng nhập</span>
         </Link>
         <Link
           href="/register"
-          className="hidden lg:flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-brand-400 to-brand-500 hover:from-brand-300 hover:to-brand-400 rounded-full shadow-lg shadow-brand-500/20 transition-all"
+          className="hidden lg:flex items-center gap-1.5 px-4.5 py-2 text-xs sm:text-sm font-extrabold text-white bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 hover:from-brand-500 hover:via-brand-600 hover:to-brand-600 rounded-full shadow-md shadow-brand-600/20 hover:shadow-lg hover:shadow-brand-500/30 transition-all duration-300 hover:scale-105"
         >
           <span>Đăng ký</span>
         </Link>
         <Link
           href="/login"
-          className="sm:hidden p-2 rounded-full bg-slate-800/60 text-brand-300 border border-slate-700"
+          className="sm:hidden p-2 rounded-full bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 border border-slate-200 hover:border-brand-400 transition-all hover:scale-105"
           aria-label="Đăng nhập"
         >
           <User className="w-5 h-5" />
