@@ -6,6 +6,7 @@ vi.mock("@/server/db", () => {
     db: {
       review: {
         findMany: vi.fn(),
+        findFirst: vi.fn(),
         create: vi.fn(),
       },
       user: {
@@ -146,11 +147,41 @@ describe("API /api/reviews", () => {
       expect(json.error).toContain("tối thiểu 5 ký tự");
     });
 
+    it("trả về 400 nếu user đã đánh giá sản phẩm này trước đó", async () => {
+      mockAuth.mockResolvedValue({
+        user: { id: "user-1", name: "Nguyễn Văn A", role: "CUSTOMER" },
+      });
+
+      db.review.findFirst.mockResolvedValue({
+        id: "existing-rev",
+        productId: "polo-doanh-nghiep-hdc-pro",
+        userId: "user-1",
+      });
+
+      const request = new Request("http://localhost:3000/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: "polo-doanh-nghiep-hdc-pro",
+          rating: 5,
+          content: "Đánh giá lần thứ hai không được chấp nhận.",
+        }),
+      });
+
+      const response = await POST(request);
+      const json = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(json.success).toBe(false);
+      expect(json.error).toContain("đã gửi đánh giá");
+    });
+
     it("tạo đánh giá thành công khi dữ liệu hợp lệ (ADMIN role)", async () => {
       mockAuth.mockResolvedValue({
         user: { id: "admin-1", name: "Quản trị viên", role: "ADMIN" },
       });
 
+      db.review.findFirst.mockResolvedValue(null);
       db.review.create.mockResolvedValue({
         id: "rev-new-1",
         rating: 5,
@@ -179,3 +210,4 @@ describe("API /api/reviews", () => {
     });
   });
 });
+

@@ -79,27 +79,46 @@ export async function GET(request) {
         }
       }
 
-      return NextResponse.json({
-        reviews: reviews.map((r) => ({
-          id: r.id,
-          rating: r.rating,
-          content: r.content,
-          createdAt: r.createdAt,
-          user: {
-            name: r.user?.fullName || "Khách hàng HUNI",
-            avatar: r.user?.avatar || null,
-          },
-        })),
+      const mappedReviews = reviews.map((r) => ({
+        id: r.id,
+        rating: r.rating,
+        content: r.content,
+        createdAt: r.createdAt,
+        user: {
+          fullName: r.user?.fullName || "Khách hàng HUNI",
+          name: r.user?.fullName || "Khách hàng HUNI",
+          avatar: r.user?.avatar || null,
+        },
+      }));
+
+      const responsePayload = {
+        reviews: mappedReviews,
         avgRating,
         total,
         canReview,
         hasOrdered,
         isAuthenticated: Boolean(session?.user?.id),
+      };
+
+      return NextResponse.json({
+        success: true,
+        data: {
+          reviews: mappedReviews,
+          avgRating,
+          total,
+        },
+        ...responsePayload,
       });
     } catch (dbErr) {
       console.warn("Chưa có cơ sở dữ liệu review hoặc lỗi truy vấn:", dbErr.message);
 
       return NextResponse.json({
+        success: true,
+        data: {
+          reviews: [],
+          avgRating: 0,
+          total: 0,
+        },
         reviews: [],
         avgRating: 0,
         total: 0,
@@ -191,6 +210,24 @@ export async function POST(request) {
         }
       }
 
+      // Kiểm tra nếu user đã đánh giá sản phẩm này
+      const existingReview = await db.review.findFirst({
+        where: {
+          productId,
+          userId: session.user.id,
+        },
+      }).catch(() => null);
+
+      if (existingReview) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Bạn đã gửi đánh giá cho sản phẩm này rồi.",
+          },
+          { status: 400 }
+        );
+      }
+
       const review = await db.review.create({
         data: {
           productId,
@@ -205,19 +242,24 @@ export async function POST(request) {
         },
       });
 
+      const formattedReview = {
+        id: review.id,
+        rating: review.rating,
+        content: review.content,
+        createdAt: review.createdAt,
+        user: {
+          name: review.user?.fullName || session.user.name || "Khách hàng HUNI",
+          fullName: review.user?.fullName || session.user.name || "Khách hàng HUNI",
+          avatar: review.user?.avatar || session.user.avatar || null,
+        },
+      };
+
       return NextResponse.json(
         {
           success: true,
-          review: {
-            id: review.id,
-            rating: review.rating,
-            content: review.content,
-            createdAt: review.createdAt,
-            user: {
-              name: review.user?.fullName || session.user.name || "Khách hàng HUNI",
-              avatar: review.user?.avatar || session.user.avatar || null,
-            },
-          },
+          message: "Gửi đánh giá thành công",
+          review: formattedReview,
+          data: { review: formattedReview },
         },
         { status: 201 }
       );

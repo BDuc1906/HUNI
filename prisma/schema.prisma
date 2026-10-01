@@ -181,10 +181,34 @@ model Review {
 
   @@index([productId])
   @@index([userId])
+  @@unique([productId, userId])
   @@map("reviews")
+}
+
+// ==================================================
+// MÃ GIẢM GIÁ / VOUCHERS
+// ==================================================
+model Voucher {
+  id          String    @id @default(cuid())
+  code        String    @unique
+  discount    Int       // Số tiền giảm (VND) hoặc phần trăm (%)
+  type        String    // "percentage" | "fixed"
+  minOrder    Int       @default(0) // Đơn tối thiểu (VND)
+  maxDiscount Int?      // Giới hạn giảm tối đa cho percentage (VND)
+  usageLimit  Int?      // Số lượt dùng tối đa (null = không giới hạn)
+  usedCount   Int       @default(0)
+  active      Boolean   @default(true)
+  expiresAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([code])
+  @@index([active])
+  @@map("vouchers")
 }
 
 enum UserRole {
   CUSTOMER
   ADMIN
 }
+

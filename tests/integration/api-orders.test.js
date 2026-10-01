@@ -9,11 +9,24 @@ vi.mock("@/server/db", () => {
         create: vi.fn(),
         update: vi.fn(),
       },
+      user: {
+        findUnique: vi.fn(),
+      },
       order: {
         create: vi.fn(),
+        findMany: vi.fn(),
+        count: vi.fn(),
       },
     },
     generateOrderNumber: vi.fn(() => "HN-260930-9999"),
+  };
+});
+
+// Mock @/server/auth
+const mockAuth = vi.fn();
+vi.mock("@/server/auth", () => {
+  return {
+    auth: () => mockAuth(),
   };
 });
 
@@ -26,7 +39,7 @@ vi.mock("@/server/mailer", () => {
 });
 
 import { db } from "@/server/db";
-import { POST } from "@/app/api/orders/route";
+import { POST, GET } from "@/app/api/orders/route";
 
 describe("API POST /api/orders", () => {
   beforeEach(() => {
@@ -186,5 +199,125 @@ describe("API POST /api/orders", () => {
     expect(json.order.subtotal).toBe(2350000);
     expect(json.order.discount).toBe(235000);
     expect(json.order.total).toBe(2115000);
+  });
+});
+
+describe("API GET /api/orders (Auth Guard & RBAC)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("trả về 401 Unauthorized nếu chưa đăng nhập", async () => {
+    mockAuth.mockResolvedValue(null);
+
+    const request = new Request("http://localhost:3000/api/orders");
+    const response = await GET(request);
+    const json = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(json.success).toBe(false);
+    expect(json.error).toContain("đăng nhập");
+  });
+
+  it("trả về 403 Forbidden nếu người dùng không phải ADMIN cố xem toàn bộ đơn", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "user-cust-1", name: "Khách hàng A", role: "CUSTOMER" },
+    });
+
+    const request = new Request("http://localhost:3000/api/orders");
+    const response = await GET(request);
+    const json = await response.json();
+
+    expect(response.status).toBe(403);
+    expect(json.success).toBe(false);
+    expect(json.error).toContain("Chỉ Quản trị viên (ADMIN)");
+  });
+
+  it("cho phép ADMIN xem toàn bộ danh sách đơn hàng", async () => {
+    mockAuth.mockResolvedValue({
+      user: { id: "admin-1", name: "Quản trị viên", role: "ADMIN" },
+    });
+
+    const mockOrders = [
+      {
+        id: "ord-1",
+        orderNumber: "HN-260930-0001",
+        status: "PENDING",
+        total: 5000000,
+        customer: { fullName: "Công ty ABC", phone: "0901234567" },
+        items: [],
+      },
+      {
+        id: "ord-2",
+        orderNumber: "HN-260930-0002",
+        status: "COMPLETED",
+        total: 12000000,
+        customer: { fullName: "Tập đoàn XYZ", phone: "0909876543" },
+        items: [],
+      },
+    ];
+
+    db.order.findMany.mockResolvedValue(mockOrders);
+    db.order.count.mockResolvedValue(2);
+
+    const request = new Request(
+      "http://localhost:3000/api/orders?limit=10&page=1"
+    );
+    const response = await GET(request);
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.success).toBe(true);
+    expect(json.count).toBe(2);
+    expect(json.total).toBe(2);
+    expect(json.totalPages).toBe(1);
+    expect(json.orders).toHaveLength(2);
+  });
+
+  it("cho phép CUSTOMER xem các đơn hàng của chính mình qua param ?mine=true", async () => {
+    mockAuth.mockResolvedValue({
+      user: {
+        id: "user-cust-1",
+        email: "khachhang@gmail.com",
+        role: "CUSTOMER",
+      },
+    });
+
+    db.user.findUnique.mockResolvedValue({
+      email: "khachhang@gmail.com",
+      phone: "0912345678",
+    });
+
+    const myOrders = [
+      {
+        id: "ord-own-1",
+        orderNumber: "HN-260930-7777",
+        status: "PRODUCING",
+        total: 3500000,
+        customer: { fullName: "Khách hàng A", phone: "0912345678" },
+        items: [],
+      },
+    ];
+
+    db.order.findMany.mockResolvedValue(myOrders);
+    db.order.count.mockResolvedValue(1);
+
+    const request = new Request("http://localhost:3000/api/orders?mine=true");
+    const response = await GET(request);
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.success).toBe(true);
+    expect(json.count).toBe(1);
+    expect(json.orders[0].orderNumber).toBe("HN-260930-7777");
+    expect(db.order.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          customer: expect.objectContaining({
+            OR: expect.any(Array),
+          }),
+        }),
+      })
+    );
   });
 });
