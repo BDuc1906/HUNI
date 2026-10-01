@@ -74,7 +74,7 @@ export default function PrivacyPage() {
               </h2>
               <p className="text-sm leading-relaxed">
                 Quý khách có quyền yêu cầu xem, chỉnh sửa hoặc xóa thông tin cá nhân bất
-                kỳ lúc nào bằng cách liên hệ hotline <strong>0984.959.586</strong> hoặc
+                kỳ lúc nào bằng cách liên hệ hotline <strong>0984 95 95 86</strong> hoặc
                 email <strong>dongphuchuni@gmail.com</strong>.
               </p>
             </section>
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
               <ul className="space-y-1 text-sm text-slate-700">
                 <li className="flex items-center gap-2">
                   <span>📞 Hotline / Zalo:</span>
-                  <strong className="text-[#004f5e]">0984.959.586</strong>
+                  <strong className="text-[#004f5e]">0984 95 95 86</strong>
                 </li>
                 <li className="flex items-center gap-2">
                   <span>✉️ Email hỗ trợ:</span>

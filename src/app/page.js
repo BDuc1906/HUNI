@@ -33,7 +33,7 @@ export default function Home() {
       </ErrorBoundary>
 
       <ErrorBoundary name="Sản phẩm">
-        <ProductCatalog />
+        <ProductCatalog isHome={true} />
       </ErrorBoundary>
 
       <ErrorBoundary name="Vì sao chọn HDC">

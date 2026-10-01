@@ -330,7 +330,7 @@ export default function Header() {
               ) : (
                 <div className="p-4 text-center text-xs text-slate-400">
                   Không tìm thấy mẫu phù hợp. Gọi hotline{" "}
-                  <strong className="text-brand-300">0984.959.586</strong> để
+                  <strong className="text-brand-300">0984 95 95 86</strong> để
                   tư vấn may riêng!
                 </div>
               )}

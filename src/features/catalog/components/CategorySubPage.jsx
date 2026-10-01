@@ -12,6 +12,7 @@ import { SITE_HIERARCHY } from "@/shared/data/siteHierarchy";
 import { PRODUCTS, BRAND_INFO } from "@/shared/data";
 import ProductCard from "@/features/catalog/components/ProductCard";
 import ErrorBoundary from "@/shared/components/ErrorBoundary";
+import PageHeroSlider from "@/shared/components/PageHeroSlider";
 import {
   ChevronRight,
   Sparkles,
@@ -76,69 +77,12 @@ export default function CategorySubPage({ categoryInfo, slugArray }) {
   return (
     <div className="min-h-screen bg-[#f8fafc]">
       {/* =============================================
-          HERO BANNER & BREADCRUMBS
+          HERO SLIDER — Giống slidebar trang chủ
           ============================================= */}
-      <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-10 sm:py-14 border-b border-brand-400/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          {/* Breadcrumbs chuẩn SEO */}
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-4 overflow-x-auto whitespace-nowrap scrollbar-none py-1"
-          >
-            <Link href="/" className="hover:text-white transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
-
-            {parentCat && (
-              <>
-                <Link
-                  href={parentCat.url}
-                  className="hover:text-white transition-colors"
-                >
-                  {parentCat.shortTitle || parentCat.title}
-                </Link>
-                <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
-              </>
-            )}
-
-            <span className="text-white font-bold">
-              {categoryInfo.shortTitle || categoryInfo.title}
-            </span>
-          </nav>
-
-          <div className="max-w-3xl space-y-3 sm:space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider border border-brand-400/30">
-              <Tag className="w-3.5 h-3.5" />
-              <span>Chuyên Mục Sản Xuất • Chuẩn Form HDC</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-              {categoryInfo.h1}
-            </h1>
-
-            <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed">
-              {categoryInfo.desc}
-            </p>
-
-            {/* Badges cam kết */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-brand-200 pt-1">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-brand-400 shrink-0" />
-                <span>May mẫu thử tận nơi 0đ</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-brand-400 shrink-0" />
-                <span>Bảo hành 30 ngày lỗi may</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-brand-400 shrink-0" />
-                <span>Chiết khấu sỉ lên tới 35%</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHeroSlider
+        category={categoryInfo.categoryKey || "corporate"}
+        breadcrumb={categoryInfo.shortTitle || categoryInfo.title}
+      />
 
       {/* =============================================
           SUB-CATEGORIES PILL SWITCHER

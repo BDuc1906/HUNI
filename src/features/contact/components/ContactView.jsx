@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
+import PageHeroSlider from "@/shared/components/PageHeroSlider";
 import {
   Phone,
   Mail,
@@ -43,7 +44,7 @@ const CONTACT_LOCATIONS = [
     name: "HDC FASHION — Trụ Sở Chính & Showroom",
     address: "LK-17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, Tỉnh Hòa Bình",
     addressFull: "LK-17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, Tỉnh Hòa Bình, Việt Nam",
-    phone: "0984.959.586",
+    phone: "0984 95 95 86",
     phoneRaw: "0984959586",
     email: "dongphuchuni@gmail.com",
     hours: "Thứ 2 - Thứ 7: 08:00 - 18:00",
@@ -60,7 +61,7 @@ const CONTACT_LOCATIONS = [
     name: "Văn Phòng Đại Diện Hà Nội",
     address: "Số 6, Kim Đồng, P. Giáp Bát, Q. Hoàng Mai, Hà Nội",
     addressFull: "Số 6, Kim Đồng, P. Giáp Bát, Q. Hoàng Mai, Hà Nội, Việt Nam",
-    phone: "0984.959.586",
+    phone: "0984 95 95 86",
     phoneRaw: "0984959586",
     email: "dongphuchuni@gmail.com",
     hours: "Thứ 2 - Thứ 7: 08:00 - 18:00",
@@ -77,7 +78,7 @@ const CONTACT_LOCATIONS = [
     name: "Nhà Máy Sản Xuất & Xưởng May HDC",
     address: "KCN Thụy Vân, TP. Việt Trì, Tỉnh Phú Thọ",
     addressFull: "KCN Thụy Vân, Phường Thụy Vân, TP. Việt Trì, Tỉnh Phú Thọ, Việt Nam",
-    phone: "0984.959.586",
+    phone: "0984 95 95 86",
     phoneRaw: "0984959586",
     email: "dongphuchuni@gmail.com",
     hours: "Thứ 2 - Thứ 7: 07:30 - 17:30",
@@ -239,7 +240,7 @@ export default function ContactView() {
       }
     } catch (err) {
       console.error("Lỗi gửi yêu cầu liên hệ:", err);
-      setErrorMessage("Không thể kết nối máy chủ. Quý khách vui lòng gọi trực tiếp hotline 0984.959.586!");
+      setErrorMessage("Không thể kết nối máy chủ. Quý khách vui lòng gọi trực tiếp hotline 0984 95 95 86!");
       showToast("Lỗi kết nối máy chủ", "error");
     } finally {
       setIsSubmitting(false);
@@ -271,80 +272,9 @@ export default function ContactView() {
   return (
     <div className="bg-slate-50 min-h-screen">
       {/* ========================================================
-          HERO BANNER — Thiết kế sắc sảo, không lỗi xuống dòng
+          HERO SLIDER — Trượt ảnh slidebar giống trang chủ
           ======================================================== */}
-      <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-12 sm:py-16 md:py-20 border-b border-brand-400/20 relative overflow-hidden">
-        {/* Glow ambient effects */}
-        <div className="absolute top-0 right-10 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-5">
-            <Link href="/" className="hover:text-white transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400 shrink-0" />
-            <span className="text-white font-semibold">Liên Hệ &amp; Hỗ Trợ Doanh Nghiệp</span>
-          </nav>
-
-          <div className="max-w-3xl">
-            {/* Top pill badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider mb-4 border border-brand-400/30">
-              <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
-              <span>Trung Tâm Hỗ Trợ Doanh Nghiệp 24/7 • Phản Hồi Trong 5 Phút</span>
-            </div>
-
-            {/* Main title without unnatural line break */}
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              KẾT NỐI VỚI{" "}
-              <span className="text-brand-300">ĐỘI NGŨ CHUYÊN GIA HDC FASHION</span>
-            </h1>
-
-            <p className="text-slate-200 text-sm sm:text-base md:text-lg leading-relaxed mb-8">
-              Hơn 50.000+ tập đoàn và doanh nghiệp đã tin chọn HDC. Chúng tôi sẵn sàng đồng hành từ khâu chọn chất liệu, phối màu nhận diện, thiết kế 3D cho đến may mẫu thử 0đ duyệt form trước khi may đồng loạt.
-            </p>
-
-            {/* Quick Action Badges */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <a
-                href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
-              >
-                <Phone className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
-                <div className="text-[11px] text-slate-300 font-medium">Hotline 24/7</div>
-                <div className="text-sm sm:text-base font-bold text-white truncate">{BRAND_INFO.contact.hotline}</div>
-              </a>
-
-              <a
-                href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
-              >
-                <MessageCircle className="w-5 h-5 text-blue-300 mb-2 group-hover:scale-110 transition-transform" />
-                <div className="text-[11px] text-slate-300 font-medium">Chat Zalo OA</div>
-                <div className="text-sm sm:text-base font-bold text-white">Phản hồi tức thì</div>
-              </a>
-
-              <a
-                href={`mailto:${BRAND_INFO.contact.email}`}
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
-              >
-                <Mail className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
-                <div className="text-[11px] text-slate-300 font-medium">Email Doanh Nghiệp</div>
-                <div className="text-xs sm:text-sm font-bold text-white truncate">{BRAND_INFO.contact.email}</div>
-              </a>
-
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3.5 border border-white/15">
-                <Clock className="w-5 h-5 text-brand-300 mb-2" />
-                <div className="text-[11px] text-slate-300 font-medium">Giờ Làm Việc</div>
-                <div className="text-xs sm:text-sm font-bold text-white">08:00 - 18:00 (T2-T7)</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <PageHeroSlider category="contact" breadcrumb="Liên Hệ & Hỗ Trợ Doanh Nghiệp" />
 
       {/* ========================================================
           MAIN INTERACTION SECTION — FORM & SUPPORT INFO
@@ -485,7 +415,7 @@ export default function ContactView() {
                           <input
                             type="tel"
                             required
-                            placeholder="Ví dụ: 0984 959 586"
+                            placeholder="Ví dụ: 0984 95 95 86"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
                             className="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-500/20 transition-all text-slate-800"
@@ -823,29 +753,31 @@ export default function ContactView() {
             </p>
           </div>
 
-          {/* 3 Location Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            {CONTACT_LOCATIONS.map((loc) => {
-              const Icon = loc.icon;
-              const isSelected = activeLocation.id === loc.id;
-              const isCopied = copiedId === loc.id;
+          {/* ====================================================
+              SIDE-BY-SIDE: 3 LOCATIONS LIST (LEFT) & COMPACT CORNER MAP (RIGHT)
+              ==================================================== */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+            {/* LEFT (7 cols): Danh sách cơ sở */}
+            <div className="lg:col-span-7 space-y-4">
+              {CONTACT_LOCATIONS.map((loc) => {
+                const Icon = loc.icon;
+                const isSelected = activeLocation.id === loc.id;
+                const isCopied = copiedId === loc.id;
 
-              return (
-                <div
-                  key={loc.id}
-                  onClick={() => setActiveLocation(loc)}
-                  className={`cursor-pointer rounded-3xl p-6 border-2 transition-all flex flex-col justify-between ${
-                    isSelected
-                      ? "border-brand-500 bg-white shadow-xl ring-2 ring-brand-500/20"
-                      : "border-slate-200 bg-slate-50 hover:bg-white hover:border-brand-300 hover:shadow-md"
-                  }`}
-                >
-                  <div className="space-y-4">
-                    {/* Header */}
-                    <div className="flex items-center justify-between">
+                return (
+                  <div
+                    key={loc.id}
+                    onClick={() => setActiveLocation(loc)}
+                    className={`cursor-pointer rounded-2xl p-5 sm:p-6 border-2 transition-all ${
+                      isSelected
+                        ? "border-brand-500 bg-white shadow-xl ring-2 ring-brand-500/20"
+                        : "border-slate-200 bg-slate-50/70 hover:bg-white hover:border-brand-300 hover:shadow-md"
+                    }`}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-100">
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all ${
+                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${
                             isSelected
                               ? "bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-md"
                               : "bg-white text-slate-700 border border-slate-200"
@@ -854,152 +786,201 @@ export default function ContactView() {
                           <Icon className="w-5 h-5" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-100/70 text-brand-800">
-                            {loc.type}
-                          </span>
-                          <div className="flex items-center gap-1.5 mt-1">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-100/80 text-brand-800">
+                              {loc.type}
+                            </span>
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             <span className="text-[11px] text-emerald-700 font-bold">Đang mở cửa</span>
                           </div>
+                          <h3 className="font-extrabold text-[#004f5e] text-base leading-snug mt-1">
+                            {loc.name}
+                          </h3>
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCopyAddress(loc);
-                        }}
-                        className="p-2 rounded-xl bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors"
-                        title="Sao chép địa chỉ"
-                      >
-                        {isCopied ? (
-                          <Check className="w-4 h-4 text-emerald-600" />
-                        ) : (
-                          <Copy className="w-4 h-4" />
-                        )}
-                      </button>
+                      <div className="flex items-center gap-2 self-start sm:self-center">
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCopyAddress(loc);
+                          }}
+                          className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                          title="Sao chép địa chỉ"
+                        >
+                          {isCopied ? (
+                            <>
+                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                              <span className="text-emerald-700 font-bold">Đã chép</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-3.5 h-3.5" />
+                              <span>Sao chép</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveLocation(loc);
+                          }}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                            isSelected
+                              ? "bg-[#004f5e] text-white shadow-xs"
+                              : "bg-slate-100 hover:bg-brand-50 text-brand-700"
+                          }`}
+                        >
+                          <MapPin className="w-3.5 h-3.5" />
+                          <span>{isSelected ? "Đang chọn" : "Xem bản đồ"}</span>
+                        </button>
+                      </div>
                     </div>
 
-                    <h3 className="font-extrabold text-[#004f5e] text-base leading-snug">
-                      {loc.name}
-                    </h3>
-
                     {/* Address details */}
-                    <div className="space-y-2 text-xs text-slate-600">
+                    <div className="space-y-2 text-xs text-slate-600 mb-3">
                       <div className="flex items-start gap-2">
                         <MapPin className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
                         <span className="font-medium text-slate-800">{loc.addressFull}</span>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <Phone className="w-4 h-4 text-brand-600 shrink-0" />
-                        <a
-                          href={`tel:${loc.phoneRaw}`}
-                          className="font-bold text-[#004f5e] hover:underline"
-                        >
-                          {loc.phone}
-                        </a>
-                      </div>
+                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-brand-600 shrink-0" />
+                          <a
+                            href={`tel:${loc.phoneRaw}`}
+                            className="font-bold text-[#004f5e] hover:underline"
+                          >
+                            Hotline: {loc.phone}
+                          </a>
+                        </div>
 
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-brand-600 shrink-0" />
-                        <span>{loc.hours}</span>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-brand-600 shrink-0" />
+                          <span>{loc.hours}</span>
+                        </div>
                       </div>
                     </div>
 
                     {/* Features list */}
-                    <div className="pt-2 border-t border-slate-200/70">
-                      <div className="grid grid-cols-2 gap-1.5 text-[11px] text-slate-600">
-                        {loc.features.map((feat, fIdx) => (
-                          <div key={fIdx} className="flex items-center gap-1.5">
-                            <span className="text-brand-500 font-bold">✓</span>
-                            <span className="truncate">{feat}</span>
-                          </div>
-                        ))}
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 pt-2.5 border-t border-slate-100">
+                      {loc.features.map((feat, fIdx) => (
+                        <div key={fIdx} className="flex items-center gap-1">
+                          <span className="text-brand-500 font-bold">✓</span>
+                          <span>{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* RIGHT (5 cols - GÓC TRANG): Bản đồ nhỏ gọn */}
+            <div className="lg:col-span-5 lg:sticky lg:top-24">
+              <div className="bg-white rounded-3xl border-2 border-slate-200/90 shadow-xl overflow-hidden">
+                {/* Header widget */}
+                <div className="bg-gradient-to-r from-[#003843] to-[#004f5e] text-white px-4 py-3 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div className="w-7 h-7 rounded-lg bg-brand-400/20 text-brand-300 flex items-center justify-center shrink-0">
+                      <MapPin className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-[10px] text-brand-300 font-bold uppercase tracking-wider">
+                        Bản Đồ Góc Tra Cứu
+                      </div>
+                      <div className="text-xs font-bold text-white truncate">
+                        {activeLocation.name}
                       </div>
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="pt-5 mt-4 border-t border-slate-100 flex items-center gap-2">
+                  <a
+                    href={directionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 px-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all shrink-0 border border-white/15"
+                    title="Mở Google Maps toàn màn hình"
+                  >
+                    <ExternalLink className="w-3 h-3 text-brand-300" />
+                    <span>Mở Maps</span>
+                  </a>
+                </div>
+
+                {/* Quick tabs selector for locations right above the map */}
+                <div className="p-2 bg-slate-100 border-b border-slate-200 flex gap-1 overflow-x-auto scrollbar-none">
+                  {CONTACT_LOCATIONS.map((loc) => {
+                    const isSelected = activeLocation.id === loc.id;
+                    return (
+                      <button
+                        key={loc.id}
+                        type="button"
+                        onClick={() => setActiveLocation(loc)}
+                        className={`flex-1 min-w-[90px] py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all text-center truncate ${
+                          isSelected
+                            ? "bg-[#004f5e] text-white shadow-xs"
+                            : "bg-white text-slate-600 hover:bg-slate-200"
+                        }`}
+                      >
+                        {loc.id === "headquarters"
+                          ? "Hòa Bình"
+                          : loc.id === "branch-hanoi"
+                          ? "Hà Nội"
+                          : "Phú Thọ"}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Compact Map Container */}
+                <div className="h-[270px] sm:h-[300px] w-full relative bg-slate-100">
+                  <iframe
+                    key={activeLocation.id}
+                    src={mapEmbedUrl}
+                    title={`Bản đồ ${activeLocation.name}`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                </div>
+
+                {/* Bottom Footer Info */}
+                <div className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs space-y-2.5">
+                  <div className="flex items-start gap-2 text-slate-700">
+                    <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0 mt-0.5" />
+                    <span className="line-clamp-2 text-[11px] font-medium leading-relaxed">
+                      {activeLocation.addressFull}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1">
                     <a
-                      href={`tel:${loc.phoneRaw}`}
+                      href={`tel:${activeLocation.phoneRaw}`}
                       className="flex-1 py-2 px-3 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"
                     >
                       <Phone className="w-3.5 h-3.5" />
-                      <span>Gọi ngay</span>
+                      <span>{activeLocation.phone}</span>
                     </a>
 
                     <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(loc.addressFull)}`}
+                      href={directionsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-2 px-3 bg-[#004f5e] hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"
+                      className="flex-1 py-2 px-3 bg-[#004f5e] hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-xs"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>Chỉ đường</span>
                     </a>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-
-          {/* ====================================================
-              MAP EMBED SECTION
-              ==================================================== */}
-          <div className="bg-slate-100 rounded-3xl overflow-hidden border-2 border-slate-200 shadow-xl">
-            <div className="bg-[#004f5e] text-white p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-brand-400/20 text-brand-300 flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="text-xs text-brand-300 font-bold uppercase tracking-wider">
-                    Vị Trí Đang Xem
-                  </div>
-                  <div className="text-base sm:text-lg font-extrabold text-white">
-                    {activeLocation.name}
-                  </div>
-                </div>
               </div>
-
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <button
-                  type="button"
-                  onClick={() => handleCopyAddress(activeLocation)}
-                  className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all border border-white/15"
-                >
-                  <Copy className="w-3.5 h-3.5" />
-                  <span>{copiedId === activeLocation.id ? "Đã chép!" : "Sao chép địa chỉ"}</span>
-                </button>
-
-                <a
-                  href={directionsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-md transition-all shrink-0"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Mở Google Maps</span>
-                </a>
-              </div>
-            </div>
-
-            <div className="h-[360px] sm:h-[420px] md:h-[480px] w-full relative">
-              <iframe
-                key={activeLocation.id}
-                src={mapEmbedUrl}
-                title={`Bản đồ ${activeLocation.name}`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-                className="w-full h-full"
-              />
             </div>
           </div>
         </div>

@@ -87,7 +87,7 @@ export default function TermsPage() {
               <ul className="space-y-1.5 text-sm text-slate-700">
                 <li className="flex items-center gap-2">
                   <span>📞 Hotline / Zalo:</span>
-                  <strong className="text-[#004f5e]">0984.959.586</strong>
+                  <strong className="text-[#004f5e]">0984 95 95 86</strong>
                 </li>
                 <li className="flex items-center gap-2">
                   <span>✉️ Email hỗ trợ:</span>

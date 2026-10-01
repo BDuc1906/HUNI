@@ -12,8 +12,8 @@ export const BRAND_INFO = {
     bio: "Với gần 10 năm kinh nghiệm, HDC là đơn vị chuyên thiết kế và sản xuất đồng phục theo yêu cầu cho doanh nghiệp, tổ chức và trường học. Sở hữu đội ngũ tay nghề cao cùng hệ thống sản xuất hiện đại, HDC đáp ứng linh hoạt từ đơn hàng nhỏ đến số lượng lớn, đồng hành cùng khách hàng từ tư vấn, thiết kế đến sản xuất và giao hàng."
   },
   contact: {
-    hotline: "0984.959.586",
-    hotlineDisplay: "0984.959.586",
+    hotline: "0984 95 95 86",
+    hotlineDisplay: "0984 95 95 86",
     hotlineRaw: "0984959586",
     website: "hdcfashion.vn",
     zalo: "0984959586",

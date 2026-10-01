@@ -31,7 +31,7 @@ export const metadata = {
     template: "%s | HDC FASHION",
   },
   description:
-    "HDC GROUP VN - Thương hiệu HDC Fashion do CEO Nguyễn Thị Thương sáng lập. Chuyên tư vấn, thiết kế độc quyền và may đo đồng phục doanh nghiệp, trường học, thể thao golf cao cấp. Xưởng sản xuất trực tiếp 2.500m², hotline: 0984.959.586.",
+    "HDC GROUP VN - Thương hiệu HDC Fashion do CEO Nguyễn Thị Thương sáng lập. Chuyên tư vấn, thiết kế độc quyền và may đo đồng phục doanh nghiệp, trường học, thể thao golf cao cấp. Xưởng sản xuất trực tiếp 2.500m², hotline: 0984 95 95 86.",
   keywords:
     "đồng phục hdc, hdc fashion, hdcfashion, phong cách tạo thành công, đồng phục doanh nghiệp, may đo đồng phục, áo polo đồng phục, vest doanh nhân, hdc group vn, nguyễn thị thương, đồng phục phú thọ, đồng phục hà nội",
   authors: [{ name: "HDC GROUP VN - HDC FASHION" }],
@@ -68,7 +68,7 @@ export const metadata = {
     siteName: "HDC FASHION",
     title: "HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp",
     description:
-      "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ, thiết kế 3D miễn phí. Hotline 0984.959.586",
+      "Thiết kế & may đo đồng phục doanh nghiệp cao cấp. May mẫu thử 0đ, thiết kế 3D miễn phí. Hotline 0984 95 95 86",
     images: [
       {
         url: "/images/uniform_polo_corporate.jpg",

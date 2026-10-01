@@ -50,7 +50,7 @@ export default function QuickQuoteModal() {
       triggerConfetti();
       showToast("Đã gửi yêu cầu thành công! HDC sẽ phản hồi trong 5 phút.", "success");
     } catch (err) {
-      showToast(err.message || "Có lỗi xảy ra, vui lòng thử lại hoặc gọi Hotline 0984.959.586", "error");
+      showToast(err.message || "Có lỗi xảy ra, vui lòng thử lại hoặc gọi Hotline 0984 95 95 86", "error");
     } finally {
       setLoading(false);
     }

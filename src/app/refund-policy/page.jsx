@@ -76,7 +76,7 @@ export default function ReturnPolicyPage() {
                 4. Quy trình đổi trả
               </h2>
               <ol className="list-decimal pl-5 text-sm space-y-1">
-                <li>Liên hệ hotline 0984.959.586 hoặc Zalo để thông báo</li>
+                <li>Liên hệ hotline 0984 95 95 86 hoặc Zalo để thông báo</li>
                 <li>Cung cấp mã đơn hàng và hình ảnh sản phẩm lỗi</li>
                 <li>HDC xác nhận trong vòng 24 giờ</li>
                 <li>Nhân viên đến nhận sản phẩm lỗi và giao sản phẩm mới</li>

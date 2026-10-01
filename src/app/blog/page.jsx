@@ -7,6 +7,7 @@ import React from "react";
 import Link from "next/link";
 import { SITE_HIERARCHY } from "@/shared/data/siteHierarchy";
 import { BRAND_INFO } from "@/shared/data";
+import PageHeroSlider from "@/shared/components/PageHeroSlider";
 import {
   BookOpen,
   ChevronRight,
@@ -42,37 +43,11 @@ export default function BlogIndexPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      {/* Hero Banner */}
-      <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-12 sm:py-16 border-b border-brand-400/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-4"
-          >
-            <Link href="/" className="hover:text-white transition-colors">
-              Trang Chủ
-            </Link>
-            <ChevronRight className="w-3.5 h-3.5 text-brand-400" />
-            <span className="text-white font-semibold">Blog Kiến Thức</span>
-          </nav>
-
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider border border-brand-400/30">
-              <BookOpen className="w-3.5 h-3.5" />
-              <span>HDC Knowledge Hub 2026</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
-              CẨM NANG &amp; KINH NGHIỆM{" "}
-              <span className="text-brand-300">MAY ĐO ĐỒNG PHỤC DOANH NGHIỆP</span>
-            </h1>
-
-            <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed">
-              Tổng hợp kiến thức chuyên sâu về bảng size chuẩn, kỹ thuật dệt may, đánh giá chất liệu vải và kinh nghiệm tối ưu chi phí đặt may đồng phục cho công ty.
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* Dynamic Slidebar Hero — Chạy ảnh chuyển động giống trang chủ */}
+      <PageHeroSlider
+        category="blog"
+        breadcrumb="Kiến Thức & Cẩm Nang"
+      />
 
       {/* Main Content */}
       <section className="py-8 sm:py-12">
