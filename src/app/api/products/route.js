@@ -26,20 +26,27 @@ export async function GET(request) {
       ? parseInt(searchParams.get("priceMax"))
       : null;
     const sort = searchParams.get("sort") || "popular";
+    const publishedParam = searchParams.get("published");
+    const featuredParam = searchParams.get("featured");
     const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
     const limit = Math.min(
       Math.max(1, parseInt(searchParams.get("limit") || "12")),
-      48
+      100
     );
     const skip = (page - 1) * limit;
 
     // 1. Thử lấy từ Database Prisma
     try {
-      const dbCount = await db.product.count({ where: { published: true } });
+      const dbCount = await db.product.count();
 
       if (dbCount > 0) {
         const whereClause = {
-          published: true,
+          ...(publishedParam === "all"
+            ? {}
+            : publishedParam === "false"
+            ? { published: false }
+            : { published: true }),
+          ...(featuredParam === "true" ? { featured: true } : {}),
           ...(category && category !== "all" ? { category } : {}),
           ...(priceMin !== null || priceMax !== null
             ? {
@@ -53,6 +60,7 @@ export async function GET(request) {
             ? {
                 OR: [
                   { title: { contains: search, mode: "insensitive" } },
+                  { sku: { contains: search, mode: "insensitive" } },
                   { description: { contains: search, mode: "insensitive" } },
                   { material: { contains: search, mode: "insensitive" } },
                 ],

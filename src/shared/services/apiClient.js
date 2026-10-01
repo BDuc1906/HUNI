@@ -325,6 +325,16 @@ export const adminService = {
       body: JSON.stringify(voucherData),
     });
   },
+
+  /**
+   * Cập nhật trạng thái kích hoạt của voucher
+   */
+  async updateVoucherStatus(id, active) {
+    return apiFetch("/api/admin/vouchers", {
+      method: "PATCH",
+      body: JSON.stringify({ id, active }),
+    });
+  },
 };
 
 // ==================================================

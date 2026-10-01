@@ -63,6 +63,29 @@ export async function GET(request) {
           _count: {
             select: { orders: true, quotes: true },
           },
+          orders: {
+            orderBy: { createdAt: "desc" },
+            take: 20,
+            select: {
+              id: true,
+              orderNumber: true,
+              status: true,
+              total: true,
+              createdAt: true,
+            },
+          },
+          quotes: {
+            orderBy: { createdAt: "desc" },
+            take: 20,
+            select: {
+              id: true,
+              category: true,
+              quantity: true,
+              status: true,
+              estimatedPrice: true,
+              createdAt: true,
+            },
+          },
         },
       }),
       db.customer.count({ where: whereClause }),
@@ -79,6 +102,11 @@ export async function GET(request) {
       notes: c.notes,
       orderCount: c._count?.orders ?? 0,
       quoteCount: c._count?.quotes ?? 0,
+      orders: c.orders || [],
+      quotes: c.quotes || [],
+      totalSpent: (c.orders || [])
+        .filter((o) => o.status !== "CANCELLED")
+        .reduce((sum, o) => sum + (o.total || 0), 0),
       createdAt: c.createdAt,
       updatedAt: c.updatedAt,
     }));

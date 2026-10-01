@@ -140,3 +140,59 @@ export async function POST(request) {
     );
   }
 }
+
+export async function PATCH(request) {
+  try {
+    const session = await auth().catch(() => null);
+
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Vui lòng đăng nhập để thực hiện thao tác này.",
+        },
+        { status: 401 }
+      );
+    }
+
+    if (session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Truy cập bị từ chối. Chỉ Quản trị viên (ADMIN) mới có quyền cập nhật voucher.",
+        },
+        { status: 403 }
+      );
+    }
+
+    const body = await request.json();
+    const { id, code, active } = body;
+
+    if (!id && !code) {
+      return NextResponse.json(
+        { success: false, error: "Thiếu ID hoặc mã voucher" },
+        { status: 400 }
+      );
+    }
+
+    const updated = await db.voucher.update({
+      where: id ? { id } : { code },
+      data: {
+        ...(active !== undefined ? { active: Boolean(active) } : {}),
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Cập nhật trạng thái voucher thành công",
+      data: updated,
+    });
+  } catch (error) {
+    console.error("[admin/vouchers] PATCH error:", error);
+    return NextResponse.json(
+      { success: false, error: "Không thể cập nhật trạng thái voucher" },
+      { status: 500 }
+    );
+  }
+}
