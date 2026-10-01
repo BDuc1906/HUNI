@@ -29,31 +29,54 @@ export const authConfig = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        const user = await db.user.findUnique({
-          where: { email: credentials.email.toLowerCase().trim() },
-        });
+        const email = credentials.email.toLowerCase().trim();
+        const password = credentials.password;
 
-        if (!user) return null;
+        // 1. Tài khoản Quản trị viên Demo (dùng được ngay cả khi chưa kết nối Database)
+        if (
+          (email === "admin@hdcfashion.vn" || email === "admin@gmail.com") &&
+          (password === "admin123" || password === "admin@123")
+        ) {
+          return {
+            id: "admin-master-id",
+            email: "admin@hdcfashion.vn",
+            name: "Quản Trị Viên HDC",
+            role: "ADMIN",
+            avatar: "/images/icon.png",
+          };
+        }
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          user.passwordHash
-        );
-        if (!isValid) return null;
+        try {
+          const user = await db.user.findUnique({
+            where: { email },
+          });
 
-        // Cập nhật lastLoginAt
-        await db.user.update({
-          where: { id: user.id },
-          data: { lastLoginAt: new Date() },
-        });
+          if (!user) return null;
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.fullName,
-          role: user.role,
-          avatar: user.avatar,
-        };
+          const isValid = await bcrypt.compare(
+            password,
+            user.passwordHash
+          );
+          if (!isValid) return null;
+
+          // Cập nhật lastLoginAt (bỏ qua nếu DB lỗi)
+          await db.user
+            .update({
+              where: { id: user.id },
+              data: { lastLoginAt: new Date() },
+            })
+            .catch(() => {});
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.fullName,
+            role: user.role,
+            avatar: user.avatar,
+          };
+        } catch {
+          return null;
+        }
       },
     }),
   ],
