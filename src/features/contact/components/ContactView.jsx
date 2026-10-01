@@ -29,7 +29,9 @@ import {
   Truck,
   Layers,
   Award,
-  AlertCircle
+  AlertCircle,
+  Plus,
+  Minus,
 } from "lucide-react";
 
 // ============================================================
@@ -101,14 +103,7 @@ const PRODUCT_OPTIONS = [
   { id: "accessories", label: "Phụ Kiện Doanh Nghiệp", desc: "Mũ nón, cặp da, cà vạt, quà tặng" },
 ];
 
-const QUANTITY_PRESETS = [
-  { value: 20, label: "10 - 20 áo" },
-  { value: 50, label: "20 - 50 áo" },
-  { value: 100, label: "50 - 100 áo" },
-  { value: 300, label: "100 - 300 áo" },
-  { value: 500, label: "300 - 500 áo" },
-  { value: 1000, label: "Trên 500 áo" },
-];
+const QUICK_QUANTITY_OPTIONS = [10, 20, 50, 100, 200, 500];
 
 // ============================================================
 // FAQ DATA FOR CONTACT
@@ -163,8 +158,7 @@ export default function ContactView() {
   const [submittedData, setSubmittedData] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Location selector state
-  const [activeLocation, setActiveLocation] = useState(CONTACT_LOCATIONS[0]);
+  // Copy state
   const [copiedId, setCopiedId] = useState(null);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
@@ -193,6 +187,13 @@ export default function ContactView() {
       return;
     }
 
+    const parsedQty = parseInt(quantity, 10);
+    if (!parsedQty || isNaN(parsedQty) || parsedQty < 10) {
+      setErrorMessage("Số lượng đặt may tối thiểu là 10 cái. Quý khách vui lòng nhập số lượng từ 10 trở lên.");
+      showToast("Số lượng tối thiểu là 10 cái", "error");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -215,7 +216,7 @@ export default function ContactView() {
           email: email.trim() || undefined,
           company: company.trim() || undefined,
           category: category,
-          quantity: Number(quantity) || 50,
+          quantity: parsedQty,
           notes: payloadNotes,
         }),
       });
@@ -252,21 +253,16 @@ export default function ContactView() {
     setPhone("");
     setEmail("");
     setCompany("");
+    setQuantity(50);
     setNotes("");
     setAppointmentLocation("");
     setAppointmentDate("");
     setErrorMessage("");
   };
 
-  // Google Maps Embed URL
-  const mapApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  const mapQuery = activeLocation.query
-    ? encodeURIComponent(activeLocation.query)
-    : `${activeLocation.lat},${activeLocation.lng}`;
-  const mapEmbedUrl = mapApiKey
-    ? `https://www.google.com/maps/embed/v1/place?key=${mapApiKey}&q=${mapQuery}&zoom=16&language=vi`
-    : `https://www.google.com/maps?q=${mapQuery}&z=16&hl=vi&output=embed`;
-  const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
+  // Helper mở Google Maps
+  const getGoogleMapsUrl = (loc) =>
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.query || loc.addressFull)}`;
 
   return (
     <div className="bg-slate-50 min-h-screen">
@@ -549,28 +545,94 @@ export default function ContactView() {
                       {/* Row 4: Quantity Selection */}
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                            Số Lượng Dự Kiến (Chiết khấu sỉ theo bậc)
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <span>Số Lượng Áo Cần May</span>
+                            <span className="text-rose-500">*</span>
+                            <span className="text-[11px] font-medium text-slate-500 normal-case">
+                              (Tối thiểu 10 cái)
+                            </span>
                           </label>
-                          <span className="text-xs font-extrabold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-lg border border-brand-200">
-                            {quantity} áo
-                          </span>
+                          {Number(quantity) >= 10 && (
+                            <span className="text-xs font-extrabold text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-lg border border-brand-200">
+                              {Number(quantity).toLocaleString()} áo
+                            </span>
+                          )}
                         </div>
-                        <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
-                          {QUANTITY_PRESETS.map((q) => (
+
+                        {/* Input & Stepper */}
+                        <div className="space-y-2.5">
+                          <div className="relative flex items-center">
                             <button
-                              key={q.value}
                               type="button"
-                              onClick={() => setQuantity(q.value)}
-                              className={`py-2 px-1 rounded-xl text-xs font-bold text-center transition-all ${
-                                quantity === q.value
-                                  ? "bg-brand-500 text-white shadow-sm"
-                                  : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                              }`}
+                              onClick={() => {
+                                const current = parseInt(quantity, 10) || 10;
+                                setQuantity(Math.max(10, current - 10));
+                              }}
+                              className="absolute left-2 z-10 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
+                              title="Giảm 10 cái (Tối thiểu 10)"
                             >
-                              {q.label}
+                              <Minus className="w-3.5 h-3.5" />
                             </button>
-                          ))}
+                            <input
+                              type="number"
+                              min={10}
+                              step={1}
+                              required
+                              value={quantity}
+                              onChange={(e) => setQuantity(e.target.value)}
+                              placeholder="Nhập số lượng áo chính xác (tối thiểu 10)..."
+                              className={`w-full pl-12 pr-20 py-2.5 font-bold text-slate-800 bg-slate-50 border rounded-xl text-sm transition-all focus:bg-white focus:outline-none ${
+                                quantity !== "" && Number(quantity) < 10
+                                  ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100"
+                                  : "border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                              }`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const current = parseInt(quantity, 10) || 0;
+                                setQuantity(Math.max(10, current + 10));
+                              }}
+                              className="absolute right-12 z-10 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
+                              title="Tăng 10 cái"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="absolute right-3 text-xs font-bold text-slate-400 pointer-events-none select-none">
+                              áo
+                            </span>
+                          </div>
+
+                          {/* Warning message if below minimum */}
+                          {quantity !== "" && Number(quantity) < 10 && (
+                            <div className="flex items-center gap-1.5 text-xs text-rose-600 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-lg animate-in fade-in">
+                              <AlertCircle className="w-4 h-4 shrink-0" />
+                              <span>Số lượng đặt may tối thiểu là <strong>10 cái</strong>. Quý khách vui lòng nhập từ 10 trở lên.</span>
+                            </div>
+                          )}
+
+                          {/* Quick selection chips */}
+                          <div>
+                            <div className="text-[11px] font-medium text-slate-500 mb-1.5">
+                              Gợi ý chọn nhanh số lượng:
+                            </div>
+                            <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                              {QUICK_QUANTITY_OPTIONS.map((q) => (
+                                <button
+                                  key={q}
+                                  type="button"
+                                  onClick={() => setQuantity(q)}
+                                  className={`py-1.5 px-2 rounded-xl text-xs font-bold text-center transition-all ${
+                                    Number(quantity) === q
+                                      ? "bg-brand-500 text-white shadow-sm ring-1 ring-brand-500"
+                                      : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                                  }`}
+                                >
+                                  {q} cái
+                                </button>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
 
@@ -819,124 +881,97 @@ export default function ContactView() {
               HỆ THỐNG TRỤ SỞ, VĂN PHÒNG &amp; XƯỞNG SẢN XUẤT
             </h2>
             <p className="text-slate-600 text-sm sm:text-base">
-              Quý khách có thể ghé trực tiếp showroom để cảm nhận chất liệu vải thật, thử các phom áo may sẵn hoặc liên hệ để chuyên viên đến tư vấn tận nơi.
+              Quý khách có thể ghé trực tiếp showroom để cảm nhận chất liệu vải thật, thử phom áo may sẵn hoặc bấm vào cơ sở bất kỳ để tự động mở và chỉ đường trên Google Maps.
             </p>
           </div>
 
           {/* ====================================================
-              SIDE-BY-SIDE: 3 LOCATIONS LIST (LEFT) & COMPACT CORNER MAP (RIGHT)
+              HỆ THỐNG CƠ SỞ (FULL-WIDTH 3 CỘT — CLICK MỞ GOOGLE MAPS)
               ==================================================== */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-            {/* LEFT (7 cols): Danh sách cơ sở */}
-            <div className="lg:col-span-7 space-y-4">
-              {CONTACT_LOCATIONS.map((loc) => {
-                const Icon = loc.icon;
-                const isSelected = activeLocation.id === loc.id;
-                const isCopied = copiedId === loc.id;
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            {CONTACT_LOCATIONS.map((loc) => {
+              const Icon = loc.icon;
+              const isCopied = copiedId === loc.id;
+              const mapsUrl = getGoogleMapsUrl(loc);
 
-                return (
-                  <div
-                    key={loc.id}
-                    onClick={() => setActiveLocation(loc)}
-                    className={`cursor-pointer rounded-2xl p-5 sm:p-6 border-2 transition-all ${
-                      isSelected
-                        ? "border-brand-500 bg-white shadow-xl ring-2 ring-brand-500/20"
-                        : "border-slate-200 bg-slate-50/70 hover:bg-white hover:border-brand-300 hover:shadow-md"
-                    }`}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-100">
+              return (
+                <div
+                  key={loc.id}
+                  onClick={() => window.open(mapsUrl, "_blank", "noopener,noreferrer")}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      window.open(mapsUrl, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  className="group relative flex flex-col justify-between rounded-3xl p-6 sm:p-7 border-2 border-slate-200/90 bg-white hover:border-brand-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden"
+                >
+                  {/* Top accent bar on hover */}
+                  <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  {/* Card Content Top */}
+                  <div className="space-y-4">
+                    {/* Header: Icon, Type & Status */}
+                    <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <div
-                          className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all ${
-                            isSelected
-                              ? "bg-gradient-to-br from-brand-400 to-brand-600 text-white shadow-md"
-                              : "bg-white text-slate-700 border border-slate-200"
-                          }`}
-                        >
-                          <Icon className="w-5 h-5" />
+                        <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 group-hover:bg-gradient-to-br group-hover:from-brand-500 group-hover:to-brand-600 group-hover:text-white flex items-center justify-center shrink-0 transition-all duration-300 shadow-xs">
+                          <Icon className="w-6 h-6" />
                         </div>
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full bg-brand-100/80 text-brand-800">
-                              {loc.type}
-                            </span>
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-100/80 text-brand-800 inline-block">
+                            {loc.type}
+                          </span>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                             <span className="text-[11px] text-emerald-700 font-bold">Đang mở cửa</span>
                           </div>
-                          <h3 className="font-extrabold text-[#004f5e] text-base leading-snug mt-1">
-                            {loc.name}
-                          </h3>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 self-start sm:self-center">
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleCopyAddress(loc);
-                          }}
-                          className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-slate-600 border border-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-colors"
-                          title="Sao chép địa chỉ"
-                        >
-                          {isCopied ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
-                              <span className="text-emerald-700 font-bold">Đã chép</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3.5 h-3.5" />
-                              <span>Sao chép</span>
-                            </>
-                          )}
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveLocation(loc);
-                          }}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
-                            isSelected
-                              ? "bg-[#004f5e] text-white shadow-xs"
-                              : "bg-slate-100 hover:bg-brand-50 text-brand-700"
-                          }`}
-                        >
-                          <MapPin className="w-3.5 h-3.5" />
-                          <span>{isSelected ? "Đang chọn" : "Xem bản đồ"}</span>
-                        </button>
+                      {/* External Link icon badge */}
+                      <div
+                        className="p-2 rounded-xl bg-slate-100 group-hover:bg-brand-500 group-hover:text-white text-slate-500 transition-all shrink-0"
+                        title="Click để mở Google Maps"
+                      >
+                        <ExternalLink className="w-4 h-4" />
                       </div>
                     </div>
 
-                    {/* Address details */}
-                    <div className="space-y-2 text-xs text-slate-600 mb-3">
-                      <div className="flex items-start gap-2">
-                        <MapPin className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
-                        <span className="font-medium text-slate-800">{loc.addressFull}</span>
+                    {/* Location Name */}
+                    <h3 className="font-extrabold text-[#004f5e] group-hover:text-brand-600 text-lg leading-snug transition-colors">
+                      {loc.name}
+                    </h3>
+
+                    {/* Full Address */}
+                    <div className="flex items-start gap-2.5 text-xs text-slate-600 leading-relaxed bg-slate-50 p-3.5 rounded-2xl border border-slate-100 group-hover:bg-brand-50/40 transition-colors">
+                      <MapPin className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                      <span className="font-medium text-slate-800">{loc.addressFull}</span>
+                    </div>
+
+                    {/* Contact & Hours */}
+                    <div className="space-y-2 text-xs text-slate-600 pt-1">
+                      <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-brand-600 shrink-0" />
+                        <span className="text-slate-500">Hotline:</span>
+                        <a
+                          href={`tel:${loc.phoneRaw}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="font-bold text-[#004f5e] hover:text-brand-600 hover:underline"
+                        >
+                          {loc.phone}
+                        </a>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-brand-600 shrink-0" />
-                          <a
-                            href={`tel:${loc.phoneRaw}`}
-                            className="font-bold text-[#004f5e] hover:underline"
-                          >
-                            Hotline: {loc.phone}
-                          </a>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-brand-600 shrink-0" />
-                          <span>{loc.hours}</span>
-                        </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-brand-600 shrink-0" />
+                        <span className="text-slate-500">Giờ làm việc:</span>
+                        <span className="font-medium text-slate-700">{loc.hours}</span>
                       </div>
                     </div>
 
                     {/* Features list */}
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 pt-2.5 border-t border-slate-100">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-slate-500 pt-3 border-t border-slate-100">
                       {loc.features.map((feat, fIdx) => (
                         <div key={fIdx} className="flex items-center gap-1">
                           <span className="text-brand-500 font-bold">✓</span>
@@ -945,113 +980,46 @@ export default function ContactView() {
                       ))}
                     </div>
                   </div>
-                );
-              })}
-            </div>
 
-            {/* RIGHT (5 cols - GÓC TRANG): Bản đồ nhỏ gọn */}
-            <div className="lg:col-span-5 lg:sticky lg:top-24">
-              <div className="bg-white rounded-3xl border-2 border-slate-200/90 shadow-xl overflow-hidden">
-                {/* Header widget */}
-                <div className="bg-gradient-to-r from-[#003843] to-[#004f5e] text-white px-4 py-3 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-7 h-7 rounded-lg bg-brand-400/20 text-brand-300 flex items-center justify-center shrink-0">
-                      <MapPin className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0">
-                      <div className="text-[10px] text-brand-300 font-bold uppercase tracking-wider">
-                        Bản Đồ Góc Tra Cứu
-                      </div>
-                      <div className="text-xs font-bold text-white truncate">
-                        {activeLocation.name}
-                      </div>
-                    </div>
-                  </div>
-
-                  <a
-                    href={directionsUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1.5 px-2.5 bg-white/10 hover:bg-white/20 text-white rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all shrink-0 border border-white/15"
-                    title="Mở Google Maps toàn màn hình"
-                  >
-                    <ExternalLink className="w-3 h-3 text-brand-300" />
-                    <span>Mở Maps</span>
-                  </a>
-                </div>
-
-                {/* Quick tabs selector for locations right above the map */}
-                <div className="p-2 bg-slate-100 border-b border-slate-200 flex gap-1 overflow-x-auto scrollbar-none">
-                  {CONTACT_LOCATIONS.map((loc) => {
-                    const isSelected = activeLocation.id === loc.id;
-                    return (
-                      <button
-                        key={loc.id}
-                        type="button"
-                        onClick={() => setActiveLocation(loc)}
-                        className={`flex-1 min-w-[90px] py-1.5 px-2 rounded-lg text-[11px] font-bold transition-all text-center truncate ${
-                          isSelected
-                            ? "bg-[#004f5e] text-white shadow-xs"
-                            : "bg-white text-slate-600 hover:bg-slate-200"
-                        }`}
-                      >
-                        {loc.id === "headquarters"
-                          ? "Hòa Bình"
-                          : loc.id === "branch-hanoi"
-                          ? "Hà Nội"
-                          : "Phú Thọ"}
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Compact Map Container */}
-                <div className="h-[270px] sm:h-[300px] w-full relative bg-slate-100">
-                  <iframe
-                    key={activeLocation.id}
-                    src={mapEmbedUrl}
-                    title={`Bản đồ ${activeLocation.name}`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    allowFullScreen
-                    className="w-full h-full"
-                  />
-                </div>
-
-                {/* Bottom Footer Info */}
-                <div className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs space-y-2.5">
-                  <div className="flex items-start gap-2 text-slate-700">
-                    <MapPin className="w-3.5 h-3.5 text-brand-600 shrink-0 mt-0.5" />
-                    <span className="line-clamp-2 text-[11px] font-medium leading-relaxed">
-                      {activeLocation.addressFull}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-1">
-                    <a
-                      href={`tel:${activeLocation.phoneRaw}`}
-                      className="flex-1 py-2 px-3 bg-brand-50 hover:bg-brand-100 text-brand-700 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors"
+                  {/* Card Bottom: Action buttons */}
+                  <div className="pt-5 mt-4 border-t border-slate-100 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCopyAddress(loc);
+                      }}
+                      className="px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
+                      title="Sao chép địa chỉ"
                     >
-                      <Phone className="w-3.5 h-3.5" />
-                      <span>{activeLocation.phone}</span>
-                    </a>
+                      {isCopied ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="text-emerald-700">Đã chép</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Sao chép</span>
+                        </>
+                      )}
+                    </button>
 
                     <a
-                      href={directionsUrl}
+                      href={mapsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex-1 py-2 px-3 bg-[#004f5e] hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                      onClick={(e) => e.stopPropagation()}
+                      className="flex-1 py-2.5 px-3 bg-[#004f5e] group-hover:bg-gradient-to-r group-hover:from-brand-500 group-hover:to-brand-600 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-sm"
                     >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      <span>Chỉ đường</span>
+                      <MapPin className="w-3.5 h-3.5" />
+                      <span>Mở Google Maps</span>
+                      <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
                     </a>
                   </div>
                 </div>
-              </div>
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>

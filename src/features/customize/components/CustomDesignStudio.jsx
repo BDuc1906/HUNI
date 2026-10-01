@@ -588,7 +588,7 @@ export default function CustomDesignStudio() {
 
       if (res && res.success) {
         setSubmitSuccess({
-          quoteId: res.data?.quoteId || res.quoteId || "HDC-" + Date.now().toString().slice(-6),
+          quoteId: res.data?.quoteId || res.quoteId || "HDC-QUOTE",
           category: currentGarment.name,
           quantity: finalQty,
           sizeSummary:

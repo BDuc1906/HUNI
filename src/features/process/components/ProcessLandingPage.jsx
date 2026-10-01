@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { PROCESS_STEPS } from "@/shared/data";
+import { processRelatedLinks } from "@/features/process/data/articles";
 import ModuleBreadcrumb from "./ModuleBreadcrumb";
 
 const iconMap = {
@@ -184,6 +185,16 @@ export default function ProcessLandingPage() {
               Liên hệ tư vấn
             </a>
           </div>
+          <nav aria-label="Nội dung liên quan" className="mt-8 border-t border-white/15 pt-6">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-200">Tìm hiểu thêm</p>
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
+              {processRelatedLinks.process.map((link) => (
+                <Link key={link.href} href={link.href} className="inline-flex min-h-11 items-center rounded-xl border border-white/25 px-4 py-2 text-sm font-bold text-white transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
       </section>
     </>
