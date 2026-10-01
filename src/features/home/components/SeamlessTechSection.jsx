@@ -79,7 +79,7 @@ export default function SeamlessTechSection() {
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#004f5e]">
-            CÔNG NGHỆ SEAMLESS
+            CÔNG NGHỆ SAEMLESS
           </h2>
 
           <p className="text-lg sm:text-xl md:text-2xl font-bold text-brand-gradient">

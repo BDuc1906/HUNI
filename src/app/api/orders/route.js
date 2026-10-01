@@ -1,10 +1,11 @@
-﻿// ==================================================
+// ==================================================
 // POST /api/orders — Nhận đơn hàng (BẢO MẬT)
 // GET  /api/orders — Danh sách (admin)
 // ==================================================
 
 import { NextResponse } from "next/server";
 import { db, generateOrderNumber } from "@/server/db";
+import { auth } from "@/server/auth";
 import {
   createOrderSchema,
   formatZodErrors,
@@ -316,28 +317,114 @@ export async function POST(request) {
 }
 
 // ==================================================
-// GET — Danh sách đơn (admin)
-// ⚠️ TODO: Thêm auth check — chỉ ADMIN được gọi
+// GET — Danh sách đơn hàng (BẢO MẬT: Auth Guard & RBAC)
+// - ADMIN: Xem toàn bộ đơn hàng (hỗ trợ filter status, pagination)
+// - CUSTOMER (?mine=true): Xem các đơn hàng của chính tài khoản đăng nhập
+// - Chưa đăng nhập: 401 Unauthorized
+// - Người dùng không phải ADMIN cố xem toàn bộ: 403 Forbidden
 // ==================================================
 export async function GET(request) {
   try {
+    const session = await auth().catch(() => null);
+
+    // 1. Kiểm tra xác thực (Authentication Guard)
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Vui lòng đăng nhập để truy cập danh sách đơn hàng.",
+        },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
-    const limit = parseInt(searchParams.get("limit") || "20");
+    const limit = Math.min(
+      Math.max(1, parseInt(searchParams.get("limit") || "20")),
+      100
+    );
+    const page = Math.max(1, parseInt(searchParams.get("page") || "1"));
+    const skip = (page - 1) * limit;
+    const isMine = searchParams.get("mine") === "true";
+    const isAdmin = session.user.role === "ADMIN";
 
-    const orders = await db.order.findMany({
-      where: status ? { status } : undefined,
-      take: Math.min(limit, 100),
-      orderBy: { createdAt: "desc" },
-      include: {
-        customer: true,
-        items: true,
-      },
-    });
+    // 2. Kiểm tra phân quyền (RBAC)
+    // Nếu không phải ADMIN và không yêu cầu xem đơn cá nhân (?mine=true) -> Chặn 403 Forbidden
+    if (!isAdmin && !isMine) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Truy cập bị từ chối. Chỉ Quản trị viên (ADMIN) mới có quyền xem danh sách đơn hàng hệ thống.",
+        },
+        { status: 403 }
+      );
+    }
+
+    // 3. Xây dựng điều kiện truy vấn an toàn
+    let whereClause = {};
+
+    if (status) {
+      whereClause.status = status;
+    }
+
+    if (!isAdmin || isMine) {
+      // Tìm thông tin SĐT và Email của User để lấy các đơn hàng tương ứng
+      const user = await db.user.findUnique({
+        where: { id: session.user.id },
+        select: { email: true, phone: true },
+      });
+
+      const orConditions = [
+        ...(user?.email ? [{ customer: { email: user.email } }] : []),
+        ...(user?.phone ? [{ customer: { phone: user.phone } }] : []),
+      ];
+
+      if (orConditions.length === 0) {
+        return NextResponse.json({
+          success: true,
+          count: 0,
+          total: 0,
+          page,
+          limit,
+          totalPages: 0,
+          orders: [],
+        });
+      }
+
+      whereClause = {
+        ...(status ? { status } : {}),
+        customer: {
+          OR: [
+            ...(user?.email ? [{ email: user.email }] : []),
+            ...(user?.phone ? [{ phone: user.phone }] : []),
+          ],
+        },
+      };
+    }
+
+    const [orders, total] = await Promise.all([
+      db.order.findMany({
+        where: whereClause,
+        take: limit,
+        skip,
+        orderBy: { createdAt: "desc" },
+        include: {
+          customer: true,
+          items: true,
+        },
+      }),
+      db.order.count({ where: whereClause }),
+    ]);
 
     return NextResponse.json({
       success: true,
       count: orders.length,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
       orders,
     });
   } catch (error) {

@@ -32,16 +32,16 @@ export async function generateMetadata({ params }) {
 
   if (!product) {
     return {
-      title: "Sản phẩm không tồn tại | HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp",
+      title: "Sản phẩm không tồn tại | HUNI Đồng Phục",
       description: "Không tìm thấy thông tin sản phẩm yêu cầu.",
     };
   }
 
   return {
-    title: `${product.title} | HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp`,
+    title: `${product.title} | HUNI Đồng Phục`,
     description: product.description,
     openGraph: {
-      title: `${product.title} | HDC FASHION - Đồng Phục Doanh Nghiệp Cao Cấp`,
+      title: `${product.title} | HUNI Đồng Phục`,
       description: product.description,
       images: [product.image],
       type: "website",
@@ -102,14 +102,14 @@ export default async function ProductDetailPage({ params }) {
           >
             <Link
               href="/"
-              className="hover:text-brand-600 transition-colors font-medium"
+              className="hover:text-amber-700 transition-colors font-medium"
             >
               Trang chủ
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <Link
               href="/#catalog"
-              className="hover:text-brand-600 transition-colors font-medium"
+              className="hover:text-amber-700 transition-colors font-medium"
             >
               Sản phẩm
             </Link>
@@ -139,7 +139,7 @@ export default async function ProductDetailPage({ params }) {
               {/* Tiêu đề & Mã SKU */}
               <div className="space-y-2 border-b border-slate-200 pb-4 sm:pb-5">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
-                  <span className="text-xs font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg border border-brand-200 inline-block">
+                  <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200 inline-block">
                     {categoryName}
                   </span>
                   <span className="text-xs text-slate-400 font-mono">
@@ -170,7 +170,7 @@ export default async function ProductDetailPage({ params }) {
                     Giá may mẫu / Đơn hàng nhỏ (từ 10 chiếc):
                   </span>
                   <div className="flex items-baseline gap-2 sm:gap-3 flex-wrap">
-                    <span className="text-xl sm:text-2xl md:text-3xl font-black text-brand-600">
+                    <span className="text-xl sm:text-2xl md:text-3xl font-black text-amber-600">
                       {product.price.toLocaleString("vi-VN")}đ
                     </span>
                     {product.originalPrice && product.originalPrice > product.price && (
@@ -194,10 +194,10 @@ export default async function ProductDetailPage({ params }) {
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
                     <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                      <Tag className="w-3.5 h-3.5 text-brand-600" />
+                      <Tag className="w-3.5 h-3.5 text-amber-600" />
                       Bảng giá may sỉ theo số lượng
                     </h3>
-                    <span className="text-[11px] text-brand-700 font-semibold">
+                    <span className="text-[11px] text-amber-700 font-semibold">
                       Chiết khấu lên tới 35%
                     </span>
                   </div>
@@ -206,7 +206,7 @@ export default async function ProductDetailPage({ params }) {
                     {product.wholesaleTiers.map((tier, idx) => (
                       <div
                         key={idx}
-                        className="p-3 bg-white rounded-xl border border-slate-200 text-center hover:border-brand-400 hover:shadow-xs transition-all"
+                        className="p-3 bg-white rounded-xl border border-slate-200 text-center hover:border-amber-400 hover:shadow-xs transition-all"
                       >
                         <div className="text-[11px] font-semibold text-slate-500">
                           {tier.label}
@@ -262,7 +262,7 @@ export default async function ProductDetailPage({ params }) {
                       <span className="text-xs font-bold text-slate-700">
                         Kích thước hỗ trợ:
                       </span>
-                      <span className="text-[11px] text-brand-700 font-semibold flex items-center gap-1">
+                      <span className="text-[11px] text-amber-700 font-semibold flex items-center gap-1">
                         <Ruler className="w-3 h-3" /> Hỗ trợ may đo theo bảng size công ty
                       </span>
                     </div>
@@ -315,7 +315,7 @@ export default async function ProductDetailPage({ params }) {
               {/* Thông tin dịch vụ & chính sách */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-200 text-xs">
                 <div className="flex items-start gap-2 text-slate-600">
-                  <Truck className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
+                  <Truck className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-slate-800 block">Giao hàng toàn quốc</span>
                     <span>Miễn phí vận chuyển từ 50 chiếc</span>

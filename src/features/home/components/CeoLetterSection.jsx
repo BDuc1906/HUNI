@@ -12,7 +12,7 @@ import {
   Award,
   Scissors,
   Truck,
-  HeartHandshake
+  HeartHandshake,
 } from "lucide-react";
 
 export default function CeoLetterSection() {
@@ -28,9 +28,9 @@ export default function CeoLetterSection() {
       <div className="absolute bottom-10 right-10 w-72 sm:w-96 h-72 sm:h-96 bg-slate-50 rounded-full blur-3xl pointer-events-none opacity-50" />
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 relative z-10">
-        {/* =============================================
-            BANNER tmht.jpg
-            ============================================= */}
+        {/* ============================================
+            BANNER với chú thích brand
+            ============================================ */}
         <div className="max-w-6xl mx-auto mb-10 sm:mb-14">
           <div className="relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-2xl sm:rounded-3xl blur-md opacity-20 pointer-events-none" />
@@ -43,14 +43,27 @@ export default function CeoLetterSection() {
                 height={900}
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 1152px"
                 className="w-full h-auto"
+                priority
               />
+
+              {/* ==========================================
+                  Badge chú thích mối quan hệ brand
+                  ========================================== */}
+              <div className="absolute bottom-3 right-3 px-3 py-2 bg-white/95 backdrop-blur-md rounded-lg shadow-lg border border-slate-200 max-w-[calc(100%-24px)]">
+                <p className="text-[10px] sm:text-[11px] text-slate-700 leading-snug">
+                  <strong className="text-[#004f5e]">HDC FASHION</strong>
+                  <span className="mx-1 text-slate-400">—</span>
+                  Thương hiệu của{" "}
+                  <strong className="text-amber-700">HUNI</strong>
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* =============================================
+        {/* ============================================
             Section Header
-            ============================================= */}
+            ============================================ */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2 sm:space-y-3">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-500" />
@@ -66,14 +79,12 @@ export default function CeoLetterSection() {
           <div className="w-20 sm:w-24 h-1 bg-gradient-to-r from-brand-400 to-brand-600 mx-auto rounded-full mt-2" />
         </div>
 
-        {/* =============================================
-            Main Card — 2 columns
-            ============================================= */}
+        {/* ============================================
+            Main Card
+            ============================================ */}
         <div className="bg-slate-50 rounded-2xl sm:rounded-3xl border border-slate-200 p-4 sm:p-6 md:p-10 shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-start">
-            {/* =========================================
-                Left: CEO Portrait — hiển thị đầy đủ 100% ảnh
-                ========================================= */}
+            {/* Left: CEO Portrait */}
             <div className="lg:col-span-5">
               <div className="relative group w-full max-w-md mx-auto">
                 <div className="absolute -inset-1.5 sm:-inset-2 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 rounded-3xl blur-md opacity-30 group-hover:opacity-50 transition duration-500" />
@@ -91,9 +102,7 @@ export default function CeoLetterSection() {
               </div>
             </div>
 
-            {/* =========================================
-                Right: Letter Content
-                ========================================= */}
+            {/* Right: Letter Content */}
             <div className="lg:col-span-7 space-y-5 sm:space-y-6">
               <div className="space-y-2 sm:space-y-3">
                 <div className="text-[#004f5e] font-extrabold text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2">
@@ -104,8 +113,9 @@ export default function CeoLetterSection() {
                   {BRAND_INFO.ceo.bio}
                 </p>
                 <p className="text-slate-600 text-[13px] sm:text-sm italic font-medium border-l-4 border-brand-400 pl-3 sm:pl-4 py-1">
-                  &ldquo;Chúng tôi tin rằng, mỗi bộ đồng phục không chỉ là trang phục công sở đơn thuần,
-                  mà còn là niềm tự hào, đại diện cho bản sắc văn hóa và đẳng cấp của một tập thể.&rdquo;
+                  &ldquo;Chúng tôi tin rằng, mỗi bộ đồng phục không chỉ là trang
+                  phục công sở đơn thuần, mà còn là niềm tự hào, đại diện cho bản
+                  sắc văn hóa và đẳng cấp của một tập thể.&rdquo;
                 </p>
               </div>
 
@@ -113,19 +123,24 @@ export default function CeoLetterSection() {
               <div className="pt-2 border-t border-slate-200">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-2 text-[11px] sm:text-xs text-slate-700">
                   <span className="flex items-center gap-1.5 text-[#004f5e] font-bold">
-                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" /> Chất lượng
+                    <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" />{" "}
+                    Chất lượng
                   </span>
                   <span className="flex items-center gap-1.5 text-[#004f5e] font-bold">
-                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" /> Thiết kế
+                    <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" />{" "}
+                    Thiết kế
                   </span>
                   <span className="flex items-center gap-1.5 text-[#004f5e] font-bold">
-                    <Scissors className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" /> May đo
+                    <Scissors className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" />{" "}
+                    May đo
                   </span>
                   <span className="flex items-center gap-1.5 text-[#004f5e] font-bold">
-                    <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" /> Giao hàng
+                    <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" />{" "}
+                    Giao hàng
                   </span>
                   <span className="flex items-center gap-1.5 text-[#004f5e] font-bold">
-                    <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" /> Đồng hành
+                    <HeartHandshake className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-500" />{" "}
+                    Đồng hành
                   </span>
                 </div>
               </div>
@@ -136,7 +151,7 @@ export default function CeoLetterSection() {
                   onClick={() => setIsQuickQuoteOpen(true)}
                   className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-black text-xs sm:text-sm rounded-xl sm:rounded-2xl shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] transition-all"
                 >
-                  <span>Nhận Báo Giá & Mẫu Vải Miễn Phí</span>
+                  <span>Nhận Báo Giá &amp; Mẫu Vải Miễn Phí</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
                 </button>
 
@@ -151,9 +166,7 @@ export default function CeoLetterSection() {
             </div>
           </div>
 
-          {/* =========================================
-              Contact info — full width, 3 cột
-              ========================================= */}
+          {/* Contact info */}
           <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             <a
               href={`tel:${BRAND_INFO.contact.hotlineRaw}`}

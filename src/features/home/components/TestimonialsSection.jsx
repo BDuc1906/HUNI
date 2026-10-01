@@ -1,82 +1,147 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import { TESTIMONIALS } from "@/shared/data";
-import { Star, Quote, Award } from "lucide-react";
+import { BRAND_INFO } from "@/shared/data";
+import { useShop } from "@/shared/providers/ShopProvider";
+import {
+  Sparkles,
+  Quote,
+  Phone,
+  ArrowRight,
+  Award,
+  Pencil,
+  Scissors,
+  Truck,
+  HeartHandshake,
+} from "lucide-react";
+
+// ============================================================
+// CEO QUOTE + 5 CAM KẾT VÀNG
+// Style giống banner HUNI: nền navy, icon tròn viền vàng
+// ============================================================
+
+const COMMITMENTS = [
+  { icon: Award, label: "CHẤT LƯỢNG", label2: "CAM KẾT" },
+  { icon: Pencil, label: "THIẾT KẾ", label2: "ĐỘC QUYỀN" },
+  { icon: Scissors, label: "MAY ĐO", label2: "CHUYÊN NGHIỆP" },
+  { icon: Truck, label: "GIAO HÀNG", label2: "ĐÚNG HẸN" },
+  { icon: HeartHandshake, label: "ĐỒNG HÀNH", label2: "LÂU DÀI" },
+];
 
 export default function TestimonialsSection() {
-  if (!TESTIMONIALS || TESTIMONIALS.length === 0) return null;
+  const { setIsQuickQuoteOpen } = useShop();
 
   return (
-    <section className="py-14 sm:py-20 bg-slate-50 border-t border-slate-200">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4">
-        {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 space-y-2 sm:space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
-            <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-600" />
-            Đánh Giá Khách Hàng
-          </div>
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#004f5e]">
-            KHÁCH HÀNG NÓI GÌ VỀ HDC?
-          </h2>
-          <p className="text-slate-600 text-xs sm:text-sm md:text-base">
-            Sự hài lòng của quý đối tác chính là thước đo giá trị cao nhất cho chất lượng
-            và dịch vụ của chúng tôi.
-          </p>
-        </div>
+    <section
+      id="ceo-quote-section"
+      className="py-14 sm:py-20 bg-white border-t border-slate-200 relative overflow-hidden"
+    >
+      {/* Ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-50 rounded-full blur-3xl pointer-events-none opacity-50" />
 
-        {/* 3 Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
-          {TESTIMONIALS.map((item, idx) => (
-            <div
-              key={idx}
-              className="bg-white p-4 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl border border-slate-200 hover:border-brand-400 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
-            >
-              <div className="space-y-3 sm:space-y-4">
-                {/* Stars + Quote icon */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-0.5 sm:gap-1 text-brand-500">
-                    {[...Array(item.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current"
-                      />
-                    ))}
-                  </div>
-                  <Quote className="w-5 h-5 sm:w-7 sm:h-7 text-brand-200" />
-                </div>
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 relative z-10">
+        {/* ============================================
+            CEO QUOTE CARD
+            ============================================ */}
+        <div className="relative bg-gradient-to-br from-[#001a3d] via-[#00284f] to-[#001a3d] rounded-3xl p-6 sm:p-10 md:p-12 border border-amber-400/30 shadow-2xl overflow-hidden mb-8 sm:mb-10">
+          {/* Glow effects */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
 
-                <p className="text-slate-700 text-xs sm:text-sm leading-relaxed italic">
-                  &ldquo;{item.content}&rdquo;
-                </p>
+          <div className="relative z-10 text-center">
+            {/* Quote icon */}
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg mx-auto mb-6">
+              <Quote className="w-7 h-7 text-white" />
+            </div>
+
+            {/* Tagline */}
+            <p className="text-xl sm:text-2xl md:text-3xl font-black text-white leading-relaxed mb-8 max-w-3xl mx-auto">
+              &ldquo;HUNI —{" "}
+              <span className="text-amber-300">
+                Đồng hành cùng doanh nghiệp
+              </span>
+              , nâng tầm thương hiệu qua từng bộ đồng phục!&rdquo;
+            </p>
+
+            {/* Author */}
+            <div className="inline-flex items-center gap-4 pt-6 border-t border-white/10">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-white font-black text-lg sm:text-xl shrink-0 border-2 border-white/20">
+                TT
               </div>
-
-              {/* Author */}
-              <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 flex items-center gap-3">
-                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden border-2 border-brand-400 shadow-sm shrink-0">
-                  <Image
-                    src={item.avatar}
-                    alt={item.name}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
+              <div className="text-left">
+                <div className="font-extrabold text-white text-base sm:text-lg">
+                  {BRAND_INFO.ceo.name}
                 </div>
-                <div className="min-w-0">
-                  <h4 className="font-extrabold text-[#004f5e] text-xs sm:text-sm truncate">
-                    {item.name}
-                  </h4>
-                  <p className="text-[10px] sm:text-[11px] text-slate-500 line-clamp-1 mt-0.5">
-                    {item.role}
-                  </p>
-                  <span className="text-[10px] text-brand-700 font-semibold">
-                    {item.location}
-                  </span>
+                <div className="text-amber-300 text-xs sm:text-sm font-semibold">
+                  Founder &amp; CEO HDC GROUP VN
                 </div>
               </div>
             </div>
-          ))}
+          </div>
+        </div>
+
+        {/* ============================================
+            5 CAM KẾT VÀNG — Style giống banner HUNI
+            ============================================ */}
+        <div className="bg-gradient-to-br from-[#001a3d] via-[#00284f] to-[#001a3d] rounded-3xl p-5 sm:p-7 border border-amber-400/30 shadow-2xl overflow-hidden relative">
+          {/* Glow effects */}
+          <div className="absolute top-0 right-1/4 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/4 w-64 h-64 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10">
+            {/* Grid 5 cam kết */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-3 md:gap-4">
+              {COMMITMENTS.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div
+                    key={idx}
+                    className="flex flex-col sm:flex-row items-center sm:items-center gap-2 sm:gap-3 text-center sm:text-left"
+                  >
+                    {/* Icon tròn viền vàng */}
+                    <div className="relative w-14 h-14 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full border-2 border-amber-400 flex items-center justify-center shrink-0 bg-[#001a3d]/50">
+                      <Icon
+                        className="w-6 h-6 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-400"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+
+                    {/* Text 2 dòng */}
+                    <div className="min-w-0">
+                      <div className="text-white font-black text-[11px] sm:text-[11px] md:text-xs leading-tight uppercase tracking-wide">
+                        {item.label}
+                      </div>
+                      <div className="text-white font-black text-[11px] sm:text-[11px] md:text-xs leading-tight uppercase tracking-wide">
+                        {item.label2}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================
+            CTA — Liên hệ CEO
+            ============================================ */}
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+          <button
+            onClick={() => setIsQuickQuoteOpen(true)}
+            className="px-6 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-xl shadow-brand-500/30 flex items-center justify-center gap-2 transform hover:-translate-y-1 active:scale-[0.98] transition-all whitespace-nowrap"
+          >
+            <Sparkles className="w-4 h-4 shrink-0" />
+            <span>Nhận Báo Giá Miễn Phí</span>
+            <ArrowRight className="w-4 h-4 shrink-0" />
+          </button>
+
+          <a
+            href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
+            className="px-6 sm:px-8 py-3.5 sm:py-4 bg-white hover:bg-slate-50 text-[#004f5e] border-2 border-[#004f5e] font-bold text-xs sm:text-sm rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all whitespace-nowrap"
+          >
+            <Phone className="w-4 h-4 text-brand-600 animate-pulse shrink-0" />
+            <span>Hotline: {BRAND_INFO.contact.hotline}</span>
+          </a>
         </div>
       </div>
     </section>

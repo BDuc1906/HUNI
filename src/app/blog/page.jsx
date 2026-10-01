@@ -7,7 +7,6 @@ import React from "react";
 import Link from "next/link";
 import { SITE_HIERARCHY } from "@/shared/data/siteHierarchy";
 import { BRAND_INFO } from "@/shared/data";
-import PageHeroSlider from "@/shared/components/PageHeroSlider";
 import {
   BookOpen,
   ChevronRight,
@@ -43,11 +42,37 @@ export default function BlogIndexPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-      {/* Dynamic Slidebar Hero — Chạy ảnh chuyển động giống trang chủ */}
-      <PageHeroSlider
-        category="blog"
-        breadcrumb="Kiến Thức & Cẩm Nang"
-      />
+      {/* Hero Banner */}
+      <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-12 sm:py-16 border-b border-brand-400/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-2 text-xs sm:text-sm text-brand-200/80 mb-4"
+          >
+            <Link href="/" className="hover:text-white transition-colors">
+              Trang Chủ
+            </Link>
+            <ChevronRight className="w-3.5 h-3.5 text-brand-400" />
+            <span className="text-white font-semibold">Blog Kiến Thức</span>
+          </nav>
+
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-400/20 text-brand-300 text-xs font-bold uppercase tracking-wider border border-brand-400/30">
+              <BookOpen className="w-3.5 h-3.5" />
+              <span>HDC Knowledge Hub 2026</span>
+            </div>
+
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight tracking-tight">
+              CẨM NANG &amp; KINH NGHIỆM <br />
+              <span className="text-brand-300">MAY ĐO ĐỒNG PHỤC DOANH NGHIỆP</span>
+            </h1>
+
+            <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed">
+              Tổng hợp kiến thức chuyên sâu về bảng size chuẩn, kỹ thuật dệt may, đánh giá chất liệu vải và kinh nghiệm tối ưu chi phí đặt may đồng phục cho công ty.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Main Content */}
       <section className="py-8 sm:py-12">
@@ -55,7 +80,7 @@ export default function BlogIndexPage() {
           {/* Bài viết tiêu điểm nổi bật */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-brand-500" />
+              <Sparkles className="w-5 h-5 text-amber-500" />
               <h2 className="text-xl sm:text-2xl font-black text-slate-900">
                 Bài Viết Tiêu Điểm Cần Đọc
               </h2>
@@ -66,11 +91,11 @@ export default function BlogIndexPage() {
                 <Link
                   key={article.slug}
                   href={article.url}
-                  className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 hover:border-brand-400 hover:shadow-xl transition-all group flex flex-col justify-between"
+                  className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200 hover:border-amber-400 hover:shadow-xl transition-all group flex flex-col justify-between"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="px-3 py-1 bg-brand-50 text-brand-800 border border-brand-200 rounded-full text-xs font-bold">
+                      <span className="px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-xs font-bold">
                         {article.categoryBadge}
                       </span>
                       <span className="text-xs text-slate-400 flex items-center gap-1">
@@ -78,7 +103,7 @@ export default function BlogIndexPage() {
                       </span>
                     </div>
 
-                    <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-brand-700 transition-colors leading-snug">
+                    <h3 className="text-base sm:text-lg font-black text-slate-900 group-hover:text-amber-700 transition-colors leading-snug">
                       {article.title}
                     </h3>
 
@@ -91,7 +116,7 @@ export default function BlogIndexPage() {
                     <span className="text-slate-500 font-medium">
                       Tác giả: {article.author}
                     </span>
-                    <span className="text-brand-700 font-extrabold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                    <span className="text-amber-700 font-extrabold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                       Đọc chi tiết <ArrowRight className="w-4 h-4" />
                     </span>
                   </div>
@@ -163,7 +188,7 @@ export default function BlogIndexPage() {
             <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0 w-full sm:w-auto">
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-brand-400 hover:bg-brand-300 text-[#003843] font-extrabold text-xs sm:text-sm text-center shadow-lg transition-all"
+                className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#071b34] font-extrabold text-xs sm:text-sm text-center shadow-lg transition-all"
               >
                 Hotline: {BRAND_INFO.contact.hotline}
               </a>

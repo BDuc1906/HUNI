@@ -38,7 +38,8 @@ export default function FinalCtaSection() {
         {/* Main heading */}
         <div className="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
           <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-tight text-white">
-            ĐỒNG HÀNH CÙNG HDC{" "}
+            ĐỒNG HÀNH CÙNG HDC
+            <br />
             <span className="text-brand-gradient">NGAY HÔM NAY</span>
           </h2>
           <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-2xl mx-auto">

@@ -81,23 +81,15 @@ export default function TermsPage() {
               <h2 className="font-extrabold text-[#004f5e] text-base mb-2">
                 5. Liên hệ
               </h2>
-              <p className="text-sm leading-relaxed mb-3">
-                Mọi thắc mắc hoặc yêu cầu hỗ trợ pháp lý, quý khách vui lòng liên hệ:
+              <p className="text-sm leading-relaxed">
+                Mọi thắc mắc xin liên hệ:
+                <br />
+                📞 Hotline: <strong>0984.959.586</strong>
+                <br />
+                ✉️ Email: <strong>dongphuchuni@gmail.com</strong>
+                <br />
+                🏢 Trụ sở: LK-17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, TP. Việt Trì, Phú Thọ
               </p>
-              <ul className="space-y-1.5 text-sm text-slate-700">
-                <li className="flex items-center gap-2">
-                  <span>📞 Hotline / Zalo:</span>
-                  <strong className="text-[#004f5e]">0984 95 95 86</strong>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span>✉️ Email hỗ trợ:</span>
-                  <strong className="text-[#004f5e]">dongphuchuni@gmail.com</strong>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="shrink-0">🏢 Trụ sở chính:</span>
-                  <span>LK-17 Dự án Dạ Hợp 6 tầng, Phường Hòa Bình, Tỉnh Hòa Bình</span>
-                </li>
-              </ul>
             </section>
           </div>
         </div>

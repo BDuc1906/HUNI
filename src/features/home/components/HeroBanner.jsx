@@ -1,25 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import {
-  Sparkles,
-  PhoneCall,
-  ArrowRight,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-} from "lucide-react";
+import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
-// SLIDES DATA
-// ✅ Slide #3 Polo: đổi từ uniform_polo_corporate.jpg (cận cảnh cổ áo)
-//    → 06_polo_01.jpg (người mặc áo polo)
+// SLIDES DATA — 5 slides
 // ============================================================
 const SLIDES = [
   {
@@ -30,7 +19,6 @@ const SLIDES = [
     subtitle: "Tinh hoa thiên nhiên Việt Nam",
     description:
       "5 chất liệu tự nhiên độc quyền: Modal, Bamboo, Sợi Bạc Hà, Sợi Sen, Sợi Chuối. Kết hợp công nghệ Seamless không đường may + họa tiết văn hóa Việt.",
-    highlight: "BST Chất liệu xanh 2026",
     ctaPrimary: "Xem Bảng Vải",
     ctaSecondary: "Báo Giá Ngay",
     ctaLink: "/bang-vai",
@@ -42,22 +30,19 @@ const SLIDES = [
     titleHighlight: "CÙNG HDC FASHION",
     subtitle: "Vest doanh nhân may đo chuẩn Ý",
     description:
-      "Bộ sưu tập Vest & Sơ mi cao cấp dành riêng cho Ban lãnh đạo, cấp quản lý. Đo ni tận nơi bởi đội ngũ thợ may 15+ năm kinh nghiệm.",
-    highlight: "Vest doanh nhân",
+      "Bộ sưu tập Vest & Sơ mi cao cấp dành riêng cho Ban lãnh đạo, cấp quản lý. Đo ni tận nơi bởi đội ngũ thợ may nhiều năm kinh nghiệm.",
     ctaPrimary: "Nhận Báo Giá 0đ",
     ctaSecondary: "Xem BST Vest",
     ctaLink: "/dong-phuc-may-do",
   },
   {
-    // ✅ ĐÃ ĐỔI ẢNH — người mặc áo polo thay vì cận cảnh cổ áo
     image: "/images/06_polo_01.jpg",
     eyebrow: "Bán Chạy Nhất 2026",
     title: "ÁO POLO DOANH NGHIỆP",
     titleHighlight: "HDC CLASSIC",
     subtitle: "Vải cá sấu Cotton Compact 4 chiều",
     description:
-      "Dòng áo Polo đồng phục chủ lực được hơn 50.000+ doanh nghiệp tin dùng. Vải kháng khuẩn ion bạc, co giãn 4 chiều, bền màu sau 100 lần giặt.",
-    highlight: "Polo Classic",
+      "Dòng áo Polo đồng phục chủ lực được nhiều doanh nghiệp tin dùng. Vải kháng khuẩn ion bạc, co giãn 4 chiều, bền màu sau 100 lần giặt.",
     ctaPrimary: "Đặt Polo Ngay",
     ctaSecondary: "Xem Bảng Màu",
     ctaLink: "/dong-phuc-doanh-nghiep",
@@ -70,7 +55,6 @@ const SLIDES = [
     subtitle: "Golf, Pickleball, Marathon, Team building",
     description:
       "Công nghệ làm mát AeroCool hạ nhiệt cơ thể 3°C. Chống tia UV UPF 50+. Co giãn 4 chiều cho cú swing chuẩn xác.",
-    highlight: "Golf & Thể thao",
     ctaPrimary: "Đặt Golf Ngay",
     ctaSecondary: "Xem Ảnh Giải",
     ctaLink: "/dong-phuc-the-thao",
@@ -83,7 +67,6 @@ const SLIDES = [
     subtitle: "Học sinh các cấp, sinh viên, giáo viên",
     description:
       "Chuẩn phom dáng quốc tế, vải mềm mại an toàn cho làn da học sinh. Váy xếp ly có quần lót an toàn. Huy hiệu trường thêu Tajima sắc sảo.",
-    highlight: "Trường học",
     ctaPrimary: "Báo Giá Trường",
     ctaSecondary: "Xem Album",
     ctaLink: "/dong-phuc-truong-hoc",
@@ -99,54 +82,35 @@ const CHECKLIST = [
   "Giao toàn quốc",
 ];
 
-const SLIDE_DURATION = 6000;
 const TRANSITION_DURATION = 700;
 
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const touchStartXRef = useRef(0);
   const touchEndXRef = useRef(0);
 
+  // ============================================================
+  // NAVIGATION HANDLERS — Chỉ trượt bằng tay
+  // ============================================================
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
     setCurrentSlide(((index % total) + total) % total);
-    setProgress(0);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-    setProgress(0);
   }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-    setProgress(0);
   }, []);
 
-  // Auto-play + progress
-  useEffect(() => {
-    if (isPaused) return;
-
-    const startTime = Date.now();
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(percent);
-
-      if (elapsed >= SLIDE_DURATION) {
-        nextSlide();
-      }
-    }, 50);
-
-    return () => clearInterval(timer);
-  }, [currentSlide, isPaused, nextSlide]);
-
-  // Keyboard
+  // ============================================================
+  // KEYBOARD NAVIGATION — Desktop dùng ← →
+  // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowLeft") prevSlide();
@@ -156,11 +120,12 @@ export default function HeroBanner() {
     return () => window.removeEventListener("keydown", handleKey);
   }, [nextSlide, prevSlide]);
 
-  // Touch
+  // ============================================================
+  // TOUCH SWIPE — Mobile
+  // ============================================================
   const handleTouchStart = (e) => {
     touchStartXRef.current = e.touches[0].clientX;
     touchEndXRef.current = e.touches[0].clientX;
-    setIsPaused(true);
   };
 
   const handleTouchMove = (e) => {
@@ -173,7 +138,6 @@ export default function HeroBanner() {
       if (diff > 0) nextSlide();
       else prevSlide();
     }
-    setTimeout(() => setIsPaused(false), 3000);
   };
 
   const slide = SLIDES[currentSlide];
@@ -209,15 +173,15 @@ export default function HeroBanner() {
               className="object-cover object-center"
             />
 
-            {/* Gradient overlay — giống nhau cho mọi slide */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/95 via-[#00222a]/75 to-[#00222a]/40" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#00222a]/90 via-transparent to-[#00222a]/40" />
+            {/* Gradient overlay nhẹ */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/75 via-[#00222a]/50 to-[#00222a]/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#00222a]/70 via-transparent to-transparent" />
           </div>
         ))}
       </div>
 
       {/* ============================================
-          CONTENT OVERLAY — Text bên trái
+          CONTENT OVERLAY
           ============================================ */}
       <div className="relative z-10 h-full flex flex-col justify-center pointer-events-none">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-40 sm:pb-48 lg:pb-44 pointer-events-auto">
@@ -225,27 +189,29 @@ export default function HeroBanner() {
             {/* Eyebrow */}
             <div
               key={`eyebrow-${currentSlide}`}
-              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
             >
-              <Sparkles className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+              <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
               <span>{slide.eyebrow}</span>
             </div>
 
-            {/* Title */}
+            {/* TITLE — 2 dòng */}
             <div
               key={`title-${currentSlide}`}
               className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
             >
-              <h1 className="text-[28px] leading-[1.12] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance">
-                {slide.title}{" "}
-                <span className="text-brand-gradient inline">{slide.titleHighlight}</span>
+              <h1 className="text-[28px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance drop-shadow-lg">
+                {slide.title}
               </h1>
+              <h2 className="text-[26px] leading-[1.15] sm:text-3xl md:text-4xl lg:text-[48px] xl:text-[54px] font-black tracking-tight text-brand-gradient text-balance drop-shadow-lg mt-1 sm:mt-1.5">
+                {slide.titleHighlight}
+              </h2>
             </div>
 
             {/* Subtitle */}
             <p
               key={`sub-${currentSlide}`}
-              className="text-brand-300 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance"
+              className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
             >
               &ldquo;{slide.subtitle}&rdquo;
             </p>
@@ -253,7 +219,7 @@ export default function HeroBanner() {
             {/* Description */}
             <p
               key={`desc-${currentSlide}`}
-              className="text-slate-200 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty"
+              className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
             >
               {slide.description}
             </p>
@@ -266,9 +232,9 @@ export default function HeroBanner() {
               {CHECKLIST.map((item) => (
                 <div
                   key={item}
-                  className="flex items-center gap-2 text-xs lg:text-sm text-slate-100 font-medium whitespace-nowrap"
+                  className="flex items-center gap-2 text-xs lg:text-sm text-white font-medium whitespace-nowrap drop-shadow"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-brand-400 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-brand-300 shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -289,16 +255,16 @@ export default function HeroBanner() {
 
               <Link
                 href={slide.ctaLink}
-                className="px-5 sm:px-7 py-3.5 sm:py-4 bg-white/10 backdrop-blur-md hover:bg-white/20 text-white font-bold text-[13px] sm:text-sm rounded-2xl border border-white/30 hover:border-white/50 flex items-center justify-center gap-2 active:scale-[0.98] transition-all whitespace-nowrap"
+                className="px-5 sm:px-7 py-3.5 sm:py-4 bg-white/15 backdrop-blur-md hover:bg-white/25 text-white font-bold text-[13px] sm:text-sm rounded-2xl border border-white/35 hover:border-white/60 flex items-center justify-center gap-2 active:scale-[0.98] transition-all whitespace-nowrap"
               >
                 <span>{slide.ctaSecondary}</span>
               </Link>
 
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="px-3 sm:px-4 py-3 text-white hover:text-brand-300 font-bold text-[13px] sm:text-sm flex items-center justify-center gap-2 transition-colors whitespace-nowrap"
+                className="px-3 sm:px-4 py-3 text-white hover:text-brand-200 font-bold text-[13px] sm:text-sm flex items-center justify-center gap-2 transition-colors whitespace-nowrap drop-shadow"
               >
-                <PhoneCall className="w-4 h-4 text-brand-400 animate-pulse shrink-0" />
+                <PhoneCall className="w-4 h-4 text-brand-300 animate-pulse shrink-0" />
                 <span>{BRAND_INFO.contact.hotline}</span>
               </a>
             </div>
@@ -306,23 +272,23 @@ export default function HeroBanner() {
         </div>
 
         {/* ============================================
-            STATS BAR — Hiển thị cho mọi slide
+            STATS BAR
             ============================================ */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a] to-transparent pt-8 pb-5 sm:pb-6">
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
               {BRAND_INFO.stats.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="bg-white/5 backdrop-blur-md border border-white/10 hover:border-brand-400/40 rounded-xl p-2.5 sm:p-3 transition-colors min-w-0"
+                  className="bg-white/10 backdrop-blur-md border border-white/15 hover:border-brand-400/50 rounded-xl p-2.5 sm:p-3 transition-colors min-w-0"
                 >
-                  <div className="text-lg sm:text-xl lg:text-2xl font-black text-brand-400 leading-none whitespace-nowrap">
+                  <div className="text-lg sm:text-xl lg:text-2xl font-black text-brand-300 leading-none whitespace-nowrap">
                     {stat.value}
                   </div>
                   <div className="text-[10px] sm:text-xs font-bold text-white mt-1.5 leading-tight line-clamp-1">
                     {stat.label}
                   </div>
-                  <div className="hidden sm:block text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                  <div className="hidden sm:block text-[10px] text-slate-300 line-clamp-1 mt-0.5">
                     {stat.sub}
                   </div>
                 </div>
@@ -332,45 +298,20 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Arrows desktop */}
-      <button
-        onClick={prevSlide}
-        aria-label="Slide trước"
-        className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:border-white/40 text-white items-center justify-center transition-all active:scale-95 z-20"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        aria-label="Slide sau"
-        className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 hover:border-white/40 text-white items-center justify-center transition-all active:scale-95 z-20"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* Top-right controls */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-3">
-        <button
-          onClick={() => setIsPaused((p) => !p)}
-          aria-label={isPaused ? "Tiếp tục slideshow" : "Tạm dừng slideshow"}
-          className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all active:scale-95"
-        >
-          {isPaused ? (
-            <Play className="w-4 h-4 fill-current" />
-          ) : (
-            <Pause className="w-4 h-4 fill-current" />
-          )}
-        </button>
-
-        <div className="px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-xs font-bold tabular-nums whitespace-nowrap">
+      {/* ============================================
+          COUNTER — Góc trên phải (01 / 05)
+          ============================================ */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
+        <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
           {String(currentSlide + 1).padStart(2, "0")}{" "}
-          <span className="text-white/50">/</span>{" "}
+          <span className="text-white/60">/</span>{" "}
           {String(SLIDES.length).padStart(2, "0")}
         </div>
       </div>
 
-      {/* Dots navigation */}
+      {/* ============================================
+          DOTS NAVIGATION — Bấm để chuyển slide
+          ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {SLIDES.map((_, idx) => {
           const active = idx === currentSlide;
@@ -380,34 +321,14 @@ export default function HeroBanner() {
               key={idx}
               onClick={() => goToSlide(idx)}
               aria-label={`Đến slide ${idx + 1}`}
-              className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 ${
                 active
-                  ? "w-10 sm:w-14 bg-white/30"
-                  : "w-2 sm:w-3 bg-white/40 hover:bg-white/60"
+                  ? "w-10 sm:w-14 bg-brand-400"
+                  : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
               }`}
-            >
-              {active && (
-                <span
-                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full"
-                  style={{
-                    width: `${progress}%`,
-                    transition: isPaused ? "none" : "width 50ms linear",
-                  }}
-                />
-              )}
-            </button>
+            />
           );
         })}
-      </div>
-
-      {/* Label góc dưới trái */}
-      <div className="hidden lg:block absolute bottom-28 left-4 sm:left-6 z-20 max-w-xs">
-        <div className="text-[10px] font-bold uppercase tracking-widest text-brand-400 mb-1 whitespace-nowrap">
-          Đang xem
-        </div>
-        <div className="text-white text-sm font-bold leading-tight">
-          {slide.highlight}
-        </div>
       </div>
     </section>
   );

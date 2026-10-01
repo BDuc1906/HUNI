@@ -120,7 +120,7 @@ export async function sendCustomerConfirmationEmail(order) {
         </div>
 
         <p style="font-size:13px;color:#64748b;">
-          Mọi thắc mắc xin liên hệ hotline <strong>0984 95 95 86</strong> hoặc email
+          Mọi thắc mắc xin liên hệ hotline <strong>0984.959.586</strong> hoặc email
           <strong>dongphuchuni@gmail.com</strong>.
         </p>
       </div>

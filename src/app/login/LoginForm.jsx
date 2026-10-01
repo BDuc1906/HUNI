@@ -9,13 +9,15 @@ import { Loader2, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 // ==================================================
 // Component "vỏ" — không gọi useSearchParams trực tiếp,
 // nên an toàn để Next.js prerender phần shell.
+// Suspense được bọc NGAY TẠI ĐÂY, đúng chỗ dùng hook,
+// nên hết lỗi "missing-suspense-with-csr-bailout".
 // ==================================================
 export default function LoginForm() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-[#004f5e] via-[#00677a] to-[#003843] flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-brand-400 animate-spin" />
+        <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
         </div>
       }
     >
@@ -25,7 +27,7 @@ export default function LoginForm() {
 }
 
 // ==================================================
-// Component thật — chứa toàn bộ logic + JSX,
+// Component thật — chứa toàn bộ logic + JSX gốc,
 // gọi useSearchParams() ở đây.
 // ==================================================
 function LoginFormInner() {
@@ -65,7 +67,7 @@ function LoginFormInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#004f5e] via-[#00677a] to-[#003843] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#071b34] via-[#0a2540] to-[#04121f] flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
@@ -82,7 +84,7 @@ function LoginFormInner() {
               <div className="font-black text-2xl text-white tracking-wider">
                 HDC
               </div>
-              <div className="text-[10px] uppercase tracking-widest text-brand-300 font-bold">
+              <div className="text-[10px] uppercase tracking-widest text-brand-400 font-bold">
                 Fashion
               </div>
             </div>
@@ -90,10 +92,10 @@ function LoginFormInner() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-brand-400/20">
-          <div className="bg-gradient-to-r from-[#004f5e] to-[#00677a] px-6 py-5 border-b border-brand-500/20">
+        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-amber-400/20">
+          <div className="bg-gradient-to-r from-[#071b34] to-[#0a2540] px-6 py-5 border-b border-amber-500/20">
             <h1 className="text-xl font-black text-white">Đăng nhập</h1>
-            <p className="text-xs text-brand-200/90 mt-1">
+            <p className="text-xs text-amber-200/80 mt-1">
               Chào mừng trở lại HDC FASHION
             </p>
           </div>
@@ -128,7 +130,7 @@ function LoginFormInner() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="email@example.com"
                   disabled={loading}
-                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-200 disabled:opacity-60"
+                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                 />
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </div>
@@ -147,7 +149,7 @@ function LoginFormInner() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   disabled={loading}
-                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-200 disabled:opacity-60"
+                  className="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-200 disabled:opacity-60"
                 />
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               </div>
@@ -156,7 +158,7 @@ function LoginFormInner() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-black text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60 cursor-pointer"
+              className="w-full py-3 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-[#071b34] font-black text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] disabled:opacity-60"
             >
               {loading ? (
                 <>
@@ -175,7 +177,7 @@ function LoginFormInner() {
               Chưa có tài khoản?{" "}
               <Link
                 href="/register"
-                className="text-brand-600 hover:text-brand-700 font-bold"
+                className="text-amber-600 hover:text-amber-700 font-bold"
               >
                 Đăng ký ngay
               </Link>
@@ -186,7 +188,7 @@ function LoginFormInner() {
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-xs text-brand-200 hover:text-white font-medium transition-colors"
+            className="text-xs text-amber-300 hover:text-amber-200 font-medium"
           >
             ← Về trang chủ
           </Link>

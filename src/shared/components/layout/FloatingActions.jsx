@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { BRAND_INFO } from "@/shared/data";
-import { useShop } from "@/shared/providers/ShopProvider";
-import { Phone, MessageCircle, ArrowUp, Sparkles } from "lucide-react";
+import { Phone, MessageCircle, ArrowUp } from "lucide-react";
 import ChatWidget from "@/features/chatbot/components/ChatWidget";
 
 export default function FloatingActions() {
-  const { setIsQuickQuoteOpen } = useShop();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -28,16 +26,7 @@ export default function FloatingActions() {
           DESKTOP / TABLET — Floating stack bên phải
           ============================================= */}
       <div className="hidden md:flex fixed bottom-6 right-5 z-30 flex-col items-end gap-3 pointer-events-auto">
-        {/* 1. Quick Quote Button — chỉ desktop lg+ */}
-        <button
-          onClick={() => setIsQuickQuoteOpen(true)}
-          className="hidden lg:flex items-center gap-2 px-4 py-2.5 rounded-full bg-gradient-to-r from-brand-400 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-extrabold text-xs uppercase shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 border border-brand-300/40"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Báo Giá May 3 Phút</span>
-        </button>
-
-        {/* 2. Zalo */}
+        {/* 1. Zalo — Icon tròn */}
         <a
           href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
           target="_blank"
@@ -48,27 +37,27 @@ export default function FloatingActions() {
           <MessageCircle className="w-5 h-5" />
         </a>
 
-        {/* 3. Hotline */}
+        {/* 2. Hotline — Icon tròn (cùng size với Zalo & Chat AI) */}
         <a
           href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
           title={`Gọi Hotline tư vấn 24/7: ${BRAND_INFO.contact.hotline}`}
-          className="relative w-14 h-14 rounded-full bg-gradient-to-tr from-brand-500 to-brand-400 text-white flex items-center justify-center shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
+          className="relative w-12 h-12 rounded-full bg-gradient-to-tr from-brand-500 to-brand-400 text-white flex items-center justify-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
         >
-          <Phone className="w-6 h-6 animate-bounce" />
+          <Phone className="w-5 h-5 animate-bounce" />
           <span className="sr-only">Hotline {BRAND_INFO.contact.hotline}</span>
         </a>
 
-        {/* 4. Chat AI — ngay dưới Hotline */}
+        {/* 3. Chat AI — Icon tròn */}
         <ChatWidget />
 
-        {/* 5. Scroll to top */}
+        {/* 4. Scroll to top — Icon tròn nhỏ hơn (chỉ hiện khi scroll xuống) */}
         {showScrollTop && (
           <button
             onClick={scrollToTop}
             title="Cuộn lên đầu trang"
-            className="w-10 h-10 rounded-full bg-[#004f5e] hover:bg-slate-800 text-brand-400 flex items-center justify-center shadow-lg transition-all border border-brand-400/30"
+            className="w-12 h-12 rounded-full bg-[#004f5e] hover:bg-slate-800 text-brand-400 flex items-center justify-center shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 border-2 border-white"
           >
-            <ArrowUp className="w-4 h-4" />
+            <ArrowUp className="w-5 h-5" />
           </button>
         )}
       </div>
@@ -99,13 +88,13 @@ export default function FloatingActions() {
           </a>
 
           {/* Quick Quote */}
-          <button
-            onClick={() => setIsQuickQuoteOpen(true)}
+          <a
+            href="/lien-he"
             className="flex flex-col items-center justify-center gap-0.5 py-2.5 active:bg-brand-50 transition-colors"
           >
-            <Sparkles className="w-5 h-5 text-brand-600" />
-            <span className="text-[11px] font-bold text-brand-700">Báo giá</span>
-          </button>
+            <Phone className="w-5 h-5 text-brand-600" />
+            <span className="text-[11px] font-bold text-brand-700">Liên hệ</span>
+          </a>
         </div>
       </div>
 

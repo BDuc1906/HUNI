@@ -3,91 +3,99 @@
 import React from "react";
 import ErrorBoundary from "@/shared/components/ErrorBoundary";
 
+// ============================================================
+// TRANG CHỦ — 12 SECTIONS (ĐÃ BỎ NewArrivalsSection)
+// ============================================================
+
+// 1. HOOK
 import HeroBanner from "@/features/home/components/HeroBanner";
+
+// 2. TRUST
 import TrustBar from "@/features/home/components/TrustBar";
-import ProductCatalog from "@/features/catalog/components/ProductCatalog";
-import WhyChooseUs from "@/features/home/components/WhyChooseUs";
-import FabricGuideSection from "@/features/home/components/FabricGuideSection";
-import SeamlessTechSection from "@/features/home/components/SeamlessTechSection";
-import CulturalHeritageSection from "@/features/home/components/CulturalHeritageSection";
-import KidsSection from "@/features/home/components/KidsSection";
-import GolfSection from "@/features/home/components/GolfSection";
-import ProcessSection from "@/features/home/components/ProcessSection";
-import CeoLetterSection from "@/features/home/components/CeoLetterSection";
-import TestimonialsSection from "@/features/home/components/TestimonialsSection";
-import GallerySection from "@/features/home/components/GallerySection";
+
+// 3-4. BROWSE & SẢN PHẨM
+import CategoryShowcase from "@/features/home/components/CategoryShowcase";
+import FeaturedProductsSection from "@/features/home/components/FeaturedProductsSection";
+
+// 5. CAPTURE LEAD SỚM
 import QuickQuoteSection from "@/features/quote/components/QuickQuoteSection";
+
+// 6-8. BUILD CASE
+import WhyChooseUs from "@/features/home/components/WhyChooseUs";
+import SeamlessTechSection from "@/features/home/components/SeamlessTechSection";
+import ProcessSection from "@/features/home/components/ProcessSection";
+
+// 9. PROOF
+import FeedbackSection from "@/features/home/components/FeedbackSection";
+
+// 10. OBJECTION
 import FaqSection from "@/features/home/components/FaqSection";
-import MapSection from "@/features/home/components/MapSection";
+
+// 11. CONTENT
+import NewsSection from "@/features/home/components/NewsSection";
+
+// 12. CLOSE
 import FinalCtaSection from "@/features/home/components/FinalCtaSection";
 
 export default function Home() {
   return (
     <>
+      {/* 1. HERO */}
       <ErrorBoundary name="Hero">
         <HeroBanner />
       </ErrorBoundary>
 
-      <ErrorBoundary name="Trust Bar">
+      {/* 2. ĐỐI TÁC & KHÁCH HÀNG */}
+      <ErrorBoundary name="Đối tác">
         <TrustBar />
       </ErrorBoundary>
 
-      <ErrorBoundary name="Sản phẩm">
-        <ProductCatalog isHome={true} />
+      {/* 3. DANH MỤC */}
+      <ErrorBoundary name="Danh mục">
+        <CategoryShowcase />
       </ErrorBoundary>
 
-      <ErrorBoundary name="Vì sao chọn HDC">
-        <WhyChooseUs />
+      {/* 4. SẢN PHẨM NỔI BẬT — 5 hàng, mỗi hàng 5 SP theo loại */}
+      <ErrorBoundary name="Sản phẩm nổi bật">
+        <FeaturedProductsSection />
       </ErrorBoundary>
 
-      <ErrorBoundary name="Bảng vải">
-        <FabricGuideSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Công nghệ Seamless">
-        <SeamlessTechSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Hóa tiết văn hóa">
-        <CulturalHeritageSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Đồng phục Kids">
-        <KidsSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Đồng phục Golf">
-        <GolfSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Quy trình">
-        <ProcessSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Thư mời hợp tác">
-        <CeoLetterSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Đánh giá khách hàng">
-        <TestimonialsSection />
-      </ErrorBoundary>
-
-      <ErrorBoundary name="Hình ảnh thực tế">
-        <GallerySection />
-      </ErrorBoundary>
-
+      {/* 5. BÁO GIÁ NHANH */}
       <ErrorBoundary name="Báo giá nhanh">
         <QuickQuoteSection />
       </ErrorBoundary>
 
+      {/* 6. VÌ SAO CHỌN HDC */}
+      <ErrorBoundary name="Vì sao chọn HDC">
+        <WhyChooseUs />
+      </ErrorBoundary>
+
+      {/* 7. CÔNG NGHỆ SEAMLESS */}
+      <ErrorBoundary name="Công nghệ Seamless">
+        <SeamlessTechSection />
+      </ErrorBoundary>
+
+      {/* 8. QUY TRÌNH */}
+      <ErrorBoundary name="Quy trình">
+        <ProcessSection />
+      </ErrorBoundary>
+
+      {/* 9. FEEDBACK */}
+      <ErrorBoundary name="Feedback khách hàng">
+        <FeedbackSection />
+      </ErrorBoundary>
+
+      {/* 10. FAQ */}
       <ErrorBoundary name="FAQ">
         <FaqSection />
       </ErrorBoundary>
 
-      <ErrorBoundary name="Bản đồ">
-        <MapSection />
+      {/* 11. BLOG */}
+      <ErrorBoundary name="Tin tức">
+        <NewsSection />
       </ErrorBoundary>
 
+      {/* 12. CTA CUỐI */}
       <ErrorBoundary name="CTA cuối">
         <FinalCtaSection />
       </ErrorBoundary>

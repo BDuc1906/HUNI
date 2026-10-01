@@ -99,11 +99,11 @@ export default async function BlogPostPage({ params }) {
             aria-label="Breadcrumb"
             className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 overflow-x-auto whitespace-nowrap scrollbar-none py-1"
           >
-            <Link href="/" className="hover:text-brand-600 transition-colors">
+            <Link href="/" className="hover:text-amber-700 transition-colors">
               Trang Chủ
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-            <Link href="/blog" className="hover:text-brand-600 transition-colors">
+            <Link href="/blog" className="hover:text-amber-700 transition-colors">
               Blog Kiến Thức
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
@@ -115,7 +115,7 @@ export default async function BlogPostPage({ params }) {
           {/* Article Header */}
           <header className="space-y-4 border-b border-slate-200 pb-6">
             <div className="flex items-center gap-2">
-              <span className="px-3 py-1 bg-brand-50 text-brand-800 border border-brand-200 rounded-full text-xs font-bold">
+              <span className="px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-xs font-bold">
                 {article.categoryBadge}
               </span>
               <span className="text-xs text-slate-400">•</span>
@@ -150,7 +150,7 @@ export default async function BlogPostPage({ params }) {
           </header>
 
           {/* Tóm tắt mở đầu */}
-          <div className="p-4 sm:p-5 bg-brand-50/70 border-l-4 border-brand-500 rounded-r-2xl text-slate-700 text-xs sm:text-sm leading-relaxed italic">
+          <div className="p-4 sm:p-5 bg-amber-50/70 border-l-4 border-amber-500 rounded-r-2xl text-slate-700 text-xs sm:text-sm leading-relaxed italic">
             &ldquo;{article.summary}&rdquo;
           </div>
 
@@ -302,9 +302,9 @@ export default async function BlogPostPage({ params }) {
                 SEO LINK EQUITY CTA (CHUYỂN LINK JUICE SANG CATEGORY)
                 Flow: Blog -> Category -> Quote Form (SƠ ĐỒ 3 & 4)
                 ============================================= */}
-            <div className="my-8 p-6 bg-gradient-to-br from-brand-50/60 via-white to-brand-50/30 rounded-3xl border-2 border-brand-400/60 shadow-md space-y-3">
-              <div className="flex items-center gap-2 text-brand-900 font-extrabold text-sm sm:text-base">
-                <Sparkles className="w-5 h-5 text-brand-600 shrink-0" />
+            <div className="my-8 p-6 bg-gradient-to-br from-amber-50 via-white to-amber-50/50 rounded-3xl border-2 border-amber-400 shadow-md space-y-3">
+              <div className="flex items-center gap-2 text-amber-800 font-extrabold text-sm sm:text-base">
+                <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
                 <span>Bạn Đang Cần Đặt May Cho Doanh Nghiệp?</span>
               </div>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -313,14 +313,14 @@ export default async function BlogPostPage({ params }) {
               <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <Link
                   href={article.targetCategoryLink}
-                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-brand-600 to-brand-700 hover:from-brand-700 hover:to-brand-800 text-white font-black text-xs sm:text-sm text-center shadow-md transition-all flex items-center justify-center gap-2"
+                  className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs sm:text-sm text-center shadow-md transition-all flex items-center justify-center gap-2"
                 >
                   <span>Xem Danh Mục {article.targetCategoryName}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                  className="px-5 py-3 rounded-xl bg-[#004f5e] hover:bg-[#003843] text-brand-200 font-bold text-xs sm:text-sm text-center transition-colors flex items-center justify-center gap-1.5"
+                  className="px-5 py-3 rounded-xl bg-[#004f5e] hover:bg-[#003843] text-brand-300 font-bold text-xs sm:text-sm text-center transition-colors flex items-center justify-center gap-1.5"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>Gọi Hotline: {BRAND_INFO.contact.hotline}</span>
@@ -344,14 +344,14 @@ export default async function BlogPostPage({ params }) {
                   className="p-4 bg-white rounded-2xl border border-slate-200 hover:border-brand-400 hover:shadow-md transition-all group flex flex-col justify-between"
                 >
                   <div>
-                    <span className="text-[10px] font-bold text-brand-700 block mb-1">
+                    <span className="text-[10px] font-bold text-amber-700 block mb-1">
                       {rel.categoryBadge}
                     </span>
-                    <h4 className="text-xs font-bold text-slate-800 group-hover:text-brand-800 transition-colors line-clamp-2">
+                    <h4 className="text-xs font-bold text-slate-800 group-hover:text-amber-800 transition-colors line-clamp-2">
                       {rel.title}
                     </h4>
                   </div>
-                  <span className="text-[11px] text-brand-700 font-bold mt-3 inline-flex items-center gap-1">
+                  <span className="text-[11px] text-amber-700 font-bold mt-3 inline-flex items-center gap-1">
                     Xem bài viết <ArrowRight className="w-3 h-3" />
                   </span>
                 </Link>

@@ -24,6 +24,7 @@ import {
   GraduationCap,
   PackageCheck,
   ArrowRight,
+  Palette,
 } from "lucide-react";
 import { CATEGORIES } from "@/shared/data";
 
@@ -36,6 +37,7 @@ const catIconMap = {
   Activity: Activity,
   GraduationCap: GraduationCap,
   PackageCheck: PackageCheck,
+  Palette: Palette,
 };
 
 // ============================================================
@@ -78,6 +80,13 @@ const MAIN_NAV = [
         href: "/phu-kien-doanh-nghiep",
         desc: "Mũ nón, cặp da, túi quà tặng thương hiệu",
         icon: "PackageCheck",
+      },
+      {
+        label: "Tự Thiết Kế & Gửi Mẫu",
+        href: "/thiet-ke-dong-phuc",
+        desc: "Studio 2D phối màu, chèn logo & nhận áo mẫu 0đ",
+        icon: "Palette",
+        badge: "HOT",
       },
     ],
   },
@@ -262,14 +271,14 @@ export default function Header() {
               </span>
             </div>
             <div className="hidden sm:block h-px w-full max-w-[130px] bg-gradient-to-r from-brand-400/60 via-brand-400/30 to-transparent" />
-            <span className="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-brand-400/85 font-semibold leading-none whitespace-nowrap">
+            <span className="hidden sm:block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-brand-400/85 font-semibold leading-none">
               Đồng phục doanh nghiệp cao cấp
             </span>
           </div>
         </Link>
 
         {/* Desktop Search */}
-        <div className="hidden lg:flex flex-1 max-w-md mx-3 xl:mx-6 relative">
+        <div className="hidden lg:flex flex-1 max-w-md mx-6 relative">
           <div className="relative w-full">
             <input
               type="text"
@@ -330,7 +339,7 @@ export default function Header() {
               ) : (
                 <div className="p-4 text-center text-xs text-slate-400">
                   Không tìm thấy mẫu phù hợp. Gọi hotline{" "}
-                  <strong className="text-brand-300">0984 95 95 86</strong> để
+                  <strong className="text-brand-300">0984.959.586</strong> để
                   tư vấn may riêng!
                 </div>
               )}
@@ -443,7 +452,7 @@ export default function Header() {
                       onMouseEnter={() => handleMouseEnter(item.label)}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <div className="w-[480px] max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-2 animate-in fade-in slide-in-from-top-1 duration-150">
+                      <div className="w-[480px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-2 animate-in fade-in slide-in-from-top-1 duration-150">
                         {item.children.map((child) => {
                           const Icon = catIconMap[child.icon] || Briefcase;
                           const childActive = pathname === child.href;
@@ -469,13 +478,18 @@ export default function Header() {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div
-                                  className={`font-bold text-sm ${
+                                  className={`font-bold text-sm flex items-center gap-1.5 ${
                                     childActive
                                       ? "text-brand-800"
                                       : "text-slate-800"
                                   }`}
                                 >
-                                  {child.label}
+                                  <span>{child.label}</span>
+                                  {child.badge && (
+                                    <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-amber-400 text-slate-950 tracking-wider">
+                                      {child.badge}
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="text-xs text-slate-500 mt-0.5 line-clamp-1">
                                   {child.desc}
@@ -636,7 +650,7 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 overflow-y-auto pb-24">
+          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 overflow-y-auto">
             <div className="sticky top-0 bg-[#004f5e] p-4 border-b border-slate-800 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
                 <div className="relative w-9 h-9 aspect-square overflow-hidden bg-white rounded-lg flex items-center justify-center shadow-md">
@@ -687,7 +701,9 @@ export default function Header() {
                           }
                           className={`w-full flex items-center justify-between py-2.5 px-3 rounded-lg font-semibold transition-colors ${
                             pathname.startsWith("/dong-phuc") ||
-                            pathname.startsWith("/phu-kien")
+                            pathname.startsWith("/phu-kien") ||
+                            pathname.startsWith("/thiet-ke") ||
+                            pathname.startsWith("/tu-thiet-ke")
                               ? "text-brand-300 bg-slate-800/50"
                               : "text-slate-200 hover:bg-slate-800"
                           }`}
@@ -721,6 +737,11 @@ export default function Header() {
                                   <span className="truncate">
                                     {child.label}
                                   </span>
+                                  {child.badge && (
+                                    <span className="px-1.5 py-0.5 text-[8px] font-black uppercase rounded bg-amber-400 text-slate-950 ml-auto">
+                                      {child.badge}
+                                    </span>
+                                  )}
                                 </Link>
                               );
                             })}

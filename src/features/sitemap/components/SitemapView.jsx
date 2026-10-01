@@ -957,7 +957,7 @@ export default function SitemapView() {
                   <span className="text-[10px] font-black text-slate-400 uppercase">Bước 3</span>
                   <div className="font-bold text-xs text-slate-800 mt-1">Gọi Hotline / Đặt Lịch</div>
                   <div className="text-[11px] text-slate-500 mt-1">
-                    Gọi hotline 0984 95 95 86 hẹn khảo sát xưởng hoặc tư vấn tận nơi
+                    Gọi hotline 0984.959.586 hẹn khảo sát xưởng hoặc tư vấn tận nơi
                   </div>
                 </div>
 

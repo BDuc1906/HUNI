@@ -58,7 +58,7 @@ export default function CulturalHeritageSection() {
           </div>
 
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#004f5e]">
-            HỌA TIẾT VĂN HÓA
+            HÓA TIẾT VĂN HÓA
           </h2>
 
           <p className="text-lg sm:text-xl md:text-2xl font-bold text-brand-gradient">

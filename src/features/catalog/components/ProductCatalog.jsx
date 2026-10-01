@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo, useEffect, useTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { PRODUCTS, CATEGORIES } from "@/shared/data";
 import ProductCard from "./ProductCard";
@@ -15,9 +14,7 @@ import {
   Briefcase,
   Activity,
   GraduationCap,
-  PackageCheck,
-  Flame,
-  ArrowRight
+  PackageCheck
 } from "lucide-react";
 
 const iconMap = {
@@ -52,8 +49,8 @@ function SkeletonCard() {
   );
 }
 
-export default function ProductCatalog({ initialCategory, isHome = false }) {
-  const { activeCategory, setActiveCategory, setIsQuickQuoteOpen } = useShop();
+export default function ProductCatalog({ initialCategory }) {
+  const { activeCategory, setActiveCategory } = useShop();
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -152,63 +149,6 @@ export default function ProductCatalog({ initialCategory, isHome = false }) {
     });
   }, [activeCategory, selectedMaterial, searchFilter, priceRange, sortBy]);
 
-  // Lọc 4 sản phẩm hot nhất cho trang chủ
-  const homeProducts = useMemo(() => {
-    if (!isHome) return filteredProducts;
-
-    // Khi ở trang chủ và chưa chọn bộ lọc riêng, lấy chính xác 4 sản phẩm flagship hot nhất:
-    // 1. Áo Polo Doanh Nghiệp HDC Classic Gold (Bán Chạy Nhất)
-    // 2. Sơ Mi Ngắn Tay HDC Classic Xanh Đậm (Best Seller Sơ Mi)
-    // 3. Vest Công Sở HDC Classic Đen (Best Seller May Đo)
-    // 4. Set Đồng Phục Golf & Pickleball HDC AeroCool Pro (Xu Hướng 2026)
-    if (
-      activeCategory === "all" &&
-      !searchFilter.trim() &&
-      selectedMaterial === "all" &&
-      priceRange === "all" &&
-      sortBy === "popular"
-    ) {
-      const flagshipIds = [
-        "huni-polo-pro",
-        "hdc-shirt-short-1",
-        "hdc-vest-classic",
-        "huni-golf-dryfit",
-      ];
-      const flagships = flagshipIds
-        .map((id) => PRODUCTS.find((p) => p.id === id))
-        .filter(Boolean);
-      if (flagships.length === 4) return flagships;
-    }
-
-    // Nếu người dùng lọc danh mục/tìm kiếm ở trang chủ, ưu tiên sản phẩm Best Seller/Hot và lấy đúng 4 sản phẩm
-    const sorted = [...filteredProducts].sort((a, b) => {
-      const aIsHot =
-        a.badge === "Best Seller" ||
-        a.badge === "Bán Chạy Nhất" ||
-        a.badge?.includes("Bán Chạy");
-      const bIsHot =
-        b.badge === "Best Seller" ||
-        b.badge === "Bán Chạy Nhất" ||
-        b.badge?.includes("Bán Chạy");
-      if (aIsHot && !bIsHot) return -1;
-      if (!aIsHot && bIsHot) return 1;
-      return 0;
-    });
-    return sorted.slice(0, 4);
-  }, [
-    isHome,
-    filteredProducts,
-    activeCategory,
-    searchFilter,
-    selectedMaterial,
-    priceRange,
-    sortBy,
-  ]);
-
-  const displayedProducts = isHome
-    ? homeProducts
-    : filteredProducts.slice(0, visibleCount);
-
   const activeFiltersCount = [
     activeCategory !== "all",
     searchFilter.trim() !== "",
@@ -239,34 +179,16 @@ export default function ProductCatalog({ initialCategory, isHome = false }) {
             Section Header
             ============================================= */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10 space-y-2 sm:space-y-3">
-          <div
-            className={`inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider ${
-              isHome
-                ? "bg-rose-50 border border-rose-200 text-rose-700"
-                : "bg-brand-50 border border-brand-200 text-brand-700"
-            }`}
-          >
-            {isHome ? (
-              <>
-                <Flame className="w-3.5 h-3.5 text-rose-600 fill-rose-600" />
-                <span>Top 4 Sản Phẩm Bán Chạy Nhất 2026</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-500" />
-                <span>Danh Mục &amp; Sản Phẩm 2026</span>
-              </>
-            )}
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-500" />
+            Danh Mục &amp; Sản Phẩm 2026
           </div>
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold text-[#004f5e]">
-            {isHome
-              ? "TOP 4 SẢN PHẨM ĐỒNG PHỤC HOT NHẤT"
-              : "DANH MỤC SẢN PHẨM ĐỒNG PHỤC HDC"}
+            DANH MỤC SẢN PHẨM ĐỒNG PHỤC HDC
           </h2>
           <p className="text-slate-600 text-xs sm:text-sm md:text-base">
-            {isHome
-              ? "Những thiết kế chủ lực được hơn 50.000+ tập đoàn, doanh nghiệp tin chọn đặt may nhiều nhất — chuẩn form tôn dáng, bền bỉ và tối ưu ngân sách."
-              : "Chọn nhóm sản phẩm bên dưới để xem ngay các mẫu thiết kế, chất liệu và bảng giá sỉ tương ứng — tất cả trong một nơi duy nhất."}
+            Chọn nhóm sản phẩm bên dưới để xem ngay các mẫu thiết kế, chất liệu và bảng giá sỉ
+            tương ứng — tất cả trong một nơi duy nhất.
           </p>
         </div>
 
@@ -375,15 +297,7 @@ export default function ProductCatalog({ initialCategory, isHome = false }) {
           </div>
 
           <div className="text-[11px] sm:text-xs text-slate-500 font-medium pt-4 sm:pt-6 shrink-0">
-            {isHome ? (
-              <span>
-                Hiển thị <strong className="text-[#004f5e]">{displayedProducts.length}</strong> sản phẩm hot nhất
-              </span>
-            ) : (
-              <span>
-                Hiển thị <strong className="text-[#004f5e]">{Math.min(visibleCount, filteredProducts.length)}</strong> / {filteredProducts.length} mẫu
-              </span>
-            )}
+            Hiển thị <strong className="text-[#004f5e]">{Math.min(visibleCount, filteredProducts.length)}</strong> / {filteredProducts.length} mẫu
           </div>
         </div>
 
@@ -474,76 +388,38 @@ export default function ProductCatalog({ initialCategory, isHome = false }) {
             Product Grid / Skeleton Loading
             ============================================= */}
         {isPending ? (
-          <div
-            className={
-              isHome
-                ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
-                : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6"
-            }
-          >
-            {Array.from({ length: isHome ? 4 : 8 }).map((_, i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
               <SkeletonCard key={i} />
             ))}
           </div>
-        ) : displayedProducts.length > 0 ? (
+        ) : filteredProducts.length > 0 ? (
           <>
-            <div
-              className={
-                isHome
-                  ? "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
-                  : "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6"
-              }
-            >
-              {displayedProducts.map((product) => (
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6">
+              {filteredProducts.slice(0, visibleCount).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
-            {/* Bottom Actions: Homepage CTA vs Category Pagination */}
-            {isHome ? (
-              <div className="mt-8 sm:mt-12 text-center space-y-4">
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <Link
-                    href="/dong-phuc-doanh-nghiep"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3.5 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-400 hover:to-brand-500 text-white font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-2xl shadow-xl shadow-brand-500/25 active:scale-95 transition-all group"
-                  >
-                    <span>Xem Toàn Bộ 40+ Mẫu Đồng Phục</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsQuickQuoteOpen(true)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-slate-50 text-[#004f5e] font-bold text-xs sm:text-sm rounded-2xl border-2 border-[#004f5e]/20 active:scale-95 transition-all shadow-sm"
-                  >
-                    <span>Yêu Cầu Báo Giá Sỉ &amp; Mẫu Thử 0đ</span>
-                  </button>
-                </div>
-                <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
-                  Hiển thị 4 sản phẩm tiêu biểu • Hỗ trợ may đo mẫu thử 0đ và gửi tập vải mẫu tận văn phòng
-                </p>
-              </div>
-            ) : (
-              /* Load-more Pattern for Category pages */
-              <div className="mt-8 sm:mt-12 text-center space-y-3">
-                <p className="text-xs text-slate-500 font-medium">
-                  Đang xem {Math.min(visibleCount, filteredProducts.length)} / {filteredProducts.length} sản phẩm
-                </p>
-                {visibleCount < filteredProducts.length && (
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setVisibleCount((prev) =>
-                        Math.min(prev + 9, filteredProducts.length)
-                      )
-                    }
-                    className="px-6 py-3 bg-[#004f5e] hover:bg-[#003843] text-brand-300 font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all active:scale-[0.98]"
-                  >
-                    Xem thêm {Math.min(9, filteredProducts.length - visibleCount)} sản phẩm
-                  </button>
-                )}
-              </div>
-            )}
+            {/* Load-more Pattern */}
+            <div className="mt-8 sm:mt-12 text-center space-y-3">
+              <p className="text-xs text-slate-500 font-medium">
+                Đang xem {Math.min(visibleCount, filteredProducts.length)} / {filteredProducts.length} sản phẩm
+              </p>
+              {visibleCount < filteredProducts.length && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setVisibleCount((prev) =>
+                      Math.min(prev + 9, filteredProducts.length)
+                    )
+                  }
+                  className="px-6 py-3 bg-[#004f5e] hover:bg-[#003843] text-brand-300 font-bold text-xs sm:text-sm rounded-xl shadow-md transition-all active:scale-[0.98]"
+                >
+                  Xem thêm {Math.min(9, filteredProducts.length - visibleCount)} sản phẩm
+                </button>
+              )}
+            </div>
           </>
         ) : (
           <div className="text-center py-12 sm:py-16 bg-slate-50 rounded-2xl border border-dashed border-slate-300 p-6 sm:p-8">

@@ -73,7 +73,7 @@ Tư vấn khách hàng (chủ yếu là doanh nghiệp, tổ chức, trường h
 3. Khi khách hỏi sản phẩm → giới thiệu 1-3 sản phẩm phù hợp nhất, kèm giá và điểm nổi bật.
 4. Khi khách hỏi chất liệu → so sánh ngắn 2-3 loại vải phù hợp nhu cầu.
 5. Khi khách hỏi quy trình → liệt kê 5 bước ngắn gọn.
-6. Khi không có thông tin → nói: "Em chưa có thông tin này, anh/chị vui lòng gọi hotline 0984 95 95 86 để được tư vấn chi tiết ạ."
+6. Khi không có thông tin → nói: "Em chưa có thông tin này, anh/chị vui lòng gọi hotline 0984.959.586 để được tư vấn chi tiết ạ."
 7. Không hứa hẹn những gì không có trong dữ liệu.
 
 ## ĐỊNH DẠNG
@@ -163,7 +163,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         reply:
-          "Xin lỗi, hệ thống tư vấn đang bảo trì. Anh/chị vui lòng gọi hotline 0984 95 95 86 để được hỗ trợ ngay ạ.",
+          "Xin lỗi, hệ thống tư vấn đang bảo trì. Anh/chị vui lòng gọi hotline 0984.959.586 để được hỗ trợ ngay ạ.",
       },
       { status: 200 }
     );
@@ -279,8 +279,8 @@ export async function POST(req) {
       return NextResponse.json(
         {
           reply: isTemporary
-            ? "Hệ thống AI đang quá tải tạm thời 😅 Anh/chị thử lại sau 30 giây, hoặc gọi hotline 0984 95 95 86 để được tư vấn trực tiếp ạ."
-            : "Xin lỗi anh/chị, em đang gặp sự cố kỹ thuật. Anh/chị vui lòng gọi hotline 0984 95 95 86 để được hỗ trợ ạ 🙏",
+            ? "Hệ thống AI đang quá tải tạm thời 😅 Anh/chị thử lại sau 30 giây, hoặc gọi hotline 0984.959.586 để được tư vấn trực tiếp ạ."
+            : "Xin lỗi anh/chị, em đang gặp sự cố kỹ thuật. Anh/chị vui lòng gọi hotline 0984.959.586 để được hỗ trợ ạ 🙏",
         },
         { status: 200 }
       );
@@ -293,7 +293,7 @@ export async function POST(req) {
     return NextResponse.json(
       {
         reply:
-          "Xin lỗi anh/chị, em đang gặp sự cố kết nối. Anh/chị vui lòng gọi hotline 0984 95 95 86 để được hỗ trợ ạ 🙏",
+          "Xin lỗi anh/chị, em đang gặp sự cố kết nối. Anh/chị vui lòng gọi hotline 0984.959.586 để được hỗ trợ ạ 🙏",
       },
       { status: 200 }
     );

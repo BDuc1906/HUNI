@@ -35,7 +35,7 @@ export default function ProductDetailGallery({
         {/* Badges */}
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           {badge && (
-            <span className="px-3 py-1 bg-brand-600 text-white text-xs font-black rounded-full shadow-md">
+            <span className="px-3 py-1 bg-amber-500 text-white text-xs font-black rounded-full shadow-md">
               {badge}
             </span>
           )}
@@ -57,7 +57,7 @@ export default function ProductDetailGallery({
               onClick={() => setSelectedImg(img)}
               className={`relative w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
                 selectedImg === img
-                  ? "border-brand-500 ring-2 ring-brand-500/30 scale-105"
+                  ? "border-amber-500 ring-2 ring-amber-500/30 scale-105"
                   : "border-slate-200 opacity-70 hover:opacity-100"
               }`}
             >
@@ -76,7 +76,7 @@ export default function ProductDetailGallery({
       {/* Cam kết thương hiệu */}
       <div className="grid grid-cols-2 gap-2 sm:gap-3 pt-1 sm:pt-2">
         <div className="p-2.5 sm:p-3 bg-white rounded-2xl border border-slate-200/70 flex items-center gap-2 sm:gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
             <Award className="w-4 h-4" />
           </div>
           <div className="text-[11px] leading-tight">
