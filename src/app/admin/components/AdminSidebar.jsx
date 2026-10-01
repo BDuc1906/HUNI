@@ -17,6 +17,8 @@ import {
   ChevronRight,
   Menu,
   X,
+  MessageSquare,
+  RotateCcw,
 } from "lucide-react";
 import { adminService } from "@/shared/services/apiClient";
 
@@ -45,6 +47,16 @@ const NAV_ITEMS = [
     href: "/admin/products",
     label: "Sản Phẩm",
     icon: Package,
+  },
+  {
+    href: "/admin/reviews",
+    label: "Đánh Giá & Phản Hồi",
+    icon: MessageSquare,
+  },
+  {
+    href: "/admin/returns",
+    label: "Đổi Trả & Hoàn Tiền",
+    icon: RotateCcw,
   },
   {
     href: "/admin/customers",

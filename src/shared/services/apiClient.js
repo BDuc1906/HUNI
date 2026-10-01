@@ -335,6 +335,76 @@ export const adminService = {
       body: JSON.stringify({ id, active }),
     });
   },
+
+  /**
+   * Danh sách đánh giá phản hồi của khách hàng
+   */
+  async getReviews(params = {}) {
+    const query = new URLSearchParams();
+    if (params.rating) query.set("rating", params.rating);
+    if (params.status) query.set("status", params.status);
+    if (params.search) query.set("search", params.search);
+    if (params.page) query.set("page", params.page);
+    if (params.limit) query.set("limit", params.limit);
+    const qs = query.toString();
+    return apiFetch(`/api/admin/reviews${qs ? `?${qs}` : ""}`);
+  },
+
+  /**
+   * Cập nhật trạng thái hoặc gửi phản hồi đánh giá
+   */
+  async updateReview(id, data) {
+    return apiFetch("/api/admin/reviews", {
+      method: "PATCH",
+      body: JSON.stringify({ id, ...data }),
+    });
+  },
+
+  /**
+   * Xoá 1 hoặc nhiều đánh giá
+   */
+  async deleteReview(idOrIds) {
+    const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
+    return apiFetch("/api/admin/reviews", {
+      method: "DELETE",
+      body: JSON.stringify({ ids }),
+    });
+  },
+
+  /**
+   * Danh sách yêu cầu đổi trả & hoàn tiền
+   */
+  async getReturns(params = {}) {
+    const query = new URLSearchParams();
+    if (params.type) query.set("type", params.type);
+    if (params.status) query.set("status", params.status);
+    if (params.search) query.set("search", params.search);
+    if (params.page) query.set("page", params.page);
+    if (params.limit) query.set("limit", params.limit);
+    const qs = query.toString();
+    return apiFetch(`/api/admin/returns${qs ? `?${qs}` : ""}`);
+  },
+
+  /**
+   * Cập nhật trạng thái yêu cầu đổi trả / hoàn tiền
+   */
+  async updateReturn(id, data) {
+    return apiFetch("/api/admin/returns", {
+      method: "PATCH",
+      body: JSON.stringify({ id, ...data }),
+    });
+  },
+
+  /**
+   * Xoá 1 hoặc nhiều yêu cầu đổi trả
+   */
+  async deleteReturn(idOrIds) {
+    const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
+    return apiFetch("/api/admin/returns", {
+      method: "DELETE",
+      body: JSON.stringify({ ids }),
+    });
+  },
 };
 
 // ==================================================

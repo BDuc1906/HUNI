@@ -23,6 +23,8 @@ import {
   X,
   Server,
   Sparkles,
+  MessageSquare,
+  RotateCcw,
 } from "lucide-react";
 
 const ROUTE_NAMES = {
@@ -30,6 +32,8 @@ const ROUTE_NAMES = {
   "/admin/orders": "Quản Lý Đơn Hàng",
   "/admin/quotes": "Quản Lý Báo Giá",
   "/admin/products": "Quản Lý Sản Phẩm",
+  "/admin/reviews": "Quản Lý Đánh Giá & Phản Hồi",
+  "/admin/returns": "Quản Lý Đổi Trả & Hoàn Tiền",
   "/admin/customers": "Quản Lý Khách Hàng",
   "/admin/vouchers": "Quản Lý Voucher",
 };
@@ -241,6 +245,24 @@ export default function AdminHeader({ user }) {
                   >
                     <Package className="w-4 h-4 text-purple-400" />
                     <span>Kho Hàng & Sản Phẩm</span>
+                  </Link>
+
+                  <Link
+                    href="/admin/reviews"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                  >
+                    <MessageSquare className="w-4 h-4 text-amber-400" />
+                    <span>Đánh Giá & Phản Hồi</span>
+                  </Link>
+
+                  <Link
+                    href="/admin/returns"
+                    onClick={() => setIsDropdownOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
+                  >
+                    <RotateCcw className="w-4 h-4 text-indigo-400" />
+                    <span>Đổi Trả & Hoàn Tiền</span>
                   </Link>
 
                   <Link
