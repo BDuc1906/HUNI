@@ -13,6 +13,10 @@ import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 const SLIDES = [
   {
     image: "/images/catalogue-2026-hero.jpg",
+    // position: phần ảnh được neo khi bị cắt ("top" | "center" | "bottom")
+    // fit: "cover" (mặc định, tràn màn hình) | "contain" (thấy trọn ảnh, có nền mờ 2 bên)
+    // hideText: true => ẩn khối chữ của code (dùng khi ảnh đã có chữ sẵn)
+    position: "top",
     eyebrow: "Bộ Sưu Tập 2026",
     title: "CHẤT LIỆU XANH",
     titleHighlight: "BỀN VỮNG",
@@ -24,7 +28,8 @@ const SLIDES = [
     ctaLink: "/bang-vai",
   },
   {
-    image: "/images/uniform_corporate_suits.jpg",
+    image: "/images/09_kids_school_01.jpg",
+    position: "top",
     eyebrow: "Đẳng Cấp Lãnh Đạo",
     title: "NÂNG TẦM THƯƠNG HIỆU",
     titleHighlight: "CÙNG HDC FASHION",
@@ -83,6 +88,12 @@ const CHECKLIST = [
 ];
 
 const TRANSITION_DURATION = 700;
+
+const POSITION_CLASS = {
+  top: "object-top",
+  center: "object-center",
+  bottom: "object-bottom",
+};
 
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
@@ -163,19 +174,36 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0"
             aria-hidden={idx !== currentSlide}
           >
+            {/* Chỉ khi fit="contain": nền mờ lấp 2 bên */}
+            {s.fit === "contain" && (
+              <Image
+                src={s.image}
+                alt=""
+                aria-hidden="true"
+                fill
+                sizes="100vw"
+                quality={75}
+                className="object-cover object-center scale-110 blur-2xl opacity-80"
+              />
+            )}
+
+            {/* Ảnh chính: mặc định tràn kín màn hình */}
             <Image
               src={s.image}
               alt={s.title + " " + s.titleHighlight}
               fill
               sizes="100vw"
-              quality={92}
+              quality={90}
               priority={idx === 0}
-              className="object-cover object-center"
+              className={`${
+                s.fit === "contain" ? "object-contain" : "object-cover"
+              } ${POSITION_CLASS[s.position || "center"]}`}
             />
 
-            {/* Gradient overlay nhẹ */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/75 via-[#00222a]/50 to-[#00222a]/20" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#00222a]/70 via-transparent to-transparent" />
+            {/* Gradient nhẹ chỉ ở bên trái, để chữ dễ đọc (slide có chữ sẵn thì bỏ) */}
+            {!s.hideText && (
+              <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
+            )}
           </div>
         ))}
       </div>
@@ -183,9 +211,15 @@ export default function HeroBanner() {
       {/* ============================================
           CONTENT OVERLAY
           ============================================ */}
-      <div className="relative z-10 h-full flex flex-col justify-center pointer-events-none">
+      <div
+        className={`relative z-10 h-full flex flex-col pointer-events-none ${
+          slide.hideText ? "justify-end" : "justify-center"
+        }`}
+      >
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-40 sm:pb-48 lg:pb-44 pointer-events-auto">
           <div className="max-w-3xl">
+            {!slide.hideText && (
+              <>
             {/* Eyebrow */}
             <div
               key={`eyebrow-${currentSlide}`}
@@ -239,6 +273,9 @@ export default function HeroBanner() {
                 </div>
               ))}
             </div>
+
+              </>
+            )}
 
             {/* CTA */}
             <div
