@@ -24,6 +24,7 @@ import {
   GraduationCap,
   PackageCheck,
   ArrowRight,
+  Palette,
 } from "lucide-react";
 import { CATEGORIES } from "@/shared/data";
 
@@ -36,6 +37,7 @@ const catIconMap = {
   Activity: Activity,
   GraduationCap: GraduationCap,
   PackageCheck: PackageCheck,
+  Palette: Palette,
 };
 
 // ============================================================
@@ -78,6 +80,13 @@ const MAIN_NAV = [
         href: "/phu-kien-doanh-nghiep",
         desc: "Mũ nón, cặp da, túi quà tặng thương hiệu",
         icon: "PackageCheck",
+      },
+      {
+        label: "Tự Thiết Kế & Gửi Mẫu",
+        href: "/thiet-ke-dong-phuc",
+        desc: "Studio 2D phối màu, chèn logo & nhận áo mẫu 0đ",
+        icon: "Palette",
+        badge: "HOT",
       },
     ],
   },
@@ -469,13 +478,18 @@ export default function Header() {
                               </div>
                               <div className="flex-1 min-w-0">
                                 <div
-                                  className={`font-bold text-sm ${
+                                  className={`font-bold text-sm flex items-center gap-1.5 ${
                                     childActive
                                       ? "text-brand-800"
                                       : "text-slate-800"
                                   }`}
                                 >
-                                  {child.label}
+                                  <span>{child.label}</span>
+                                  {child.badge && (
+                                    <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-amber-400 text-slate-950 tracking-wider">
+                                      {child.badge}
+                                    </span>
+                                  )}
                                 </div>
                                 <div className="text-xs text-slate-500 mt-0.5 line-clamp-1">
                                   {child.desc}
@@ -687,7 +701,9 @@ export default function Header() {
                           }
                           className={`w-full flex items-center justify-between py-2.5 px-3 rounded-lg font-semibold transition-colors ${
                             pathname.startsWith("/dong-phuc") ||
-                            pathname.startsWith("/phu-kien")
+                            pathname.startsWith("/phu-kien") ||
+                            pathname.startsWith("/thiet-ke") ||
+                            pathname.startsWith("/tu-thiet-ke")
                               ? "text-brand-300 bg-slate-800/50"
                               : "text-slate-200 hover:bg-slate-800"
                           }`}
@@ -721,6 +737,11 @@ export default function Header() {
                                   <span className="truncate">
                                     {child.label}
                                   </span>
+                                  {child.badge && (
+                                    <span className="px-1.5 py-0.5 text-[8px] font-black uppercase rounded bg-amber-400 text-slate-950 ml-auto">
+                                      {child.badge}
+                                    </span>
+                                  )}
                                 </Link>
                               );
                             })}
