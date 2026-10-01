@@ -26,7 +26,8 @@ const SLIDES = [
   },
   {
     image: "/images/uniform_corporate_suits.jpg",
-    position: "top",
+    fit: "contain",
+    position: "center",
     eyebrow: "Đẳng Cấp Lãnh Đạo",
     title: "NÂNG TẦM THƯƠNG HIỆU",
     titleHighlight: "CÙNG HDC FASHION",
@@ -221,6 +222,7 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0"
             aria-hidden={idx !== currentSlide}
           >
+            {/* Nền mờ khi fit="contain" — 2 bên có nền blur từ chính ảnh */}
             {s.fit === "contain" && (
               <Image
                 src={s.image}
@@ -233,6 +235,7 @@ export default function HeroBanner() {
               />
             )}
 
+            {/* Ảnh chính */}
             <Image
               src={s.image}
               alt={s.title + " " + s.titleHighlight}
@@ -245,6 +248,7 @@ export default function HeroBanner() {
               } ${POSITION_CLASS[s.position || "center"]}`}
             />
 
+            {/* Gradient overlay — chỉ khi có text */}
             {!s.hideText && (
               <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
             )}
