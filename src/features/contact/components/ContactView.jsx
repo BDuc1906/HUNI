@@ -29,7 +29,9 @@ import {
   Truck,
   Layers,
   Award,
-  AlertCircle
+  AlertCircle,
+  Plus,
+  Minus,
 } from "lucide-react";
 
 // ============================================================
@@ -101,14 +103,7 @@ const PRODUCT_OPTIONS = [
   { id: "accessories", label: "Phụ Kiện Doanh Nghiệp", desc: "Mũ nón, cặp da, cà vạt, quà tặng" },
 ];
 
-const QUANTITY_PRESETS = [
-  { value: 20, label: "10 - 20 áo" },
-  { value: 50, label: "20 - 50 áo" },
-  { value: 100, label: "50 - 100 áo" },
-  { value: 300, label: "100 - 300 áo" },
-  { value: 500, label: "300 - 500 áo" },
-  { value: 1000, label: "Trên 500 áo" },
-];
+const QUICK_QUANTITY_OPTIONS = [10, 20, 50, 100, 200, 500];
 
 // ============================================================
 // FAQ DATA FOR CONTACT
@@ -192,6 +187,13 @@ export default function ContactView() {
       return;
     }
 
+    const parsedQty = parseInt(quantity, 10);
+    if (!parsedQty || isNaN(parsedQty) || parsedQty < 10) {
+      setErrorMessage("Số lượng đặt may tối thiểu là 10 cái. Quý khách vui lòng nhập số lượng từ 10 trở lên.");
+      showToast("Số lượng tối thiểu là 10 cái", "error");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -214,7 +216,7 @@ export default function ContactView() {
           email: email.trim() || undefined,
           company: company.trim() || undefined,
           category: category,
-          quantity: Number(quantity) || 50,
+          quantity: parsedQty,
           notes: payloadNotes,
         }),
       });
@@ -251,6 +253,7 @@ export default function ContactView() {
     setPhone("");
     setEmail("");
     setCompany("");
+    setQuantity(50);
     setNotes("");
     setAppointmentLocation("");
     setAppointmentDate("");
@@ -542,28 +545,94 @@ export default function ContactView() {
                       {/* Row 4: Quantity Selection */}
                       <div>
                         <div className="flex items-center justify-between mb-2">
-                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                            Số Lượng Dự Kiến (Chiết khấu sỉ theo bậc)
+                          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                            <span>Số Lượng Áo Cần May</span>
+                            <span className="text-rose-500">*</span>
+                            <span className="text-[11px] font-medium text-slate-500 normal-case">
+                              (Tối thiểu 10 cái)
+                            </span>
                           </label>
-                          <span className="text-xs font-extrabold text-brand-600 bg-brand-50 px-2 py-0.5 rounded-lg border border-brand-200">
-                            {quantity} áo
-                          </span>
+                          {Number(quantity) >= 10 && (
+                            <span className="text-xs font-extrabold text-brand-600 bg-brand-50 px-2.5 py-0.5 rounded-lg border border-brand-200">
+                              {Number(quantity).toLocaleString()} áo
+                            </span>
+                          )}
                         </div>
-                        <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
-                          {QUANTITY_PRESETS.map((q) => (
+
+                        {/* Input & Stepper */}
+                        <div className="space-y-2.5">
+                          <div className="relative flex items-center">
                             <button
-                              key={q.value}
                               type="button"
-                              onClick={() => setQuantity(q.value)}
-                              className={`py-2 px-1 rounded-xl text-xs font-bold text-center transition-all ${
-                                quantity === q.value
-                                  ? "bg-brand-500 text-white shadow-sm"
-                                  : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                              }`}
+                              onClick={() => {
+                                const current = parseInt(quantity, 10) || 10;
+                                setQuantity(Math.max(10, current - 10));
+                              }}
+                              className="absolute left-2 z-10 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
+                              title="Giảm 10 cái (Tối thiểu 10)"
                             >
-                              {q.label}
+                              <Minus className="w-3.5 h-3.5" />
                             </button>
-                          ))}
+                            <input
+                              type="number"
+                              min={10}
+                              step={1}
+                              required
+                              value={quantity}
+                              onChange={(e) => setQuantity(e.target.value)}
+                              placeholder="Nhập số lượng áo chính xác (tối thiểu 10)..."
+                              className={`w-full pl-12 pr-20 py-2.5 font-bold text-slate-800 bg-slate-50 border rounded-xl text-sm transition-all focus:bg-white focus:outline-none ${
+                                quantity !== "" && Number(quantity) < 10
+                                  ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100"
+                                  : "border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                              }`}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const current = parseInt(quantity, 10) || 0;
+                                setQuantity(Math.max(10, current + 10));
+                              }}
+                              className="absolute right-12 z-10 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
+                              title="Tăng 10 cái"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="absolute right-3 text-xs font-bold text-slate-400 pointer-events-none select-none">
+                              áo
+                            </span>
+                          </div>
+
+                          {/* Warning message if below minimum */}
+                          {quantity !== "" && Number(quantity) < 10 && (
+                            <div className="flex items-center gap-1.5 text-xs text-rose-600 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-lg animate-in fade-in">
+                              <AlertCircle className="w-4 h-4 shrink-0" />
+                              <span>Số lượng đặt may tối thiểu là <strong>10 cái</strong>. Quý khách vui lòng nhập từ 10 trở lên.</span>
+                            </div>
+                          )}
+
+                          {/* Quick selection chips */}
+                          <div>
+                            <div className="text-[11px] font-medium text-slate-500 mb-1.5">
+                              Gợi ý chọn nhanh số lượng:
+                            </div>
+                            <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                              {QUICK_QUANTITY_OPTIONS.map((q) => (
+                                <button
+                                  key={q}
+                                  type="button"
+                                  onClick={() => setQuantity(q)}
+                                  className={`py-1.5 px-2 rounded-xl text-xs font-bold text-center transition-all ${
+                                    Number(quantity) === q
+                                      ? "bg-brand-500 text-white shadow-sm ring-1 ring-brand-500"
+                                      : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                                  }`}
+                                >
+                                  {q} cái
+                                </button>
+                              ))}
+                            </div>
+                          </div>
                         </div>
                       </div>
 

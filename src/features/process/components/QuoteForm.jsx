@@ -153,7 +153,7 @@ export default function QuoteForm() {
             {categoryOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </div>
-        <Field label="Số lượng dự kiến" name="quantity" type="number" min="1" step="1" value={form.quantity} error={errors.quantity} onChange={updateField} required className={fieldClass("quantity")} inputMode="numeric" placeholder="Ví dụ: 50" />
+        <Field label="Số lượng dự kiến (tối thiểu 10)" name="quantity" type="number" min="10" step="1" value={form.quantity} error={errors.quantity} onChange={updateField} required className={fieldClass("quantity")} inputMode="numeric" placeholder="Ví dụ: 50" />
         <div>
           <label htmlFor="material" className="mb-1.5 block text-sm font-bold text-slate-700">Chất liệu mong muốn</label>
           <select id="material" name="material" value={form.material} onChange={updateField} className={fieldClass("material")}>
