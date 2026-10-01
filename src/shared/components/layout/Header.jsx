@@ -250,6 +250,14 @@ export default function Header() {
               <ClipboardList className="w-3.5 h-3.5" />
               <span>Tra cứu đơn hàng</span>
             </button>
+            <span className="text-slate-600">|</span>
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] shadow-sm transition-all"
+            >
+              <ShieldCheck className="w-3 h-3 text-blue-200" />
+              <span>Admin (Demo)</span>
+            </Link>
           </div>
         </div>
       </div>
@@ -554,6 +562,17 @@ export default function Header() {
               </Link>
             );
           })}
+
+          {/* Nút chuyển sang Admin Demo */}
+          <div className="ml-auto py-1 pl-3">
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/25 hover:bg-blue-600 border border-blue-400/40 text-blue-300 hover:text-white font-bold text-xs shadow-sm transition-all hover:scale-105"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-300 group-hover:text-white" />
+              <span>Admin (Demo)</span>
+            </Link>
+          </div>
         </div>
       </nav>
 
@@ -697,6 +716,19 @@ export default function Header() {
                 <Sparkles className="w-4 h-4" />
                 Nhận Báo Giá Nhanh 3 Phút
               </button>
+
+              {/* Nút chuyển sang Admin Demo trên Mobile */}
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full py-2.5 px-3.5 bg-blue-600/20 hover:bg-blue-600 border border-blue-500/40 text-blue-300 hover:text-white font-bold text-xs rounded-xl flex items-center justify-between transition-all"
+              >
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-blue-400" />
+                  <span>Trang Quản Trị Admin (Demo)</span>
+                </div>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
 
               {/* NAV CHÍNH */}
               <div className="space-y-1">

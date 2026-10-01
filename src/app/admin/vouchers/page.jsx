@@ -25,9 +25,12 @@ export default function AdminVouchersPage() {
       const res = await adminService.getVouchers();
       if (res?.success && res?.data) {
         setVouchers(res.data.vouchers || []);
+      } else {
+        setVouchers([]);
       }
     } catch (err) {
       console.error("Error loading vouchers:", err);
+      setVouchers([]);
     } finally {
       setLoading(false);
     }
@@ -57,7 +60,6 @@ export default function AdminVouchersPage() {
             : `ℹ️ Đã vô hiệu hoá voucher ${voucher.code}`
         );
         setTimeout(() => setToastMessage(""), 4000);
-        // Cập nhật state
         setVouchers((prev) =>
           prev.map((v) => (v.id === voucher.id ? { ...v, active: newActiveState } : v))
         );

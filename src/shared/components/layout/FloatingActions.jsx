@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
-import { Phone, MessageCircle, ArrowUp } from "lucide-react";
+import { Phone, MessageCircle, ArrowUp, ShieldCheck } from "lucide-react";
 import ChatWidget from "@/features/chatbot/components/ChatWidget";
 
 export default function FloatingActions() {
@@ -113,6 +114,19 @@ export default function FloatingActions() {
           <ArrowUp className="w-4 h-4" />
         </button>
       )}
+
+      {/* Nút chuyển nhanh sang Admin (Demo) nổi góc dưới bên trái */}
+      <div className="fixed bottom-20 md:bottom-6 left-4 sm:left-6 z-30 pointer-events-auto">
+        <Link
+          href="/admin"
+          title="Chuyển sang Cổng Quản Trị Admin (Demo)"
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900/90 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-xs font-bold shadow-2xl backdrop-blur-md transition-all transform hover:scale-105 group"
+        >
+          <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse group-hover:bg-white" />
+          <ShieldCheck className="w-4 h-4 text-blue-400 group-hover:text-white transition-colors" />
+          <span>Admin (Demo)</span>
+        </Link>
+      </div>
     </>
   );
 }

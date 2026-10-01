@@ -61,9 +61,13 @@ export default function AdminCustomersPage() {
             totalPages: res.data.totalPages || 1,
           });
         }
+      } else {
+        setCustomers([]);
+        setPagination({ page: 1, limit: 20, total: 0, totalPages: 1 });
       }
     } catch (err) {
       console.error("Error loading customers:", err);
+      setCustomers([]);
     } finally {
       setLoading(false);
     }

@@ -16,7 +16,12 @@ import QuickQuoteModal from "@/features/quote/components/QuickQuoteModal";
 
 export default function AppShell({ children }) {
   const pathname = usePathname();
+  const isAdminPage = pathname?.startsWith("/admin");
   const isAuthPage = pathname === "/login" || pathname === "/register";
+
+  if (isAdminPage) {
+    return <>{children}</>;
+  }
 
   if (isAuthPage) {
     return <main className="min-h-screen">{children}</main>;

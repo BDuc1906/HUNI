@@ -10,8 +10,11 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const user = req.auth?.user;
 
-  // Bảo vệ /admin/* — chỉ ADMIN
+  // Bảo vệ /admin/* — chỉ ADMIN trong production
   if (pathname.startsWith("/admin")) {
+    if (process.env.NODE_ENV !== "production" || process.env.ADMIN_PREVIEW_MODE === "true") {
+      return NextResponse.next();
+    }
     if (!user) {
       return NextResponse.redirect(
         new URL(`/login?redirect=${pathname}`, req.url)

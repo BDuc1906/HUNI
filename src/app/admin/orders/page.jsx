@@ -94,9 +94,14 @@ export default function AdminOrdersPage() {
         if (res.data.summary) {
           setSummary(res.data.summary);
         }
+      } else {
+        setOrders([]);
+        setPagination({ page: 1, limit: 20, total: 0, totalPages: 1 });
+        setSummary({ pending: 0, producing: 0, completed: 0, totalRevenue: 0 });
       }
     } catch (err) {
       console.error("Error fetching orders:", err);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -130,7 +135,6 @@ export default function AdminOrdersPage() {
       setSelectedOrder((prev) => ({ ...prev, ...updatedOrder }));
     }
 
-    // Làm mới lại bảng và summary
     loadOrders();
   };
 
