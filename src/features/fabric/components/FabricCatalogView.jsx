@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { FABRIC_COMPARISONS } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
 import {
   Sparkles,
@@ -30,17 +29,11 @@ import {
   HelpCircle,
   FileCheck,
   RefreshCw,
-  PhoneCall,
-  ArrowRight,
   Check,
-  Zap,
-  SlidersHorizontal,
   Compass,
   Eye,
   Scale,
   X,
-  Plus,
-  Maximize2,
   CheckCheck,
 } from "lucide-react";
 
