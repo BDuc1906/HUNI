@@ -375,16 +375,6 @@ sequenceDiagram
 4. **Mã hóa mật khẩu:** Sử dụng thuật toán `bcryptjs` với salt rounds $\ge 10$ để băm mật khẩu người dùng trước khi lưu trữ.
 5. **Khả năng tự phục hồi (Fault Tolerance):** Endpoint trợ lý tư vấn (`/api/chat`) luôn trả về mã HTTP 200 kèm số hotline ngay cả khi dịch vụ bên thứ ba bị quá tải, ngăn chặn tối đa việc vỡ giao diện client.
 
----
-
-## 📞 Liên Hệ & Bản Quyền
-
-* **Đơn vị chủ quản:** CÔNG TY CỔ PHẦN TẬP ĐOÀN HDC (HDC GROUP VN)
-* **Thương hiệu đại diện:** HUNI UNIFORM — HDC FASHION
-* **Hotline hỗ trợ 24/7:** [0984.959.586](tel:0984959586)
-* **Kênh trao đổi Zalo:** [zalo.me/0984959586](https://zalo.me/0984959586)
-* **Email liên hệ:** [support@huniuniform.vn](mailto:support@huniuniform.vn)
-* **Trang web chính thức:** [https://huniuniform.vn](https://huniuniform.vn)
 
 ---
 
