@@ -9,10 +9,29 @@ export default function sitemap() {
       changeFrequency: "weekly",
       priority: 1.0,
     },
-    // Thêm sau khi tách trang:
-  // { url: `${baseUrl}/dong-phuc-doanh-nghiep`, lastModified: now, priority: 0.9 },
-  // { url: `${baseUrl}/vest-may-do`, lastModified: now, priority: 0.9 },
-  // { url: `${baseUrl}/the-thao-golf`, lastModified: now, priority: 0.8 },
-  // { url: `${baseUrl}/truong-hoc`, lastModified: now, priority: 0.8 },
+    {
+      url: `${baseUrl}/quy-trinh-may-dong-phuc-doanh-nghiep`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
+    {
+      url: `${baseUrl}/bao-gia-dong-phuc-cong-ty`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/cach-thiet-ke-logo-ao-dong-phuc`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/xu-huong-dong-phuc-2026`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    },
   ];
 }
