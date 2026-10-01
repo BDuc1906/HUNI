@@ -82,8 +82,12 @@ const MAIN_NAV = [
     ],
   },
   { label: "Bảng Vải", href: "/bang-vai" },
+<<<<<<< HEAD
   { label: "Quy Trình", href: "/quy-trinh-may" },
   { label: "Kiến Thức", href: "/blog" },
+=======
+  { label: "Quy Trình", href: "/quy-trinh-may-dong-phuc-doanh-nghiep" },
+>>>>>>> 0622545 (feat: implement process module)
   { label: "Liên Hệ", href: "/lien-he" },
 ];
 
@@ -92,6 +96,14 @@ const MAIN_NAV = [
 // để user có thời gian di chuột từ button xuống dropdown
 // ============================================================
 const HOVER_CLOSE_DELAY = 180;
+
+// Các nội dung thuộc module Quy Trình dùng chung một trạng thái active trong navigation.
+const PROCESS_MODULE_PATHS = new Set([
+  "/quy-trinh-may-dong-phuc-doanh-nghiep",
+  "/bao-gia-dong-phuc-cong-ty",
+  "/cach-thiet-ke-logo-ao-dong-phuc",
+  "/xu-huong-dong-phuc-2026",
+]);
 
 export default function Header() {
   const {
@@ -172,6 +184,12 @@ export default function Header() {
   // ============================================================
   const isActive = (href) => {
     if (href === "/" && pathname === "/") return true;
+    if (
+      href === "/quy-trinh-may-dong-phuc-doanh-nghiep" &&
+      PROCESS_MODULE_PATHS.has(pathname)
+    ) {
+      return true;
+    }
     if (href !== "/" && pathname.startsWith(href)) return true;
     return false;
   };
