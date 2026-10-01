@@ -264,7 +264,7 @@ export default function HeroBanner() {
           CONTENT OVERLAY
           ============================================ */}
       <div className="relative z-10 h-full flex flex-col pointer-events-none justify-center">
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-40 sm:pb-48 lg:pb-44 pointer-events-auto">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-60 sm:pb-56 md:pb-48 lg:pb-44 pointer-events-auto">
           <div className="max-w-3xl">
             {/* Eyebrow */}
             <div
@@ -354,6 +354,26 @@ export default function HeroBanner() {
         {/* STATS BAR */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* DOTS NAVIGATION — nằm trong thanh stats nên không bao giờ đè lên */}
+            <div className="pointer-events-auto flex items-center justify-center gap-2 mb-3">
+              {SLIDES.map((_, idx) => {
+                const active = idx === currentSlide;
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => goToSlide(idx)}
+                    aria-label={`Đến slide ${idx + 1}`}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      active
+                        ? "w-10 sm:w-14 bg-brand-400"
+                        : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
+                    }`}
+                  />
+                );
+              })}
+            </div>
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
               {BRAND_INFO.stats.map((stat, idx) => (
                 <div
@@ -376,25 +396,6 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* DOTS NAVIGATION */}
-      <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {SLIDES.map((_, idx) => {
-          const active = idx === currentSlide;
-
-          return (
-            <button
-              key={idx}
-              onClick={() => goToSlide(idx)}
-              aria-label={`Đến slide ${idx + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                active
-                  ? "w-10 sm:w-14 bg-brand-400"
-                  : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
-              }`}
-            />
-          );
-        })}
-      </div>
     </section>
   );
 }
