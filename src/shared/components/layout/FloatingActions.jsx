@@ -116,15 +116,15 @@ export default function FloatingActions() {
       )}
 
       {/* Nút chuyển nhanh sang Admin (Demo) nổi góc dưới bên trái */}
-      <div className="fixed bottom-20 md:bottom-6 left-4 sm:left-6 z-30 pointer-events-auto">
+      <div className="fixed bottom-20 md:bottom-6 left-4 sm:left-6 z-50 pointer-events-auto">
         <Link
           href="/admin"
           title="Chuyển sang Cổng Quản Trị Admin (Demo)"
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-slate-900/90 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/40 text-xs font-bold shadow-2xl backdrop-blur-md transition-all transform hover:scale-105 group"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-900/95 hover:bg-blue-600 text-blue-300 hover:text-white border-2 border-blue-400 text-xs font-black shadow-2xl backdrop-blur-md transition-all transform hover:scale-110 group ring-4 ring-blue-500/20"
         >
-          <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse group-hover:bg-white" />
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping group-hover:bg-white" />
           <ShieldCheck className="w-4 h-4 text-blue-400 group-hover:text-white transition-colors" />
-          <span>Admin (Demo)</span>
+          <span>⚡ Admin (Demo)</span>
         </Link>
       </div>
     </>

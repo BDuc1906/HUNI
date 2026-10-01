@@ -93,6 +93,7 @@ const MAIN_NAV = [
   { label: "Bảng Vải", href: "/bang-vai" },
   { label: "Quy Trình", href: "/quy-trinh-may-dong-phuc-doanh-nghiep" },
   { label: "Liên Hệ", href: "/lien-he" },
+  { label: "⚡ Quản Trị (Admin Demo)", href: "/admin", isHighlight: true },
 ];
 
 // ============================================================
@@ -419,6 +420,15 @@ export default function Header() {
 
           <UserMenu />
 
+          <Link
+            href="/admin"
+            title="Vào trang quản trị Admin Demo"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs shadow-md shadow-amber-500/25 transition-all hover:scale-105"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-slate-950" />
+            <span>Admin Demo</span>
+          </Link>
+
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition-colors"
@@ -547,6 +557,20 @@ export default function Header() {
               );
             }
 
+            if (item.isHighlight) {
+              return (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  style={{ whiteSpace: "nowrap" }}
+                  className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-500/30 transition-all hover:scale-105 my-1.5"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-blue-200" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            }
+
             return (
               <Link
                 key={item.label}
@@ -562,17 +586,6 @@ export default function Header() {
               </Link>
             );
           })}
-
-          {/* Nút chuyển sang Admin Demo */}
-          <div className="ml-auto py-1 pl-3">
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/25 hover:bg-blue-600 border border-blue-400/40 text-blue-300 hover:text-white font-bold text-xs shadow-sm transition-all hover:scale-105"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-300 group-hover:text-white" />
-              <span>Admin (Demo)</span>
-            </Link>
-          </div>
         </div>
       </nav>
 
