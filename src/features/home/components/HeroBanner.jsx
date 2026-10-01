@@ -103,7 +103,7 @@ export default function HeroBanner() {
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
   const isSwipingRef = useRef(false);
-  const isPausedRef = useRef(false); // dùng ref để không re-render
+  const isPausedRef = useRef(false);
 
   // ============================================================
   // NAVIGATION HANDLERS
@@ -123,7 +123,7 @@ export default function HeroBanner() {
 
   // ============================================================
   // AUTO-PLAY — Tự chuyển slide mỗi 6 giây
-  // Tạm dừng khi user đang tương tác (touchstart), resume sau 3s
+  // Tạm dừng khi user đang tương tác, resume sau 3 giây
   // ============================================================
   useEffect(() => {
     const timer = setInterval(() => {
@@ -136,7 +136,7 @@ export default function HeroBanner() {
   }, []);
 
   // ============================================================
-  // KEYBOARD NAVIGATION
+  // KEYBOARD NAVIGATION — Desktop dùng ← →
   // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
@@ -265,6 +265,7 @@ export default function HeroBanner() {
           <div className="max-w-3xl">
             {!slide.hideText && (
               <>
+                {/* Eyebrow */}
                 <div
                   key={`eyebrow-${currentSlide}`}
                   className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
@@ -273,6 +274,7 @@ export default function HeroBanner() {
                   <span>{slide.eyebrow}</span>
                 </div>
 
+                {/* TITLE — 2 dòng */}
                 <div
                   key={`title-${currentSlide}`}
                   className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
@@ -285,6 +287,7 @@ export default function HeroBanner() {
                   </h2>
                 </div>
 
+                {/* Subtitle */}
                 <p
                   key={`sub-${currentSlide}`}
                   className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
@@ -292,6 +295,7 @@ export default function HeroBanner() {
                   &ldquo;{slide.subtitle}&rdquo;
                 </p>
 
+                {/* Description */}
                 <p
                   key={`desc-${currentSlide}`}
                   className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
@@ -299,6 +303,7 @@ export default function HeroBanner() {
                   {slide.description}
                 </p>
 
+                {/* Checklist */}
                 <div
                   key={`check-${currentSlide}`}
                   className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
@@ -316,6 +321,7 @@ export default function HeroBanner() {
               </>
             )}
 
+            {/* CTA */}
             <div
               key={`cta-${currentSlide}`}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-left-4 duration-500 delay-300"
@@ -346,7 +352,9 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* STATS BAR */}
+        {/* ============================================
+            STATS BAR
+            ============================================ */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
@@ -368,17 +376,6 @@ export default function HeroBanner() {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* ============================================
-          COUNTER — Góc trên phải (01 / 05)
-          ============================================ */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
-        <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
-          {String(currentSlide + 1).padStart(2, "0")}{" "}
-          <span className="text-white/60">/</span>{" "}
-          {String(SLIDES.length).padStart(2, "0")}
         </div>
       </div>
 
