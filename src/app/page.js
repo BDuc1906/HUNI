@@ -4,30 +4,25 @@ import React from "react";
 import ErrorBoundary from "@/shared/components/ErrorBoundary";
 
 // ============================================================
-// TRANG CHỦ — 11 SECTIONS (ĐÃ BỎ TrustBar & NewArrivals)
-//
-// Flow logic:
-//   1-3   : HOOK → BROWSE → SẢN PHẨM HOT
-//   4     : CAPTURE LEAD SỚM
-//   5-7   : BUILD CASE (WhyChooseUs → Seamless USP → Process)
-//   8-9   : PROOF + OBJECTION (Feedback → FAQ)
-//   10-11 : CONTENT + CLOSE (Blog → Final CTA)
+// TRANG CHỦ — 11 SECTIONS (ĐÃ BỎ NewArrivalsSection VÀ ProcessSection — quy trình có trang riêng /quy-trinh-may)
 // ============================================================
 
 // 1. HOOK
 import HeroBanner from "@/features/home/components/HeroBanner";
 
-// 2-3. BROWSE & SẢN PHẨM
+// 2. TRUST
+import TrustBar from "@/features/home/components/TrustBar";
+
+// 3-4. BROWSE & SẢN PHẨM
 import CategoryShowcase from "@/features/home/components/CategoryShowcase";
 import FeaturedProductsSection from "@/features/home/components/FeaturedProductsSection";
 
-// 4. CAPTURE LEAD SỚM
+// 5. CAPTURE LEAD SỚM
 import QuickQuoteSection from "@/features/quote/components/QuickQuoteSection";
 
-// 5-7. BUILD CASE
+// 6-7. BUILD CASE
 import WhyChooseUs from "@/features/home/components/WhyChooseUs";
 import SeamlessTechSection from "@/features/home/components/SeamlessTechSection";
-import ProcessSection from "@/features/home/components/ProcessSection";
 
 // 8. PROOF
 import FeedbackSection from "@/features/home/components/FeedbackSection";
@@ -49,34 +44,34 @@ export default function Home() {
         <HeroBanner />
       </ErrorBoundary>
 
-      {/* 2. DANH MỤC */}
+      {/* 2. ĐỐI TÁC & KHÁCH HÀNG */}
+      <ErrorBoundary name="Đối tác">
+        <TrustBar />
+      </ErrorBoundary>
+
+      {/* 3. DANH MỤC */}
       <ErrorBoundary name="Danh mục">
         <CategoryShowcase />
       </ErrorBoundary>
 
-      {/* 3. SẢN PHẨM NỔI BẬT — 1 hàng · 5 SP đại diện 5 loại */}
+      {/* 4. SẢN PHẨM NỔI BẬT — 5 hàng, mỗi hàng 5 SP theo loại */}
       <ErrorBoundary name="Sản phẩm nổi bật">
         <FeaturedProductsSection />
       </ErrorBoundary>
 
-      {/* 4. BÁO GIÁ NHANH */}
+      {/* 5. BÁO GIÁ NHANH */}
       <ErrorBoundary name="Báo giá nhanh">
         <QuickQuoteSection />
       </ErrorBoundary>
 
-      {/* 5. VÌ SAO CHỌN HDC */}
+      {/* 6. VÌ SAO CHỌN HDC */}
       <ErrorBoundary name="Vì sao chọn HDC">
         <WhyChooseUs />
       </ErrorBoundary>
 
-      {/* 6. CÔNG NGHỆ SEAMLESS */}
+      {/* 7. CÔNG NGHỆ SEAMLESS */}
       <ErrorBoundary name="Công nghệ Seamless">
         <SeamlessTechSection />
-      </ErrorBoundary>
-
-      {/* 7. QUY TRÌNH */}
-      <ErrorBoundary name="Quy trình">
-        <ProcessSection />
       </ErrorBoundary>
 
       {/* 8. FEEDBACK */}
