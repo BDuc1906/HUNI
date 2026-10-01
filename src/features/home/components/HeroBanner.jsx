@@ -5,16 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import {
-  Sparkles,
-  PhoneCall,
-  ArrowRight,
-  CheckCircle2,
-  ChevronLeft,
-  ChevronRight,
-  Pause,
-  Play,
-} from "lucide-react";
+import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
 // SLIDES DATA — 5 slides
@@ -110,7 +101,6 @@ export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const sectionRef = useRef(null);
@@ -138,11 +128,9 @@ export default function HeroBanner() {
   }, []);
 
   // ============================================================
-  // AUTO-PLAY SLIDESHOW TIMER VÀ THANH TIẾN ĐỘ PROGRESS
+  // TỰ ĐỘNG CHẠY SLIDESHOW (AUTO-PLAY LIÊN TỤC) & TIẾN ĐỘ PROGRESS
   // ============================================================
   useEffect(() => {
-    if (isPaused) return;
-
     const intervalTime = 50;
     const step = (intervalTime / SLIDE_DURATION) * 100;
 
@@ -157,7 +145,7 @@ export default function HeroBanner() {
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [isPaused, nextSlide]);
+  }, [nextSlide]);
 
   // ============================================================
   // KEYBOARD NAVIGATION — Desktop dùng ← →
@@ -172,7 +160,7 @@ export default function HeroBanner() {
   }, [nextSlide, prevSlide]);
 
   // ============================================================
-  // TOUCH SWIPE — Native event listener với passive: false
+  // TOUCH SWIPE — Mobile
   // ============================================================
   useEffect(() => {
     const el = sectionRef.current;
@@ -182,7 +170,6 @@ export default function HeroBanner() {
       touchStartXRef.current = e.touches[0].clientX;
       touchStartYRef.current = e.touches[0].clientY;
       isSwipingRef.current = false;
-      setIsPaused(true); // Tạm dừng auto-play khi user chạm
     };
 
     const onTouchMove = (e) => {
@@ -204,9 +191,6 @@ export default function HeroBanner() {
       }
 
       isSwipingRef.current = false;
-
-      // Resume auto-play sau 3 giây kể từ khi user ngừng tương tác
-      setTimeout(() => setIsPaused(false), 3000);
     };
 
     el.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -225,10 +209,8 @@ export default function HeroBanner() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900 group/banner"
+      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900"
       style={{ touchAction: "pan-y" }}
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
     >
       {/* ============================================
           SLIDES — TRƯỢT NGANG
@@ -407,49 +389,6 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          ARROWS NAVIGATION — Chuyển slide Desktop / Tablet
-          ============================================ */}
-      <button
-        onClick={prevSlide}
-        aria-label="Slide trước"
-        className="hidden md:flex absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 hover:border-white/50 text-white items-center justify-center transition-all active:scale-95 z-20 shadow-xl hover:scale-105"
-      >
-        <ChevronLeft className="w-6 h-6" />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        aria-label="Slide sau"
-        className="hidden md:flex absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 hover:border-white/50 text-white items-center justify-center transition-all active:scale-95 z-20 shadow-xl hover:scale-105"
-      >
-        <ChevronRight className="w-6 h-6" />
-      </button>
-
-      {/* ============================================
-          CONTROLS — Góc trên phải: Pause/Play & Counter (01 / 05)
-          ============================================ */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2">
-        <button
-          onClick={() => setIsPaused((p) => !p)}
-          aria-label={isPaused ? "Tiếp tục trình chiếu" : "Tạm dừng trình chiếu"}
-          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition-all active:scale-95"
-          title={isPaused ? "Tiếp tục trình chiếu" : "Tạm dừng trình chiếu"}
-        >
-          {isPaused ? (
-            <Play className="w-3.5 h-3.5 fill-current" />
-          ) : (
-            <Pause className="w-3.5 h-3.5 fill-current" />
-          )}
-        </button>
-
-        <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
-          {String(currentSlide + 1).padStart(2, "0")}{" "}
-          <span className="text-white/60">/</span>{" "}
-          {String(SLIDES.length).padStart(2, "0")}
-        </div>
-      </div>
-
-      {/* ============================================
           DOTS NAVIGATION — Bấm để chuyển slide & Thanh tiến độ
           ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
@@ -472,7 +411,7 @@ export default function HeroBanner() {
                   className="absolute inset-y-0 left-0 bg-brand-400 rounded-full h-full"
                   style={{
                     width: `${progress}%`,
-                    transition: isPaused ? "none" : "width 50ms linear",
+                    transition: "width 50ms linear",
                   }}
                 />
               )}
