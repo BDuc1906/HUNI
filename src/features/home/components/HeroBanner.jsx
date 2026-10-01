@@ -25,7 +25,7 @@ const SLIDES = [
     ctaLink: "/bang-vai",
   },
   {
-    image: "/images/09_kids_school_01.jpg",
+    image: "/images/uniform_corporate_suits.jpg",
     position: "top",
     eyebrow: "Đẳng Cấp Lãnh Đạo",
     title: "NÂNG TẦM THƯƠNG HIỆU",
@@ -158,7 +158,7 @@ export default function HeroBanner() {
       touchStartXRef.current = e.touches[0].clientX;
       touchStartYRef.current = e.touches[0].clientY;
       isSwipingRef.current = false;
-      isPausedRef.current = true; // Tạm dừng auto-play khi user chạm
+      isPausedRef.current = true;
     };
 
     const onTouchMove = (e) => {
@@ -181,7 +181,6 @@ export default function HeroBanner() {
 
       isSwipingRef.current = false;
 
-      // Resume auto-play sau 3 giây kể từ khi user ngừng tương tác
       setTimeout(() => {
         isPausedRef.current = false;
       }, 3000);
