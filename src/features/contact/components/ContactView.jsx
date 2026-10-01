@@ -30,8 +30,6 @@ import {
   Layers,
   Award,
   AlertCircle,
-  Plus,
-  Minus,
 } from "lucide-react";
 
 // ============================================================
@@ -102,8 +100,6 @@ const PRODUCT_OPTIONS = [
   { id: "school", label: "Đồng Phục Trường Học", desc: "Học sinh các cấp, sinh viên, giáo viên" },
   { id: "accessories", label: "Phụ Kiện Doanh Nghiệp", desc: "Mũ nón, cặp da, cà vạt, quà tặng" },
 ];
-
-const QUICK_QUANTITY_OPTIONS = [10, 20, 50, 100, 200, 500];
 
 // ============================================================
 // FAQ DATA FOR CONTACT
@@ -542,13 +538,13 @@ export default function ContactView() {
                         </div>
                       </div>
 
-                      {/* Row 4: Quantity Selection */}
+                      {/* Row 4: Quantity Input */}
                       <div>
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center justify-between mb-1.5">
                           <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                            <span>Số Lượng Áo Cần May</span>
+                            <span>Số Lượng Dự Kiến</span>
                             <span className="text-rose-500">*</span>
-                            <span className="text-[11px] font-medium text-slate-500 normal-case">
+                            <span className="text-[11px] font-semibold text-rose-500 normal-case">
                               (Tối thiểu 10 cái)
                             </span>
                           </label>
@@ -559,81 +555,38 @@ export default function ContactView() {
                           )}
                         </div>
 
-                        {/* Input & Stepper */}
-                        <div className="space-y-2.5">
-                          <div className="relative flex items-center">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const current = parseInt(quantity, 10) || 10;
-                                setQuantity(Math.max(10, current - 10));
-                              }}
-                              className="absolute left-2 z-10 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
-                              title="Giảm 10 cái (Tối thiểu 10)"
-                            >
-                              <Minus className="w-3.5 h-3.5" />
-                            </button>
-                            <input
-                              type="number"
-                              min={10}
-                              step={1}
-                              required
-                              value={quantity}
-                              onChange={(e) => setQuantity(e.target.value)}
-                              placeholder="Nhập số lượng áo chính xác (tối thiểu 10)..."
-                              className={`w-full pl-12 pr-20 py-2.5 font-bold text-slate-800 bg-slate-50 border rounded-xl text-sm transition-all focus:bg-white focus:outline-none ${
-                                quantity !== "" && Number(quantity) < 10
-                                  ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100"
-                                  : "border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-                              }`}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const current = parseInt(quantity, 10) || 0;
-                                setQuantity(Math.max(10, current + 10));
-                              }}
-                              className="absolute right-12 z-10 w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors"
-                              title="Tăng 10 cái"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                            </button>
-                            <span className="absolute right-3 text-xs font-bold text-slate-400 pointer-events-none select-none">
-                              áo
-                            </span>
-                          </div>
-
-                          {/* Warning message if below minimum */}
-                          {quantity !== "" && Number(quantity) < 10 && (
-                            <div className="flex items-center gap-1.5 text-xs text-rose-600 bg-rose-50 border border-rose-200 px-3 py-1.5 rounded-lg animate-in fade-in">
-                              <AlertCircle className="w-4 h-4 shrink-0" />
-                              <span>Số lượng đặt may tối thiểu là <strong>10 cái</strong>. Quý khách vui lòng nhập từ 10 trở lên.</span>
-                            </div>
-                          )}
-
-                          {/* Quick selection chips */}
-                          <div>
-                            <div className="text-[11px] font-medium text-slate-500 mb-1.5">
-                              Gợi ý chọn nhanh số lượng:
-                            </div>
-                            <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
-                              {QUICK_QUANTITY_OPTIONS.map((q) => (
-                                <button
-                                  key={q}
-                                  type="button"
-                                  onClick={() => setQuantity(q)}
-                                  className={`py-1.5 px-2 rounded-xl text-xs font-bold text-center transition-all ${
-                                    Number(quantity) === q
-                                      ? "bg-brand-500 text-white shadow-sm ring-1 ring-brand-500"
-                                      : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                                  }`}
-                                >
-                                  {q} cái
-                                </button>
-                              ))}
-                            </div>
-                          </div>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min="10"
+                            step="1"
+                            required
+                            value={quantity}
+                            onChange={(e) => setQuantity(e.target.value)}
+                            onBlur={() => {
+                              if (quantity !== "" && Number(quantity) < 10) {
+                                setErrorMessage("Số lượng đặt may tối thiểu là 10 cái.");
+                              }
+                            }}
+                            placeholder="Nhập số lượng áo chính xác (tối thiểu 10 cái)..."
+                            className={`w-full px-4 py-3 font-bold text-slate-800 bg-slate-50 border rounded-xl text-sm transition-all focus:bg-white focus:outline-none ${
+                              quantity !== "" && Number(quantity) < 10
+                                ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100"
+                                : "border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                            }`}
+                          />
+                          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 pointer-events-none select-none">
+                            cái / áo
+                          </span>
                         </div>
+
+                        {/* Cảnh báo nếu số lượng nhập < 10 */}
+                        {quantity !== "" && Number(quantity) < 10 && (
+                          <div className="mt-2 flex items-center gap-1.5 text-xs text-rose-600 bg-rose-50 border border-rose-200 px-3 py-2 rounded-xl animate-in fade-in">
+                            <AlertCircle className="w-4 h-4 shrink-0" />
+                            <span>Số lượng nhập không được nhỏ hơn <strong>10 cái</strong>. Quý khách vui lòng nhập từ 10 trở lên.</span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Extra Onsite Fields when Tab is "onsite" */}

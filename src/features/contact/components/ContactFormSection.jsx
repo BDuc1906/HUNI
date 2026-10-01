@@ -378,39 +378,30 @@ export default function ContactFormSection() {
                     <span>Số Lượng Đặt May Dự Kiến</span>
                   </h3>
 
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {QUANTITY_TIERS.map((tier) => {
-                      const active = quantityTier === tier && !customQty;
-                      return (
-                        <button
-                          key={tier}
-                          type="button"
-                          onClick={() => {
-                            setQuantityTier(tier);
-                            setCustomQty("");
-                          }}
-                          className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border ${
-                            active
-                              ? "bg-[#004f5e] text-white border-[#004f5e] shadow-sm"
-                              : "bg-white text-slate-700 border-slate-200 hover:border-brand-400"
-                          }`}
-                        >
-                          {tier}
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-slate-500">Hoặc số lượng cụ thể:</span>
-                    <input
-                      type="number"
-                      min="1"
-                      value={customQty}
-                      onChange={(e) => setCustomQty(e.target.value)}
-                      placeholder="Nhập số lượng (áo)"
-                      className="w-44 px-3 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-800 text-xs focus:outline-none focus:border-brand-500"
-                    />
+                  <div className="space-y-2">
+                    <div className="relative max-w-xs">
+                      <input
+                        type="number"
+                        min="10"
+                        step="1"
+                        required
+                        value={customQty || (quantityTier && quantityTier !== "10 - 20 áo" ? quantityTier.split(" ")[0] : "")}
+                        onChange={(e) => {
+                          setCustomQty(e.target.value);
+                          setQuantityTier("");
+                        }}
+                        placeholder="Nhập số lượng áo (tối thiểu 10 cái)..."
+                        className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-800 text-sm font-bold focus:outline-none focus:border-brand-500"
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 pointer-events-none">
+                        áo / cái
+                      </span>
+                    </div>
+                    {customQty !== "" && Number(customQty) < 10 && (
+                      <p className="text-[11px] text-rose-500 font-bold">
+                        * Số lượng nhập không được nhỏ hơn 10 cái
+                      </p>
+                    )}
                   </div>
                 </div>
 
