@@ -119,6 +119,21 @@ export default function AdminProductsPage() {
     setTimeout(() => setToastMessage(""), 4000);
   };
 
+  const handleDeleteMultipleProducts = async (ids) => {
+    try {
+      await Promise.allSettled(ids.map((id) => productsService.deleteProduct(id)));
+    } catch (err) {
+      console.error("Error bulk deleting products:", err);
+    }
+    setProducts((prev) => prev.filter((p) => !ids.includes(p.id)));
+    setPagination((prev) => ({
+      ...prev,
+      total: Math.max(0, prev.total - ids.length),
+    }));
+    setToastMessage(`✅ Đã xoá thành công ${ids.length} sản phẩm`);
+    setTimeout(() => setToastMessage(""), 4000);
+  };
+
   const handleResetFilters = () => {
     setSearchTerm("");
     setDebouncedSearch("");
@@ -245,6 +260,7 @@ export default function AdminProductsPage() {
         pagination={pagination}
         onPageChange={(newPage) => setPage(newPage)}
         onDeleteProduct={handleDeleteProduct}
+        onDeleteMultipleProducts={handleDeleteMultipleProducts}
         loading={loading}
       />
     </div>

@@ -66,6 +66,9 @@ export default function ProductForm({
     initialData?.originalPrice ? String(initialData.originalPrice) : ""
   );
   const [wholesaleTiers, setWholesaleTiers] = useState(initialData?.wholesaleTiers || []);
+  const [stock, setStock] = useState(
+    initialData?.stock !== undefined ? String(initialData.stock) : "120"
+  );
 
   // Features (dynamic list)
   const [features, setFeatures] = useState(initialData?.features || []);
@@ -179,6 +182,8 @@ export default function ProductForm({
       description: description.trim(),
       price: parseInt(price, 10),
       originalPrice: originalPrice ? parseInt(originalPrice, 10) : undefined,
+      stock: stock ? parseInt(stock, 10) : 0,
+      inStock: (stock ? parseInt(stock, 10) : 0) > 0,
       wholesaleTiers: wholesaleTiers.length > 0 ? wholesaleTiers : undefined,
       features,
       images,
@@ -310,10 +315,10 @@ export default function ProductForm({
           <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-6">
             <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
               <Layers className="w-4 h-4 text-emerald-400" />
-              <span>Chính Sách Giá & Bán Sỉ</span>
+              <span>Chính Sách Giá, Tồn Kho & Bán Sỉ</span>
             </h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
                   Giá niêm yết (VNĐ) <span className="text-rose-400">*</span>
@@ -331,7 +336,7 @@ export default function ProductForm({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Giá cũ / Giá gạch ngang (VNĐ)
+                  Giá cũ / Gạch ngang (VNĐ)
                 </label>
                 <input
                   type="number"
@@ -341,6 +346,20 @@ export default function ProductForm({
                   onChange={(e) => setOriginalPrice(e.target.value)}
                   placeholder="VD: 250000"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono text-slate-400 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Số lượng tồn kho (Chiếc)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                  placeholder="VD: 120"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono font-bold text-white focus:outline-none focus:border-blue-500"
                 />
               </div>
             </div>
