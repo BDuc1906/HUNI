@@ -10,6 +10,8 @@ import {
   PhoneCall,
   ArrowRight,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Pause,
   Play,
 } from "lucide-react";
@@ -20,6 +22,9 @@ import {
 const SLIDES = [
   {
     image: "/images/catalogue-2026-hero.jpg",
+    // position: phần ảnh được neo khi bị cắt ("top" | "center" | "bottom")
+    // fit: "cover" (mặc định, tràn màn hình) | "contain" (thấy trọn ảnh, có nền mờ 2 bên)
+    // hideText: true => ẩn khối chữ của code (dùng khi ảnh đã có chữ sẵn)
     position: "top",
     eyebrow: "Bộ Sưu Tập 2026",
     title: "CHẤT LIỆU XANH",
@@ -92,7 +97,7 @@ const CHECKLIST = [
 ];
 
 const TRANSITION_DURATION = 700;
-const SLIDE_DURATION = 6000; // 6 giây / slide
+const SLIDE_DURATION = 5000; // 5 giây / slide
 const SWIPE_THRESHOLD = 50;
 
 const POSITION_CLASS = {
@@ -133,27 +138,29 @@ export default function HeroBanner() {
   }, []);
 
   // ============================================================
-  // AUTO-PLAY + PROGRESS BAR
+  // AUTO-PLAY SLIDESHOW TIMER VÀ THANH TIẾN ĐỘ PROGRESS
   // ============================================================
   useEffect(() => {
     if (isPaused) return;
 
-    const startTime = Date.now();
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(percent);
+    const intervalTime = 50;
+    const step = (intervalTime / SLIDE_DURATION) * 100;
 
-      if (elapsed >= SLIDE_DURATION) {
-        nextSlide();
-      }
-    }, 50);
+    const timer = setInterval(() => {
+      setProgress((prev) => {
+        if (prev + step >= 100) {
+          nextSlide();
+          return 0;
+        }
+        return prev + step;
+      });
+    }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [currentSlide, isPaused, nextSlide]);
+  }, [isPaused, nextSlide]);
 
   // ============================================================
-  // KEYBOARD NAVIGATION
+  // KEYBOARD NAVIGATION — Desktop dùng ← →
   // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
@@ -218,8 +225,10 @@ export default function HeroBanner() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900"
+      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900 group/banner"
       style={{ touchAction: "pan-y" }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
       {/* ============================================
           SLIDES — TRƯỢT NGANG
@@ -237,6 +246,7 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0"
             aria-hidden={idx !== currentSlide}
           >
+            {/* Chỉ khi fit="contain": nền mờ lấp 2 bên */}
             {s.fit === "contain" && (
               <Image
                 src={s.image}
@@ -249,6 +259,7 @@ export default function HeroBanner() {
               />
             )}
 
+            {/* Ảnh chính: mặc định tràn kín màn hình */}
             <Image
               src={s.image}
               alt={s.title + " " + s.titleHighlight}
@@ -261,6 +272,7 @@ export default function HeroBanner() {
               } ${POSITION_CLASS[s.position || "center"]}`}
             />
 
+            {/* Gradient nhẹ chỉ ở bên trái, để chữ dễ đọc (slide có chữ sẵn thì bỏ) */}
             {!s.hideText && (
               <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
             )}
@@ -280,6 +292,7 @@ export default function HeroBanner() {
           <div className="max-w-3xl">
             {!slide.hideText && (
               <>
+                {/* Eyebrow */}
                 <div
                   key={`eyebrow-${currentSlide}`}
                   className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
@@ -288,6 +301,7 @@ export default function HeroBanner() {
                   <span>{slide.eyebrow}</span>
                 </div>
 
+                {/* TITLE — 2 dòng */}
                 <div
                   key={`title-${currentSlide}`}
                   className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
@@ -300,6 +314,7 @@ export default function HeroBanner() {
                   </h2>
                 </div>
 
+                {/* Subtitle */}
                 <p
                   key={`sub-${currentSlide}`}
                   className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
@@ -307,6 +322,7 @@ export default function HeroBanner() {
                   &ldquo;{slide.subtitle}&rdquo;
                 </p>
 
+                {/* Description */}
                 <p
                   key={`desc-${currentSlide}`}
                   className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
@@ -314,6 +330,7 @@ export default function HeroBanner() {
                   {slide.description}
                 </p>
 
+                {/* Checklist */}
                 <div
                   key={`check-${currentSlide}`}
                   className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
@@ -331,6 +348,7 @@ export default function HeroBanner() {
               </>
             )}
 
+            {/* CTA */}
             <div
               key={`cta-${currentSlide}`}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-left-4 duration-500 delay-300"
@@ -361,7 +379,9 @@ export default function HeroBanner() {
           </div>
         </div>
 
-        {/* STATS BAR */}
+        {/* ============================================
+            STATS BAR
+            ============================================ */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
@@ -387,18 +407,38 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          TOP-RIGHT: Nút Play/Pause + Counter
+          ARROWS NAVIGATION — Chuyển slide Desktop / Tablet
           ============================================ */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-3">
+      <button
+        onClick={prevSlide}
+        aria-label="Slide trước"
+        className="hidden md:flex absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 hover:border-white/50 text-white items-center justify-center transition-all active:scale-95 z-20 shadow-xl hover:scale-105"
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </button>
+
+      <button
+        onClick={nextSlide}
+        aria-label="Slide sau"
+        className="hidden md:flex absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 hover:border-white/50 text-white items-center justify-center transition-all active:scale-95 z-20 shadow-xl hover:scale-105"
+      >
+        <ChevronRight className="w-6 h-6" />
+      </button>
+
+      {/* ============================================
+          CONTROLS — Góc trên phải: Pause/Play & Counter (01 / 05)
+          ============================================ */}
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2">
         <button
           onClick={() => setIsPaused((p) => !p)}
-          aria-label={isPaused ? "Tiếp tục slideshow" : "Tạm dừng slideshow"}
-          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition-all active:scale-95"
+          aria-label={isPaused ? "Tiếp tục trình chiếu" : "Tạm dừng trình chiếu"}
+          className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/15 hover:bg-white/30 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition-all active:scale-95"
+          title={isPaused ? "Tiếp tục trình chiếu" : "Tạm dừng trình chiếu"}
         >
           {isPaused ? (
-            <Play className="w-4 h-4 fill-current" />
+            <Play className="w-3.5 h-3.5 fill-current" />
           ) : (
-            <Pause className="w-4 h-4 fill-current" />
+            <Pause className="w-3.5 h-3.5 fill-current" />
           )}
         </button>
 
@@ -410,7 +450,7 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          DOTS NAVIGATION — Có progress bar bên trong
+          DOTS NAVIGATION — Bấm để chuyển slide & Thanh tiến độ
           ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {SLIDES.map((_, idx) => {
@@ -423,13 +463,13 @@ export default function HeroBanner() {
               aria-label={`Đến slide ${idx + 1}`}
               className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
                 active
-                  ? "w-10 sm:w-14 bg-white/40"
-                  : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
+                  ? "w-10 sm:w-14 bg-white/30"
+                  : "w-2.5 sm:w-3 bg-white/50 hover:bg-white/80"
               }`}
             >
               {active && (
                 <span
-                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full"
+                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full h-full"
                   style={{
                     width: `${progress}%`,
                     transition: isPaused ? "none" : "width 50ms linear",
