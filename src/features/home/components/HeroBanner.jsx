@@ -99,6 +99,7 @@ export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const sectionRef = useRef(null);
   const touchStartXRef = useRef(0);
@@ -112,29 +113,37 @@ export default function HeroBanner() {
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
     setCurrentSlide(((index % total) + total) % total);
+    setProgress(0);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    setProgress(0);
   }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setProgress(0);
   }, []);
 
   // ============================================================
-  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây
-  // Tạm dừng khi user đang tương tác, resume sau 3 giây
+  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây & Cập nhật thanh timing
   // ============================================================
   useEffect(() => {
+    const startTime = Date.now();
     const timer = setInterval(() => {
-      if (!isPausedRef.current) {
-        setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+      if (isPausedRef.current) return;
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
+      setProgress(percent);
+
+      if (elapsed >= SLIDE_DURATION) {
+        nextSlide();
       }
-    }, SLIDE_DURATION);
+    }, 50);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [currentSlide, nextSlide]);
 
   // ============================================================
   // KEYBOARD NAVIGATION — Desktop dùng ← →
@@ -250,7 +259,50 @@ export default function HeroBanner() {
 
             {/* Gradient overlay — chỉ khi có text */}
             {!s.hideText && (
-              <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent pointer-events-none">
+                {/* Thanh tiến độ timing chuyển slidebar chạy ngang dưới đáy thẻ */}
+                <div className="absolute bottom-0 left-0 right-0 z-30 pointer-events-none">
+                  <div className="h-1 bg-white/20 w-full overflow-hidden">
+                    <div
+                      className="h-full bg-brand-400 transition-all duration-75 ease-linear"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Phần hiển thị timing chuyển slidebar dưới đáy thẻ */}
+                <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
+                  {SLIDES.map((_, dotIdx) => {
+                    const active = dotIdx === currentSlide;
+
+                    return (
+                      <button
+                        key={dotIdx}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          goToSlide(dotIdx);
+                        }}
+                        aria-label={`Đến slide ${dotIdx + 1}`}
+                        className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
+                          active
+                            ? "w-10 sm:w-14 bg-white/40 shadow-sm"
+                            : "w-2.5 sm:w-3 bg-white/50 hover:bg-white/80"
+                        }`}
+                      >
+                        {active && (
+                          <span
+                            className="absolute inset-y-0 left-0 bg-brand-400 rounded-full h-full"
+                            style={{
+                              width: `${progress}%`,
+                              transition: "width 50ms linear",
+                            }}
+                          />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         ))}
@@ -382,27 +434,6 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* ============================================
-          DOTS NAVIGATION — Bấm để chuyển slide
-          ============================================ */}
-      <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-        {SLIDES.map((_, idx) => {
-          const active = idx === currentSlide;
-
-          return (
-            <button
-              key={idx}
-              onClick={() => goToSlide(idx)}
-              aria-label={`Đến slide ${idx + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                active
-                  ? "w-10 sm:w-14 bg-brand-400"
-                  : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
-              }`}
-            />
-          );
-        })}
-      </div>
     </section>
   );
 }

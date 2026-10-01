@@ -63,6 +63,11 @@ export default function QuickQuoteSection() {
       showToast("Vui lòng nhập số điện thoại hoặc Zalo để nhận báo giá", "error");
       return;
     }
+    const parsedQty = parseInt(quantity, 10);
+    if (!parsedQty || isNaN(parsedQty) || parsedQty < 10) {
+      showToast("Số lượng nhập không được nhỏ hơn 10 cái", "error");
+      return;
+    }
     setSubmitted(true);
     triggerConfetti();
     showToast("Đã ghi nhận yêu cầu! Chuyên viên HDC sẽ gửi file báo giá qua Zalo/SĐT trong 5 phút.");
@@ -161,48 +166,45 @@ export default function QuickQuoteSection() {
                     </div>
                   </div>
 
-                  {/* 2. Quantity Slider + Quick Presets */}
+                  {/* 2. Quantity Input */}
                   <div>
                     <div className="flex items-center justify-between text-xs font-bold mb-2">
-                      <span className="text-[#004f5e]">2. Số Lượng Áo Dự Kiến:</span>
-                      <div className="flex items-center gap-2">
-                        {discountPercent > 0 && (
-                          <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 font-extrabold text-[10px] border border-rose-200">
-                            Giảm {discountPercent}%
-                          </span>
-                        )}
-                        <span className="text-base text-brand-600 font-black">{quantity} sản phẩm</span>
-                      </div>
+                      <span className="text-[#004f5e] flex items-center gap-1.5">
+                        <span>2. Số Lượng Áo Dự Kiến</span>
+                        <span className="text-rose-500 font-semibold text-[11px]">(Tối thiểu 10 cái)</span>
+                      </span>
+                      {discountPercent > 0 && (
+                        <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 font-extrabold text-[10px] border border-rose-200">
+                          Giảm {discountPercent}%
+                        </span>
+                      )}
                     </div>
 
-                    <input
-                      type="range"
-                      min="10"
-                      max="500"
-                      step="10"
-                      value={quantity}
-                      onChange={(e) => setQuantity(parseInt(e.target.value))}
-                      className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-500"
-                    />
-
-                    {/* Quick preset buttons */}
-                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
-                      <span className="text-[10px] text-slate-400 font-medium">Chọn nhanh:</span>
-                      {[20, 50, 100, 200, 500].map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          onClick={() => setQuantity(preset)}
-                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold border transition-colors ${
-                            quantity === preset
-                              ? "bg-[#004f5e] text-white border-[#004f5e]"
-                              : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
-                          }`}
-                        >
-                          {preset} áo
-                        </button>
-                      ))}
+                    <div className="relative">
+                      <input
+                        type="number"
+                        min="10"
+                        step="1"
+                        required
+                        value={quantity}
+                        onChange={(e) => setQuantity(e.target.value)}
+                        placeholder="Nhập số lượng áo chính xác (tối thiểu 10 cái)..."
+                        className={`w-full px-4 py-2.5 bg-slate-50 border rounded-xl text-slate-800 font-bold focus:outline-none focus:bg-white text-sm ${
+                          quantity !== "" && Number(quantity) < 10
+                            ? "border-rose-400 focus:border-rose-500 focus:ring-2 focus:ring-rose-100"
+                            : "border-slate-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                        }`}
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400 pointer-events-none">
+                        sản phẩm
+                      </span>
                     </div>
+
+                    {quantity !== "" && Number(quantity) < 10 && (
+                      <p className="text-[11px] text-rose-500 font-bold mt-1.5">
+                        * Số lượng nhập không được nhỏ hơn 10 cái
+                      </p>
+                    )}
                   </div>
 
                   {/* 3. Fabric Option */}
