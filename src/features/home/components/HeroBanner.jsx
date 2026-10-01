@@ -5,14 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import {
-  Sparkles,
-  PhoneCall,
-  ArrowRight,
-  CheckCircle2,
-  Pause,
-  Play,
-} from "lucide-react";
+import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
 // SLIDES DATA — 5 slides
@@ -92,7 +85,7 @@ const CHECKLIST = [
 ];
 
 const TRANSITION_DURATION = 700;
-const SLIDE_DURATION = 6000; // 6 giây / slide
+const SLIDE_DURATION = 6000;
 const SWIPE_THRESHOLD = 50;
 
 const POSITION_CLASS = {
@@ -105,13 +98,12 @@ export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
 
   const sectionRef = useRef(null);
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
   const isSwipingRef = useRef(false);
+  const isPausedRef = useRef(false); // dùng ref để không re-render
 
   // ============================================================
   // NAVIGATION HANDLERS
@@ -119,38 +111,29 @@ export default function HeroBanner() {
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
     setCurrentSlide(((index % total) + total) % total);
-    setProgress(0);
   }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
-    setProgress(0);
   }, []);
 
   const prevSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
-    setProgress(0);
   }, []);
 
   // ============================================================
-  // AUTO-PLAY + PROGRESS BAR
+  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây
+  // Tạm dừng khi user đang tương tác (touchstart), resume sau 3s
   // ============================================================
   useEffect(() => {
-    if (isPaused) return;
-
-    const startTime = Date.now();
     const timer = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / SLIDE_DURATION) * 100, 100);
-      setProgress(percent);
-
-      if (elapsed >= SLIDE_DURATION) {
-        nextSlide();
+      if (!isPausedRef.current) {
+        setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
       }
-    }, 50);
+    }, SLIDE_DURATION);
 
     return () => clearInterval(timer);
-  }, [currentSlide, isPaused, nextSlide]);
+  }, []);
 
   // ============================================================
   // KEYBOARD NAVIGATION
@@ -175,7 +158,7 @@ export default function HeroBanner() {
       touchStartXRef.current = e.touches[0].clientX;
       touchStartYRef.current = e.touches[0].clientY;
       isSwipingRef.current = false;
-      setIsPaused(true); // Tạm dừng auto-play khi user chạm
+      isPausedRef.current = true; // Tạm dừng auto-play khi user chạm
     };
 
     const onTouchMove = (e) => {
@@ -199,7 +182,9 @@ export default function HeroBanner() {
       isSwipingRef.current = false;
 
       // Resume auto-play sau 3 giây kể từ khi user ngừng tương tác
-      setTimeout(() => setIsPaused(false), 3000);
+      setTimeout(() => {
+        isPausedRef.current = false;
+      }, 3000);
     };
 
     el.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -387,21 +372,9 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          TOP-RIGHT: Nút Play/Pause + Counter
+          COUNTER — Góc trên phải (01 / 05)
           ============================================ */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20 flex items-center gap-2 sm:gap-3">
-        <button
-          onClick={() => setIsPaused((p) => !p)}
-          aria-label={isPaused ? "Tiếp tục slideshow" : "Tạm dừng slideshow"}
-          className="w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 backdrop-blur-md border border-white/25 text-white flex items-center justify-center transition-all active:scale-95"
-        >
-          {isPaused ? (
-            <Play className="w-4 h-4 fill-current" />
-          ) : (
-            <Pause className="w-4 h-4 fill-current" />
-          )}
-        </button>
-
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
         <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
           {String(currentSlide + 1).padStart(2, "0")}{" "}
           <span className="text-white/60">/</span>{" "}
@@ -410,7 +383,7 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          DOTS NAVIGATION — Có progress bar bên trong
+          DOTS NAVIGATION — Bấm để chuyển slide
           ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {SLIDES.map((_, idx) => {
@@ -421,22 +394,12 @@ export default function HeroBanner() {
               key={idx}
               onClick={() => goToSlide(idx)}
               aria-label={`Đến slide ${idx + 1}`}
-              className={`relative h-1.5 rounded-full overflow-hidden transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-300 ${
                 active
-                  ? "w-10 sm:w-14 bg-white/40"
+                  ? "w-10 sm:w-14 bg-brand-400"
                   : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
               }`}
-            >
-              {active && (
-                <span
-                  className="absolute inset-y-0 left-0 bg-brand-400 rounded-full"
-                  style={{
-                    width: `${progress}%`,
-                    transition: isPaused ? "none" : "width 50ms linear",
-                  }}
-                />
-              )}
-            </button>
+            />
           );
         })}
       </div>
