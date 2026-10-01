@@ -1,11 +1,10 @@
 # 📋 API CONTRACT — HUNI / HDC FASHION
 
-> **Phiên bản:** v1.0  
-> **Cập nhật:** 2026-09-30  
-> **Tech stack:** Next.js 15 App Router · PostgreSQL (Supabase) · Prisma ORM · NextAuth v5 (JWT)  
-> **Base URL:** `https://hunistore.com` (production) | `http://localhost:3000` (dev)  
-> **Content-Type:** `application/json` cho toàn bộ request/response  
-> **Auth:** JWT session cookie (NextAuth) — các endpoint có 🔒 yêu cầu đăng nhập
+> **Phiên bản:** v2.0 (Cập nhật từ source code thực tế 01/10/2026)
+> **Tech stack:** Next.js 15 App Router · PostgreSQL (Supabase) · Prisma ORM · NextAuth v5 (JWT)
+> **Base URL:** `https://hunistore.com` (production) | `http://localhost:3000` (dev)
+> **Content-Type:** `application/json`
+> **Auth:** JWT session cookie (NextAuth) — endpoint có 🔒 yêu cầu đăng nhập · 🔒 ADMIN yêu cầu role ADMIN
 
 ---
 
@@ -17,9 +16,9 @@
 4. [Quotes — Báo Giá](#4-quotes--báo-giá)
 5. [Tracking — Tra Cứu Đơn](#5-tracking--tra-cứu-đơn)
 6. [Chat — AI Tư Vấn](#6-chat--ai-tư-vấn)
-7. [Products — Sản Phẩm (TODO)](#7-products--sản-phẩm-todo)
-8. [Reviews — Đánh Giá (TODO)](#8-reviews--đánh-giá-todo)
-9. [Admin — Quản Trị (TODO)](#9-admin--quản-trị-todo)
+7. [Products — Sản Phẩm](#7-products--sản-phẩm)
+8. [Reviews — Đánh Giá](#8-reviews--đánh-giá)
+9. [Admin — Quản Trị](#9-admin--quản-trị)
 10. [Database Schema](#10-database-schema)
 11. [Error Codes Reference](#11-error-codes-reference)
 12. [Security Notes](#12-security-notes)
@@ -30,23 +29,15 @@
 
 ### Response Envelope
 
-Mọi response đều theo chuẩn:
-
 ```json
 // Thành công
-{
-  "success": true,
-  "message": "...",        // (tuỳ endpoint)
-  "data": { ... }          // hoặc field cụ thể
-}
+{ "success": true, "message": "...", "data": { ... } }
 
 // Thất bại
 {
   "success": false,
-  "error": "Mô tả lỗi rõ ràng bằng tiếng Việt",
-  "details": [             // (tuỳ endpoint - validation errors)
-    { "field": "email", "message": "Email không hợp lệ" }
-  ]
+  "error": "Mô tả lỗi tiếng Việt",
+  "details": [{ "field": "email", "message": "Email không hợp lệ" }]
 }
 ```
 
@@ -54,40 +45,27 @@ Mọi response đều theo chuẩn:
 
 | Code | Ý nghĩa |
 |------|---------|
-| `200` | OK — Thành công (GET, PUT, PATCH) |
-| `201` | Created — Tạo mới thành công (POST) |
-| `400` | Bad Request — Dữ liệu không hợp lệ |
+| `200` | OK |
+| `201` | Created |
+| `400` | Bad Request — Validation fail |
 | `401` | Unauthorized — Chưa đăng nhập |
 | `403` | Forbidden — Không đủ quyền |
-| `404` | Not Found — Không tìm thấy |
-| `409` | Conflict — Đã tồn tại (VD: email trùng) |
-| `429` | Too Many Requests — Rate limit |
+| `404` | Not Found |
+| `409` | Conflict — Trùng lặp (email, slug, sku, voucher code) |
+| `429` | Rate Limit |
 | `500` | Internal Server Error |
 
-### Rate Limiting
+### Rate Limiting (In-memory — 1 instance)
 
 | Endpoint | Giới hạn |
 |----------|---------|
-| `POST /api/orders` | 5 request / IP / giờ |
-| `POST /api/chat` | Giới hạn bởi Gemini API quota |
-| Các endpoint khác | Chưa có (TODO: thêm Upstash Redis) |
+| `POST /api/orders` | 5 req / IP / giờ |
+| `POST /api/chat` | Giới hạn bởi Gemini API |
+| Khác | Chưa có — TODO: Upstash Redis |
 
-Response khi bị rate limit:
-```http
-HTTP/1.1 429 Too Many Requests
-Retry-After: 3540
-```
-```json
-{
-  "success": false,
-  "error": "Bạn đã gửi quá nhiều đơn hàng. Vui lòng thử lại sau 59 phút."
-}
-```
+### Phone Normalization
 
-### Validation — Phone
-
-Server tự normalize SĐT: chấp nhận `0987654321`, `0987.654.321`, `0987 654 321`, `+84987654321`  
-→ Output luôn là `0987654321` (10–11 số)
+Chấp nhận: `0987654321` / `0987.654.321` / `+84987654321` → Output: `0987654321` (10–11 số)
 
 ---
 
@@ -95,8 +73,7 @@ Server tự normalize SĐT: chấp nhận `0987654321`, `0987.654.321`, `0987 65
 
 ### 2.1 `POST /api/register` — Đăng ký tài khoản
 
-**Request Body:**
-
+**Request:**
 ```json
 {
   "fullName": "Nguyễn Văn A",
@@ -110,89 +87,48 @@ Server tự normalize SĐT: chấp nhận `0987654321`, `0987.654.321`, `0987 65
 
 | Field | Bắt buộc | Ràng buộc |
 |-------|----------|-----------|
-| `fullName` | ✅ | min 2, max 100 ký tự |
-| `email` | ✅ | định dạng email hợp lệ, unique |
-| `phone` | ✅ | 10–11 số (sau normalize) |
-| `password` | ✅ | min 6, max 100 ký tự |
+| `fullName` | ✅ | min 2, max 100 |
+| `email` | ✅ | email hợp lệ, unique |
+| `phone` | ✅ | 10–11 số |
+| `password` | ✅ | min 6, max 100 |
 
 **Response `201`:**
 ```json
 {
   "success": true,
   "message": "Đăng ký thành công",
-  "user": {
-    "id": "cm123abc",
-    "email": "nva@company.vn",
-    "fullName": "Nguyễn Văn A"
-  }
+  "user": { "id": "cm...", "email": "nva@company.vn", "fullName": "Nguyễn Văn A" }
 }
 ```
 
-**Response `409`** (email trùng):
-```json
-{
-  "success": false,
-  "error": "Email này đã được đăng ký"
-}
-```
+**Response `409`:** `"Email này đã được đăng ký"`
 
 ---
 
 ### 2.2 `POST /api/auth/[...nextauth]` — Đăng nhập (NextAuth)
 
-> Xử lý bởi NextAuth v5. Frontend dùng `signIn()` từ `next-auth/react`.
+Frontend dùng `signIn()` từ `next-auth/react`.
 
-**Credentials Provider — Payload:**
+**JWT Session payload:**
 ```json
 {
-  "email": "nva@company.vn",
-  "password": "matkhau123"
+  "user": { "id": "cm...", "name": "Nguyễn Văn A", "email": "...", "role": "CUSTOMER", "avatar": null }
 }
 ```
 
-**Session JWT payload (sau khi đăng nhập):**
-```json
-{
-  "user": {
-    "id": "cm123abc",
-    "name": "Nguyễn Văn A",
-    "email": "nva@company.vn",
-    "role": "CUSTOMER",
-    "avatar": null
-  }
-}
-```
-
-**Session maxAge:** 30 ngày  
-**Strategy:** JWT (stateless, không lưu DB)
-
----
-
-### 2.3 `GET /api/auth/session` — Kiểm tra session (NextAuth)
-
-```json
-{
-  "user": {
-    "id": "cm123abc",
-    "name": "Nguyễn Văn A",
-    "email": "nva@company.vn",
-    "role": "CUSTOMER",
-    "avatar": null
-  },
-  "expires": "2026-10-30T..."
-}
-```
+**Session:** JWT stateless, maxAge 30 ngày.
 
 ---
 
 ## 3. Orders — Đơn Hàng
 
-### 3.1 `POST /api/orders` — Tạo đơn hàng mới
+### 3.1 `POST /api/orders` — Tạo đơn hàng
 
-> ⚠️ **Bảo mật:** Server tự tính lại giá từ `productId + quantity`. Client gửi `unitPrice` chỉ để server đối chiếu — nếu lệch >1% sẽ bị từ chối.
+> ⚠️ **Server-side price guard:** Server tính lại giá từ `productId + quantity`. Client gửi `unitPrice` để đối chiếu — lệch >1% → reject.
+> Phí logo: Server tự cộng thêm **15.000đ/chiếc** nếu `customLogo` có giá trị.
+> Rate limit: **5 đơn / IP / giờ**.
 
-**Request Body:**
-
+**Request:**
 ```json
 {
   "customer": {
@@ -210,53 +146,39 @@ Server tự normalize SĐT: chấp nhận `0987654321`, `0987.654.321`, `0987 65
       "unitPrice": 135000,
       "color": "Xanh Navy Hoàng Gia",
       "size": "L",
-      "customLogo": {
-        "url": "https://...",
-        "position": "chest-left",
-        "width": 8,
-        "height": 5
-      }
+      "customLogo": { "url": "https://...", "position": "chest-left", "width": 8, "height": 5 }
     }
   ],
   "voucherCode": "HUNI2026",
   "paymentMethod": "vietqr",
-  "notes": "Giao hàng trước ngày 15/10",
+  "notes": "Giao hàng trước 15/10",
   "vatInfo": {
     "taxCode": "0123456789",
     "companyName": "Công Ty TNHH ABC",
     "companyAddress": "123 Nguyễn Trãi, Q.1, TP.HCM",
-    "email": "kientoanchinhhung@abc.com"
+    "email": "ketoan@abc.com"
   }
 }
 ```
 
-**Validation chi tiết:**
+**Validation:**
 
 | Field | Bắt buộc | Ràng buộc |
 |-------|----------|-----------|
 | `customer.fullName` | ✅ | min 2, max 100 |
 | `customer.phone` | ✅ | 10–11 số |
 | `customer.email` | ❌ | email hợp lệ hoặc rỗng |
-| `customer.company` | ❌ | max 200 |
-| `customer.address` | ✅ | không được rỗng |
-| `items` | ✅ | min 1, max 50 items |
-| `items[].productId` | ✅ | phải tồn tại trong PRODUCTS data |
-| `items[].quantity` | ✅ | integer, min 5, max 100,000 |
+| `customer.address` | ✅ | không rỗng |
+| `items` | ✅ | min 1, max 50 |
+| `items[].productId` | ✅ | phải tồn tại trong PRODUCTS |
+| `items[].quantity` | ✅ | integer, min 5, max 100.000 |
 | `items[].unitPrice` | ✅ | integer ≥ 0 (server đối chiếu) |
-| `items[].color` | ❌ | string |
-| `items[].size` | ❌ | string |
-| `items[].customLogo` | ❌ | bất kỳ object |
-| `voucherCode` | ❌ | max 50 ký tự (server re-validate) |
 | `paymentMethod` | ✅ | `"vietqr"` \| `"deposit30"` \| `"freesample"` |
-| `notes` | ❌ | max 500 ký tự |
-| `vatInfo` | ❌ | object hoặc null |
+| `voucherCode` | ❌ | max 50 ký tự |
+| `notes` | ❌ | max 500 |
 | `vatInfo.taxCode` | ✅* | min 1, max 50 |
 | `vatInfo.companyAddress` | ✅* | min 1, max 500 |
 | `vatInfo.email` | ✅* | email hợp lệ |
-
-> *Bắt buộc nếu `vatInfo` được gửi kèm
-
-**Phí custom logo:** Server tự cộng thêm **15,000đ/chiếc** nếu `customLogo` có giá trị.
 
 **Response `201`:**
 ```json
@@ -272,107 +194,41 @@ Server tự normalize SĐT: chấp nhận `0987654321`, `0987.654.321`, `0987 65
     "status": "PENDING",
     "voucherApplied": "HUNI2026"
   },
-  "rateLimit": {
-    "remaining": 4
-  }
+  "rateLimit": { "remaining": 4 }
 }
 ```
 
-**Response `400`** (price mismatch):
-```json
-{
-  "success": false,
-  "error": "Giá sản phẩm không hợp lệ. Vui lòng tải lại trang và thử lại.",
-  "details": [
-    {
-      "field": "items.huni-polo-pro.unitPrice",
-      "message": "Giá sản phẩm \"Áo Polo Doanh Nghiệp HDC Classic Gold\" không khớp (client: 100000đ, server: 135000đ)"
-    }
-  ]
-}
-```
-
-**Side effects:**
-- Tạo `Customer` nếu SĐT chưa tồn tại, hoặc update thông tin nếu đã có
-- Gửi email thông báo cho admin (nền - không block response)
-- Gửi email xác nhận cho khách (nền - không block response)
+**Side effects:** Gửi email admin + email xác nhận khách (background, không block response).
 
 ---
 
-### 3.2 `GET /api/orders` — Danh sách đơn hàng (🔒 Auth Guard & RBAC)
+### 3.2 `GET /api/orders` 🔒 — Danh sách đơn (RBAC 2 tầng)
 
-> 🔒 **Xác thực & Phân quyền:**
-> - **Chưa đăng nhập:** Trả về `401 Unauthorized`.
-> - **ADMIN:** Xem danh sách toàn bộ đơn hàng (hỗ trợ filter `status`, phân trang `page`, `limit`).
-> - **CUSTOMER:** Chỉ được phép xem các đơn hàng của chính mình qua query `?mine=true`. Nếu người dùng không phải ADMIN cố tình gọi API lấy toàn bộ đơn hàng mà không có `?mine=true`, hệ thống sẽ trả về `403 Forbidden`.
+| Caller | Điều kiện | Kết quả |
+|--------|-----------|---------|
+| Chưa đăng nhập | — | `401` |
+| CUSTOMER | không có `?mine=true` | `403` |
+| CUSTOMER | `?mine=true` | Đơn của chính tài khoản |
+| ADMIN | bất kỳ | Toàn bộ đơn |
 
 **Query params:**
 
-| Param | Bắt buộc | Mô tả |
-|-------|----------|-------|
-| `status` | ❌ | Filter theo `OrderStatus` enum |
-| `limit` | ❌ | Số bản ghi (mặc định 20, tối đa 100) |
-| `page` | ❌ | Trang hiện tại (mặc định 1) |
-| `mine` | ❌ | `true` để lấy danh sách đơn của tài khoản đang đăng nhập |
+| Param | Mô tả |
+|-------|-------|
+| `status` | Filter theo OrderStatus |
+| `limit` | Mặc định 20, max 100 |
+| `page` | Mặc định 1 |
+| `mine` | `true` — CUSTOMER xem đơn của mình |
 
-**Ví dụ:** `GET /api/orders?status=PENDING&limit=10&page=1`
-
-**Response `401`** (Chưa đăng nhập):
-```json
-{
-  "success": false,
-  "error": "Vui lòng đăng nhập để truy cập danh sách đơn hàng."
-}
-```
-
-**Response `403`** (Không có quyền admin):
-```json
-{
-  "success": false,
-  "error": "Truy cập bị từ chối. Chỉ Quản trị viên (ADMIN) mới có quyền xem danh sách đơn hàng hệ thống."
-}
-```
-
-**Response `200`** (ADMIN hoặc CUSTOMER xem đơn của mình):
+**Response `200`:**
 ```json
 {
   "success": true,
   "count": 5,
-  "orders": [
-    {
-      "id": "cm456def",
-      "orderNumber": "HN-261001-7823",
-      "status": "PENDING",
-      "paymentMethod": "vietqr",
-      "subtotal": 13500000,
-      "discount": 675000,
-      "total": 12825000,
-      "notes": "Giao hàng trước ngày 15/10",
-      "vatInfo": null,
-      "createdAt": "2026-10-01T16:00:00.000Z",
-      "updatedAt": "2026-10-01T16:00:00.000Z",
-      "customer": {
-        "id": "cm789ghi",
-        "fullName": "Công Ty ABC",
-        "phone": "0987654321",
-        "email": "order@abc.com",
-        "company": "Công Ty TNHH ABC"
-      },
-      "items": [
-        {
-          "id": "cm111jkl",
-          "productId": "huni-polo-pro",
-          "productName": "Áo Polo Doanh Nghiệp HDC Classic Gold",
-          "quantity": 100,
-          "unitPrice": 135000,
-          "color": "Xanh Navy Hoàng Gia",
-          "size": "L",
-          "customLogo": null,
-          "subtotal": 13500000
-        }
-      ]
-    }
-  ]
+  "total": 42,
+  "page": 1,
+  "totalPages": 3,
+  "orders": [ { "id": "...", "orderNumber": "HN-...", "status": "PENDING", "customer": {...}, "items": [...] } ]
 }
 ```
 
@@ -380,15 +236,15 @@ Server tự normalize SĐT: chấp nhận `0987654321`, `0987.654.321`, `0987 65
 
 ### 3.3 `OrderStatus` Enum
 
-```
-PENDING    → Mới tiếp nhận, chờ xử lý
-QUOTED     → Đã báo giá, chờ khách xác nhận
-CONFIRMED  → Khách đã xác nhận, chốt đơn
-PRODUCING  → Đang may / sản xuất
-SHIPPED    → Đã giao vận chuyển
-COMPLETED  → Hoàn thành, nhận hàng xong
-CANCELLED  → Đã huỷ
-```
+| Giá trị | Ý nghĩa |
+|---------|---------|
+| `PENDING` | Mới tiếp nhận |
+| `QUOTED` | Đã báo giá |
+| `CONFIRMED` | Đã xác nhận |
+| `PRODUCING` | Đang sản xuất |
+| `SHIPPED` | Đã giao vận chuyển |
+| `COMPLETED` | Hoàn thành |
+| `CANCELLED` | Đã huỷ |
 
 ---
 
@@ -396,8 +252,7 @@ CANCELLED  → Đã huỷ
 
 ### 4.1 `POST /api/quotes` — Gửi yêu cầu báo giá
 
-**Request Body:**
-
+**Request:**
 ```json
 {
   "fullName": "Nguyễn Văn B",
@@ -407,7 +262,7 @@ CANCELLED  → Đã huỷ
   "category": "school",
   "quantity": 500,
   "estimatedPrice": 300000,
-  "notes": "Cần thiết kế logo riêng cho trường"
+  "notes": "Cần thiết kế logo riêng"
 }
 ```
 
@@ -417,298 +272,431 @@ CANCELLED  → Đã huỷ
 |-------|----------|-----------|
 | `fullName` | ✅ | min 2, max 100 |
 | `phone` | ✅ | 10–11 số |
-| `email` | ❌ | email hợp lệ hoặc rỗng |
-| `company` | ❌ | max 200 |
-| `category` | ✅ | `"polo"` \| `"shirt"` \| `"suit"` \| `"golf"` \| `"school"` \| `"accessories"` |
+| `category` | ✅ | `polo` \| `shirt` \| `suit` \| `golf` \| `school` \| `accessories` |
 | `quantity` | ✅ | integer, min 10 |
+| `email` | ❌ | email hoặc rỗng |
 | `estimatedPrice` | ❌ | integer ≥ 0 |
-| `notes` | ❌ | max 500 ký tự |
+| `notes` | ❌ | max 500 |
 
 **Response `201`:**
 ```json
-{
-  "success": true,
-  "message": "Yêu cầu báo giá đã được tiếp nhận",
-  "quoteId": "cm222mno"
-}
+{ "success": true, "message": "Yêu cầu báo giá đã được tiếp nhận", "quoteId": "cm..." }
 ```
-
-**Side effects:**
-- Tạo `Customer` nếu SĐT chưa tồn tại
-- Tạo `Quote` với `status = "NEW"`
 
 ---
 
 ### 4.2 `QuoteStatus` Enum
 
-```
-NEW        → Mới gửi, chưa xử lý
-CONTACTED  → Đã gọi điện / liên hệ
-QUOTED     → Đã gửi báo giá cho khách
-CONVERTED  → Đã chuyển thành đơn hàng thật
-CLOSED     → Đóng (không có nhu cầu)
-```
+| Giá trị | Ý nghĩa |
+|---------|---------|
+| `NEW` | Mới gửi |
+| `CONTACTED` | Đã liên hệ |
+| `QUOTED` | Đã gửi báo giá |
+| `CONVERTED` | Đã chuyển thành đơn hàng |
+| `CLOSED` | Đóng |
 
 ---
 
 ## 5. Tracking — Tra Cứu Đơn
 
-### 5.1 `GET /api/tracking` — Tra cứu đơn hàng theo mã hoặc SĐT
+### 5.1 `GET /api/tracking?code=...`
 
-**Query params:**
+**Query params:** `code` — Mã đơn (`HN-261001-7823`) hoặc SĐT (`0987654321`)
 
-| Param | Bắt buộc | Mô tả |
-|-------|----------|-------|
-| `code` | ✅ | Mã đơn hàng (`HN-261001-7823`) hoặc SĐT (`0987654321`) |
+Tìm theo `orderNumber` (uppercase) HOẶC SĐT khách → trả đơn gần nhất.
 
-**Ví dụ:**
-- `GET /api/tracking?code=HN-261001-7823`
-- `GET /api/tracking?code=0987654321`
-
-**Logic tìm kiếm:**
-- Nếu `code` khớp `orderNumber` (uppercase) → trả về đơn đó
-- Nếu `code` khớp SĐT khách hàng → trả về **đơn gần nhất**
-
-**Response `200`** (tìm thấy):
+**Response `200`:**
 ```json
 {
   "success": true,
   "order": {
-    "id": "cm456def",
-    "orderNumber": "HN-261001-7823",
-    "status": "PRODUCING",
-    "paymentMethod": "deposit30",
-    "subtotal": 13500000,
-    "discount": 675000,
-    "total": 12825000,
-    "notes": "Giao hàng trước ngày 15/10",
-    "createdAt": "2026-10-01T16:00:00.000Z",
-    "customer": {
-      "fullName": "Công Ty ABC",
-      "phone": "0987654321"
-    },
-    "items": [
-      {
-        "productName": "Áo Polo Doanh Nghiệp HDC Classic Gold",
-        "quantity": 100,
-        "unitPrice": 135000,
-        "color": "Xanh Navy Hoàng Gia",
-        "size": "L",
-        "subtotal": 13500000
-      }
-    ]
+    "id": "...", "orderNumber": "HN-261001-7823", "status": "PRODUCING",
+    "customer": { "fullName": "Công Ty ABC", "phone": "0987654321" },
+    "items": [...]
   }
 }
 ```
 
-**Response `200`** (không tìm thấy):
-```json
-{
-  "success": true,
-  "order": null
-}
-```
-
-**Response `400`** (thiếu code):
-```json
-{
-  "success": false,
-  "error": "Thiếu mã đơn hàng"
-}
-```
+**Response `200` (không tìm thấy):** `{ "success": true, "order": null }`
 
 ---
 
 ## 6. Chat — AI Tư Vấn
 
-### 6.1 `POST /api/chat` — Gửi tin nhắn cho AI
+### 6.1 `POST /api/chat`
 
-> **Engine:** Google Gemini 2.5 Flash (với fallback sang các model nhẹ hơn)  
-> **Retry logic:** Tự động retry 2 lần với backoff 0ms → 500ms → 1500ms  
-> **Fallback:** Nếu tất cả model thất bại → trả về tin nhắn hướng dẫn gọi hotline
+**Engine:** Gemini 2.5 Flash + fallback model + retry (0ms → 500ms → 1500ms).
 
-**Request Body:**
-
+**Request:**
 ```json
 {
   "messages": [
-    {
-      "role": "user",
-      "text": "Giá áo polo cho 200 cái là bao nhiêu?"
-    },
-    {
-      "role": "model",
-      "text": "Dạ, với 200 áo polo, anh/chị sẽ được giá 135.000đ/chiếc..."
-    },
-    {
-      "role": "user",
-      "text": "Có thể thêu logo không?"
-    }
+    { "role": "user", "text": "Giá áo polo 200 cái?" },
+    { "role": "model", "text": "Dạ, 200 áo polo giá 135.000đ/chiếc..." },
+    { "role": "user", "text": "Có thêu logo không?" }
   ]
 }
 ```
 
-**Quy tắc:**
-- `messages` là array, tối thiểu 1 phần tử
-- `role`: `"user"` hoặc `"model"`
-- `text`: string, tối đa 1000 ký tự / message, trimmed
-- Server chỉ lấy **10 messages cuối** (MAX_HISTORY = 10)
+**Quy tắc:** Max 10 messages cuối, mỗi message max 1.000 ký tự.
 
-**Response `200`** (thành công):
+**Response `200`:**
 ```json
-{
-  "reply": "Dạ, HDC hỗ trợ in/thêu logo tại 1 vị trí miễn phí từ 30 áo trở lên ạ. Anh/chị cho em xin thêm thông tin về logo (file vector, vị trí đặt) để báo giá chính xác nhé 😊"
-}
+{ "reply": "Dạ, HDC hỗ trợ thêu logo miễn phí từ 30 áo ạ 😊" }
 ```
 
-**Response `200`** (AI bị quá tải - luôn trả 200, không phải 503):
-```json
-{
-  "reply": "Hệ thống AI đang quá tải tạm thời 😅 Anh/chị thử lại sau 30 giây, hoặc gọi hotline 0984.959.586 để được tư vấn trực tiếp ạ."
-}
-```
-
-> **Lưu ý thiết kế:** Chat endpoint luôn trả HTTP 200 để không làm vỡ UI, ngay cả khi AI fail.
+> Luôn trả HTTP 200 kể cả khi AI fail — fallback sang tin nhắn hướng dẫn hotline.
 
 ---
 
-## 7. Products — Sản Phẩm (TODO)
+## 7. Products — Sản Phẩm
 
-> ⚠️ **Chưa có** — Hiện tại sản phẩm lấy từ data tĩnh `src/shared/data/products.js`.  
-> Prisma đã có model `Product`. Cần build các endpoint này để chuyển sang DB-driven.
+> **Chiến lược fallback:** GET endpoints tự động fallback sang `STATIC_PRODUCTS` nếu DB chưa seed.
 
-### 7.1 `GET /api/products` — Danh sách sản phẩm
+### 7.1 `GET /api/products` — Danh sách sản phẩm (Public)
 
-**Query params (TODO):**
+**Query params:**
 
-| Param | Mô tả |
-|-------|-------|
-| `category` | Filter theo category ID |
-| `search` | Tìm kiếm text (title, material) |
-| `priceMin` | Giá từ (VND) |
-| `priceMax` | Giá đến (VND) |
-| `sort` | `popular` \| `priceAsc` \| `priceDesc` \| `rating` \| `discount` |
-| `page` | Số trang (mặc định 1) |
-| `limit` | Số item/trang (mặc định 12, max 48) |
+| Param | Mô tả | Mặc định |
+|-------|-------|---------|
+| `category` | Filter category ID | — |
+| `search` | Tìm text trong title, description, material | — |
+| `priceMin` | Giá từ (VND) | — |
+| `priceMax` | Giá đến (VND) | — |
+| `sort` | `popular` \| `priceAsc` \| `priceDesc` \| `rating` \| `discount` | `popular` |
+| `page` | Số trang | `1` |
+| `limit` | Items/trang (max 48) | `12` |
 
-**Response schema (TODO):**
+**Response `200`:**
 ```json
 {
   "success": true,
   "data": {
-    "products": [ /* array Product */ ],
-    "total": 40,
-    "page": 1,
-    "totalPages": 4
+    "products": [ { "id": "...", "slug": "...", "sku": "...", "title": "...", "price": 185000, ... } ],
+    "total": 40, "page": 1, "totalPages": 4
   }
 }
 ```
 
 ---
 
-### 7.2 `GET /api/products/[id]` — Chi tiết sản phẩm (TODO)
+### 7.2 `GET /api/products/[id]` — Chi tiết sản phẩm (Public)
 
-**Response schema (TODO):**
+`[id]` có thể là `id` (cuid), `slug`, hoặc `sku`.
+
+**Response `200`:**
 ```json
 {
   "success": true,
   "data": {
-    "id": "cm...",
-    "slug": "ao-polo-doanh-nghiep-hdc-classic-gold",
-    "sku": "HN-POLO-01",
-    "title": "Áo Polo Doanh Nghiệp HDC Classic Gold",
-    "description": "...",
-    "category": "corporate",
-    "material": "Pique Cá Sấu Cotton Compact 4 Chiều",
-    "price": 185000,
-    "originalPrice": 245000,
+    "id": "cm...", "slug": "ao-polo-doanh-nghiep-hdc-classic-gold",
+    "sku": "HN-POLO-01", "title": "Áo Polo Doanh Nghiệp HDC Classic Gold",
+    "category": "corporate", "material": "Pique Cá Sấu Cotton Compact 4 Chiều",
+    "price": 185000, "originalPrice": 245000,
     "images": ["/images/uniform_polo_corporate.jpg"],
-    "features": ["..."],
-    "colors": [
-      { "name": "Xanh Navy Hoàng Gia", "code": "#0B2042" }
-    ],
-    "sizes": ["S", "M", "L", "XL", "2XL"],
-    "wholesaleTiers": [
-      { "min": 10, "max": 49, "price": 185000, "label": "10 - 49 áo" }
-    ],
-    "published": true,
-    "featured": true,
-    "createdAt": "2026-01-01T00:00:00.000Z"
+    "features": ["..."], "colors": [{"name": "Xanh Navy", "code": "#0B2042"}],
+    "sizes": ["S","M","L","XL","2XL"],
+    "wholesaleTiers": [{"min": 10, "max": 49, "price": 185000, "label": "10-49 áo"}],
+    "published": true, "featured": true
   }
 }
 ```
 
 ---
 
-### 7.3 `POST /api/products` 🔒 ADMIN — Tạo sản phẩm (TODO)
+### 7.3 `POST /api/products` 🔒 ADMIN — Tạo sản phẩm
 
-### 7.4 `PUT /api/products/[id]` 🔒 ADMIN — Sửa sản phẩm (TODO)
+**Request:**
+```json
+{
+  "slug": "ao-polo-doanh-nghiep-hdc-classic-gold",
+  "sku": "HN-POLO-01",
+  "title": "Áo Polo Doanh Nghiệp HDC Classic Gold",
+  "description": "Mô tả chi tiết sản phẩm...",
+  "category": "corporate",
+  "material": "Pique Cá Sấu Cotton Compact 4 Chiều",
+  "price": 185000,
+  "originalPrice": 245000,
+  "images": ["/images/uniform_polo_corporate.jpg"],
+  "features": ["Vải Pique thoáng khí", "Kháng khuẩn ion bạc"],
+  "colors": [{"name": "Xanh Navy", "code": "#0B2042"}],
+  "sizes": ["S","M","L","XL","2XL"],
+  "wholesaleTiers": [{"min": 10, "max": 49, "price": 185000, "label": "10-49 áo"}],
+  "published": true,
+  "featured": false
+}
+```
 
-### 7.5 `DELETE /api/products/[id]` 🔒 ADMIN — Xoá sản phẩm (TODO)
+**Validation:**
+
+| Field | Bắt buộc | Ràng buộc |
+|-------|----------|-----------|
+| `slug` | ✅ | min 2, max 200, unique |
+| `sku` | ✅ | min 2, max 50, unique |
+| `title` | ✅ | min 2, max 200 |
+| `description` | ✅ | min 5 |
+| `category` | ✅ | không rỗng |
+| `price` | ✅ | integer ≥ 0 |
+| `images` | ✅ | array, min 1 phần tử |
+| `material`, `originalPrice`, `features`, `colors`, `sizes`, `wholesaleTiers` | ❌ | tuỳ chọn |
+| `published` | ❌ | boolean, default `true` |
+| `featured` | ❌ | boolean, default `false` |
+
+**Response `201`:** `{ "success": true, "message": "Tạo sản phẩm thành công", "data": { ... } }`
+
+**Response `409`:** `"Đường dẫn (slug) đã tồn tại"` hoặc `"Mã sản phẩm (SKU) đã tồn tại"`
 
 ---
 
-## 8. Reviews — Đánh Giá (TODO)
+### 7.4 `PUT /api/products/[id]` 🔒 ADMIN — Cập nhật sản phẩm
 
-> Model `Review` đã có trong Prisma. Cần build các endpoint sau:
+Tất cả field là optional (partial update). Kiểm tra trùng `slug` / `sku` nếu có thay đổi.
 
-### 8.1 `GET /api/reviews?productId=xxx` — Lấy đánh giá sản phẩm (TODO)
+**Response `200`:** `{ "success": true, "message": "Cập nhật sản phẩm thành công", "data": { ... } }`
 
-**Response schema (TODO):**
+---
+
+### 7.5 `DELETE /api/products/[id]` 🔒 ADMIN — Xoá sản phẩm
+
+**Response `200`:** `{ "success": true, "message": "Xóa sản phẩm thành công" }`
+
+---
+
+## 8. Reviews — Đánh Giá
+
+### 8.1 `GET /api/reviews?productId=xxx` — Lấy đánh giá
+
+**Response `200`:**
 ```json
 {
   "success": true,
   "data": {
     "reviews": [
-      {
-        "id": "cm...",
-        "rating": 5,
-        "content": "Áo đẹp, chất vải tốt, giao nhanh!",
-        "createdAt": "2026-09-01T...",
-        "user": {
-          "fullName": "Công Ty ABC",
-          "avatar": null
-        }
-      }
+      { "id": "cm...", "rating": 5, "content": "Áo đẹp, giao nhanh!", "createdAt": "...",
+        "user": { "fullName": "Công Ty ABC", "avatar": null } }
     ],
-    "avgRating": 4.8,
-    "total": 124
+    "avgRating": 4.8, "total": 124
   }
 }
 ```
 
-### 8.2 `POST /api/reviews` 🔒 — Tạo đánh giá (TODO)
+---
+
+### 8.2 `POST /api/reviews` 🔒 — Tạo đánh giá
 
 > Chỉ user đã đăng nhập và đã có đơn hàng chứa `productId` mới được đánh giá.
+> Mỗi user chỉ đánh giá 1 lần / sản phẩm (unique constraint DB).
 
-**Request Body (TODO):**
+**Request:**
+```json
+{ "productId": "huni-polo-pro", "rating": 5, "content": "Áo đẹp, chất vải tốt!" }
+```
+
+**Validation:**
+
+| Field | Ràng buộc |
+|-------|-----------|
+| `productId` | string, không rỗng |
+| `rating` | integer 1–5 |
+| `content` | min 5, max 500 ký tự |
+
+**Response `201`:** `{ "success": true, "message": "Đánh giá đã được ghi nhận", "data": { ... } }`
+
+---
+
+## 9. Admin — Quản Trị
+
+> Tất cả endpoint `/api/admin/*` yêu cầu: **đăng nhập** (401) + **role ADMIN** (403).
+
+### 9.1 `GET /api/admin/dashboard` 🔒 ADMIN — Thống kê tổng quan
+
+**Response `200`:**
 ```json
 {
-  "productId": "huni-polo-pro",
-  "rating": 5,
-  "content": "Áo đẹp, chất vải tốt, giao nhanh!"
+  "success": true,
+  "data": {
+    "stats": {
+      "totalOrders": 142,
+      "totalRevenue": 387500000,
+      "totalQuotes": 89,
+      "totalCustomers": 76
+    },
+    "statusCounts": {
+      "orders": { "pending": 12, "producing": 8, "completed": 110, "cancelled": 3 },
+      "quotes": { "new": 5 }
+    },
+    "recentOrders": [ { "id": "...", "orderNumber": "HN-...", "customer": {...}, "items": [...] } ],
+    "recentQuotes": [ { "id": "...", "fullName": "...", "category": "polo", "quantity": 200 } ]
+  }
+}
+```
+
+---
+
+### 9.2 `GET /api/admin/orders` 🔒 ADMIN — Danh sách đơn hàng (đầy đủ filter)
+
+**Query params:**
+
+| Param | Mô tả |
+|-------|-------|
+| `status` | Filter OrderStatus |
+| `search` | Tìm theo orderNumber, tên/SĐT/email/công ty khách |
+| `dateFrom` | ISO date — lọc từ ngày |
+| `dateTo` | ISO date — lọc đến ngày |
+| `page` | Mặc định 1 |
+| `limit` | Mặc định 20, max 100 |
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "data": {
+    "orders": [ ... ],
+    "total": 142, "page": 1, "limit": 20, "totalPages": 8,
+    "summary": { "pending": 12, "producing": 8, "completed": 110, "totalRevenue": 387500000 }
+  }
+}
+```
+
+---
+
+### 9.3 `PATCH /api/admin/orders/[id]` 🔒 ADMIN — Cập nhật đơn hàng
+
+`[id]` có thể là `id` (cuid) hoặc `orderNumber`.
+
+**Request:**
+```json
+{ "status": "CONFIRMED", "notes": "Đã xác nhận đặt cọc 30%" }
+```
+
+**Validation:**
+
+| Field | Ràng buộc |
+|-------|-----------|
+| `status` | OrderStatus enum (optional) |
+| `notes` | max 500, nullable (optional) |
+
+**Response `200`:** `{ "success": true, "message": "Cập nhật trạng thái đơn hàng thành công", "data": { ... } }`
+
+---
+
+### 9.4 `GET /api/admin/quotes` 🔒 ADMIN — Danh sách báo giá
+
+**Query params:**
+
+| Param | Mô tả |
+|-------|-------|
+| `status` | Filter QuoteStatus |
+| `category` | Filter category (polo, shirt, suit...) |
+| `search` | Tìm theo tên/SĐT/email/công ty |
+| `page` | Mặc định 1 |
+| `limit` | Mặc định 20, max 100 |
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "data": { "quotes": [...], "total": 89, "page": 1, "limit": 20, "totalPages": 5 }
+}
+```
+
+---
+
+### 9.5 `PATCH /api/admin/quotes/[id]` 🔒 ADMIN — Cập nhật báo giá
+
+**Request:**
+```json
+{ "status": "QUOTED", "estimatedPrice": 175000, "notes": "Đã gửi bảng giá qua email" }
+```
+
+**Validation:**
+
+| Field | Ràng buộc |
+|-------|-----------|
+| `status` | QuoteStatus enum (optional) |
+| `estimatedPrice` | integer ≥ 0, nullable (optional) |
+| `notes` | max 500, nullable (optional) |
+
+---
+
+### 9.6 `GET /api/admin/customers` 🔒 ADMIN — Danh sách khách hàng
+
+**Query params:** `search`, `page`, `limit` (max 100)
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "data": {
+    "customers": [
+      {
+        "id": "cm...", "fullName": "Công Ty ABC", "phone": "0987654321",
+        "email": "...", "company": "...", "address": "...",
+        "taxCode": "...", "notes": "...",
+        "orderCount": 5, "quoteCount": 2,
+        "createdAt": "...", "updatedAt": "..."
+      }
+    ],
+    "total": 76, "page": 1, "limit": 20, "totalPages": 4
+  }
+}
+```
+
+---
+
+### 9.7 `GET /api/admin/vouchers` 🔒 ADMIN — Danh sách voucher
+
+**Response `200`:**
+```json
+{
+  "success": true,
+  "data": {
+    "vouchers": [
+      {
+        "id": "cm...", "code": "HUNI2026", "type": "percentage", "discount": 5,
+        "minOrder": 0, "maxDiscount": 5000000, "usageLimit": null, "usedCount": 38,
+        "active": true, "expiresAt": "2026-12-31T23:59:59.000Z"
+      }
+    ],
+    "total": 3
+  }
+}
+```
+
+---
+
+### 9.8 `POST /api/admin/vouchers` 🔒 ADMIN — Tạo voucher mới
+
+**Request:**
+```json
+{
+  "code": "SALE30",
+  "type": "percentage",
+  "discount": 10,
+  "minOrder": 5000000,
+  "maxDiscount": 2000000,
+  "usageLimit": 100,
+  "expiresAt": "2026-12-31T23:59:59",
+  "active": true
 }
 ```
 
 **Validation:**
-- `rating`: integer 1–5
-- `content`: min 10, max 500 ký tự
-- Mỗi user chỉ được đánh giá 1 lần / sản phẩm (TODO: unique constraint)
 
----
+| Field | Bắt buộc | Ràng buộc |
+|-------|----------|-----------|
+| `code` | ✅ | min 2, max 50, tự động uppercase, unique |
+| `type` | ✅ | `"percentage"` \| `"fixed"` |
+| `discount` | ✅ | integer ≥ 1 |
+| `minOrder` | ❌ | integer ≥ 0, default 0 |
+| `maxDiscount` | ❌ | integer ≥ 0, nullable |
+| `usageLimit` | ❌ | integer ≥ 1, nullable (null = không giới hạn) |
+| `expiresAt` | ❌ | ISO date string, nullable |
+| `active` | ❌ | boolean, default true |
 
-## 9. Admin — Quản Trị (TODO)
+**Response `201`:** `{ "success": true, "message": "Tạo voucher thành công", "data": { ... } }`
 
-> Tất cả endpoint admin yêu cầu `session.user.role === "ADMIN"`.  
-> Hiện tại `GET /api/orders` chưa có guard — cần bổ sung ngay.
-
-### 9.1 `GET /api/admin/orders` 🔒 ADMIN — Danh sách đơn hàng với filter đầy đủ (TODO)
-### 9.2 `PATCH /api/admin/orders/[id]` 🔒 ADMIN — Cập nhật trạng thái đơn (TODO)
-### 9.3 `GET /api/admin/quotes` 🔒 ADMIN — Danh sách báo giá (TODO)
-### 9.4 `PATCH /api/admin/quotes/[id]` 🔒 ADMIN — Cập nhật trạng thái báo giá (TODO)
-### 9.5 `GET /api/admin/customers` 🔒 ADMIN — Danh sách khách hàng (TODO)
-### 9.6 `GET /api/admin/dashboard` 🔒 ADMIN — Thống kê tổng quan (TODO)
-### 9.7 `POST /api/admin/vouchers` 🔒 ADMIN — Tạo voucher mới (TODO)
+**Response `409`:** `"Mã voucher \"SALE30\" đã tồn tại trên hệ thống."`
 
 ---
 
@@ -720,9 +708,11 @@ CLOSED     → Đóng (không có nhu cầu)
 Customer ──< Order ──< OrderItem
 Customer ──< Quote
 User ──< Review
+Voucher (độc lập)
+Product (độc lập, có static fallback)
 ```
 
-### Các Model & Fields
+### Models
 
 #### `customers`
 | Field | Type | Ghi chú |
@@ -731,118 +721,92 @@ User ──< Review
 | `fullName` | String | |
 | `phone` | String | unique, index |
 | `email` | String? | index |
-| `company` | String? | |
-| `address` | String? | |
-| `taxCode` | String? | |
-| `notes` | String? | |
-| `createdAt` | DateTime | |
-| `updatedAt` | DateTime | auto-update |
+| `company`, `address`, `taxCode`, `notes` | String? | |
 
 #### `orders`
 | Field | Type | Ghi chú |
 |-------|------|---------|
 | `id` | cuid | PK |
-| `orderNumber` | String | unique, format `HN-YYMMDD-XXXX` |
+| `orderNumber` | String | unique, `HN-YYMMDD-XXXX` |
 | `customerId` | String | FK → customers |
-| `status` | OrderStatus | PENDING, QUOTED, CONFIRMED, PRODUCING, SHIPPED, COMPLETED, CANCELLED |
-| `paymentMethod` | String | `vietqr` / `deposit30` / `freesample` |
-| `subtotal` | Int | VND, server-computed |
-| `discount` | Int | VND, server-computed |
-| `total` | Int | VND, server-computed |
-| `notes` | String? | |
+| `status` | OrderStatus | default PENDING |
+| `paymentMethod` | String | vietqr / deposit30 / freesample |
+| `subtotal`, `discount`, `total` | Int | VND, server-computed |
 | `vatInfo` | Json? | `{taxCode, companyName, companyAddress, email}` |
-| `createdAt` | DateTime | |
-| `updatedAt` | DateTime | |
 
 #### `order_items`
 | Field | Type | Ghi chú |
 |-------|------|---------|
-| `id` | cuid | PK |
-| `orderId` | String | FK → orders (onDelete: Cascade) |
-| `productId` | String | ID sản phẩm |
-| `productName` | String | Snapshot tại thời điểm đặt |
-| `quantity` | Int | |
-| `unitPrice` | Int | VND, server-verified |
-| `color` | String? | |
-| `size` | String? | |
+| `orderId` | String | FK → orders (Cascade) |
+| `productId`, `productName` | String | snapshot tại thời điểm đặt |
+| `quantity`, `unitPrice`, `subtotal` | Int | |
+| `color`, `size` | String? | |
 | `customLogo` | Json? | `{url, position, width, height}` |
-| `subtotal` | Int | VND |
 
 #### `quotes`
 | Field | Type | Ghi chú |
 |-------|------|---------|
-| `id` | cuid | PK |
-| `customerId` | String? | FK → customers (optional) |
-| `fullName` | String | |
-| `phone` | String | index |
-| `email` | String? | |
-| `company` | String? | |
-| `category` | String | polo / shirt / suit / golf / school / accessories |
+| `category` | String | polo/shirt/suit/golf/school/accessories |
 | `quantity` | Int | |
 | `estimatedPrice` | Int? | VND |
-| `notes` | String? | |
-| `status` | QuoteStatus | NEW, CONTACTED, QUOTED, CONVERTED, CLOSED |
-| `createdAt` | DateTime | |
-| `updatedAt` | DateTime | |
+| `status` | QuoteStatus | default NEW |
 
 #### `products`
 | Field | Type | Ghi chú |
 |-------|------|---------|
-| `id` | cuid | PK |
-| `slug` | String | unique, URL-friendly |
+| `slug` | String | unique |
 | `sku` | String | unique |
-| `title` | String | |
-| `description` | Text | |
-| `category` | String | |
-| `material` | String? | |
-| `price` | Int | VND |
-| `originalPrice` | Int? | VND |
-| `images` | String[] | mảng URL |
-| `features` | String[] | |
-| `colors` | Json? | `[{name, code}]` |
-| `sizes` | String[] | |
-| `wholesaleTiers` | Json? | `[{min, max, price, label}]` |
+| `price`, `originalPrice` | Int | VND |
+| `images`, `features`, `sizes` | String[] | |
+| `colors`, `wholesaleTiers` | Json? | |
 | `published` | Boolean | default true |
 | `featured` | Boolean | default false |
 
 #### `users`
 | Field | Type | Ghi chú |
 |-------|------|---------|
-| `id` | cuid | PK |
-| `email` | String | unique, index |
-| `passwordHash` | String | bcrypt, rounds=10 |
-| `fullName` | String | |
-| `phone` | String? | |
-| `avatar` | String? | URL |
+| `email` | String | unique |
+| `passwordHash` | String | bcrypt rounds=10 |
 | `role` | UserRole | CUSTOMER / ADMIN |
-| `lastLoginAt` | DateTime? | |
+| `lastLoginAt` | DateTime? | cập nhật mỗi lần login |
 
 #### `reviews`
 | Field | Type | Ghi chú |
 |-------|------|---------|
-| `id` | cuid | PK |
 | `productId` | String | index |
-| `userId` | String | FK → users (onDelete: Cascade) |
+| `userId` | String | FK → users (Cascade) |
 | `rating` | SmallInt | 1–5 |
-| `content` | String | |
-| `createdAt` | DateTime | |
+| Unique constraint | `[productId, userId]` | 1 user / 1 đánh giá / 1 sản phẩm |
+
+#### `vouchers`
+| Field | Type | Ghi chú |
+|-------|------|---------|
+| `code` | String | unique, uppercase |
+| `type` | String | `percentage` \| `fixed` |
+| `discount` | Int | % hoặc VND |
+| `minOrder` | Int | default 0 |
+| `maxDiscount` | Int? | trần giảm giá |
+| `usageLimit` | Int? | null = không giới hạn |
+| `usedCount` | Int | default 0 |
+| `active` | Boolean | default true |
+| `expiresAt` | DateTime? | |
 
 ---
 
 ## 11. Error Codes Reference
 
-| HTTP | `error` message | Nguyên nhân |
-|------|-----------------|-------------|
-| 400 | "Dữ liệu không hợp lệ" | Validation Zod fail, kèm `details[]` |
-| 400 | "Thiếu mã đơn hàng" | GET /tracking thiếu `code` param |
-| 400 | "Giá sản phẩm không hợp lệ..." | Client gửi giá lệch >1% so với server |
-| 400 | "Mã ưu đãi không hợp lệ" | Voucher code không tồn tại |
-| 400 | "Mã ưu đãi đã hết hạn" | Voucher hết hạn |
-| 400 | "Mã ưu đãi đã bị vô hiệu hóa" | Voucher bị tắt |
-| 400 | "Đơn hàng tối thiểu Xđ..." | Subtotal chưa đủ điều kiện voucher |
-| 409 | "Email này đã được đăng ký" | Duplicate email khi register |
+| HTTP | `error` | Nguyên nhân |
+|------|---------|-------------|
+| 400 | "Dữ liệu không hợp lệ" + `details[]` | Zod validation fail |
+| 400 | "Thiếu mã đơn hàng" | GET /tracking thiếu `code` |
+| 400 | "Giá sản phẩm không hợp lệ..." | Client price lệch >1% |
+| 400 | "Mã ưu đãi không hợp lệ / hết hạn / bị tắt / đơn chưa đủ" | Voucher validation |
+| 401 | "Vui lòng đăng nhập..." | Chưa có session |
+| 403 | "Truy cập bị từ chối. Chỉ Quản trị viên..." | Role không phải ADMIN |
+| 404 | "Không tìm thấy..." | Resource không tồn tại |
+| 409 | "...đã tồn tại" | Duplicate email / slug / sku / voucher code |
 | 429 | "Bạn đã gửi quá nhiều đơn..." | Rate limit 5 đơn/IP/giờ |
-| 500 | "Không thể xử lý đơn hàng..." | Lỗi DB hoặc lỗi không mong đợi |
+| 500 | "Không thể xử lý..." | Lỗi DB hoặc lỗi server |
 
 ---
 
@@ -850,32 +814,32 @@ User ──< Review
 
 ### ✅ Đã có
 
-| Biện pháp | Áp dụng tại |
-|-----------|-------------|
-| **Server-side price validation** | `POST /api/orders` — tính lại giá từ DB, reject nếu lệch >1% |
-| **Server-side voucher validation** | `POST /api/orders` — không tin voucher từ client |
-| **Zod schema validation** | Tất cả POST endpoints |
-| **bcrypt hash** (rounds=10) | `POST /api/register` |
-| **JWT session** (30 ngày) | NextAuth — stateless |
-| **Rate limiting** (in-memory) | `POST /api/orders` — 5 req/IP/giờ |
-| **SQL Injection safe** | Prisma ORM — parameterized queries |
-| **Phone normalization** | Tất cả endpoint nhận SĐT |
-| **Lỗi không expose internal** | Tất cả — chỉ log server, response chỉ có message chung |
+| Biện pháp | Áp dụng |
+|-----------|---------|
+| Server-side price re-validation | `POST /api/orders` |
+| Server-side voucher re-validation | `POST /api/orders` |
+| Zod schema validation | Tất cả POST/PUT/PATCH |
+| bcrypt hash rounds=10 | `POST /api/register` |
+| JWT session 30 ngày | NextAuth stateless |
+| Auth guard 2 tầng (401 + 403 RBAC) | `GET /api/orders`, `/api/admin/*` |
+| Rate limit in-memory | `POST /api/orders` |
+| SQL Injection safe | Prisma parameterized queries |
+| Phone normalization | Tất cả endpoint nhận SĐT |
+| Unique review constraint DB | `reviews(productId, userId)` |
+| Logo fee server-computed (+15k/chiếc) | `POST /api/orders` |
 
-### ⚠️ Cần bổ sung (TODO)
+### ⚠️ Còn cần bổ sung
 
-| Vấn đề | Ưu tiên | Giải pháp đề xuất |
-|--------|---------|-------------------|
-| `GET /api/orders` chưa có auth guard | 🔴 Cao | Kiểm tra `session.user.role === "ADMIN"` |
-| Rate limit dùng in-memory | 🟡 Trung bình | Chuyển sang **Upstash Redis** khi scale |
-| Chưa có CSRF protection rõ ràng | 🟡 Trung bình | NextAuth tự xử lý cho form — kiểm tra lại với fetch calls |
-| Email chưa verify | 🟡 Trung bình | Thêm `emailVerified` field + link xác thực |
-| Chưa có rate limit cho `/api/register` | 🟡 Trung bình | Thêm tương tự orders |
-| Voucher lưu hardcode trong code | 🟢 Thấp | Chuyển sang model `Voucher` trong Prisma |
-| Chưa có input sanitization XSS | 🟢 Thấp | Thêm DOMPurify hoặc strip HTML trước khi save |
-| Secret key trong `authConfig` có fallback hardcode | 🟢 Thấp | Bắt buộc env var, không cho fallback trong prod |
+| Vấn đề | Ưu tiên | Giải pháp |
+|--------|---------|-----------|
+| Rate limit in-memory (mất khi restart) | 🟡 | Upstash Redis |
+| Chưa có rate limit cho `/api/register` | 🟡 | Thêm tương tự orders |
+| Email chưa verify | 🟡 | `emailVerified` field + link xác nhận |
+| `usedCount` voucher chưa tăng khi đặt hàng | 🟡 | Cập nhật trong `POST /api/orders` |
+| Secret key có hardcode fallback | 🟢 | Bắt buộc env var trong prod |
+| Chưa có input sanitization XSS | 🟢 | Strip HTML trước khi lưu DB |
+| Review chưa check đã mua hàng chưa | 🟢 | Verify orderId trong `POST /api/reviews` |
 
 ---
 
-*Tài liệu này được tạo tự động từ phân tích source code bởi Antigravity AI.*  
-*Cập nhật khi có thay đổi API hoặc schema.*
+*API Contract v2.0 — Tạo từ source code thực tế · HUNI/HDC Fashion · 01/10/2026*
