@@ -13,9 +13,6 @@ import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 const SLIDES = [
   {
     image: "/images/catalogue-2026-hero.jpg",
-    // position: phần ảnh được neo khi bị cắt ("top" | "center" | "bottom")
-    // fit: "cover" (mặc định, tràn màn hình) | "contain" (thấy trọn ảnh, có nền mờ 2 bên)
-    // hideText: true => ẩn khối chữ của code (dùng khi ảnh đã có chữ sẵn)
     position: "top",
     eyebrow: "Bộ Sưu Tập 2026",
     title: "CHẤT LIỆU XANH",
@@ -95,16 +92,24 @@ const POSITION_CLASS = {
   bottom: "object-bottom",
 };
 
+// Ngưỡng vuốt tối thiểu (px) để chuyển slide
+const SWIPE_THRESHOLD = 50;
+
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Ref của <section> cha để gắn native touch listeners
+  const sectionRef = useRef(null);
+
+  // Lưu trữ tọa độ touch
   const touchStartXRef = useRef(0);
-  const touchEndXRef = useRef(0);
+  const touchStartYRef = useRef(0);
+  const isSwipingRef = useRef(false);
 
   // ============================================================
-  // NAVIGATION HANDLERS — Chỉ trượt bằng tay
+  // NAVIGATION HANDLERS
   // ============================================================
   const goToSlide = useCallback((index) => {
     const total = SLIDES.length;
@@ -120,7 +125,7 @@ export default function HeroBanner() {
   }, []);
 
   // ============================================================
-  // KEYBOARD NAVIGATION — Desktop dùng ← →
+  // KEYBOARD NAVIGATION
   // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
@@ -132,29 +137,73 @@ export default function HeroBanner() {
   }, [nextSlide, prevSlide]);
 
   // ============================================================
-  // TOUCH SWIPE — Mobile
+  // TOUCH SWIPE — Native event listener với passive: false
+  // ⭐ Đây là fix chính để vuốt hoạt động trên mobile
   // ============================================================
-  const handleTouchStart = (e) => {
-    touchStartXRef.current = e.touches[0].clientX;
-    touchEndXRef.current = e.touches[0].clientX;
-  };
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
 
-  const handleTouchMove = (e) => {
-    touchEndXRef.current = e.touches[0].clientX;
-  };
+    const onTouchStart = (e) => {
+      touchStartXRef.current = e.touches[0].clientX;
+      touchStartYRef.current = e.touches[0].clientY;
+      isSwipingRef.current = false;
+    };
 
-  const handleTouchEnd = () => {
-    const diff = touchStartXRef.current - touchEndXRef.current;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) nextSlide();
-      else prevSlide();
-    }
-  };
+    const onTouchMove = (e) => {
+      const dx = e.touches[0].clientX - touchStartXRef.current;
+      const dy = e.touches[0].clientY - touchStartYRef.current;
+
+      // Xác định user đang vuốt NGANG (swipe slide)
+      // hay cuộn DỌC (để browser xử lý bình thường)
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
+        isSwipingRef.current = true;
+
+        // Chặn browser scroll khi đang swipe slide
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      }
+    };
+
+    const onTouchEnd = (e) => {
+      if (!isSwipingRef.current) return;
+
+      const dx = e.changedTouches[0].clientX - touchStartXRef.current;
+
+      if (Math.abs(dx) > SWIPE_THRESHOLD) {
+        if (dx < 0) {
+          // Vuốt sang trái → next
+          nextSlide();
+        } else {
+          // Vuốt sang phải → prev
+          prevSlide();
+        }
+      }
+
+      isSwipingRef.current = false;
+    };
+
+    // ⚠️ Quan trọng: touchmove phải có passive: false để preventDefault() hoạt động
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [nextSlide, prevSlide]);
 
   const slide = SLIDES[currentSlide];
 
   return (
-    <section className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900">
+    <section
+      ref={sectionRef}
+      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900"
+      style={{ touchAction: "pan-y" }}
+    >
       {/* ============================================
           SLIDES — TRƯỢT NGANG
           ============================================ */}
@@ -164,9 +213,6 @@ export default function HeroBanner() {
           transform: `translateX(-${currentSlide * 100}%)`,
           transitionDuration: `${TRANSITION_DURATION}ms`,
         }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
       >
         {SLIDES.map((s, idx) => (
           <div
@@ -174,7 +220,7 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0"
             aria-hidden={idx !== currentSlide}
           >
-            {/* Chỉ khi fit="contain": nền mờ lấp 2 bên */}
+            {/* Nền mờ khi fit="contain" */}
             {s.fit === "contain" && (
               <Image
                 src={s.image}
@@ -187,7 +233,7 @@ export default function HeroBanner() {
               />
             )}
 
-            {/* Ảnh chính: mặc định tràn kín màn hình */}
+            {/* Ảnh chính */}
             <Image
               src={s.image}
               alt={s.title + " " + s.titleHighlight}
@@ -200,7 +246,7 @@ export default function HeroBanner() {
               } ${POSITION_CLASS[s.position || "center"]}`}
             />
 
-            {/* Gradient nhẹ chỉ ở bên trái, để chữ dễ đọc (slide có chữ sẵn thì bỏ) */}
+            {/* Gradient overlay */}
             {!s.hideText && (
               <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
             )}
@@ -220,60 +266,59 @@ export default function HeroBanner() {
           <div className="max-w-3xl">
             {!slide.hideText && (
               <>
-            {/* Eyebrow */}
-            <div
-              key={`eyebrow-${currentSlide}`}
-              className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
-              <span>{slide.eyebrow}</span>
-            </div>
-
-            {/* TITLE — 2 dòng */}
-            <div
-              key={`title-${currentSlide}`}
-              className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
-            >
-              <h1 className="text-[28px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance drop-shadow-lg">
-                {slide.title}
-              </h1>
-              <h2 className="text-[26px] leading-[1.15] sm:text-3xl md:text-4xl lg:text-[48px] xl:text-[54px] font-black tracking-tight text-brand-gradient text-balance drop-shadow-lg mt-1 sm:mt-1.5">
-                {slide.titleHighlight}
-              </h2>
-            </div>
-
-            {/* Subtitle */}
-            <p
-              key={`sub-${currentSlide}`}
-              className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
-            >
-              &ldquo;{slide.subtitle}&rdquo;
-            </p>
-
-            {/* Description */}
-            <p
-              key={`desc-${currentSlide}`}
-              className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
-            >
-              {slide.description}
-            </p>
-
-            {/* Checklist */}
-            <div
-              key={`check-${currentSlide}`}
-              className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
-            >
-              {CHECKLIST.map((item) => (
+                {/* Eyebrow */}
                 <div
-                  key={item}
-                  className="flex items-center gap-2 text-xs lg:text-sm text-white font-medium whitespace-nowrap drop-shadow"
+                  key={`eyebrow-${currentSlide}`}
+                  className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
                 >
-                  <CheckCircle2 className="w-4 h-4 text-brand-300 shrink-0" />
-                  <span>{item}</span>
+                  <Sparkles className="w-3.5 h-3.5 text-brand-300 shrink-0" />
+                  <span>{slide.eyebrow}</span>
                 </div>
-              ))}
-            </div>
 
+                {/* TITLE */}
+                <div
+                  key={`title-${currentSlide}`}
+                  className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
+                >
+                  <h1 className="text-[28px] leading-[1.15] sm:text-4xl md:text-5xl lg:text-[54px] xl:text-[60px] font-black tracking-tight text-white text-balance drop-shadow-lg">
+                    {slide.title}
+                  </h1>
+                  <h2 className="text-[26px] leading-[1.15] sm:text-3xl md:text-4xl lg:text-[48px] xl:text-[54px] font-black tracking-tight text-brand-gradient text-balance drop-shadow-lg mt-1 sm:mt-1.5">
+                    {slide.titleHighlight}
+                  </h2>
+                </div>
+
+                {/* Subtitle */}
+                <p
+                  key={`sub-${currentSlide}`}
+                  className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
+                >
+                  &ldquo;{slide.subtitle}&rdquo;
+                </p>
+
+                {/* Description */}
+                <p
+                  key={`desc-${currentSlide}`}
+                  className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
+                >
+                  {slide.description}
+                </p>
+
+                {/* Checklist */}
+                <div
+                  key={`check-${currentSlide}`}
+                  className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
+                >
+                  {CHECKLIST.map((item) => (
+                    <div
+                      key={item}
+                      className="flex items-center gap-2 text-xs lg:text-sm text-white font-medium whitespace-nowrap drop-shadow"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-brand-300 shrink-0" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
               </>
             )}
 
@@ -336,7 +381,7 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          COUNTER — Góc trên phải (01 / 05)
+          COUNTER — Góc trên phải
           ============================================ */}
       <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-20">
         <div className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-bold tabular-nums whitespace-nowrap">
@@ -347,7 +392,7 @@ export default function HeroBanner() {
       </div>
 
       {/* ============================================
-          DOTS NAVIGATION — Bấm để chuyển slide
+          DOTS NAVIGATION
           ============================================ */}
       <div className="absolute bottom-28 sm:bottom-32 lg:bottom-36 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {SLIDES.map((_, idx) => {
