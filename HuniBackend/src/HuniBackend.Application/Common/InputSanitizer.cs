@@ -8,6 +8,10 @@ public static class InputSanitizer
     private static readonly Regex ScriptTagRegex = new(@"<script[^>]*>[\s\S]*?</script>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly Regex HtmlTagRegex = new(@"<[^>]+>", RegexOptions.Compiled);
 
+    private static readonly Regex MaliciousContentRegex = new(
+        @"(<script[^>]*>|javascript:|onload=|onerror=|onclick=|<iframe|<embed)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
     public static string Sanitize(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
@@ -22,7 +26,14 @@ public static class InputSanitizer
     public static string StripHtml(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-        var stripped = HtmlTagRegex.Replace(input, string.Empty);
+        var withoutScripts = ScriptTagRegex.Replace(input, string.Empty);
+        var stripped = HtmlTagRegex.Replace(withoutScripts, string.Empty);
         return stripped.Trim();
+    }
+
+    public static bool ContainsMaliciousContent(string? input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return false;
+        return MaliciousContentRegex.IsMatch(input);
     }
 }

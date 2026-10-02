@@ -7,7 +7,12 @@ public class LoginAttemptTracker : ILoginAttemptTracker
 {
     private readonly ConcurrentDictionary<string, (int Count, DateTime LockoutUntil)> _attempts = new();
     private const int MaxAttempts = 5;
-    private static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(15);
+    private readonly TimeSpan _lockoutDuration;
+
+    public LoginAttemptTracker(TimeSpan? lockoutDuration = null)
+    {
+        _lockoutDuration = lockoutDuration ?? TimeSpan.FromMinutes(15);
+    }
 
     public bool IsLockedOut(string key)
     {
@@ -33,7 +38,7 @@ public class LoginAttemptTracker : ILoginAttemptTracker
             (_, old) =>
             {
                 var newCount = old.Count + 1;
-                var lockout = newCount >= MaxAttempts ? DateTime.UtcNow.Add(LockoutDuration) : old.LockoutUntil;
+                var lockout = newCount >= MaxAttempts ? DateTime.UtcNow.Add(_lockoutDuration) : old.LockoutUntil;
                 return (newCount, lockout);
             }
         );

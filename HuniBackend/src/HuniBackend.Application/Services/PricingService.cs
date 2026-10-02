@@ -18,6 +18,9 @@ public class PricingService : IPricingService
 
     public int CalculateTierPrice(Product product, int quantity)
     {
+        if (quantity <= 0)
+            throw new ArgumentException("Quantity must be greater than zero.", nameof(quantity));
+
         if (product == null) return 0;
 
         if (!string.IsNullOrWhiteSpace(product.WholesaleTiers))

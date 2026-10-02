@@ -14,10 +14,20 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // ─── Services ───────────────────────────────────────────────────
-// 1. Database (PostgreSQL via Npgsql)
+// 1. Database (PostgreSQL via Npgsql, or InMemory for Testing)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseNpgsql(connectionString));
+{
+    if (builder.Environment.EnvironmentName == "Testing")
+    {
+        var dbName = builder.Configuration["TestingDbName"] ?? "HuniTestDb";
+        opt.UseInMemoryDatabase(dbName);
+    }
+    else
+    {
+        opt.UseNpgsql(connectionString);
+    }
+});
 builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
 // 2. CORS — cho phép Next.js frontend gọi
@@ -115,15 +125,12 @@ builder.Services.AddRouting(opt => { opt.LowercaseUrls = true; });
 // ─── Pipeline ───────────────────────────────────────────────────
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "HUNI API v1");
-        c.RoutePrefix = "swagger";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HUNI API v1");
+    c.RoutePrefix = "swagger";
+});
 
 app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
@@ -153,6 +160,20 @@ if (app.Environment.IsDevelopment())
         if (db.Database.CanConnect())
         {
             db.Database.Migrate();
+            if (!db.Users.Any(u => u.Email == "admin@huni.vn"))
+            {
+                db.Users.Add(new HuniBackend.Domain.Entities.User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Email = "admin@huni.vn",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                    FullName = "HUNI Administrator",
+                    Role = HuniBackend.Domain.Enums.UserRole.ADMIN,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+                db.SaveChanges();
+            }
         }
     }
     catch (Exception ex)
@@ -162,3 +183,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+public partial class Program { }
