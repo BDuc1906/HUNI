@@ -174,12 +174,12 @@ img {
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 28s linear infinite;
+  animation: marquee-scroll 26s linear infinite;
 }
 
 .animate-marquee-infinite:hover,
 .animate-marquee:hover {
-  animation-play-state: paused;
+  animation-play-state: paused !important;
 }
 
 /* =========================================================
@@ -192,5 +192,152 @@ nextjs-portal,
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+/* =========================================================
+   HIỆU ỨNG XUẤT HIỆN CHỮ ĐA DẠNG (DIVERSE TEXT ANIMATIONS)
+   ========================================================= */
+
+/* 1. Kinetic Slide-Up Reveal (Trượt chữ từ mặt nạ cắt) */
+@keyframes text-slide-up {
+  0% {
+    transform: translateY(115%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+.animate-text-slide-up {
+  animation: text-slide-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 2. Blur to Sharp Focus Reveal (Hội tụ nét từ mờ ảo) */
+@keyframes text-blur-in {
+  0% {
+    filter: blur(12px);
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  100% {
+    filter: blur(0px);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-text-blur-in {
+  animation: text-blur-in 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 3. Radiant Shimmering Gradient (Chữ phát sáng chảy tràn) */
+@keyframes text-gradient-flow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.text-brand-gradient-flow {
+  background: linear-gradient(90deg, #33b0cb 0%, #99d9e5 25%, #ffffff 50%, #99d9e5 75%, #33b0cb 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-gradient-flow 4.5s ease-in-out infinite;
+}
+
+.text-gold-gradient-flow {
+  background: linear-gradient(90deg, #f59e0b 0%, #fef3c7 25%, #ffffff 50%, #fef3c7 75%, #f59e0b 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: text-gradient-flow 4.5s ease-in-out infinite;
+}
+
+/* 4. Light Sheen Wave on Badges (Vệt sáng kim loại quét qua) */
+@keyframes sheen-sweep {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+.sheen-badge-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.sheen-badge-overlay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 100%
+  );
+  animation: sheen-sweep 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+/* 5. Vệt sáng kim loại 45 độ quét qua mượt mà (Metallic Sheen Sweep 45deg) */
+@keyframes metallic-sweep-45 {
+  0% {
+    transform: translate3d(-120%, -120%, 0) rotate(45deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate3d(120%, 120%, 0) rotate(45deg);
+    opacity: 1;
+  }
+  60%, 100% {
+    transform: translate3d(150%, 150%, 0) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+.metallic-sheen-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.metallic-sheen-container::after {
+  content: "";
+  position: absolute;
+  top: -70%;
+  left: -70%;
+  width: 240%;
+  height: 240%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 30%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.03) 70%,
+    transparent 100%
+  );
+  transform: translate3d(-120%, -120%, 0) rotate(45deg);
+  animation: metallic-sweep-45 4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  pointer-events: none;
+  z-index: 25;
+}
+
 
 
