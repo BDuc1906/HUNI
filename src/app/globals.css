@@ -63,6 +63,10 @@ body {
   font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   transition: background-color 0.2s ease, color 0.2s ease;
+  /* Text smoothing cho font hiển thị mượt */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Offset cho sticky header khi scroll tới anchor */
@@ -123,11 +127,37 @@ main[id] {
 img {
   max-width: 100%;
   height: auto;
+  /* Chống vỡ răng cưa/jagged edges - render mượt */
+  image-rendering: auto;
+  /* Anti-aliasing cho edge mềm mại */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Hỗ trợ high-DPI screens */
+  backface-visibility: hidden;
+  /* Fix cho blurry/jagged images khi transform */
+  transform: translateZ(0);
+  /* Smooth scaling interpolation */
+  -webkit-interpolation-mode: bicubic;
 }
 
 /* Next.js Image wrapper không bị dãn */
 [data-nimg] {
   max-width: 100%;
+  /* Đảm bảo ảnh Next.js render mượt */
+  image-rendering: auto;
+  /* Hỗ trợ GPU acceleration cho smooth rendering */
+  transform: translateZ(0);
+  -webkit-interpolation-mode: bicubic;
+}
+
+/* =========================================================
+   GPU Acceleration helper - chống jagged edges khi animate
+   ========================================================= */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* =========================================================

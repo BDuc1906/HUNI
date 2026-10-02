@@ -8,7 +8,9 @@ import { useShop } from "@/shared/providers/ShopProvider";
 import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
-// SLIDES DATA — 5 slides full màn hình (bỏ fit contain)
+// SLIDES DATA — 5 slides
+// focusMobile / focusDesktop = object-position (x y) của ảnh.
+// Chỉnh 2 giá trị này để dời điểm lấy nét của từng ảnh (vd "70% 30%").
 // ============================================================
 const SLIDES = [
   // ============================================
@@ -16,7 +18,8 @@ const SLIDES = [
   // ============================================
   {
     image: "/images/02_materials_01.jpg",
-    position: "center",
+    focusMobile: "center center",
+    focusDesktop: "center center",
     eyebrow: "Bộ Sưu Tập 2026",
     title: "CHẤT LIỆU XANH",
     titleHighlight: "BỀN VỮNG",
@@ -33,7 +36,8 @@ const SLIDES = [
   // ============================================
   {
     image: "/images/08_golf_event_01.jpg",
-    position: "center",
+    focusMobile: "60% 45%",
+    focusDesktop: "center 40%",
     eyebrow: "Công Nghệ AeroCool",
     title: "ĐỒNG PHỤC CÁC GIẢI",
     titleHighlight: "THỂ THAO & GOLF",
@@ -50,7 +54,8 @@ const SLIDES = [
   // ============================================
   {
     image: "/images/06_polo_01.jpg",
-    position: "center",       // ← Không còn fit: "contain"
+    focusMobile: "center 20%",
+    focusDesktop: "center 22%",
     eyebrow: "Bán Chạy Nhất 2026",
     title: "ÁO POLO DOANH NGHIỆP",
     titleHighlight: "HDC CLASSIC",
@@ -67,7 +72,8 @@ const SLIDES = [
   // ============================================
   {
     image: "/images/09_kids_school_03.jpg",
-    position: "center",
+    focusMobile: "center 22%",
+    focusDesktop: "center 25%",
     eyebrow: "Chuẩn Quốc Tế",
     title: "ĐỒNG PHỤC TRƯỜNG HỌC",
     titleHighlight: "CAO CẤP",
@@ -84,7 +90,8 @@ const SLIDES = [
   // ============================================
   {
     image: "/images/10_kids_why_02.jpg",
-    position: "center",
+    focusMobile: "center 22%",
+    focusDesktop: "center 25%",
     eyebrow: "Dòng Sản Phẩm Trẻ Em",
     title: "ĐỒNG PHỤC HDC KIDS",
     titleHighlight: "VUI NHỘN & AN TOÀN",
@@ -109,12 +116,6 @@ const CHECKLIST = [
 const TRANSITION_DURATION = 700;
 const SLIDE_DURATION = 6000;
 const SWIPE_THRESHOLD = 50;
-
-const POSITION_CLASS = {
-  top: "object-top",
-  center: "object-center",
-  bottom: "object-bottom",
-};
 
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
@@ -223,14 +224,14 @@ export default function HeroBanner() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-slate-900"
-      style={{ touchAction: "pan-y" }}
+      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-[#00222a]"
+      style={{ touchAction: "pan-y", maxWidth: "1920px", margin: "0 auto" }}
     >
       {/* ============================================
           SLIDES — TRƯỢT NGANG
           ============================================ */}
       <div
-        className="absolute inset-0 flex transition-transform ease-out"
+        className="absolute inset-0 flex transition-transform ease-out gpu-accelerated"
         style={{
           transform: `translateX(-${currentSlide * 100}%)`,
           transitionDuration: `${TRANSITION_DURATION}ms`,
@@ -239,23 +240,37 @@ export default function HeroBanner() {
         {SLIDES.map((s, idx) => (
           <div
             key={idx}
-            className="relative w-full h-full flex-shrink-0"
+            className="relative w-full h-full flex-shrink-0 gpu-accelerated bg-[#00222a]"
             aria-hidden={idx !== currentSlide}
           >
-            {/* Ảnh chính — object-cover tràn full */}
-            <Image
-              src={s.image}
-              alt={s.title + " " + s.titleHighlight}
-              fill
-              sizes="100vw"
-              quality={90}
-              priority={idx === 0}
-              loading={idx === 0 ? undefined : "eager"}
-              className={`object-cover ${POSITION_CLASS[s.position || "center"]}`}
-            />
+            {/* Khung ảnh — mobile: full màn hình; desktop: chiếm 68% bên phải
+                để chữ nằm trên nền đặc, chủ thể ảnh không bị chữ che */}
+            <div
+              className="absolute inset-0 lg:left-[32%]"
+              style={{
+                "--pos-m": s.focusMobile,
+                "--pos-d": s.focusDesktop,
+              }}
+            >
+              <Image
+                src={s.image}
+                alt={s.title + " " + s.titleHighlight}
+                fill
+                sizes="(min-width: 1024px) 68vw, 100vw"
+                quality={100}
+                unoptimized={true}
+                priority={idx === 0}
+                loading={idx === 0 ? undefined : "eager"}
+                className="object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)]"
+              />
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#00222a]/55 via-[#00222a]/20 to-transparent" />
+              {/* Overlay mobile/tablet: tối dần từ dưới lên để chữ dễ đọc */}
+              <div className="absolute inset-0 lg:hidden bg-gradient-to-t from-[#00222a]/90 via-[#00222a]/45 to-[#00222a]/25" />
+
+              {/* Overlay desktop: hòa mép trái ảnh vào nền, đáy tối nhẹ cho thanh stats */}
+              <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#00222a] via-[#00222a]/55 to-transparent to-[55%]" />
+              <div className="absolute inset-x-0 bottom-0 hidden lg:block h-40 bg-gradient-to-t from-[#00222a]/70 to-transparent" />
+            </div>
           </div>
         ))}
       </div>
