@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { BRAND_INFO } from "@/shared/data";
+import { apiClient } from "@/shared/services/apiClient";
 import {
   X,
   Search,
@@ -81,10 +82,9 @@ export default function OrderTrackingModal() {
     // ==================================================
     try {
       setLoading(true);
-      const res = await fetch(
+      const data = await apiClient.get(
         `/api/tracking?code=${encodeURIComponent(query)}`
       );
-      const data = await res.json();
 
       if (data.success && data.order) {
         setSearchedOrder({

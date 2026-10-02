@@ -4,6 +4,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { authService } from "@/shared/services/apiClient";
 import {
   Loader2,
   Mail,
@@ -101,6 +102,12 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
     setLoginLoading(true);
 
     try {
+      try {
+        await authService.login({ email: loginEmail, password: loginPassword });
+      } catch (e) {
+        // ignore if next-auth manages
+      }
+
       const result = await signIn("credentials", {
         email: loginEmail,
         password: loginPassword,
@@ -162,18 +169,12 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
 
     setRegLoading(true);
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json; charset=utf-8" },
-        body: JSON.stringify({
-          fullName: regFullName,
-          email: regEmail,
-          phone: regPhone,
-          password: regPassword,
-        }),
+      const data = await authService.register({
+        fullName: regFullName,
+        email: regEmail,
+        phone: regPhone,
+        password: regPassword,
       });
-
-      const data = await res.json();
 
       if (!data.success) {
         const details = data.details?.map((d) => d.message).join(" | ");

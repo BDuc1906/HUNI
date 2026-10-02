@@ -1,0 +1,1372 @@
+[
+  {
+    "id": "hdc-shirt-short-1",
+    "slug": "hdc-shirt-short-1",
+    "sku": "HDC-SHIRT-SHORT-01",
+    "title": "Sơ Mi Ngắn Tay HDC Classic Xanh Đậm",
+    "description": "Sơ mi ngắn tay cao cấp dành cho môi trường công sở mùa hè — vải mát, thấm hút, giữ phom cả ngày.",
+    "category": "corporate",
+    "material": "Kate Ý Cao Cấp Chống Nhăn",
+    "price": 235000,
+    "originalPrice": 320000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_01.jpg",
+      "/images/05_bestseller_shirts_02.jpg"
+    ],
+    "features": [
+      "Vải Kate Ý cao cấp chống nhăn",
+      "Tay ngắn thoải mái mùa hè",
+      "Cổ đức lịch lãm",
+      "Form regular fit chuẩn Âu",
+      "Có túi ngực tiện dụng"
+    ],
+    "colors": "[{\"name\":\"Xanh Đậm\",\"code\":\"#1E3A8A\"},{\"name\":\"Xanh Nhạt\",\"code\":\"#93B7D9\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":235000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":205000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":175000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":145000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-short-2",
+    "slug": "hdc-shirt-short-2",
+    "sku": "HDC-SHIRT-SHORT-02",
+    "title": "Sơ Mi Ngắn Tay HDC Caro Xanh",
+    "description": "Sơ mi ngắn tay họa tiết caro — lựa chọn trẻ trung và lịch sự cho quý ông.",
+    "category": "corporate",
+    "material": "Cotton Compact Họa Tiết Caro",
+    "price": 245000,
+    "originalPrice": 335000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_02.jpg",
+      "/images/05_bestseller_shirts_03.jpg"
+    ],
+    "features": [
+      "Họa tiết caro thanh lịch",
+      "Vải cotton compact mềm mịn",
+      "Tay ngắn thoáng mát",
+      "Form slimfit tôn dáng",
+      "Phù hợp cả đi làm và dạo phố"
+    ],
+    "colors": "[{\"name\":\"Xanh Caro Nhạt\",\"code\":\"#93B7D9\"},{\"name\":\"Xanh Caro Đậm\",\"code\":\"#1E3A8A\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":245000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":215000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":185000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":155000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-short-3",
+    "slug": "hdc-shirt-short-3",
+    "sku": "HDC-SHIRT-SHORT-03",
+    "title": "Sơ Mi Ngắn Tay HDC Sọc Xanh",
+    "description": "Sơ mi ngắn tay họa tiết sọc — lựa chọn thanh lịch cho môi trường công sở năng động.",
+    "category": "corporate",
+    "material": "Kate Ý Sọc Dọc Cao Cấp",
+    "price": 245000,
+    "originalPrice": 335000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_03.jpg",
+      "/images/05_bestseller_shirts_04.jpg"
+    ],
+    "features": [
+      "Họa tiết sọc dọc thanh lịch",
+      "Tôn dáng người mặc",
+      "Vải mềm mịn mát lạnh",
+      "Tay ngắn thoải mái",
+      "Chống nhăn hiệu quả"
+    ],
+    "colors": "[{\"name\":\"Xanh Sọc Nhạt\",\"code\":\"#93B7D9\"},{\"name\":\"Xanh Sọc Đậm\",\"code\":\"#1E40AF\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":245000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":215000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":185000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":155000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-long-1",
+    "slug": "hdc-shirt-long-1",
+    "sku": "HDC-SHIRT-LONG-01",
+    "title": "Sơ Mi Dài Tay HDC Cao Cấp Xanh Đậm",
+    "description": "Sơ mi dài tay cao cấp — chiếc sơ mi không thể thiếu cho dân công sở chuyên nghiệp.",
+    "category": "corporate",
+    "material": "Kate Ý Nhập Khẩu Cao Cấp",
+    "price": 275000,
+    "originalPrice": 375000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_04.jpg",
+      "/images/05_bestseller_shirts_05.jpg"
+    ],
+    "features": [
+      "Vải Kate Ý nhập khẩu cao cấp",
+      "Chống nhăn Non-Iron tự nhiên",
+      "Khuy ngọc trai dập chìm",
+      "Form slimfit tôn dáng",
+      "Phù hợp cả nam và nữ"
+    ],
+    "colors": "[{\"name\":\"Xanh Đậm\",\"code\":\"#1E3A8A\"},{\"name\":\"Xanh Royal\",\"code\":\"#1E40AF\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":275000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":245000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":215000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":185000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-long-2",
+    "slug": "hdc-shirt-long-2",
+    "sku": "HDC-SHIRT-LONG-02",
+    "title": "Sơ Mi Dài Tay HDC Classic Xanh Nhạt",
+    "description": "Sơ mi dài tay classic màu xanh nhạt — lựa chọn an toàn cho mọi môi trường công sở.",
+    "category": "corporate",
+    "material": "Cotton Compact 100% Cao Cấp",
+    "price": 265000,
+    "originalPrice": 365000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_05.jpg",
+      "/images/05_bestseller_shirts_06.jpg"
+    ],
+    "features": [
+      "Vải cotton compact 100% cao cấp",
+      "Thấm hút mồ hôi tốt",
+      "Form regular fit thoải mái",
+      "Cổ đức lịch lãm",
+      "Đường may tỉ mỉ từng chi tiết"
+    ],
+    "colors": "[{\"name\":\"Xanh Nhạt\",\"code\":\"#93B7D9\"},{\"name\":\"Xanh Sky\",\"code\":\"#BAE6FD\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":265000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":235000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":205000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":175000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-long-3",
+    "slug": "hdc-shirt-long-3",
+    "sku": "HDC-SHIRT-LONG-03",
+    "title": "Sơ Mi Dài Tay HDC Royal Blue",
+    "description": "Sơ mi dài tay màu xanh royal quyền quý — dành cho quý ông doanh nhân thành đạt.",
+    "category": "corporate",
+    "material": "Kate Ý Cao Cấp Kháng Khuẩn",
+    "price": 285000,
+    "originalPrice": 385000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_06.jpg",
+      "/images/05_bestseller_shirts_07.jpg"
+    ],
+    "features": [
+      "Vải Kate Ý kháng khuẩn",
+      "Chống nhăn cao cấp",
+      "Tôn lên vẻ lịch lãm quý ông",
+      "Khuy ngọc trai sang trọng",
+      "Đóng gói hộp quà cao cấp"
+    ],
+    "colors": "[{\"name\":\"Xanh Royal\",\"code\":\"#1E40AF\"},{\"name\":\"Xanh Coban\",\"code\":\"#2563EB\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":285000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":255000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":225000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":195000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-seamless-blue",
+    "slug": "hdc-shirt-seamless-blue",
+    "sku": "HDC-SEAMLESS-BLUE",
+    "title": "Sơ Mi Seamless Xanh Dương HDC",
+    "description": "Sơ mi Seamless màu xanh dương — sự lựa chọn hoàn hảo cho doanh nhân năng động.",
+    "category": "corporate",
+    "material": "Seamless Không Đường May Co Giãn 4 Chiều",
+    "price": 385000,
+    "originalPrice": 500000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_07.jpg",
+      "/images/05_bestseller_shirts_08.jpg"
+    ],
+    "features": [
+      "Công nghệ Seamless không đường may",
+      "Co giãn 4 chiều thoải mái",
+      "Siêu nhẹ — cảm giác như không mặc",
+      "Không cần là ủi",
+      "Mềm mịn như làn da thứ hai"
+    ],
+    "colors": "[{\"name\":\"Xanh Dương Nhạt\",\"code\":\"#93B7D9\"},{\"name\":\"Xanh Navy\",\"code\":\"#1E3A8A\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":385000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":335000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":285000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":235000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-shirt-seamless-pink",
+    "slug": "hdc-shirt-seamless-pink",
+    "sku": "HDC-SEAMLESS-PINK",
+    "title": "Sơ Mi Seamless Hồng Pastel HDC",
+    "description": "Sơ mi Seamless màu hồng pastel — điểm nhấn nhẹ nhàng cho phong cách công sở hiện đại.",
+    "category": "corporate",
+    "material": "Seamless Không Đường May Co Giãn 4 Chiều",
+    "price": 385000,
+    "originalPrice": 500000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_08.jpg",
+      "/images/05_bestseller_shirts_09.jpg"
+    ],
+    "features": [
+      "Công nghệ Seamless không đường may",
+      "Màu hồng pastel thanh lịch",
+      "Co giãn 4 chiều thoải mái",
+      "Không nhăn, mặc là phẳng",
+      "Phù hợp cả nam và nữ"
+    ],
+    "colors": "[{\"name\":\"Hồng Pastel\",\"code\":\"#F4C2C2\"},{\"name\":\"Hồng Đào\",\"code\":\"#FBCFE8\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":385000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":335000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":285000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":235000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-shirt-seamless-gray",
+    "slug": "hdc-shirt-seamless-gray",
+    "sku": "HDC-SEAMLESS-GRAY",
+    "title": "Sơ Mi Seamless Xám Ghi HDC",
+    "description": "Sơ mi Seamless màu xám ghi — lựa chọn trung tính, dễ phối cho quý ông hiện đại.",
+    "category": "corporate",
+    "material": "Seamless Không Đường May Co Giãn 4 Chiều",
+    "price": 385000,
+    "originalPrice": 500000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_09.jpg",
+      "/images/05_bestseller_shirts_10.jpg"
+    ],
+    "features": [
+      "Công nghệ Seamless không đường may",
+      "Màu xám ghi trung tính",
+      "Co giãn 4 chiều thoải mái",
+      "Trọng lượng siêu nhẹ",
+      "Phù hợp nhiều phong cách"
+    ],
+    "colors": "[{\"name\":\"Xám Ghi\",\"code\":\"#9CA3AF\"},{\"name\":\"Xám Đậm\",\"code\":\"#6B7280\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":385000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":335000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":285000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":235000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-shirt-white-premium",
+    "slug": "hdc-shirt-white-premium",
+    "sku": "HDC-SHIRT-WHITE",
+    "title": "Sơ Mi Trắng Cao Cấp HDC Premium",
+    "description": "Sơ mi trắng cao cấp — chiếc sơ mi không thể thiếu trong tủ đồ của mọi quý ông.",
+    "category": "corporate",
+    "material": "Kate Ý Chống Nhăn Non-Iron",
+    "price": 265000,
+    "originalPrice": 365000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_10.jpg",
+      "/images/05_bestseller_shirts_11.jpg"
+    ],
+    "features": [
+      "Vải Kate Ý chống nhăn Non-Iron",
+      "Trắng tinh khôi sang trọng",
+      "Form slimfit tôn dáng",
+      "Khuy ngọc trai dập chìm",
+      "Phù hợp mọi dịp quan trọng"
+    ],
+    "colors": "[{\"name\":\"Trắng Tinh Khôi\",\"code\":\"#FFFFFF\"},{\"name\":\"Trắng Sữa\",\"code\":\"#FEFDF9\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":265000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":235000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":205000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":175000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-cultural-2",
+    "slug": "hdc-shirt-cultural-2",
+    "sku": "HDC-SHIRT-HERITAGE",
+    "title": "Sơ Mi Họa Tiết Văn Hóa HDC Heritage Trắng",
+    "description": "Sơ mi họa tiết văn hóa Việt Nam — tôn vinh bản sắc dân tộc trong từng đường nét.",
+    "category": "corporate",
+    "material": "Cotton Compact 100% In Họa Tiết Văn Hóa",
+    "price": 335000,
+    "originalPrice": 445000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_11.jpg",
+      "/images/05_bestseller_shirts_12.jpg"
+    ],
+    "features": [
+      "In họa tiết văn hóa độc quyền HDC",
+      "Vải cotton compact 100%",
+      "Form slimfit thanh lịch",
+      "Khuy ngọc trai cao cấp",
+      "Có thể tùy chỉnh họa tiết"
+    ],
+    "colors": "[{\"name\":\"Trắng Họa Tiết\",\"code\":\"#FFFFFF\"},{\"name\":\"Trắng Xanh Họa Tiết\",\"code\":\"#F8FAFC\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":335000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":285000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":245000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":205000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-vest-classic",
+    "slug": "hdc-vest-classic",
+    "sku": "HDC-VEST-CLASSIC",
+    "title": "Vest Công Sở HDC Classic Đen",
+    "description": "Vest công sở classic màu đen — trang phục không thể thiếu cho quý ông doanh nhân.",
+    "category": "bespoke_suit",
+    "material": "Wool Len Pha Cashmere Nhập Khẩu",
+    "price": 1250000,
+    "originalPrice": 1650000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/CEO.jpg"
+    ],
+    "features": [
+      "Kỹ thuật dựng form chuẩn Âu",
+      "Ve áo vuốt nhọn tôn dáng",
+      "Lót lụa thoáng khí",
+      "Có đo ni tận nơi",
+      "Tặng kèm cà vạt lụa"
+    ],
+    "colors": "[{\"name\":\"Đen Classic\",\"code\":\"#0F172A\"},{\"name\":\"Navy Đậm\",\"code\":\"#0A192F\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "Đo ni tận nơi"
+    ],
+    "wholesaleTiers": "[{\"min\":5,\"max\":19,\"price\":1250000,\"label\":\"5 - 19 bộ\"},{\"min\":20,\"max\":49,\"price\":1150000,\"label\":\"20 - 49 bộ\"},{\"min\":50,\"max\":99,\"price\":1050000,\"label\":\"50 - 99 bộ\"},{\"min\":100,\"max\":9999,\"price\":950000,\"label\":\"Từ 100 bộ trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-shirt-seamless",
+    "slug": "hdc-shirt-seamless",
+    "sku": "HDC-SHIRT-SEAMLESS",
+    "title": "Sơ Mi Seamless Không Đường May HDC Fashion",
+    "description": "Sơ mi công nghệ Seamless độc quyền từ HDC Fashion — loại bỏ hoàn toàn đường may truyền thống tại tay, nẹp và vai áo, mang lại cảm giác mặc thoải mái tuyệt đối.",
+    "category": "corporate",
+    "material": "Seamless Không Đường May Co Giãn 4 Chiều",
+    "price": 395000,
+    "originalPrice": 520000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_05.jpg",
+      "/images/05_bestseller_shirts_06.jpg",
+      "/images/05_bestseller_shirts_09.jpg"
+    ],
+    "features": [
+      "Công nghệ liền mạch không đường may tại tay áo, nẹp áo, vai áo",
+      "Co giãn 4 chiều, siêu thoải mái khi vận động cả ngày",
+      "Trọng lượng siêu nhẹ, cảm giác mềm mịn như làn da thứ hai",
+      "Không cần là ủi — mặc là phẳng, tiết kiệm thời gian",
+      "Đặc biệt phù hợp doanh nhân, giám đốc, ban lãnh đạo"
+    ],
+    "colors": "[{\"name\":\"Xanh Dương Nhạt\",\"code\":\"#93B7D9\"},{\"name\":\"Xám Ghi\",\"code\":\"#9CA3AF\"},{\"name\":\"Hồng Pastel\",\"code\":\"#F4C2C2\"},{\"name\":\"Xanh Navy\",\"code\":\"#1E3A8A\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":395000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":345000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":295000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":245000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-polo-pro",
+    "slug": "huni-polo-pro",
+    "sku": "HN-POLO-01",
+    "title": "Áo Polo Doanh Nghiệp HDC Classic Gold",
+    "description": "Dòng áo polo đồng phục doanh nghiệp cao cấp được HDC thiết kế riêng cho các công ty, tập đoàn muốn xây dựng hình ảnh chuyên nghiệp, năng động và chỉn chu.",
+    "category": "corporate",
+    "material": "Pique Cá Sấu Cotton Compact 4 Chiều",
+    "price": 185000,
+    "originalPrice": 245000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_polo_corporate.jpg",
+      "/images/uniform_corporate_suits.jpg",
+      "/images/06_polo_01.jpg"
+    ],
+    "features": [
+      "Vải Pique dệt mắt chim tổ ong thông thoáng khí",
+      "Sợi Cotton Compact dệt kéo dài chống bai xù lông tuyệt đối",
+      "Bo cổ và bo tay dệt jacquard viền đôi vàng kim sắc nét",
+      "Kháng khuẩn ion bạc, chống mùi mồ hôi cả ngày làm việc",
+      "Miễn phí in/thêu logo công ty 1 vị trí từ 30 áo"
+    ],
+    "colors": "[{\"name\":\"Xanh Navy Hoàng Gia\",\"code\":\"#0B2042\"},{\"name\":\"Trắng Ngọc Trai\",\"code\":\"#FFFFFF\"},{\"name\":\"Xanh Sky Blue\",\"code\":\"#78A6C8\"},{\"name\":\"Đen Doanh Nhân\",\"code\":\"#18181B\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL",
+      "May đo theo số đo"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":185000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":155000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":135000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":115000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-suit-bespoke",
+    "slug": "huni-suit-bespoke",
+    "sku": "HN-SUIT-01",
+    "title": "Bộ Vest Doanh Nhân & Lãnh Đạo HDC Royal Bespoke",
+    "description": "Bộ vest đồng phục công sở cao cấp dành cho ban lãnh đạo, cấp quản lý và nhân sự ngoại giao.",
+    "category": "bespoke_suit",
+    "material": "Wool Len Pha Cashmere Nhập Khẩu Form Ý",
+    "price": 1850000,
+    "originalPrice": 2400000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/CEO.jpg",
+      "/images/uniform_polo_corporate.jpg"
+    ],
+    "features": [
+      "Kỹ thuật dựng form Canvassing chuẩn phong cách Ý",
+      "Đệm vai tự nhiên, ve áo vuốt nhọn tôn vóc dáng quyền uy",
+      "Lớp lót lụa habutai mỏng nhẹ, thoáng khí, không bí bách",
+      "Có hỗ trợ chuyên viên mang thước đến tận văn phòng lấy số đo",
+      "Tặng kèm nơ cài hoặc cà vạt lụa thêu logo doanh nghiệp"
+    ],
+    "colors": "[{\"name\":\"Navy Hoàng Gia\",\"code\":\"#0A192F\"},{\"name\":\"Xám Than Chì\",\"code\":\"#334155\"},{\"name\":\"Đen Quyền Lực\",\"code\":\"#0F172A\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "Đo ni tận nơi"
+    ],
+    "wholesaleTiers": "[{\"min\":5,\"max\":19,\"price\":1850000,\"label\":\"5 - 19 bộ\"},{\"min\":20,\"max\":49,\"price\":1650000,\"label\":\"20 - 49 bộ\"},{\"min\":50,\"max\":99,\"price\":1450000,\"label\":\"50 - 99 bộ\"},{\"min\":100,\"max\":9999,\"price\":1250000,\"label\":\"Từ 100 bộ trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-golf-dryfit",
+    "slug": "huni-golf-dryfit",
+    "sku": "HN-GOLF-01",
+    "title": "Set Đồng Phục Golf & Pickleball HDC AeroCool Pro",
+    "description": "Dòng sản phẩm chuyên biệt cho các giải đấu Golf doanh nghiệp, câu lạc bộ Pickleball, giải chạy Marathon.",
+    "category": "sport_golf",
+    "material": "Poly Spandex Dệt Lỗ Thông Hơi Chống Tia UV UPF 50+",
+    "price": 295000,
+    "originalPrice": 380000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_sport_golf.jpg",
+      "/images/07_corporate_golf_01.jpg"
+    ],
+    "features": [
+      "Công nghệ làm mát AeroCool hạ nhiệt cơ thể 3°C ngay lập tức",
+      "Độ đàn hồi co giãn 4 chiều siêu linh hoạt cho cú swing chuẩn xác",
+      "Chống nắng tia cực tím UPF 50+ bảo vệ làn da ngoài trời",
+      "Khô nhanh chỉ sau 15 phút, không đọng bệt mồ hôi",
+      "Công nghệ in chuyển nhiệt 4K sắc nét không bao giờ bong tróc"
+    ],
+    "colors": "[{\"name\":\"Xanh Emerald & Navy\",\"code\":\"#15803D\"},{\"name\":\"Navy Phối Trắng\",\"code\":\"#1E3A8A\"},{\"name\":\"Trắng Phối Xanh Mint\",\"code\":\"#10B981\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":30,\"price\":295000,\"label\":\"10 - 30 áo\"},{\"min\":31,\"max\":70,\"price\":255000,\"label\":\"31 - 70 áo\"},{\"min\":71,\"max\":150,\"price\":225000,\"label\":\"71 - 150 áo\"},{\"min\":151,\"max\":9999,\"price\":195000,\"label\":\"Từ 151 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-school-elite",
+    "slug": "huni-school-elite",
+    "sku": "HN-SCH-01",
+    "title": "Bộ Đồng Phục Học Sinh & Giáo Viên HDC Elite School",
+    "description": "Bộ đồng phục học sinh và giáo viên liên cấp chuẩn phom dáng quốc tế.",
+    "category": "school",
+    "material": "Kate Nhật Kháng Khuẩn & Kaki Tuyết Mưa Chống Nhăn",
+    "price": 320000,
+    "originalPrice": 420000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_school_students.jpg",
+      "/images/09_kids_school_01.jpg"
+    ],
+    "features": [
+      "Vải mềm mại êm dịu cho làn da học sinh, thấm mồ hôi cực tốt",
+      "Váy xếp ly có quần lót an toàn bên trong cho nữ sinh",
+      "Quần tây nam có tăng đơ chun co giãn thông minh ở cạp quần",
+      "Huy hiệu logo trường thêu vi tính Tajima sắc sảo từng chi tiết",
+      "Chống sờn rách, độ bền chịu được cả năm học vận động mạnh"
+    ],
+    "colors": "[{\"name\":\"Navy & Xám Ghi Thanh Lịch\",\"code\":\"#1E293B\"},{\"name\":\"Xanh Coban & Trắng Sữa\",\"code\":\"#2563EB\"}]",
+    "sizes": [
+      "Số 1",
+      "Số 2",
+      "Số 3",
+      "Số 4",
+      "Số 5",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "May đo"
+    ],
+    "wholesaleTiers": "[{\"min\":30,\"max\":99,\"price\":320000,\"label\":\"30 - 99 bộ\"},{\"min\":100,\"max\":299,\"price\":275000,\"label\":\"100 - 299 bộ\"},{\"min\":300,\"max\":999,\"price\":235000,\"label\":\"300 - 999 bộ\"},{\"min\":1000,\"max\":9999,\"price\":195000,\"label\":\"Từ 1,000 bộ trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-accessories-pack",
+    "slug": "huni-accessories-pack",
+    "sku": "HN-ACC-01",
+    "title": "Bộ Phụ Kiện Doanh Nghiệp HDC Branding VIP Pack",
+    "description": "Giải pháp quà tặng doanh nghiệp và phụ kiện đồng bộ nhận diện thương hiệu.",
+    "category": "accessories",
+    "material": "Vải Kaki Cotton Nhung & Da PU Cao Cấp Khóa Vàng Kim",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/uniform_polo_corporate.jpg"
+    ],
+    "features": [
+      "Mũ lưỡi trai thêu nổi 3D thương hiệu HDC / Doanh nghiệp",
+      "Cặp táp doanh nhân đựng laptop 14-15.6 inch chống sốc",
+      "Túi giấy cao cấp ép kim nhũ vàng trao tặng sự kiện",
+      "Cà vạt dệt thoi gân chìm sang trọng kèm hộp quà nắp nam châm",
+      "Nhận khắc tên cá nhân và logo công ty theo yêu cầu"
+    ],
+    "colors": "[{\"name\":\"Navy Hoàng Gia\",\"code\":\"#0B2042\"},{\"name\":\"Đen Doanh Nhân\",\"code\":\"#18181B\"},{\"name\":\"Trắng Sứ\",\"code\":\"#F8FAFC\"}]",
+    "sizes": [
+      "Free Size Tùy Chỉnh Khóa Đồng"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 món\"},{\"min\":50,\"max\":99,\"price\":120000,\"label\":\"50 - 99 món\"},{\"min\":100,\"max\":299,\"price\":95000,\"label\":\"100 - 299 món\"},{\"min\":300,\"max\":9999,\"price\":79000,\"label\":\"Từ 300 món trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-shirt-bamboo",
+    "slug": "huni-shirt-bamboo",
+    "sku": "HN-SHIRT-02",
+    "title": "Áo Sơ Mi Công Sở Sợi Tre Bamboo Kháng Khuẩn HDC Executive",
+    "description": "Chiếc áo sơ mi đồng phục công sở không thể thiếu cho dân văn phòng và nhân viên kinh doanh.",
+    "category": "corporate",
+    "material": "Vải Sợi Tre Bamboo Sinh Thái 65% Bamboo + 35% Cotton Kháng Khuẩn",
+    "price": 245000,
+    "originalPrice": 320000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/05_bestseller_shirts_01.jpg"
+    ],
+    "features": [
+      "Công nghệ dệt chống nhăn Non-Iron, giặt xong phơi khô mặc ngay",
+      "Sợi tre có tính năng tự kháng khuẩn và khử mùi mồ hôi",
+      "Khuy áo ngọc trai cao cấp dập chìm thương hiệu",
+      "Form slimfit và regular fit cho cả nam và nữ",
+      "Thêu logo nhỏ tinh tế ở măng sét cổ tay hoặc ngực áo"
+    ],
+    "colors": "[{\"name\":\"Trắng Sơ Mi Chuẩn\",\"code\":\"#FFFFFF\"},{\"name\":\"Xanh Da Trời Nhạt\",\"code\":\"#BAE6FD\"},{\"name\":\"Xanh Kẻ Tăm Navy\",\"code\":\"#1E3A8A\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "May đo"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":245000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":215000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":185000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":160000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-polo-classic-2",
+    "slug": "huni-polo-classic-2",
+    "sku": "HN-POLO-02",
+    "title": "Áo Polo Doanh Nghiệp HDC Classic Navy",
+    "description": "Áo polo dòng classic với tông màu navy hoàng gia sang trọng cho doanh nghiệp.",
+    "category": "corporate",
+    "material": "Pique Cá Sấu Cotton Compact 4 Chiều",
+    "price": 175000,
+    "originalPrice": 235000,
+    "stock": 100,
+    "images": [
+      "/images/06_polo_01.jpg",
+      "/images/06_polo_02.jpg"
+    ],
+    "features": [
+      "Vải cá sấu cao cấp",
+      "Thoáng mát",
+      "Bền màu",
+      "Kháng khuẩn"
+    ],
+    "colors": "[{\"name\":\"Xanh Navy\",\"code\":\"#0A192F\"},{\"name\":\"Trắng Sữa\",\"code\":\"#FEFDF9\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":175000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":145000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":125000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":105000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-polo-sport",
+    "slug": "huni-polo-sport",
+    "sku": "HN-POLO-03",
+    "title": "Áo Polo Thể Thao Doanh Nghiệp HDC Active",
+    "description": "Áo polo thể thao cho các sự kiện teambuilding, thể thao doanh nghiệp.",
+    "category": "corporate",
+    "material": "Vải Dry-fit Công Nghệ AeroCool",
+    "price": 195000,
+    "originalPrice": 250000,
+    "stock": 100,
+    "images": [
+      "/images/06_polo_03.jpg",
+      "/images/06_polo_04.jpg"
+    ],
+    "features": [
+      "Khô nhanh",
+      "Co giãn 4 chiều",
+      "Chống UV",
+      "Thoáng khí"
+    ],
+    "colors": "[{\"name\":\"Xanh Dương\",\"code\":\"#1E40AF\"},{\"name\":\"Đen Thể Thao\",\"code\":\"#18181B\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":195000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":165000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":145000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":125000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-shirt-premium",
+    "slug": "huni-shirt-premium",
+    "sku": "HN-SHIRT-03",
+    "title": "Áo Sơ Mi Cao Cấp HDC Premium Executive",
+    "description": "Áo sơ mi cao cấp nhất trong bộ sưu tập — dành cho cấp quản lý và lãnh đạo.",
+    "category": "corporate",
+    "material": "Kate Ý Cao Cấp Chống Nhăn Non-Iron",
+    "price": 285000,
+    "originalPrice": 380000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_01.jpg",
+      "/images/05_bestseller_shirts_02.jpg"
+    ],
+    "features": [
+      "Chống nhăn Non-Iron",
+      "Sợi dài mịn",
+      "Khuy ngọc trai",
+      "Form slimfit"
+    ],
+    "colors": "[{\"name\":\"Trắng Tinh Khôi\",\"code\":\"#FFFFFF\"},{\"name\":\"Xanh Nhạt\",\"code\":\"#BAE6FD\"},{\"name\":\"Hồng Pastel\",\"code\":\"#FBCFE8\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":285000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":245000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":215000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":185000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-shirt-classic",
+    "slug": "huni-shirt-classic",
+    "sku": "HN-SHIRT-04",
+    "title": "Áo Sơ Mi Công Sở HDC Classic Blue",
+    "description": "Áo sơ mi công sở classic — lựa chọn số 1 của dân văn phòng.",
+    "category": "corporate",
+    "material": "Cotton Compact 100% Cao Cấp",
+    "price": 235000,
+    "originalPrice": 310000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_03.jpg",
+      "/images/05_bestseller_shirts_04.jpg"
+    ],
+    "features": [
+      "Thấm hút tốt",
+      "Bền màu",
+      "Form chuẩn Âu",
+      "Dễ phối đồ"
+    ],
+    "colors": "[{\"name\":\"Xanh Navy Classic\",\"code\":\"#1E3A8A\"},{\"name\":\"Trắng\",\"code\":\"#FFFFFF\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":235000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":205000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":175000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":155000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-golf-pro-2",
+    "slug": "huni-golf-pro-2",
+    "sku": "HN-GOLF-02",
+    "title": "Bộ Đồng Phục Golf Doanh Nghiệp HDC Pro Series",
+    "description": "Bộ đồng phục golf doanh nghiệp cao cấp — đồng hành cùng các giải golf doanh nhân.",
+    "category": "sport_golf",
+    "material": "Poly Spandex Dệt Lỗ Công Nghệ AeroCool",
+    "price": 385000,
+    "originalPrice": 480000,
+    "stock": 100,
+    "images": [
+      "/images/07_corporate_golf_01.jpg",
+      "/images/07_corporate_golf_02.jpg"
+    ],
+    "features": [
+      "Co giãn 4 chiều",
+      "Khô nhanh",
+      "Chống UV 50+",
+      "Thoáng khí"
+    ],
+    "colors": "[{\"name\":\"Xanh Navy Golf\",\"code\":\"#0A2540\"},{\"name\":\"Đen Premium\",\"code\":\"#18181B\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL"
+    ],
+    "wholesaleTiers": "[{\"min\":5,\"max\":19,\"price\":385000,\"label\":\"5 - 19 set\"},{\"min\":20,\"max\":49,\"price\":345000,\"label\":\"20 - 49 set\"},{\"min\":50,\"max\":99,\"price\":305000,\"label\":\"50 - 99 set\"},{\"min\":100,\"max\":9999,\"price\":265000,\"label\":\"Từ 100 set trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-golf-dryfit-2",
+    "slug": "huni-golf-dryfit-2",
+    "sku": "HN-GOLF-03",
+    "title": "Set Golf Cao Cấp HDC Masters",
+    "description": "Set golf cao cấp cho các giải golf tầm cỡ quốc gia.",
+    "category": "sport_golf",
+    "material": "Vải Cao Cấp Chống Nắng UPF 50+",
+    "price": 425000,
+    "originalPrice": 550000,
+    "stock": 100,
+    "images": [
+      "/images/08_golf_event_01.jpg",
+      "/images/08_golf_event_02.jpg"
+    ],
+    "features": [
+      "Chống nắng UPF 50+",
+      "Khô nhanh",
+      "Co giãn",
+      "Sang trọng"
+    ],
+    "colors": "[{\"name\":\"Trắng Xanh Golf\",\"code\":\"#F8FAFC\"},{\"name\":\"Xanh Lá\",\"code\":\"#15803D\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":29,\"price\":425000,\"label\":\"10 - 29 bộ\"},{\"min\":30,\"max\":79,\"price\":385000,\"label\":\"30 - 79 bộ\"},{\"min\":80,\"max\":199,\"price\":345000,\"label\":\"80 - 199 bộ\"},{\"min\":200,\"max\":9999,\"price\":305000,\"label\":\"Từ 200 bộ trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-kids-school",
+    "slug": "huni-kids-school",
+    "sku": "HN-KID-01",
+    "title": "Đồng Phục Học Sinh Tiểu Học HDC Kids",
+    "description": "Đồng phục học sinh tiểu học chất lượng cao, an toàn cho các bé.",
+    "category": "school",
+    "material": "Cotton Compact Mềm Mại An Toàn",
+    "price": 185000,
+    "originalPrice": 250000,
+    "stock": 100,
+    "images": [
+      "/images/09_kids_school_01.jpg",
+      "/images/11_kids_polo_products_01.jpg"
+    ],
+    "features": [
+      "Mềm mại an toàn cho da trẻ em",
+      "Thấm hút mồ hôi",
+      "Không phai màu",
+      "Đường may chắc chắn"
+    ],
+    "colors": "[{\"name\":\"Trắng Xanh\",\"code\":\"#FFFFFF\"},{\"name\":\"Xanh Navy Trẻ\",\"code\":\"#1E40AF\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":185000,\"label\":\"20 - 49 bộ\"},{\"min\":50,\"max\":99,\"price\":165000,\"label\":\"50 - 99 bộ\"},{\"min\":100,\"max\":299,\"price\":145000,\"label\":\"100 - 299 bộ\"},{\"min\":300,\"max\":9999,\"price\":125000,\"label\":\"Từ 300 bộ trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-kids-polo",
+    "slug": "huni-kids-polo",
+    "sku": "HN-KID-02",
+    "title": "Áo Polo Trẻ Em HDC Kids Active",
+    "description": "Áo polo trẻ em năng động cho các bé trong mọi hoạt động.",
+    "category": "school",
+    "material": "Cotton Compact 4 Chiều",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/11_kids_polo_products_01.jpg",
+      "/images/11_kids_polo_products_02.jpg"
+    ],
+    "features": [
+      "Mềm mại",
+      "Co giãn 4 chiều",
+      "Bền màu",
+      "Thoáng mát"
+    ],
+    "colors": "[{\"name\":\"Trắng\",\"code\":\"#FFFFFF\"},{\"name\":\"Xanh Sky\",\"code\":\"#60A5FA\"},{\"name\":\"Hồng\",\"code\":\"#F472B6\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":125000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":105000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":89000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-accessories-cap",
+    "slug": "huni-accessories-cap",
+    "sku": "HN-ACC-02",
+    "title": "Mũ Lưỡi Trai Doanh Nghiệp HDC Cap",
+    "description": "Mũ lưỡi trai thêu logo doanh nghiệp — phụ kiện quà tặng sự kiện hoàn hảo.",
+    "category": "accessories",
+    "material": "Vải Kaki Cotton Nhung Cao Cấp",
+    "price": 125000,
+    "originalPrice": 175000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_polo_corporate.jpg",
+      "/images/uniform_corporate_suits.jpg"
+    ],
+    "features": [
+      "Thêu nổi 3D",
+      "Khóa đồng",
+      "Lót thoáng khí",
+      "Form chuẩn"
+    ],
+    "colors": "[{\"name\":\"Navy\",\"code\":\"#0B2042\"},{\"name\":\"Đen\",\"code\":\"#18181B\"}]",
+    "sizes": [
+      "Free Size"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":125000,\"label\":\"20 - 49 chiếc\"},{\"min\":50,\"max\":99,\"price\":105000,\"label\":\"50 - 99 chiếc\"},{\"min\":100,\"max\":299,\"price\":89000,\"label\":\"100 - 299 chiếc\"},{\"min\":300,\"max\":9999,\"price\":75000,\"label\":\"Từ 300 chiếc trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "huni-accessories-tote",
+    "slug": "huni-accessories-tote",
+    "sku": "HN-ACC-03",
+    "title": "Túi Tote Canvas Doanh Nghiệp HDC Eco",
+    "description": "Túi tote canvas thân thiện môi trường — quà tặng cho hội nghị, sự kiện.",
+    "category": "accessories",
+    "material": "Canvas Cotton Dày Dặn",
+    "price": 95000,
+    "originalPrice": 135000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_polo_corporate.jpg",
+      "/images/06_polo_01.jpg"
+    ],
+    "features": [
+      "In logo 1 mặt",
+      "Quai chắc chắn",
+      "Thân thiện môi trường",
+      "Size lớn"
+    ],
+    "colors": "[{\"name\":\"Be Tự Nhiên\",\"code\":\"#F5F5DC\"},{\"name\":\"Đen\",\"code\":\"#18181B\"}]",
+    "sizes": [
+      "Free Size"
+    ],
+    "wholesaleTiers": "[{\"min\":30,\"max\":49,\"price\":95000,\"label\":\"30 - 49 chiếc\"},{\"min\":50,\"max\":99,\"price\":79000,\"label\":\"50 - 99 chiếc\"},{\"min\":100,\"max\":299,\"price\":65000,\"label\":\"100 - 299 chiếc\"},{\"min\":300,\"max\":9999,\"price\":55000,\"label\":\"Từ 300 chiếc trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-accessories-wallet",
+    "slug": "hdc-accessories-wallet",
+    "sku": "HDC-ACC-WALLET",
+    "title": "Ví Da Doanh Nhân HDC Fashion",
+    "description": "Ví da doanh nhân cao cấp với họa tiết văn hóa Việt Nam — kết hợp tinh tế giữa truyền thống và hiện đại.",
+    "category": "accessories",
+    "material": "Da Bò Thật Cao Cấp Khắc Họa Tiết Văn Hóa",
+    "price": 285000,
+    "originalPrice": 385000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/uniform_polo_corporate.jpg"
+    ],
+    "features": [
+      "Da bò thật 100% cao cấp nhập khẩu",
+      "Khắc chìm họa tiết trống đồng Đông Sơn",
+      "12 ngăn đựng thẻ + 2 ngăn tiền mặt",
+      "Khóa kéo YKK Nhật Bản bền bỉ",
+      "Khắc tên cá nhân theo yêu cầu"
+    ],
+    "colors": "[{\"name\":\"Đen Doanh Nhân\",\"code\":\"#18181B\"},{\"name\":\"Nâu Bò\",\"code\":\"#78350F\"}]",
+    "sizes": [
+      "Free Size Nam",
+      "Free Size Nữ"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":285000,\"label\":\"20 - 49 chiếc\"},{\"min\":50,\"max\":99,\"price\":245000,\"label\":\"50 - 99 chiếc\"},{\"min\":100,\"max\":299,\"price\":205000,\"label\":\"100 - 299 chiếc\"},{\"min\":300,\"max\":9999,\"price\":165000,\"label\":\"Từ 300 chiếc trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-accessories-belt",
+    "slug": "hdc-accessories-belt",
+    "sku": "HDC-ACC-BELT",
+    "title": "Thắt Lưng Da Doanh Nhân HDC Fashion",
+    "description": "Thắt lưng da bò thật khóa đồng nguyên khối — phụ kiện không thể thiếu cho quý ông doanh nhân.",
+    "category": "accessories",
+    "material": "Da Bò Thật Khóa Đồng Nguyên Khối",
+    "price": 325000,
+    "originalPrice": 425000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/uniform_polo_corporate.jpg"
+    ],
+    "features": [
+      "Da bò thật 100% xử lý chống xước",
+      "Khóa đồng nguyên khối dập logo HDC",
+      "Đục lỗ thủ công theo số đo từng người",
+      "Có thể cắt ngắn điều chỉnh độ dài",
+      "Tặng kèm hộp quà nắp nam châm cao cấp"
+    ],
+    "colors": "[{\"name\":\"Đen Doanh Nhân\",\"code\":\"#18181B\"},{\"name\":\"Nâu Đậm\",\"code\":\"#451A03\"}]",
+    "sizes": [
+      "105cm",
+      "110cm",
+      "115cm",
+      "120cm"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":325000,\"label\":\"20 - 49 chiếc\"},{\"min\":50,\"max\":99,\"price\":285000,\"label\":\"50 - 99 chiếc\"},{\"min\":100,\"max\":299,\"price\":245000,\"label\":\"100 - 299 chiếc\"},{\"min\":300,\"max\":9999,\"price\":205000,\"label\":\"Từ 300 chiếc trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-shirt-cultural",
+    "slug": "hdc-shirt-cultural",
+    "sku": "HDC-SHIRT-CULTURE",
+    "title": "Sơ Mi Họa Tiết Văn Hóa HDC Heritage",
+    "description": "Sơ mi họa tiết văn hóa độc quyền — tôn vinh bản sắc Việt Nam trong từng đường nét thiết kế.",
+    "category": "corporate",
+    "material": "Cotton Compact 100% In Họa Tiết Văn Hóa",
+    "price": 355000,
+    "originalPrice": 465000,
+    "stock": 100,
+    "images": [
+      "/images/05_bestseller_shirts_05.jpg",
+      "/images/05_bestseller_shirts_01.jpg"
+    ],
+    "features": [
+      "In họa tiết trống đồng Đông Sơn độc quyền",
+      "Vải cotton compact 100% mềm mịn",
+      "Form slimfit tôn dáng người mặc",
+      "Thêu logo nhỏ ở ngực áo",
+      "Có thể tùy chỉnh họa tiết theo yêu cầu"
+    ],
+    "colors": "[{\"name\":\"Trắng Họa Tiết\",\"code\":\"#FFFFFF\"},{\"name\":\"Xanh Nhạt Họa Tiết\",\"code\":\"#BAE6FD\"}]",
+    "sizes": [
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "May đo"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":355000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":305000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":265000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":225000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-accessories-cravat",
+    "slug": "hdc-accessories-cravat",
+    "sku": "HDC-ACC-CRAVAT",
+    "title": "Cravat Họa Tiết Văn Hóa HDC Heritage",
+    "description": "Cravat lụa tơ tằm họa tiết văn hóa — điểm nhấn tinh tế cho bộ trang phục doanh nhân.",
+    "category": "accessories",
+    "material": "Lụa Tơ Tằm Dệt Họa Tiết Văn Hóa",
+    "price": 195000,
+    "originalPrice": 265000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_corporate_suits.jpg",
+      "/images/05_bestseller_shirts_01.jpg"
+    ],
+    "features": [
+      "Lụa tơ tằm cao cấp mềm mại",
+      "Dệt họa tiết trống đồng Đông Sơn nổi",
+      "Dài 145cm chuẩn form cravat quốc tế",
+      "Kèm hộp quà sang trọng",
+      "Có thể thêu logo doanh nghiệp"
+    ],
+    "colors": "[{\"name\":\"Xanh Navy Họa Tiết\",\"code\":\"#1E3A8A\"},{\"name\":\"Xanh Đậm Trống Đồng\",\"code\":\"#0A2540\"}]",
+    "sizes": [
+      "Free Size 145cm"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":195000,\"label\":\"20 - 49 chiếc\"},{\"min\":50,\"max\":99,\"price\":165000,\"label\":\"50 - 99 chiếc\"},{\"min\":100,\"max\":299,\"price\":135000,\"label\":\"100 - 299 chiếc\"},{\"min\":300,\"max\":9999,\"price\":105000,\"label\":\"Từ 300 chiếc trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-polo-kids-white",
+    "slug": "hdc-polo-kids-white",
+    "sku": "HDC-KID-POLO-WHITE",
+    "title": "Áo Polo Trẻ Em HDC Kids Trắng",
+    "description": "Áo polo trẻ em màu trắng — lựa chọn cơ bản và an toàn cho các bé.",
+    "category": "school",
+    "material": "Cotton Compact 4 Chiều Mềm Mại",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/11_kids_polo_products_01.jpg",
+      "/images/11_kids_polo_products_02.jpg"
+    ],
+    "features": [
+      "Vải cotton compact 4 chiều mềm mại",
+      "An toàn cho làn da trẻ em",
+      "Cổ bẻ thoải mái không cấn",
+      "Đường may chắc chắn bền bỉ",
+      "Phù hợp mặc hàng ngày và đi học"
+    ],
+    "colors": "[{\"name\":\"Trắng\",\"code\":\"#FFFFFF\"},{\"name\":\"Trắng Sữa\",\"code\":\"#FEFDF9\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":125000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":105000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":85000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-polo-kids-navy",
+    "slug": "hdc-polo-kids-navy",
+    "sku": "HDC-KID-POLO-NAVY",
+    "title": "Áo Polo Trẻ Em HDC Kids Navy",
+    "description": "Áo polo trẻ em màu navy — lựa chọn thanh lịch cho các bé.",
+    "category": "school",
+    "material": "Cotton Compact 4 Chiều Mềm Mại",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/11_kids_polo_products_02.jpg",
+      "/images/11_kids_polo_products_03.jpg"
+    ],
+    "features": [
+      "Vải cotton compact 4 chiều",
+      "Màu navy thanh lịch, dễ phối",
+      "Thấm hút mồ hôi tốt",
+      "Không phai màu sau nhiều lần giặt",
+      "Phù hợp cho cả bé trai và bé gái"
+    ],
+    "colors": "[{\"name\":\"Xanh Navy\",\"code\":\"#1E3A8A\"},{\"name\":\"Xanh Đen\",\"code\":\"#0A192F\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":125000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":105000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":85000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-polo-kids-red",
+    "slug": "hdc-polo-kids-red",
+    "sku": "HDC-KID-POLO-RED",
+    "title": "Áo Polo Trẻ Em HDC Kids Đỏ",
+    "description": "Áo polo trẻ em màu đỏ — lựa chọn nổi bật cho các bé năng động.",
+    "category": "school",
+    "material": "Cotton Compact 4 Chiều Mềm Mại",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/11_kids_polo_products_03.jpg",
+      "/images/11_kids_polo_products_04.jpg"
+    ],
+    "features": [
+      "Vải cotton compact 4 chiều",
+      "Màu đỏ tươi nổi bật",
+      "Bền màu sau 100 lần giặt",
+      "Co giãn thoải mái vận động",
+      "Phù hợp cho các bé năng động"
+    ],
+    "colors": "[{\"name\":\"Đỏ Tươi\",\"code\":\"#DC2626\"},{\"name\":\"Đỏ Đô\",\"code\":\"#991B1B\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":125000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":105000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":85000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-polo-kids-yellow",
+    "slug": "hdc-polo-kids-yellow",
+    "sku": "HDC-KID-POLO-YELLOW",
+    "title": "Áo Polo Trẻ Em HDC Kids Vàng",
+    "description": "Áo polo trẻ em màu vàng — sắc màu vui nhộn cho các bé yêu.",
+    "category": "school",
+    "material": "Cotton Compact 4 Chiều Mềm Mại",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/11_kids_polo_products_04.jpg",
+      "/images/11_kids_polo_products_05.jpg"
+    ],
+    "features": [
+      "Vải cotton compact 4 chiều",
+      "Màu vàng tươi vui nhộn",
+      "An toàn cho da nhạy cảm",
+      "Đường may tỉ mỉ",
+      "Phù hợp cho bé trai và bé gái"
+    ],
+    "colors": "[{\"name\":\"Vàng Tươi\",\"code\":\"#FCD34D\"},{\"name\":\"Vàng Mù Tạt\",\"code\":\"#D97706\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":125000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":105000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":85000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-polo-kids-brown",
+    "slug": "hdc-polo-kids-brown",
+    "sku": "HDC-KID-POLO-BROWN",
+    "title": "Áo Polo Trẻ Em HDC Kids Nâu",
+    "description": "Áo polo trẻ em màu nâu — lựa chọn ấm áp cho các bé.",
+    "category": "school",
+    "material": "Cotton Compact 4 Chiều Mềm Mại",
+    "price": 145000,
+    "originalPrice": 195000,
+    "stock": 100,
+    "images": [
+      "/images/11_kids_polo_products_05.jpg",
+      "/images/11_kids_polo_products_01.jpg"
+    ],
+    "features": [
+      "Vải cotton compact 4 chiều",
+      "Màu nâu đất ấm áp",
+      "Thấm hút mồ hôi tốt",
+      "Không nhăn, dễ giặt",
+      "Phù hợp phong cách trẻ trung"
+    ],
+    "colors": "[{\"name\":\"Nâu Đất\",\"code\":\"#78350F\"},{\"name\":\"Nâu Nhạt\",\"code\":\"#A16207\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":145000,\"label\":\"20 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":125000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":105000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":85000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
+    "id": "hdc-kid-vest-set",
+    "slug": "hdc-kid-vest-set",
+    "sku": "HDC-KID-VEST",
+    "title": "Bộ Vest Trẻ Em HDC Kids Cao Cấp",
+    "description": "Bộ vest trẻ em cao cấp — trang phục lịch lãm cho các bé trong dịp đặc biệt.",
+    "category": "school",
+    "material": "Kate Nhật Cao Cấp Form Chuẩn",
+    "price": 385000,
+    "originalPrice": 495000,
+    "stock": 100,
+    "images": [
+      "/images/12_kids_bestseller_01.jpg",
+      "/images/12_kids_bestseller_02.jpg"
+    ],
+    "features": [
+      "Vải Kate Nhật cao cấp",
+      "Form vest chuẩn quốc tế",
+      "Đường may tỉ mỉ từng chi tiết",
+      "Có cả bộ nam và nữ",
+      "Phù hợp mặc dự lễ, sự kiện"
+    ],
+    "colors": "[{\"name\":\"Navy Đậm\",\"code\":\"#0A192F\"},{\"name\":\"Xám Ghi\",\"code\":\"#334155\"}]",
+    "sizes": [
+      "110",
+      "120",
+      "130",
+      "140",
+      "150",
+      "160"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":29,\"price\":385000,\"label\":\"10 - 29 bộ\"},{\"min\":30,\"max\":79,\"price\":335000,\"label\":\"30 - 79 bộ\"},{\"min\":80,\"max\":199,\"price\":295000,\"label\":\"80 - 199 bộ\"},{\"min\":200,\"max\":9999,\"price\":255000,\"label\":\"Từ 200 bộ trở lên\"}]",
+    "published": true,
+    "featured": false
+  },
+  {
+    "id": "hdc-kid-preschool-set",
+    "slug": "hdc-kid-preschool-set",
+    "sku": "HDC-KID-PRESCHOOL",
+    "title": "Đồng Phục Mẫu Giáo HDC Kids Xám",
+    "description": "Đồng phục mẫu giáo màu xám — lựa chọn thanh lịch cho các bé mầm non.",
+    "category": "school",
+    "material": "Cotton Compact Mềm Mại An Toàn",
+    "price": 245000,
+    "originalPrice": 325000,
+    "stock": 100,
+    "images": [
+      "/images/12_kids_bestseller_03.jpg",
+      "/images/12_kids_bestseller_04.jpg"
+    ],
+    "features": [
+      "Vải cotton compact mềm mại",
+      "An toàn cho da bé mẫu giáo",
+      "Thấm hút mồ hôi tốt",
+      "Không phai màu",
+      "Đường may chắc chắn chịu được vận động"
+    ],
+    "colors": "[{\"name\":\"Xám Ghi\",\"code\":\"#9CA3AF\"},{\"name\":\"Xám Đậm\",\"code\":\"#4B5563\"}]",
+    "sizes": [
+      "100",
+      "110",
+      "120",
+      "130",
+      "140",
+      "150"
+    ],
+    "wholesaleTiers": "[{\"min\":20,\"max\":49,\"price\":245000,\"label\":\"20 - 49 bộ\"},{\"min\":50,\"max\":99,\"price\":215000,\"label\":\"50 - 99 bộ\"},{\"min\":100,\"max\":299,\"price\":185000,\"label\":\"100 - 299 bộ\"},{\"min\":300,\"max\":9999,\"price\":155000,\"label\":\"Từ 300 bộ trở lên\"}]",
+    "published": true,
+    "featured": false
+  }
+]

@@ -2,6 +2,8 @@ using HuniBackend.Domain.Entities;
 
 namespace HuniBackend.Application.Interfaces;
 
+public record ChatMessageDto(string Role, string Text);
+
 public interface IMailService
 {
     Task SendOrderConfirmationAsync(Order order);
@@ -10,5 +12,5 @@ public interface IMailService
 
 public interface IChatService
 {
-    Task<string> GetConsultantResponseAsync(string userMessage, List<string>? history = null);
+    Task<string> GetConsultantResponseAsync(List<ChatMessageDto> messages);
 }

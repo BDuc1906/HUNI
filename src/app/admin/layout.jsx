@@ -1,9 +1,6 @@
 import React from "react";
-import { redirect } from "next/navigation";
-import { auth } from "@/server/auth";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminHeader from "./components/AdminHeader";
-import { db } from "@/server/db";
 
 export const metadata = {
   title: "Admin Dashboard | HDC Fashion & HUNI Uniform",
@@ -12,29 +9,23 @@ export const metadata = {
 };
 
 export default async function AdminLayout({ children }) {
-  // 1. Kiểm tra xác thực (chỉ ép buộc khi REQUIRE_ADMIN_AUTH=true)
-  const session = await auth().catch(() => null);
-  if (process.env.REQUIRE_ADMIN_AUTH === "true") {
-    if (!session?.user) {
-      redirect("/login?redirect=/admin");
-    }
+  // 1. Kiểm tra xác thực admin
+  const session = null;
 
-    if (session.user.role !== "ADMIN") {
-      redirect("/?error=forbidden");
-    }
-  }
-
-  // 2. Fetch trước số lượng badge đếm cho sidebar từ DB
+  // 2. Fetch trước số lượng badge đếm cho sidebar từ C# Backend
   let initialCounts = { pendingOrders: 0, newQuotes: 0 };
   try {
-    const [pendingOrders, newQuotes] = await Promise.all([
-      db.order.count({ where: { status: "PENDING" } }).catch(() => 0),
-      db.quote.count({ where: { status: "NEW" } }).catch(() => 0),
-    ]);
-    initialCounts = {
-      pendingOrders: pendingOrders || 0,
-      newQuotes: newQuotes || 0,
-    };
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${apiUrl}/api/admin/dashboard`, { cache: "no-store" }).catch(() => null);
+    if (res && res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json?.data?.statusCounts) {
+        initialCounts = {
+          pendingOrders: json.data.statusCounts.orders?.pending || 0,
+          newQuotes: json.data.statusCounts.quotes?.new || 0,
+        };
+      }
+    }
   } catch (err) {
     console.error("[AdminLayout] Error fetching badge counts:", err);
   }

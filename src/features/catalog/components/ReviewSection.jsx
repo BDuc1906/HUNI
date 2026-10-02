@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { apiClient } from "@/shared/services/apiClient";
 import {
   Star,
   MessageSquare,
@@ -39,12 +40,11 @@ export default function ReviewSection({ productId }) {
     if (!productId) return;
     try {
       setLoading(true);
-      const res = await fetch(`/api/reviews?productId=${encodeURIComponent(productId)}`);
-      if (res.ok) {
-        const data = await res.json();
-        setReviews(data.reviews || []);
-        setAvgRating(data.avgRating ?? 0);
-        setTotal(data.total ?? 0);
+      const data = await apiClient.get(`/api/reviews?productId=${encodeURIComponent(productId)}`);
+      if (data.success) {
+        setReviews(data.reviews || data.data?.reviews || []);
+        setAvgRating(data.avgRating ?? data.data?.avgRating ?? 0);
+        setTotal(data.total ?? data.data?.total ?? 0);
         setCanReview(Boolean(data.canReview));
         setIsAuthenticated(Boolean(data.isAuthenticated));
       }
@@ -71,20 +71,14 @@ export default function ReviewSection({ productId }) {
       setErrorMsg("");
       setSuccessMsg("");
 
-      const res = await fetch("/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId,
-          rating,
-          content: content.trim(),
-        }),
+      const res = await apiClient.post("/api/reviews", {
+        productId,
+        rating,
+        content: content.trim(),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErrorMsg(data.error || "Gửi đánh giá không thành công.");
+      if (!res.success) {
+        setErrorMsg(res.error || "Gửi đánh giá không thành công.");
       } else {
         setSuccessMsg("Cảm ơn bạn! Đánh giá đã được ghi nhận thành công.");
         setContent("");

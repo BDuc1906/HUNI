@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
+import { apiClient } from "@/shared/services/apiClient";
 import {
   Phone,
   Mail,
@@ -203,23 +204,17 @@ export default function ContactView() {
         .filter(Boolean)
         .join(" | ");
 
-      const response = await fetch("/api/quotes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: fullName.trim(),
-          phone: cleanPhone,
-          email: email.trim() || undefined,
-          company: company.trim() || undefined,
-          category: category,
-          quantity: parsedQty,
-          notes: payloadNotes,
-        }),
+      const result = await apiClient.post("/api/quotes", {
+        fullName: fullName.trim(),
+        phone: cleanPhone,
+        email: email.trim() || undefined,
+        company: company.trim() || undefined,
+        category: category,
+        quantity: parsedQty,
+        notes: payloadNotes,
       });
 
-      const result = await response.json();
-
-      if (response.ok && result.success) {
+      if (result.success) {
         setSubmittedData({
           quoteId: result.quoteId || "HDC-" + Math.floor(100000 + Math.random() * 900000),
           fullName,

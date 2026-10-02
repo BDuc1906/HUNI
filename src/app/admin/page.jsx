@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Package,
 } from "lucide-react";
-import { db } from "@/server/db";
 import StatsCard from "./components/StatsCard";
 import OrderStatusChart from "./components/OrderStatusChart";
 import RecentOrdersTable from "./components/RecentOrdersTable";
@@ -30,7 +29,6 @@ function formatVND(amount) {
 }
 
 export default async function AdminDashboardPage() {
-  // Fetch trực tiếp dữ liệu thống kê từ PostgreSQL
   let totalOrders = 0;
   let totalQuotes = 0;
   let totalCustomers = 0;
@@ -44,60 +42,27 @@ export default async function AdminDashboardPage() {
   let recentQuotes = [];
 
   try {
-    const [
-      ordersCount,
-      quotesCount,
-      customersCount,
-      revAgg,
-      pendingCount,
-      producingCount,
-      completedCount,
-      cancelledCount,
-      newQuotesCount,
-      latestOrders,
-      latestQuotes,
-    ] = await Promise.all([
-      db.order.count().catch(() => 0),
-      db.quote.count().catch(() => 0),
-      db.customer.count().catch(() => 0),
-      db.order
-        .aggregate({
-          _sum: { total: true },
-          where: { status: { not: "CANCELLED" } },
-        })
-        .catch(() => ({ _sum: { total: 0 } })),
-      db.order.count({ where: { status: "PENDING" } }).catch(() => 0),
-      db.order.count({ where: { status: "PRODUCING" } }).catch(() => 0),
-      db.order.count({ where: { status: "COMPLETED" } }).catch(() => 0),
-      db.order.count({ where: { status: "CANCELLED" } }).catch(() => 0),
-      db.quote.count({ where: { status: "NEW" } }).catch(() => 0),
-      db.order
-        .findMany({
-          take: 5,
-          orderBy: { createdAt: "desc" },
-          include: { customer: true, items: true },
-        })
-        .catch(() => []),
-      db.quote
-        .findMany({
-          take: 5,
-          orderBy: { createdAt: "desc" },
-          include: { customer: true },
-        })
-        .catch(() => []),
-    ]);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${apiUrl}/api/admin/dashboard`, { cache: "no-store" }).catch(() => null);
+    if (res && res.ok) {
+      const json = await res.json().catch(() => null);
+      const data = json?.data;
+      if (data) {
+        totalOrders = data.stats?.totalOrders || 0;
+        totalRevenue = data.stats?.totalRevenue || 0;
+        totalQuotes = data.stats?.totalQuotes || 0;
+        totalCustomers = data.stats?.totalCustomers || 0;
 
-    totalOrders = ordersCount;
-    totalQuotes = quotesCount;
-    totalCustomers = customersCount;
-    totalRevenue = revAgg?._sum?.total || 0;
-    pendingOrders = pendingCount;
-    producingOrders = producingCount;
-    completedOrders = completedCount;
-    cancelledOrders = cancelledCount;
-    newQuotes = newQuotesCount;
-    recentOrders = latestOrders;
-    recentQuotes = latestQuotes;
+        pendingOrders = data.statusCounts?.orders?.pending || 0;
+        producingOrders = data.statusCounts?.orders?.producing || 0;
+        completedOrders = data.statusCounts?.orders?.completed || 0;
+        cancelledOrders = data.statusCounts?.orders?.cancelled || 0;
+        newQuotes = data.statusCounts?.quotes?.new || 0;
+
+        recentOrders = data.recentOrders || [];
+        recentQuotes = data.recentQuotes || [];
+      }
+    }
   } catch (error) {
     console.error("[AdminDashboard] Error fetching stats:", error);
   }

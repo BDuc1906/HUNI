@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { calculateTierPrice } from "@/shared/lib/pricing";
+import { apiClient } from "@/shared/services/apiClient";
 
 const ShopContext = createContext(null);
 
@@ -302,14 +303,8 @@ export function ShopProvider({ children }) {
       vatInfo: orderData.vatInfo || undefined,
     };
 
-    // Gọi API
-    const response = await fetch("/api/orders", {
-      method: "POST",
-      headers: { "Content-Type": "application/json; charset=utf-8" },
-      body: JSON.stringify(apiPayload),
-    });
-
-    const result = await response.json();
+    // Gọi API C# Backend
+    const result = await apiClient.post("/api/orders", apiPayload);
 
     if (!result.success) {
       // Nếu là lỗi voucher → xóa voucher đã áp dụng để user biết

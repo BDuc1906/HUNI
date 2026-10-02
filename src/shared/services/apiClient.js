@@ -4,6 +4,13 @@
 // Tuân thủ 100% API_CONTRACT.md (Response Envelope & HTTP Status Codes)
 // ==================================================
 
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
+function getToken() {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("huni_token") || localStorage.getItem("token");
+}
+
 /**
  * Hàm gọi API chung với khả năng xử lý tự động Response Envelope và HTTP Status Codes
  * @param {string} endpoint - Đường dẫn API (ví dụ: "/api/products")
@@ -12,14 +19,18 @@
  */
 export async function apiFetch(endpoint, options = {}) {
   const { headers = {}, ...customOptions } = options;
+  const token = getToken();
+
+  const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
 
   const defaultHeaders = {
     "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...headers,
   };
 
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(url, {
       ...customOptions,
       headers: defaultHeaders,
     });
@@ -430,9 +441,52 @@ export const authService = {
    * Đăng ký tài khoản khách hàng mới
    */
   async register({ fullName, email, phone, password }) {
-    return apiFetch("/api/register", {
+    return apiFetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({ fullName, email, phone, password }),
     });
   },
+
+  /**
+   * Đăng nhập tài khoản bằng email & password
+   */
+  async login({ email, password }) {
+    const res = await apiFetch("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    });
+    if (res.success && res.token && typeof window !== "undefined") {
+      localStorage.setItem("huni_token", res.token);
+      localStorage.setItem("huni_user", JSON.stringify(res.user));
+    }
+    return res;
+  },
+
+  /**
+   * Lấy thông tin tài khoản hiện tại
+   */
+  async getMe() {
+    return apiFetch("/api/auth/me");
+  },
+
+  /**
+   * Đăng xuất tài khoản
+   */
+  logout() {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("huni_token");
+      localStorage.removeItem("huni_user");
+    }
+  },
 };
+
+export const apiClient = {
+  get: (path, options = {}) => apiFetch(path, { ...options, method: 'GET' }),
+  post: (path, body, options = {}) => apiFetch(path, { ...options, method: 'POST', body: JSON.stringify(body) }),
+  put: (path, body, options = {}) => apiFetch(path, { ...options, method: 'PUT', body: JSON.stringify(body) }),
+  patch: (path, body, options = {}) => apiFetch(path, { ...options, method: 'PATCH', body: JSON.stringify(body) }),
+  delete: (path, body, options = {}) => apiFetch(path, { ...options, method: 'DELETE', body: body ? JSON.stringify(body) : undefined }),
+};
+
+export default apiClient;
+

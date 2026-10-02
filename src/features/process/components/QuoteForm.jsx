@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, CircleAlert, Loader2, Send } from "lucide-react";
+import { apiClient } from "@/shared/services/apiClient";
 
 const initialForm = {
   fullName: "",
@@ -89,22 +90,17 @@ export default function QuoteForm() {
 
     try {
       setStatus({ type: "loading", message: "Đang gửi yêu cầu báo giá..." });
-      const response = await fetch("/api/quotes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName: form.fullName.trim(),
-          company: form.company.trim(),
-          phone: form.phone.trim(),
-          email: form.email.trim(),
-          category: form.category,
-          quantity: Number(form.quantity),
-          notes,
-        }),
+      const result = await apiClient.post("/api/quotes", {
+        fullName: form.fullName.trim(),
+        company: form.company.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim(),
+        category: form.category,
+        quantity: Number(form.quantity),
+        notes,
       });
-      const result = await response.json().catch(() => ({}));
 
-      if (!response.ok || !result.success) {
+      if (!result.success) {
         const apiMessage = result?.details?.[0]?.message || result?.error;
         throw new Error(apiMessage || "Không thể gửi yêu cầu. Vui lòng thử lại.");
       }

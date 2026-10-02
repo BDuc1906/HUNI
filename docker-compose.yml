@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  # C# .NET 9 Backend
+  backend:
+    build:
+      context: ./HuniBackend
+      dockerfile: Dockerfile
+    container_name: huni-backend
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=${DATABASE_URL}
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
+      - Gemini__ApiKey=${GEMINI_API_KEY}
+      - Email__Password=${EMAIL_PASSWORD}
+      - Cors__AllowedOrigins__0=http://localhost:3000
+    restart: unless-stopped
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: huni-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    restart: unless-stopped

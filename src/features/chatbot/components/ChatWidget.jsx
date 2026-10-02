@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Bot, X, Send, Loader2 } from "lucide-react";
+import { chatService } from "@/shared/services/apiClient";
 
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
@@ -17,13 +18,8 @@ export default function ChatWidget() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
-      });
-      const data = await res.json();
-      setMessages([...next, { role: "model", text: data.reply }]);
+      const data = await chatService.sendMessage(next);
+      setMessages([...next, { role: "model", text: data.reply || "Dạ HDC sẵn sàng hỗ trợ quý khách!" }]);
     } catch {
       setMessages([...next, { role: "model", text: "Có lỗi xảy ra, vui lòng thử lại." }]);
     } finally {
