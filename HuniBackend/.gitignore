@@ -1,0 +1,11 @@
+# HuniBackend .gitignore
+appsettings.Development.json
+appsettings.Production.json
+.env
+*.user
+bin/
+obj/
+.vs/
+.idea/
+*.suo
+*.userosscache

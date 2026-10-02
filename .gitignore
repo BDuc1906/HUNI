@@ -34,3 +34,14 @@ yarn-error.log*
 .env*
 !.env.example
 
+# .NET / C# build artifacts & visual studio
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.suo
+.vs/
+**/appsettings.Development.json
+
