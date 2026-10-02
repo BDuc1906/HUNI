@@ -46,8 +46,8 @@ const GOLF_FEATURES = [
 // ==================================================
 const GOLF_GALLERY = [
   { img: "/images/08_golf_event_01.jpg", label: "Giải Golf Doanh Nhân" },
-  { img: "/images/08_golf_event_02.jpg", label: "Kỷ Niệm 30 Năm DNT" },
-  { img: "/images/08_golf_event_03.jpg", label: "Tập Thể Golfers" },
+  { img: "/images/07_corporate_golf_03.jpg", label: "Kỷ Niệm 30 Năm DNT" },
+  { img: "/images/07_corporate_golf_04.jpg", label: "Tập Thể Golfers" },
 ];
 
 export default function GolfSection() {
@@ -151,7 +151,9 @@ export default function GolfSection() {
                   alt={item.label}
                   fill
                   sizes="(max-width: 640px) 100vw, 33vw"
+                  quality={85}
                   className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                  style={{ imageRendering: "-webkit-optimize-contrast" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#004f5e]/80 via-transparent to-transparent" />
 

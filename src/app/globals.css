@@ -127,26 +127,24 @@ main[id] {
 img {
   max-width: 100%;
   height: auto;
-  /* Chống vỡ răng cưa/jagged edges - render mượt */
+  image-rendering: -webkit-optimize-contrast;
   image-rendering: auto;
-  /* Anti-aliasing cho edge mềm mại */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Hỗ trợ high-DPI screens */
   backface-visibility: hidden;
-  /* Fix cho blurry/jagged images khi transform */
+  -webkit-backface-visibility: hidden;
   transform: translateZ(0);
-  /* Smooth scaling interpolation */
   -webkit-interpolation-mode: bicubic;
 }
 
 /* Next.js Image wrapper không bị dãn */
 [data-nimg] {
   max-width: 100%;
-  /* Đảm bảo ảnh Next.js render mượt */
+  image-rendering: -webkit-optimize-contrast;
   image-rendering: auto;
-  /* Hỗ trợ GPU acceleration cho smooth rendering */
   transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
   -webkit-interpolation-mode: bicubic;
 }
 

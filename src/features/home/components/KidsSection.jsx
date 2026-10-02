@@ -57,10 +57,10 @@ const KIDS_REASONS = [
 // ẢNH HỌC SINH (dùng ảnh có sẵn)
 // ==================================================
 const KIDS_GALLERY = [
-  { img: "/images/09_kids_school_01.jpg", label: "Học sinh tiểu học" },
-  { img: "/images/10_kids_why_01.jpg", label: "Hoạt động lớp học" },
-  { img: "/images/11_kids_polo_products_01.jpg", label: "Polo Kids" },
-  { img: "/images/12_kids_bestseller_01.jpg", label: "Đồng phục Kids" },
+  { img: "/images/09_kids_school_03.jpg", label: "Học sinh tiểu học" },
+  { img: "/images/10_kids_why_02.jpg", label: "Hoạt động lớp học" },
+  { img: "/images/06_polo_01.jpg", label: "Polo Kids" },
+  { img: "/images/09_kids_school_01.jpg", label: "Đồng phục Kids" },
 ];
 
 export default function KidsSection() {
@@ -181,7 +181,9 @@ export default function KidsSection() {
                     alt={item.label}
                     fill
                     sizes="(max-width: 640px) 50vw, 25vw"
+                    quality={85}
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                    style={{ imageRendering: "-webkit-optimize-contrast" }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#004f5e]/70 via-transparent to-transparent" />
 

@@ -11,7 +11,7 @@ import { Camera, X, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
    ========================================================= */
 const ALBUM = [
   {
-    src: "/images/uniform_school_students.jpg",
+    src: "/images/09_kids_school_03.jpg",
     caption: "Đồng phục học sinh chuẩn quốc tế",
     client: "Hệ thống trường liên cấp",
     tag: "Trường học",
@@ -39,21 +39,21 @@ const ALBUM = [
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/12_kids_bestseller_01.jpg",
+    src: "/images/10_kids_why_02.jpg",
     caption: "Đồng phục mẫu giáo ngộ nghĩnh",
     client: "Trường Mầm non Quốc tế",
     tag: "Mẫu giáo",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/12_kids_bestseller_02.jpg",
+    src: "/images/09_kids_school_01.jpg",
     caption: "Đồng phục thể dục năng động",
     client: "Trường Tiểu học",
     tag: "Thể dục",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/12_kids_bestseller_03.jpg",
+    src: "/images/02_materials_01.jpg",
     caption: "Đồng phục trung học hiện đại",
     client: "Trường THPT Chuyên",
     tag: "Học sinh",
@@ -74,14 +74,14 @@ const ALBUM = [
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/08_golf_event_02.jpg",
+    src: "/images/07_corporate_golf_03.jpg",
     caption: "Đồng phục đồng bộ toàn giải",
     client: "Giải Golf từ thiện",
     tag: "Giải Golf",
     span: "col-span-1 row-span-1",
   },
   {
-    src: "/images/08_golf_event_03.jpg",
+    src: "/images/02_materials_02.jpg",
     caption: "Trao giải cùng HDC",
     client: "Giải Golf Doanh Nghiệp",
     tag: "Sự kiện",
@@ -169,7 +169,7 @@ export default function GallerySection() {
                 alt={item.caption}
                 fill
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                quality={80}
+                quality={85}
                 className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
               />
 
@@ -262,7 +262,7 @@ export default function GallerySection() {
               alt={ALBUM[lightboxIndex].caption}
               fill
               sizes="100vw"
-              quality={90}
+              quality={95}
               className="object-contain"
               priority
             />

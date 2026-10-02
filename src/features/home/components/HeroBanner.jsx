@@ -257,11 +257,11 @@ export default function HeroBanner() {
                 alt={s.title + " " + s.titleHighlight}
                 fill
                 sizes="(min-width: 1024px) 68vw, 100vw"
-                quality={100}
-                unoptimized={true}
+                quality={90}
                 priority={idx === 0}
                 loading={idx === 0 ? undefined : "eager"}
                 className="object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)]"
+                style={{ imageRendering: "-webkit-optimize-contrast" }}
               />
 
               {/* Overlay mobile/tablet: tối dần từ dưới lên để chữ dễ đọc */}

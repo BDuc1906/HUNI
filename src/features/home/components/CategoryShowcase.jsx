@@ -23,7 +23,7 @@ const CATEGORIES_DATA = [
     name: "Đồng Phục Doanh Nghiệp",
     shortName: "Doanh Nghiệp",
     desc: "Polo, sơ mi, áo thun, đồng phục công sở chuẩn form",
-    image: "/images/uniform_polo_corporate.jpg",
+    image: "/images/06_polo_01.jpg",
     icon: Briefcase,
     href: "/dong-phuc-doanh-nghiep",
     color: "from-brand-400 to-brand-600",
@@ -47,7 +47,7 @@ const CATEGORIES_DATA = [
     name: "Đồng Phục Thể Thao & Golf",
     shortName: "Thể Thao",
     desc: "Golf, Pickleball, Marathon, Team building năng động",
-    image: "/images/uniform_sport_golf.jpg",
+    image: "/images/08_golf_event_01.jpg",
     icon: Activity,
     href: "/dong-phuc-the-thao",
     color: "from-emerald-400 to-emerald-600",
@@ -59,7 +59,7 @@ const CATEGORIES_DATA = [
     name: "Đồng Phục Trường Học",
     shortName: "Trường Học",
     desc: "Học sinh các cấp, sinh viên, giáo viên chuẩn nề nếp",
-    image: "/images/uniform_school_students.jpg",
+    image: "/images/09_kids_school_03.jpg",
     icon: GraduationCap,
     href: "/dong-phuc-truong-hoc",
     color: "from-blue-500 to-blue-700",
@@ -72,7 +72,7 @@ const CATEGORIES_DATA = [
     shortName: "Phụ Kiện",
     desc: "Mũ nón, cặp da, cà vạt, túi quà tặng thương hiệu",
     // ✅ ĐÃ SỬA: từ uniform_accessories.jpg → 04_culture_accessories_01.jpg
-    image: "/images/04_culture_accessories_05.jpg",
+    image: "/images/04_culture_accessories_01.jpg",
     icon: PackageCheck,
     href: "/phu-kien-doanh-nghiep",
     color: "from-purple-500 to-purple-700",
@@ -128,7 +128,9 @@ export default function CategoryShowcase() {
                     alt={cat.name}
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    quality={85}
                     className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                    style={{ imageRendering: "-webkit-optimize-contrast" }}
                   />
 
                   {/* Gradient overlay */}
