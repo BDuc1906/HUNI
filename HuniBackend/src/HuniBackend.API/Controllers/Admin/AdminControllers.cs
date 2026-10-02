@@ -17,19 +17,39 @@ public class AdminDashboardController(AppDbContext db) : BaseApiController
     [HttpGet]
     public async Task<IActionResult> GetDashboardStats()
     {
-        var totalOrders = await db.Orders.CountAsync();
-        var pendingOrders = await db.Orders.CountAsync(o => o.Status == OrderStatus.PENDING);
-        var producingOrders = await db.Orders.CountAsync(o => o.Status == OrderStatus.PRODUCING);
-        var completedOrders = await db.Orders.CountAsync(o => o.Status == OrderStatus.COMPLETED);
-        var cancelledOrders = await db.Orders.CountAsync(o => o.Status == OrderStatus.CANCELLED);
+        var orderStats = await db.Orders.AsNoTracking()
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                TotalOrders = g.Count(),
+                PendingOrders = g.Count(o => o.Status == OrderStatus.PENDING),
+                ProducingOrders = g.Count(o => o.Status == OrderStatus.PRODUCING),
+                CompletedOrders = g.Count(o => o.Status == OrderStatus.COMPLETED),
+                CancelledOrders = g.Count(o => o.Status == OrderStatus.CANCELLED),
+                TotalRevenue = g.Where(o => o.Status != OrderStatus.CANCELLED).Sum(o => (long)o.Total)
+            })
+            .FirstOrDefaultAsync();
 
-        var totalRevenue = await db.Orders
-            .Where(o => o.Status != OrderStatus.CANCELLED)
-            .SumAsync(o => (long)o.Total);
+        var quoteStats = await db.Quotes.AsNoTracking()
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                TotalQuotes = g.Count(),
+                NewQuotes = g.Count(q => q.Status == QuoteStatus.NEW)
+            })
+            .FirstOrDefaultAsync();
 
-        var totalQuotes = await db.Quotes.CountAsync();
-        var newQuotes = await db.Quotes.CountAsync(q => q.Status == QuoteStatus.NEW);
-        var totalCustomers = await db.Customers.CountAsync();
+        var totalCustomers = await db.Customers.AsNoTracking().CountAsync();
+
+        var totalOrders = orderStats?.TotalOrders ?? 0;
+        var pendingOrders = orderStats?.PendingOrders ?? 0;
+        var producingOrders = orderStats?.ProducingOrders ?? 0;
+        var completedOrders = orderStats?.CompletedOrders ?? 0;
+        var cancelledOrders = orderStats?.CancelledOrders ?? 0;
+        var totalRevenue = orderStats?.TotalRevenue ?? 0L;
+
+        var totalQuotes = quoteStats?.TotalQuotes ?? 0;
+        var newQuotes = quoteStats?.NewQuotes ?? 0;
 
         var recentOrders = await db.Orders
             .AsNoTracking()

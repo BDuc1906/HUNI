@@ -3,14 +3,16 @@ using HuniBackend.Application.Interfaces;
 using HuniBackend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 
 namespace HuniBackend.API.Controllers;
 
 [Route("api/products")]
-public class ProductsController(IProductService productService) : BaseApiController
+public class ProductsController(IProductService productService, IOutputCacheStore? cacheStore = null) : BaseApiController
 {
     [HttpGet]
     [AllowAnonymous]
+    [OutputCache(PolicyName = "Products5min")]
     public async Task<IActionResult> GetProducts(
         [FromQuery] string? category,
         [FromQuery] string? search,
@@ -47,6 +49,7 @@ public class ProductsController(IProductService productService) : BaseApiControl
 
     [HttpGet("{id}")]
     [AllowAnonymous]
+    [OutputCache(PolicyName = "Products5min")]
     public async Task<IActionResult> GetProduct(string id)
     {
         var product = await productService.GetProductByIdOrSlugAsync(id);
@@ -89,6 +92,11 @@ public class ProductsController(IProductService productService) : BaseApiControl
             return ApiConflict(error ?? "Không thể tạo sản phẩm.");
         }
 
+        if (cacheStore != null)
+        {
+            await cacheStore.EvictByTagAsync("products", default);
+        }
+
         return ApiCreated(created!, "Tạo sản phẩm thành công");
     }
 
@@ -106,6 +114,11 @@ public class ProductsController(IProductService productService) : BaseApiControl
             return ApiConflict(error ?? "Cập nhật sản phẩm thất bại.");
         }
 
+        if (cacheStore != null)
+        {
+            await cacheStore.EvictByTagAsync("products", default);
+        }
+
         return ApiOk(updated!, "Cập nhật sản phẩm thành công");
     }
 
@@ -117,6 +130,11 @@ public class ProductsController(IProductService productService) : BaseApiControl
         if (!deleted)
         {
             return ApiNotFound("Không tìm thấy sản phẩm");
+        }
+
+        if (cacheStore != null)
+        {
+            await cacheStore.EvictByTagAsync("products", default);
         }
 
         return ApiOk(new { id }, "Xóa sản phẩm thành công");

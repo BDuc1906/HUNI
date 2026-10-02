@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using System.Text;
 using FluentValidation;
 using HuniBackend.API.Middleware;
@@ -7,15 +8,49 @@ using HuniBackend.Application.Validators;
 using HuniBackend.Infrastructure.Data;
 using HuniBackend.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ─── Services ───────────────────────────────────────────────────
-// 1. Database (PostgreSQL via Npgsql, or InMemory for Testing)
+// Disable Server header in Kestrel
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.AddServerHeader = false;
+});
+
+// ─── 0. Serilog Production Logging ─────────────────────────────────
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("MachineName", Environment.MachineName)
+    .WriteTo.Console(outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(
+        path: "logs/huni-.log",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 30,
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// ─── 1. Database (PostgreSQL via Npgsql, or InMemory for Testing) ──
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    connectionString = "Host=localhost;Port=5433;Database=hdcfashion;Username=postgres;Password=postgres;SSL Mode=Prefer";
+}
+
 builder.Services.AddDbContext<AppDbContext>(opt =>
 {
     if (builder.Environment.EnvironmentName == "Testing")
@@ -30,9 +65,9 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 });
 builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
 
-// 2. CORS — cho phép Next.js frontend gọi
+// ─── 2. CORS ───────────────────────────────────────────────────────
 var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() 
-                     ?? ["http://localhost:3000"];
+                     ?? ["http://localhost:3000", "https://hunistore.com", "https://www.hunistore.com"];
 builder.Services.AddCors(opt =>
     opt.AddPolicy("NextJsPolicy", p =>
         p.WithOrigins(allowedOrigins)
@@ -40,7 +75,12 @@ builder.Services.AddCors(opt =>
          .AllowAnyHeader()
          .AllowCredentials()));
 
-// 3. JWT Authentication
+// ─── 3. JWT Authentication ────────────────────────────────────────
+var rawSecret = builder.Configuration.GetSection("Jwt")["SecretKey"];
+var secretKey = string.IsNullOrWhiteSpace(rawSecret)
+    ? "huni-backend-super-secret-key-256bit-minimum-here-please-change-in-production!"
+    : rawSecret;
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {
@@ -53,8 +93,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwt["Issuer"] ?? "HuniBackend",
             ValidAudience = jwt["Audience"] ?? "HuniClient",
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwt["SecretKey"] ?? "huni-backend-super-secret-key-256bit-minimum-here-please-change-in-production!"))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
     });
 
@@ -67,7 +106,40 @@ builder.Services.AddControllers()
     });
 builder.Services.AddEndpointsApiExplorer();
 
-// 4. Swagger UI với cấu hình JWT Bearer
+// ─── 4. Response Compression ───────────────────────────────────────
+builder.Services.AddResponseCompression(opt =>
+{
+    opt.EnableForHttps = true;
+    opt.Providers.Add<BrotliCompressionProvider>();
+    opt.Providers.Add<GzipCompressionProvider>();
+    opt.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/json"]);
+});
+builder.Services.Configure<BrotliCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest);
+builder.Services.Configure<GzipCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest);
+
+// ─── 5. Output Cache ───────────────────────────────────────────────
+builder.Services.AddOutputCache(opt =>
+{
+    opt.AddPolicy("Products5min", p => p
+        .Expire(TimeSpan.FromMinutes(5))
+        .Tag("products"));
+    opt.AddPolicy("Static1h", p => p
+        .Expire(TimeSpan.FromHours(1))
+        .Tag("static"));
+});
+
+// ─── 6. Health Checks ──────────────────────────────────────────────
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>("database")
+    .AddCheck("gemini_api", () =>
+    {
+        var apiKey = builder.Configuration["Gemini:ApiKey"];
+        return !string.IsNullOrEmpty(apiKey) && apiKey != "YOUR_GEMINI_API_KEY"
+            ? HealthCheckResult.Healthy("Gemini API key configured")
+            : HealthCheckResult.Degraded("Gemini API key not configured");
+    });
+
+// ─── 7. Swagger UI ─────────────────────────────────────────────────
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -103,10 +175,9 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// 5. Validators (FluentValidation)
+// ─── 8. Validators & Services DI ───────────────────────────────────
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
-// 6. Application & Infrastructure Services Dependency Injection
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
 builder.Services.AddSingleton<ILoginAttemptTracker, LoginAttemptTracker>();
@@ -119,38 +190,63 @@ builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddSingleton<IChatService, GeminiChatService>();
 
-// 7. Lowercase URLs
 builder.Services.AddRouting(opt => { opt.LowercaseUrls = true; });
 
-// ─── Pipeline ───────────────────────────────────────────────────
+// ─── Pipeline ─────────────────────────────────────────────────────
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
+app.UseResponseCompression();
+app.UseRouting();
+app.UseCors("NextJsPolicy");
+app.UseOutputCache();
+
+// Swagger chỉ bật ở Development
+if (app.Environment.IsDevelopment())
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "HUNI API v1");
-    c.RoutePrefix = "swagger";
-});
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "HUNI API v1");
+        c.RoutePrefix = "swagger";
+    });
+}
 
 app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<OrderRateLimitMiddleware>();
 
 app.UseHttpsRedirection();
-app.UseCors("NextJsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-// Health check endpoint
-app.MapGet("/health", () => Results.Ok(new
+// Health Check Endpoints
+app.MapHealthChecks("/health", new HealthCheckOptions
 {
-    status = "healthy",
-    timestamp = DateTime.UtcNow,
-    service = "HuniBackend (.NET 9)"
-}));
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var result = new
+        {
+            status = report.Status.ToString().ToLower(),
+            timestamp = DateTime.UtcNow,
+            service = "HuniBackend",
+            version = "1.0.0",
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString().ToLower(),
+                duration = e.Value.Duration.TotalMilliseconds,
+                description = e.Value.Description
+            })
+        };
+        await context.Response.WriteAsJsonAsync(result);
+    }
+});
 
-// Tự động apply migrations khi khởi động (nếu DB đã kết nối)
+app.MapGet("/ping", () => "pong");
+
+// Tự động apply migrations khi khởi động (chỉ ở Development)
 if (app.Environment.IsDevelopment())
 {
     try
