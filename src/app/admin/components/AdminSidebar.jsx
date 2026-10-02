@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   ShoppingBag,
@@ -20,7 +19,7 @@ import {
   MessageSquare,
   RotateCcw,
 } from "lucide-react";
-import { adminService } from "@/shared/services/apiClient";
+import { adminService, authService } from "@/shared/services/apiClient";
 
 const NAV_ITEMS = [
   {
@@ -244,7 +243,8 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
 
   const handleLogout = async () => {
     if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi trang Quản trị?")) {
-      await signOut({ callbackUrl: "/login" });
+      authService.logout();
+      window.location.href = "/login";
     }
   };
 

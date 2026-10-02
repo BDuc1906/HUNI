@@ -458,6 +458,7 @@ export const authService = {
     if (res.success && res.token && typeof window !== "undefined") {
       localStorage.setItem("huni_token", res.token);
       localStorage.setItem("huni_user", JSON.stringify(res.user));
+      document.cookie = `huni_token=${res.token}; path=/; max-age=2592000; SameSite=Lax`;
     }
     return res;
   },
@@ -476,6 +477,7 @@ export const authService = {
     if (typeof window !== "undefined") {
       localStorage.removeItem("huni_token");
       localStorage.removeItem("huni_user");
+      document.cookie = "huni_token=; path=/; max-age=0; SameSite=Lax";
     }
   },
 };

@@ -2,17 +2,18 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "@/shared/providers/AuthProvider";
 import {
   User,
   LogIn,
   LogOut,
   Package,
-  ChevronDown
+  ChevronDown,
+  Shield,
 } from "lucide-react";
 
 export default function UserMenu() {
-  const { data: session, status } = useSession();
+  const { user, loading, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -26,13 +27,13 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  if (status === "loading") {
+  if (loading) {
     return (
       <div className="w-9 h-9 rounded-full bg-slate-800/60 border border-slate-700 animate-pulse" />
     );
   }
 
-  if (!session?.user) {
+  if (!user) {
     return (
       <div className="flex items-center gap-1.5 sm:gap-2">
         <Link
@@ -59,8 +60,8 @@ export default function UserMenu() {
     );
   }
 
-  const user = session.user;
-  const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
+  const displayName = user.fullName || user.name || "Khách hàng";
+  const initial = displayName.charAt(0).toUpperCase();
 
   return (
     <div className="relative" ref={menuRef}>
@@ -73,7 +74,7 @@ export default function UserMenu() {
           {initial}
         </div>
         <span className="hidden lg:block text-xs font-bold text-white max-w-[100px] truncate">
-          {user.name?.split(" ").slice(-1)[0] || "User"}
+          {displayName.split(" ").slice(-1)[0]}
         </span>
         <ChevronDown
           className={`hidden lg:block w-3.5 h-3.5 text-brand-300 transition-transform ${
@@ -92,7 +93,7 @@ export default function UserMenu() {
               </div>
               <div className="min-w-0">
                 <div className="text-sm font-extrabold text-white truncate">
-                  {user.name}
+                  {displayName}
                 </div>
                 <div className="text-[11px] text-brand-200/80 truncate">
                   {user.email}
@@ -101,8 +102,19 @@ export default function UserMenu() {
             </div>
           </div>
 
-          {/* Menu items — 2 mục, dùng ?tab= để mở đúng tab */}
+          {/* Menu items */}
           <div className="p-2">
+            {user.role === "ADMIN" && (
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-blue-600 transition-colors"
+              >
+                <Shield className="w-4 h-4 text-blue-600 shrink-0" />
+                <span>Trang quản trị (Admin)</span>
+              </Link>
+            )}
+
             <Link
               href="/tai-khoan"
               onClick={() => setOpen(false)}
@@ -126,9 +138,10 @@ export default function UserMenu() {
             <button
               onClick={() => {
                 setOpen(false);
-                signOut({ callbackUrl: "/" });
+                logout();
+                window.location.href = "/";
               }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 text-sm font-medium text-rose-600 transition-colors"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 text-sm font-medium text-rose-600 transition-colors text-left"
             >
               <LogOut className="w-4 h-4 shrink-0" />
               <span>Đăng xuất</span>

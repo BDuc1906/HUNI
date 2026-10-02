@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { authService } from "@/shared/services/apiClient";
 import {
   ChevronRight,
   Clock,
@@ -87,11 +87,8 @@ export default function AdminHeader({ user }) {
   const handleLogout = async () => {
     setIsDropdownOpen(false);
     if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi Cổng Quản Trị?")) {
-      try {
-        await signOut({ callbackUrl: "/" });
-      } catch {
-        router.push("/");
-      }
+      authService.logout();
+      window.location.href = "/login";
     }
   };
 

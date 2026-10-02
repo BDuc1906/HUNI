@@ -1,8 +1,7 @@
 "use client";
 
 import React, { Suspense, useState, useEffect } from "react";
-import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useAuth } from "@/shared/providers/AuthProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useShop } from "@/shared/providers/ShopProvider";
 import { PRODUCTS, BRAND_INFO } from "@/shared/data";
@@ -47,7 +46,7 @@ export default function AccountPage() {
    MAIN
    ========================================================= */
 function AccountInner() {
-  const { data: session, status } = useSession();
+  const { user, loading, logout } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -67,12 +66,12 @@ function AccountInner() {
 
   // Auth guard
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (!loading && !user) {
       router.push("/login?redirect=/tai-khoan");
     }
-  }, [status, router]);
+  }, [loading, user, router]);
 
-  if (status === "loading" || !session?.user) {
+  if (loading || !user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#004f5e] via-[#00677a] to-[#003843] flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-brand-400 animate-spin" />
@@ -80,8 +79,8 @@ function AccountInner() {
     );
   }
 
-  const user = session.user;
-  const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
+  const displayName = user.fullName || user.name || "Khách hàng";
+  const initial = displayName.charAt(0).toUpperCase();
 
   const TABS = [
     { id: "info", label: "Thông tin tài khoản", icon: User },
@@ -112,14 +111,17 @@ function AccountInner() {
             </div>
             <div className="min-w-0 flex-1">
               <h1 className="text-base sm:text-xl font-black text-white truncate">
-                Xin chào, {user.name || "bạn"}!
+                Xin chào, {displayName}!
               </h1>
               <p className="text-[11px] sm:text-sm text-brand-200/80 truncate">
                 {user.email}
               </p>
             </div>
             <button
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onClick={() => {
+                logout();
+                router.push("/");
+              }}
               className="hidden sm:flex items-center gap-2 px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl text-xs font-bold transition-colors shrink-0"
             >
               Đăng xuất

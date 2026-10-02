@@ -3,7 +3,7 @@
 import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { useAuth } from "@/shared/providers/AuthProvider";
 import { authService } from "@/shared/services/apiClient";
 import {
   Loader2,
@@ -48,6 +48,7 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
   const redirect = searchParams.get("redirect") || "/";
   const registeredParam = searchParams.get("registered") === "1";
   const isLockedParam = searchParams.get("error") === "account_locked";
+  const { login } = useAuth();
 
   // Mode: "login" hoặc "register"
   const [mode, setMode] = useState(defaultMode);
@@ -102,20 +103,10 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
     setLoginLoading(true);
 
     try {
-      try {
-        await authService.login({ email: loginEmail, password: loginPassword });
-      } catch (e) {
-        // ignore if next-auth manages
-      }
+      const res = await login(loginEmail, loginPassword);
 
-      const result = await signIn("credentials", {
-        email: loginEmail,
-        password: loginPassword,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setLoginError("Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại.");
+      if (!res.success) {
+        setLoginError(res.error || "Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại.");
       } else {
         router.push(redirect);
         router.refresh();
