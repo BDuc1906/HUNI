@@ -3,7 +3,8 @@
 import React, { useState, useMemo, useEffect, useTransition } from "react";
 import Image from "next/image";
 import { useShop } from "@/shared/providers/ShopProvider";
-import { PRODUCTS, CATEGORIES } from "@/shared/data";
+import { PRODUCTS as PRODUCTS_STATIC, CATEGORIES } from "@/shared/data";
+import { productsService } from "@/shared/services/apiClient";
 import ProductCard from "./ProductCard";
 import {
   SlidersHorizontal,
@@ -60,16 +61,65 @@ export default function ProductCatalog({ initialCategory }) {
   }, [initialCategory, setActiveCategory]);
 
   const [searchFilter, setSearchFilter] = useState("");
+  const searchQuery = searchFilter;
   const [selectedMaterial, setSelectedMaterial] = useState("all");
   const [sortBy, setSortBy] = useState("popular");
   const [priceRange, setPriceRange] = useState("all");
   const [visibleCount, setVisibleCount] = useState(9);
 
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  useEffect(() => {
+    async function loadProducts() {
+      setLoadingProducts(true);
+      const res = await productsService.getProducts({
+        category: activeCategory !== "all" ? activeCategory : undefined,
+        search: searchQuery || undefined,
+        limit: 48,
+      });
+      if (res.success) {
+        const raw = res.data?.products || res.products || [];
+        const list = raw.map((item) => ({
+          ...item,
+          image: item.image || item.images?.[0] || "/images/placeholder.png",
+          title: item.title || item.name || "",
+          colors:
+            typeof item.colors === "string"
+              ? (() => {
+                  try {
+                    return JSON.parse(item.colors);
+                  } catch {
+                    return [];
+                  }
+                })()
+              : item.colors || [],
+          wholesaleTiers:
+            typeof item.wholesaleTiers === "string"
+              ? (() => {
+                  try {
+                    return JSON.parse(item.wholesaleTiers);
+                  } catch {
+                    return [];
+                  }
+                })()
+              : item.wholesaleTiers || [],
+        }));
+        setProducts(list.length > 0 ? list : (res.data ? list : PRODUCTS_STATIC));
+      } else {
+        // Fallback: dùng static data nếu BE chưa chạy
+        setProducts(PRODUCTS_STATIC);
+      }
+      setLoadingProducts(false);
+    }
+    loadProducts();
+  }, [activeCategory, searchQuery]);
+
   // Materials unique list
-  const materialOptions = useMemo(
-    () => [...new Set(PRODUCTS.map((p) => p.material))].sort(),
-    []
-  );
+  const materialOptions = useMemo(() => {
+    const list = products.length > 0 ? products : PRODUCTS_STATIC;
+    return [...new Set(list.map((p) => p.material).filter(Boolean))].sort();
+  }, [products]);
 
   // Dedicated filter handlers that reset visibleCount without useEffect cascades
   const updateCategory = (catId) => {
@@ -112,7 +162,8 @@ export default function ProductCatalog({ initialCategory }) {
 
   // Filter & sort logic
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((item) => {
+    const currentList = products.length > 0 ? products : (loadingProducts ? [] : PRODUCTS_STATIC);
+    return currentList.filter((item) => {
       if (activeCategory !== "all" && item.category !== activeCategory) {
         return false;
       }
@@ -121,9 +172,9 @@ export default function ProductCatalog({ initialCategory }) {
       }
       if (searchFilter.trim()) {
         const query = searchFilter.toLowerCase();
-        const matchTitle = item.title.toLowerCase().includes(query);
-        const matchMaterial = item.material.toLowerCase().includes(query);
-        const matchDesc = item.description.toLowerCase().includes(query);
+        const matchTitle = (item.title || item.name || "").toLowerCase().includes(query);
+        const matchMaterial = (item.material || "").toLowerCase().includes(query);
+        const matchDesc = (item.description || "").toLowerCase().includes(query);
         if (!matchTitle && !matchMaterial && !matchDesc) return false;
       }
       if (priceRange === "under200" && item.price >= 200000) return false;
@@ -147,7 +198,7 @@ export default function ProductCatalog({ initialCategory }) {
       }
       return 0;
     });
-  }, [activeCategory, selectedMaterial, searchFilter, priceRange, sortBy]);
+  }, [products, loadingProducts, activeCategory, selectedMaterial, searchFilter, priceRange, sortBy]);
 
   const activeFiltersCount = [
     activeCategory !== "all",
@@ -277,7 +328,7 @@ export default function ProductCatalog({ initialCategory }) {
                     : "bg-slate-100 hover:bg-slate-200 text-slate-700"
                 }`}
               >
-                Tất Cả ({PRODUCTS.length})
+                Tất Cả ({products.length > 0 ? products.length : PRODUCTS_STATIC.length})
               </button>
               {displayCategories.map((cat) => (
                 <button
@@ -387,7 +438,7 @@ export default function ProductCatalog({ initialCategory }) {
         {/* =============================================
             Product Grid / Skeleton Loading
             ============================================= */}
-        {isPending ? (
+        {isPending || loadingProducts ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-5 xl:gap-6">
             {Array.from({ length: 8 }).map((_, i) => (
               <SkeletonCard key={i} />
