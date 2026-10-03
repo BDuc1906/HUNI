@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 
 export function middleware(req) {
   const { pathname } = req.nextUrl;
-  const token =
-    req.cookies.get("huni_token")?.value ||
-    req.headers.get("authorization")?.replace("Bearer ", "");
+  const token = req.cookies.get("huni_token")?.value;
 
   if (pathname.startsWith("/admin")) {
     if (process.env.REQUIRE_ADMIN_AUTH === "true" && !token) {
