@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import { Calculator, Send, CheckCircle2, Phone, Sparkles, MessageCircle, ShieldCheck } from "lucide-react";
+import { quotesService } from "@/shared/services/apiClient";
+import { Calculator, Send, CheckCircle2, Phone, Sparkles, MessageCircle, ShieldCheck, Loader2 } from "lucide-react";
 
 export default function QuickQuoteSection() {
   const { showToast, triggerConfetti } = useShop();
@@ -16,6 +17,7 @@ export default function QuickQuoteSection() {
   const [companyName, setCompanyName] = useState("");
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   // Dynamic estimate calculation
   const getEstimatedUnitPrice = () => {
@@ -45,6 +47,7 @@ export default function QuickQuoteSection() {
 
   const unitPrice = getEstimatedUnitPrice();
   const totalPrice = unitPrice * quantity;
+  const getEstimatedTotal = () => totalPrice;
 
   // Discount percentage helper
   const getDiscountPercent = () => {
@@ -57,7 +60,7 @@ export default function QuickQuoteSection() {
 
   const discountPercent = getDiscountPercent();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!phone.trim()) {
       showToast("Vui lòng nhập số điện thoại hoặc Zalo để nhận báo giá", "error");
@@ -68,9 +71,31 @@ export default function QuickQuoteSection() {
       showToast("Số lượng nhập không được nhỏ hơn 10 cái", "error");
       return;
     }
-    setSubmitted(true);
-    triggerConfetti();
-    showToast("Đã ghi nhận yêu cầu! Chuyên viên HDC sẽ gửi file báo giá qua Zalo/SĐT trong 5 phút.");
+
+    setSubmitting(true);
+    try {
+      const res = await quotesService.submitQuote({
+        fullName: companyName.trim() || "Khách Hàng Doanh Nghiệp",
+        company: companyName.trim() || undefined,
+        phone: phone.trim(),
+        category,
+        quantity: parsedQty,
+        estimatedPrice: getEstimatedTotal(),
+        notes: `Chất liệu: ${fabric}, Logo: ${logoOption}`,
+      });
+
+      if (res.success) {
+        setSubmitted(true);
+        triggerConfetti();
+        showToast("Đã ghi nhận yêu cầu! Chuyên viên HDC sẽ gửi file báo giá qua Zalo/SĐT trong 5 phút.");
+      } else {
+        showToast(res.error || "Gửi thất bại", "error");
+      }
+    } catch {
+      showToast("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.", "error");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -282,10 +307,20 @@ export default function QuickQuoteSection() {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full py-3.5 sm:py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] transition-all cursor-pointer"
+                    disabled={submitting}
+                    className="w-full py-3.5 sm:py-4 bg-gradient-to-r from-brand-400 via-brand-500 to-brand-600 hover:from-brand-300 hover:to-brand-500 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2 transform hover:-translate-y-0.5 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Gửi Yêu Cầu Báo Giá Kèm File Phối Cảnh 3D</span>
+                    {submitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Đang gửi yêu cầu...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Gửi Yêu Cầu Báo Giá Kèm File Phối Cảnh 3D</span>
+                      </>
+                    )}
                   </button>
                 </form>
               ) : (
