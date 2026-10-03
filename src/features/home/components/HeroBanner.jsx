@@ -8,14 +8,9 @@ import { useShop } from "@/shared/providers/ShopProvider";
 import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
 
 // ============================================================
-// SLIDES DATA — 5 slides
-// focusMobile / focusDesktop = object-position (x y) của ảnh.
-// Chỉnh 2 giá trị này để dời điểm lấy nét của từng ảnh (vd "70% 30%").
+// SLIDES DATA — 5 slides gốc
 // ============================================================
 const SLIDES = [
-  // ============================================
-  // SLIDE 1: CHẤT LIỆU XANH
-  // ============================================
   {
     image: "/images/02_materials_01.jpg",
     focusMobile: "center center",
@@ -30,10 +25,6 @@ const SLIDES = [
     ctaSecondary: "Báo Giá Ngay",
     ctaLink: "/bang-vai",
   },
-
-  // ============================================
-  // SLIDE 2: THỂ THAO & GOLF
-  // ============================================
   {
     image: "/images/08_golf_event_01.jpg",
     focusMobile: "60% 45%",
@@ -48,10 +39,6 @@ const SLIDES = [
     ctaSecondary: "Xem Ảnh Giải",
     ctaLink: "/dong-phuc-the-thao",
   },
-
-  // ============================================
-  // SLIDE 3: POLO DOANH NGHIỆP — ĐÃ BỎ CONTAIN
-  // ============================================
   {
     image: "/images/06_polo_01.jpg",
     focusMobile: "center 20%",
@@ -66,10 +53,6 @@ const SLIDES = [
     ctaSecondary: "Xem Bảng Màu",
     ctaLink: "/dong-phuc-doanh-nghiep",
   },
-
-  // ============================================
-  // SLIDE 4: TRƯỜNG HỌC
-  // ============================================
   {
     image: "/images/09_kids_school_03.jpg",
     focusMobile: "center 22%",
@@ -84,10 +67,6 @@ const SLIDES = [
     ctaSecondary: "Xem Album",
     ctaLink: "/dong-phuc-truong-hoc",
   },
-
-  // ============================================
-  // SLIDE 5: KIDS
-  // ============================================
   {
     image: "/images/10_kids_why_02.jpg",
     focusMobile: "center 22%",
@@ -115,42 +94,94 @@ const CHECKLIST = [
 
 const TRANSITION_DURATION = 700;
 const SLIDE_DURATION = 6000;
-const SWIPE_THRESHOLD = 50;
+const SWIPE_THRESHOLD = 60;
+
+const N = SLIDES.length;
+// ✅ 3 bộ slide liên tiếp → cuộn vòng vô hạn
+const SLIDES_TRIPLED = [...SLIDES, ...SLIDES, ...SLIDES];
 
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // virtualIndex chạy trong [0, 3N-1], khởi đầu ở đầu bộ giữa (index = N)
+  const [virtualIndex, setVirtualIndex] = useState(N);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [noTransition, setNoTransition] = useState(false);
 
   const sectionRef = useRef(null);
+  const virtualIndexRef = useRef(N);
+  const isDraggingRef = useRef(false);
+
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
   const isSwipingRef = useRef(false);
+
+  const dragStartXRef = useRef(0);
+
   const isPausedRef = useRef(false);
+
+  // Slide hiển thị cho content (0..N-1)
+  const currentSlide = ((virtualIndex % N) + N) % N;
+
+  // ============================================================
+  // ✅ Sync virtualIndex vào ref — luôn có giá trị mới nhất
+  // ============================================================
+  useEffect(() => {
+    virtualIndexRef.current = virtualIndex;
+  }, [virtualIndex]);
+
+  // ============================================================
+  // ✅ WRAP SILENT — chỉ chạy SAU KHI TRANSITION THỰC SỰ XONG
+  // Được gọi từ onTransitionEnd của slides wrapper.
+  // Điều kiện: virtualIndex nằm ngoài bộ giữa [N, 2N).
+  // ============================================================
+  const handleTransitionEnd = useCallback((e) => {
+    if (e.propertyName !== "transform") return;
+    if (isDraggingRef.current) return;
+
+    const vi = virtualIndexRef.current;
+    // Đang trong bộ giữa → không cần wrap
+    if (vi >= N && vi < 2 * N) return;
+
+    // Bật noTransition, nhảy silent về bộ giữa
+    setNoTransition(true);
+    setVirtualIndex((prev) => {
+      if (prev < N) return prev + N;
+      if (prev >= 2 * N) return prev - N;
+      return prev;
+    });
+
+    // Tắt noTransition sau khi browser đã paint vị trí mới (2 RAF để chắc)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setNoTransition(false));
+    });
+  }, []);
 
   // ============================================================
   // NAVIGATION HANDLERS
   // ============================================================
-  const goToSlide = useCallback((index) => {
-    const total = SLIDES.length;
-    setCurrentSlide(((index % total) + total) % total);
+  const goToSlide = useCallback((targetIndex) => {
+    // Nhảy tới slide targetIndex trong bộ giữa
+    setVirtualIndex(N + targetIndex);
+    setDragOffset(0);
   }, []);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    setVirtualIndex((prev) => Math.min(prev + 1, 3 * N - 1));
   }, []);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setVirtualIndex((prev) => Math.max(prev - 1, 0));
   }, []);
 
   // ============================================================
-  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây
+  // AUTO-PLAY
   // ============================================================
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!isPausedRef.current) {
-        setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+      if (!isPausedRef.current && !isDraggingRef.current) {
+        setVirtualIndex((prev) => Math.min(prev + 1, 3 * N - 1));
       }
     }, SLIDE_DURATION);
 
@@ -158,7 +189,7 @@ export default function HeroBanner() {
   }, []);
 
   // ============================================================
-  // KEYBOARD NAVIGATION
+  // KEYBOARD
   // ============================================================
   useEffect(() => {
     const handleKey = (e) => {
@@ -170,7 +201,7 @@ export default function HeroBanner() {
   }, [nextSlide, prevSlide]);
 
   // ============================================================
-  // TOUCH SWIPE
+  // TOUCH SWIPE — mobile
   // ============================================================
   useEffect(() => {
     const el = sectionRef.current;
@@ -189,6 +220,7 @@ export default function HeroBanner() {
 
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) {
         isSwipingRef.current = true;
+        setDragOffset(dx);
         if (e.cancelable) e.preventDefault();
       }
     };
@@ -202,10 +234,11 @@ export default function HeroBanner() {
       }
 
       isSwipingRef.current = false;
+      setDragOffset(0);
 
       setTimeout(() => {
         isPausedRef.current = false;
-      }, 3000);
+      }, 2500);
     };
 
     el.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -219,32 +252,115 @@ export default function HeroBanner() {
     };
   }, [nextSlide, prevSlide]);
 
+  // ============================================================
+  // MOUSE DRAG — desktop
+  // ============================================================
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const handlePointerDown = (e) => {
+      if (e.pointerType !== "mouse") return;
+      if (e.button !== 0) return;
+
+      const target = e.target;
+      if (
+        target.closest("button, a, input, textarea, select, [role='button']")
+      ) {
+        return;
+      }
+
+      isDraggingRef.current = true;
+      setIsDragging(true);
+      dragStartXRef.current = e.clientX;
+      setDragOffset(0);
+      isPausedRef.current = true;
+
+      document.body.style.userSelect = "none";
+      document.body.style.cursor = "grabbing";
+    };
+
+    const handlePointerMove = (e) => {
+      if (!isDraggingRef.current) return;
+      if (e.pointerType !== "mouse") return;
+
+      const offset = e.clientX - dragStartXRef.current;
+      setDragOffset(offset);
+    };
+
+    const handlePointerUp = (e) => {
+      if (!isDraggingRef.current) return;
+      isDraggingRef.current = false;
+      setIsDragging(false);
+
+      const offset = e.clientX - dragStartXRef.current;
+
+      if (Math.abs(offset) > SWIPE_THRESHOLD) {
+        if (offset < 0) nextSlide();
+        else prevSlide();
+      }
+
+      setDragOffset(0);
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+
+      setTimeout(() => {
+        isPausedRef.current = false;
+      }, 2000);
+    };
+
+    el.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
+
+    return () => {
+      el.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointercancel", handlePointerUp);
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+    };
+  }, [nextSlide, prevSlide]);
+
   const slide = SLIDES[currentSlide];
+  const translateX = `calc(-${virtualIndex * 100}% + ${dragOffset}px)`;
+  const disableTransition = isDragging || noTransition;
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-[#00222a]"
+      className={`
+        relative w-full h-[100svh] min-h-[540px] sm:min-h-[600px] max-h-[900px]
+        overflow-hidden bg-[#00222a] select-none
+        ${isDragging ? "cursor-grabbing" : "cursor-grab"}
+      `}
       style={{ touchAction: "pan-y", maxWidth: "1920px", margin: "0 auto" }}
     >
       {/* ============================================
-          SLIDES — TRƯỢT NGANG
+          SLIDES WRAPPER — 15 slides (3 bộ) chạy vô hạn
+          ✅ onTransitionEnd → wrap silent sau khi animation xong
           ============================================ */}
       <div
-        className="absolute inset-0 flex transition-transform ease-out gpu-accelerated"
+        onTransitionEnd={handleTransitionEnd}
+        className="absolute inset-0 flex"
         style={{
-          transform: `translateX(-${currentSlide * 100}%)`,
-          transitionDuration: `${TRANSITION_DURATION}ms`,
+          transform: `translateX(${translateX})`,
+          transitionProperty: "transform",
+          transitionDuration: disableTransition
+            ? "0ms"
+            : `${TRANSITION_DURATION}ms`,
+          transitionTimingFunction: "ease-out",
+          willChange: "transform",
         }}
       >
-        {SLIDES.map((s, idx) => (
+        {SLIDES_TRIPLED.map((s, idx) => (
           <div
             key={idx}
-            className="relative w-full h-full flex-shrink-0 gpu-accelerated bg-[#00222a]"
-            aria-hidden={idx !== currentSlide}
+            className="relative w-full h-full flex-shrink-0 bg-[#00222a]"
+            aria-hidden={idx !== virtualIndex}
           >
-            {/* Khung ảnh — mobile: full màn hình; desktop: chiếm 68% bên phải
-                để chữ nằm trên nền đặc, chủ thể ảnh không bị chữ che */}
             <div
               className="absolute inset-0 lg:left-[32%]"
               style={{
@@ -256,20 +372,17 @@ export default function HeroBanner() {
                 src={s.image}
                 alt={s.title + " " + s.titleHighlight}
                 fill
-                sizes="(min-width: 1024px) 68vw, 100vw"
-                quality={90}
-                priority={idx === 0}
-                loading={idx === 0 ? undefined : "eager"}
-                className="object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)]"
-                style={{ imageRendering: "-webkit-optimize-contrast" }}
+                sizes="(min-width: 1920px) 68vw, (min-width: 1024px) 68vw, (min-width: 640px) 100vw, 100vw"
+                quality={92}
+                priority={idx === N}
+                loading={idx === N ? undefined : "lazy"}
+                draggable={false}
+                className="object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)] pointer-events-none"
               />
 
-              {/* Overlay mobile/tablet: tối dần từ dưới lên để chữ dễ đọc */}
-              <div className="absolute inset-0 lg:hidden bg-gradient-to-t from-[#00222a]/90 via-[#00222a]/45 to-[#00222a]/25" />
-
-              {/* Overlay desktop: hòa mép trái ảnh vào nền, đáy tối nhẹ cho thanh stats */}
-              <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#00222a] via-[#00222a]/55 to-transparent to-[55%]" />
-              <div className="absolute inset-x-0 bottom-0 hidden lg:block h-40 bg-gradient-to-t from-[#00222a]/70 to-transparent" />
+              <div className="absolute inset-0 lg:hidden bg-gradient-to-t from-[#00222a]/90 via-[#00222a]/45 to-[#00222a]/25 pointer-events-none" />
+              <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#00222a] via-[#00222a]/55 to-transparent to-[55%] pointer-events-none" />
+              <div className="absolute inset-x-0 bottom-0 hidden lg:block h-40 bg-gradient-to-t from-[#00222a]/70 to-transparent pointer-events-none" />
             </div>
           </div>
         ))}
@@ -279,9 +392,8 @@ export default function HeroBanner() {
           CONTENT OVERLAY
           ============================================ */}
       <div className="relative z-10 h-full flex flex-col pointer-events-none justify-center">
-        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-60 sm:pb-56 md:pb-48 lg:pb-44 pointer-events-auto">
+        <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-64 sm:pb-56 md:pb-48 lg:pb-44 pointer-events-auto">
           <div className="max-w-3xl">
-            {/* Eyebrow */}
             <div
               key={`eyebrow-${currentSlide}`}
               className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-4 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 whitespace-nowrap"
@@ -290,7 +402,6 @@ export default function HeroBanner() {
               <span>{slide.eyebrow}</span>
             </div>
 
-            {/* TITLE */}
             <div
               key={`title-${currentSlide}`}
               className="mb-3 sm:mb-4 animate-in fade-in slide-in-from-left-4 duration-500 delay-75"
@@ -303,7 +414,6 @@ export default function HeroBanner() {
               </h2>
             </div>
 
-            {/* Subtitle */}
             <p
               key={`sub-${currentSlide}`}
               className="text-brand-200 font-medium text-sm sm:text-base italic mb-3 sm:mb-5 animate-in fade-in slide-in-from-left-4 duration-500 delay-100 text-balance drop-shadow-md"
@@ -311,7 +421,6 @@ export default function HeroBanner() {
               &ldquo;{slide.subtitle}&rdquo;
             </p>
 
-            {/* Description */}
             <p
               key={`desc-${currentSlide}`}
               className="text-slate-100 text-[13px] sm:text-sm md:text-base leading-relaxed max-w-xl mb-5 sm:mb-6 animate-in fade-in slide-in-from-left-4 duration-500 delay-150 text-pretty drop-shadow-md"
@@ -319,7 +428,6 @@ export default function HeroBanner() {
               {slide.description}
             </p>
 
-            {/* Checklist */}
             <div
               key={`check-${currentSlide}`}
               className="hidden md:grid grid-cols-3 gap-x-4 gap-y-2 mb-6 sm:mb-7 max-w-2xl animate-in fade-in slide-in-from-left-4 duration-500 delay-200"
@@ -335,7 +443,6 @@ export default function HeroBanner() {
               ))}
             </div>
 
-            {/* CTA */}
             <div
               key={`cta-${currentSlide}`}
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 animate-in fade-in slide-in-from-left-4 duration-500 delay-300"
@@ -369,8 +476,7 @@ export default function HeroBanner() {
         {/* STATS BAR */}
         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#00222a]/95 to-transparent pt-8 pb-5 sm:pb-6">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* DOTS NAVIGATION — nằm trong thanh stats nên không bao giờ đè lên */}
-            <div className="pointer-events-auto flex items-center justify-center gap-2 mb-3">
+            <div className="pointer-events-auto flex items-center justify-center gap-0.5 mb-3">
               {SLIDES.map((_, idx) => {
                 const active = idx === currentSlide;
 
@@ -379,12 +485,16 @@ export default function HeroBanner() {
                     key={idx}
                     onClick={() => goToSlide(idx)}
                     aria-label={`Đến slide ${idx + 1}`}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      active
-                        ? "w-10 sm:w-14 bg-brand-400"
-                        : "w-2 sm:w-3 bg-white/50 hover:bg-white/70"
-                    }`}
-                  />
+                    className="p-3 -m-1 flex items-center justify-center rounded-full transition-transform active:scale-90"
+                  >
+                    <span
+                      className={`block h-1.5 rounded-full transition-all duration-300 ${
+                        active
+                          ? "w-10 sm:w-14 bg-brand-400 shadow-[0_0_12px_rgba(51,176,203,0.6)]"
+                          : "w-2 sm:w-3 bg-white/50"
+                      }`}
+                    />
+                  </button>
                 );
               })}
             </div>
@@ -410,7 +520,6 @@ export default function HeroBanner() {
           </div>
         </div>
       </div>
-
     </section>
   );
 }

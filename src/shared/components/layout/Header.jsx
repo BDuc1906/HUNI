@@ -98,11 +98,9 @@ const MAIN_NAV = [
 
 // ============================================================
 // HOVER DELAY — Chờ 150ms trước khi đóng menu
-// để user có thời gian di chuột từ button xuống dropdown
 // ============================================================
 const HOVER_CLOSE_DELAY = 180;
 
-// Các nội dung thuộc module Quy Trình dùng chung một trạng thái active trong navigation.
 const PROCESS_MODULE_PATHS = new Set([
   "/quy-trinh-may-dong-phuc-doanh-nghiep",
   "/bao-gia-dong-phuc-cong-ty",
@@ -128,16 +126,11 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
 
-  // ✅ Dropdown hover state
   const [openDropdown, setOpenDropdown] = useState(null);
   const closeTimerRef = useRef(null);
 
-  // Mobile menu: category sub-menu mở/đóng
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
-  // ============================================================
-  // HOVER HANDLERS
-  // ============================================================
   const handleMouseEnter = (menuLabel) => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
@@ -152,22 +145,17 @@ export default function Header() {
     }, HOVER_CLOSE_DELAY);
   };
 
-  // Cleanup timer khi unmount
   useEffect(() => {
     return () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     };
   }, []);
 
-  // Đóng dropdown khi đổi route
   useEffect(() => {
     setOpenDropdown(null);
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  // ============================================================
-  // SEARCH
-  // ============================================================
   const searchResults = searchQuery.trim()
     ? PRODUCTS.filter(
         (p) =>
@@ -184,9 +172,6 @@ export default function Header() {
     setMobileSearchOpen(false);
   };
 
-  // ============================================================
-  // HELPER: Check link active
-  // ============================================================
   const isActive = (href) => {
     if (href === "/" && pathname === "/") return true;
     if (
@@ -476,7 +461,6 @@ export default function Header() {
                     />
                   </button>
 
-                  {/* DROPDOWN PANEL */}
                   {isOpen && (
                     <div
                       className="absolute left-0 top-full pt-1 z-50"
@@ -537,7 +521,6 @@ export default function Header() {
                           );
                         })}
 
-                        {/* Footer của dropdown */}
                         <div className="mt-1 pt-2 border-t border-slate-100 px-3 pb-1 flex items-center justify-between">
                           <span className="text-[11px] text-slate-500">
                             Cần tư vấn riêng cho doanh nghiệp?
@@ -617,7 +600,7 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto overscroll-contain">
             {searchQuery.trim() ? (
               searchResults.length > 0 ? (
                 <div className="space-y-2">
@@ -687,6 +670,7 @@ export default function Header() {
 
       {/* =============================================
           MOBILE DRAWER NAV
+          ✅ FIX: tách header cố định + body cuộn được
           ============================================= */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40">
@@ -695,8 +679,9 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 overflow-y-auto">
-            <div className="sticky top-0 bg-[#004f5e] p-4 border-b border-slate-800 flex items-center justify-between z-10">
+          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 flex flex-col">
+            {/* Header cố định trên cùng */}
+            <div className="bg-[#004f5e] p-4 border-b border-slate-800 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <div className="relative w-9 h-9 aspect-square overflow-hidden bg-white rounded-lg flex items-center justify-center shadow-md">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -718,7 +703,8 @@ export default function Header() {
               </button>
             </div>
 
-            <div className="p-4 space-y-5">
+            {/* Body cuộn được */}
+            <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-5">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -730,7 +716,6 @@ export default function Header() {
                 Nhận Báo Giá Nhanh 3 Phút
               </button>
 
-              {/* Nút chuyển sang Admin Demo trên Mobile */}
               <Link
                 href="/admin"
                 onClick={() => setMobileMenuOpen(false)}
@@ -743,7 +728,6 @@ export default function Header() {
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
-              {/* NAV CHÍNH */}
               <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
                   Điều hướng
@@ -826,7 +810,6 @@ export default function Header() {
                 })}
               </div>
 
-              {/* CALLS */}
               <div className="pt-3 border-t border-slate-800 space-y-2">
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}

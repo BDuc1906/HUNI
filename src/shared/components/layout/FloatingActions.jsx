@@ -13,7 +13,7 @@ export default function FloatingActions() {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -27,7 +27,6 @@ export default function FloatingActions() {
           DESKTOP / TABLET — Floating stack bên phải
           ============================================= */}
       <div className="hidden md:flex fixed bottom-6 right-5 z-30 flex-col items-end gap-3 pointer-events-auto">
-        {/* 1. Zalo — Icon tròn */}
         <a
           href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
           target="_blank"
@@ -38,7 +37,6 @@ export default function FloatingActions() {
           <MessageCircle className="w-5 h-5" />
         </a>
 
-        {/* 2. Hotline — Icon tròn (cùng size với Zalo & Chat AI) */}
         <a
           href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
           title={`Gọi Hotline tư vấn 24/7: ${BRAND_INFO.contact.hotline}`}
@@ -48,10 +46,8 @@ export default function FloatingActions() {
           <span className="sr-only">Hotline {BRAND_INFO.contact.hotline}</span>
         </a>
 
-        {/* 3. Chat AI — Icon tròn */}
         <ChatWidget />
 
-        {/* 4. Scroll to top — Icon tròn nhỏ hơn (chỉ hiện khi scroll xuống) */}
         {showScrollTop && (
           <button
             onClick={scrollToTop}
@@ -64,11 +60,28 @@ export default function FloatingActions() {
       </div>
 
       {/* =============================================
+          MOBILE — FAB stack (nổi phía trên bottom bar)
+          ✅ ScrollTop đã đẩy sang trái đủ xa (right-[68px])
+          ============================================= */}
+      <div className="md:hidden fixed bottom-20 right-3 z-30">
+        <ChatWidget />
+      </div>
+
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          title="Cuộn lên đầu trang"
+          className="md:hidden fixed bottom-20 right-[68px] z-30 w-10 h-10 rounded-full bg-[#004f5e]/95 backdrop-blur text-brand-400 flex items-center justify-center shadow-lg border border-brand-400/30 active:scale-95 transition-transform"
+        >
+          <ArrowUp className="w-4 h-4" />
+        </button>
+      )}
+
+      {/* =============================================
           MOBILE — Bottom action bar cố định
           ============================================= */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)]">
         <div className="grid grid-cols-3 divide-x divide-slate-200">
-          {/* Hotline */}
           <a
             href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
             className="flex flex-col items-center justify-center gap-0.5 py-2.5 active:bg-slate-50 transition-colors"
@@ -77,7 +90,6 @@ export default function FloatingActions() {
             <span className="text-[11px] font-bold text-slate-800">Gọi ngay</span>
           </a>
 
-          {/* Zalo */}
           <a
             href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
             target="_blank"
@@ -88,7 +100,6 @@ export default function FloatingActions() {
             <span className="text-[11px] font-bold text-slate-800">Chat Zalo</span>
           </a>
 
-          {/* Quick Quote */}
           <a
             href="/lien-he"
             className="flex flex-col items-center justify-center gap-0.5 py-2.5 active:bg-brand-50 transition-colors"
@@ -99,32 +110,19 @@ export default function FloatingActions() {
         </div>
       </div>
 
-      {/* Chat AI — mobile, nổi phía trên bottom bar */}
-      <div className="md:hidden fixed bottom-20 right-3 z-30">
-        <ChatWidget />
-      </div>
-
-      {/* Scroll to top — mobile, phía trên bottom bar */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          title="Cuộn lên đầu trang"
-          className="md:hidden fixed bottom-20 right-16 z-30 w-10 h-10 rounded-full bg-[#004f5e]/90 backdrop-blur text-brand-400 flex items-center justify-center shadow-lg border border-brand-400/30 active:scale-95 transition-transform"
-        >
-          <ArrowUp className="w-4 h-4" />
-        </button>
-      )}
-
-      {/* Nút chuyển nhanh sang Admin (Demo) nổi góc dưới bên trái */}
-      <div className="fixed bottom-20 md:bottom-6 left-4 sm:left-6 z-50 pointer-events-auto">
+      {/* =============================================
+          Nút Admin Demo — Nổi bên trái, đẩy lên trên bottom bar
+          ✅ bottom-24 mobile: không chồng bottom bar
+          ============================================= */}
+      <div className="fixed bottom-24 md:bottom-6 left-4 sm:left-6 z-50 pointer-events-auto">
         <Link
           href="/admin"
           title="Chuyển sang Cổng Quản Trị Admin (Demo)"
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-slate-900/95 hover:bg-blue-600 text-blue-300 hover:text-white border-2 border-blue-400 text-xs font-black shadow-2xl backdrop-blur-md transition-all transform hover:scale-110 group ring-4 ring-blue-500/20"
+          className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-full bg-slate-900/95 hover:bg-blue-600 text-blue-300 hover:text-white border-2 border-blue-400 text-[11px] sm:text-xs font-black shadow-2xl backdrop-blur-md transition-all transform hover:scale-105 group ring-4 ring-blue-500/20"
         >
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping group-hover:bg-white" />
-          <ShieldCheck className="w-4 h-4 text-blue-400 group-hover:text-white transition-colors" />
-          <span>⚡ Admin (Demo)</span>
+          <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-emerald-400 animate-ping group-hover:bg-white" />
+          <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400 group-hover:text-white transition-colors" />
+          <span>Admin (Demo)</span>
         </Link>
       </div>
     </>

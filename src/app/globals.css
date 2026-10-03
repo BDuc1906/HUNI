@@ -102,12 +102,10 @@ main[id] {
 
 /* =========================================================
    Mobile — chừa chỗ cho bottom action bar cố định
+   ✅ FIX #1: Xóa `body { padding-bottom: 64px }` vì AppShell
+   đã có `pb-16` trên thẻ <main> → tránh double padding
    ========================================================= */
 @media (max-width: 767px) {
-  body {
-    padding-bottom: 64px;
-  }
-
   /* Tối ưu tap target cho mobile — tránh double-tap zoom */
   button,
   a {
@@ -338,6 +336,3 @@ nextjs-portal,
   pointer-events: none;
   z-index: 25;
 }
-
-
-
