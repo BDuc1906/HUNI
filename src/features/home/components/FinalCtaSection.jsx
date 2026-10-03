@@ -24,7 +24,7 @@ export default function FinalCtaSection() {
     >
       {/* Ambient brand glows */}
       <div className="absolute top-0 left-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-72 sm:w-96 h-72 sm:h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-6xl mx-auto px-3 sm:px-4 relative z-10">
         {/* Top badge */}
@@ -72,7 +72,7 @@ export default function FinalCtaSection() {
             href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-5 sm:px-6 py-3.5 sm:py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-blue-900/30"
+            className="px-5 sm:px-6 py-3.5 sm:py-4 bg-[#0068FF] hover:bg-[#0055d4] text-white font-bold text-sm rounded-2xl flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-xl shadow-blue-900/30"
           >
             <MessageCircle className="w-4 h-4 shrink-0" />
             <span>Chat Zalo</span>

@@ -208,24 +208,24 @@ export default function AdminReviewsPage() {
     <div className="space-y-6">
       {/* Toast thông báo */}
       {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold animate-in fade-in slide-in-from-top duration-300">
+        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-bold animate-in fade-in slide-in-from-top duration-300">
           {toastMessage}
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 border border-amber-200 flex items-center justify-center">
               <Star className="w-5 h-5 fill-amber-400" />
             </div>
             <span>Đánh Giá & Phản Hồi</span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono font-normal">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-semibold">
               {totalCount} đánh giá
             </span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Kiểm duyệt nhận xét của khách hàng, phản hồi chính thức từ HDC Fashion và theo dõi mức độ hài lòng
           </p>
         </div>
@@ -235,7 +235,7 @@ export default function AdminReviewsPage() {
             type="button"
             onClick={handleManualRefresh}
             disabled={loading}
-            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+            className="p-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200 shadow-2xs transition-colors"
             title="Tải lại dữ liệu"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -246,67 +246,67 @@ export default function AdminReviewsPage() {
       {/* Thẻ Thống Kê Tổng Quan (Stats Cards) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Tổng đánh giá */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <MessageSquare className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Tổng Đánh Giá
             </div>
-            <div className="text-2xl font-black text-white mt-0.5">{totalCount}</div>
+            <div className="text-2xl font-black text-slate-900 mt-0.5">{totalCount}</div>
             <div className="text-[10px] text-slate-400 mt-0.5">Khách hàng xác thực</div>
           </div>
         </div>
 
         {/* Card 2: Điểm trung bình */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center shrink-0">
             <Star className="w-6 h-6 fill-amber-400" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Điểm Trung Bình
             </div>
-            <div className="text-2xl font-black text-amber-400 mt-0.5 flex items-center gap-1.5">
+            <div className="text-2xl font-black text-amber-500 mt-0.5 flex items-center gap-1.5">
               <span>{avgRating}</span>
               <span className="text-xs text-slate-400 font-normal">/ 5.0</span>
             </div>
-            <div className="text-[10px] text-emerald-400 font-semibold mt-0.5">Chất lượng xuất sắc</div>
+            <div className="text-[10px] text-emerald-600 font-semibold mt-0.5">Chất lượng xuất sắc</div>
           </div>
         </div>
 
         {/* Card 3: Chờ kiểm duyệt */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Chờ Kiểm Duyệt
             </div>
-            <div className="text-2xl font-black text-amber-300 mt-0.5">{pendingCount}</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Cần phê duyệt duyệt nhanh</div>
+            <div className="text-2xl font-black text-amber-600 mt-0.5">{pendingCount}</div>
+            <div className="text-[10px] text-slate-400 mt-0.5">Cần phê duyệt nhanh</div>
           </div>
         </div>
 
         {/* Card 4: Tỷ lệ tích cực */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
             <ThumbsUp className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Hài Lòng 4-5 Sao
             </div>
-            <div className="text-2xl font-black text-emerald-400 mt-0.5">{positiveRate}%</div>
+            <div className="text-2xl font-black text-emerald-600 mt-0.5">{positiveRate}%</div>
             <div className="text-[10px] text-slate-400 mt-0.5">Tỷ lệ khách hàng đánh giá cao</div>
           </div>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-3">
+      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
           {/* Ô tìm kiếm (5 cols) */}
           <div className="lg:col-span-5 relative">
@@ -316,7 +316,7 @@ export default function AdminReviewsPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm theo khách hàng, sản phẩm, SĐT, nội dung..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
             />
           </div>
 
@@ -328,7 +328,7 @@ export default function AdminReviewsPage() {
                 setRatingFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
             >
               {RATING_FILTERS.map((f) => (
                 <option key={f.value} value={f.value}>
@@ -346,7 +346,7 @@ export default function AdminReviewsPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
             >
               {STATUS_FILTERS.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -362,7 +362,7 @@ export default function AdminReviewsPage() {
               type="button"
               onClick={handleResetFilters}
               title="Đặt lại bộ lọc"
-              className="w-full sm:w-auto p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition-colors flex items-center justify-center"
+              className="w-full sm:w-auto p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center"
             >
               <RotateCcw className="w-4 h-4" />
             </button>

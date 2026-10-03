@@ -217,15 +217,15 @@ export default function AdminOrdersPage() {
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200/80">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <span>Quản Lý Đơn Hàng</span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono font-normal">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-bold border border-slate-200">
               {pagination.total} đơn
             </span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Theo dõi tiến độ đơn may đồng phục, thanh toán và xử lý đơn hàng
           </p>
         </div>
@@ -235,7 +235,7 @@ export default function AdminOrdersPage() {
             type="button"
             onClick={handleManualRefresh}
             disabled={loading}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+            className="p-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 shadow-xs transition-colors"
             title="Tải lại dữ liệu"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -243,7 +243,7 @@ export default function AdminOrdersPage() {
           <button
             type="button"
             onClick={handleExportCSV}
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-500/20 transition-all flex items-center gap-1.5"
           >
             <Download className="w-4 h-4" />
             <span>Xuất CSV</span>
@@ -253,49 +253,49 @@ export default function AdminOrdersPage() {
 
       {/* 2. Summary Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center font-bold">
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold border border-amber-100">
             ⏳
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-medium">Chờ xử lý</div>
-            <div className="text-base font-extrabold text-amber-400 font-mono">
+            <div className="text-[11px] text-slate-500 font-medium">Chờ xử lý</div>
+            <div className="text-base font-black text-amber-700 font-mono">
               {summary.pending} đơn
             </div>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center font-bold">
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold border border-brand-100">
             🔧
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-medium">Đang may</div>
-            <div className="text-base font-extrabold text-blue-400 font-mono">
+            <div className="text-[11px] text-slate-500 font-medium">Đang may</div>
+            <div className="text-base font-black text-brand-700 font-mono">
               {summary.producing} đơn
             </div>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/15 text-emerald-400 flex items-center justify-center font-bold">
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold border border-emerald-100">
             ✔️
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-medium">Hoàn thành</div>
-            <div className="text-base font-extrabold text-emerald-400 font-mono">
+            <div className="text-[11px] text-slate-500 font-medium">Hoàn thành</div>
+            <div className="text-base font-black text-emerald-700 font-mono">
               {summary.completed} đơn
             </div>
           </div>
         </div>
 
-        <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-indigo-500/15 text-indigo-400 flex items-center justify-center font-bold">
+        <div className="p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center font-bold border border-teal-100">
             💰
           </div>
           <div>
-            <div className="text-[11px] text-slate-400 font-medium">Tổng doanh thu</div>
-            <div className="text-base font-extrabold text-white font-mono truncate">
+            <div className="text-[11px] text-slate-500 font-medium">Tổng doanh thu</div>
+            <div className="text-base font-black text-slate-900 font-mono truncate">
               {formatVND(summary.totalRevenue)}
             </div>
           </div>
@@ -303,7 +303,7 @@ export default function AdminOrdersPage() {
       </div>
 
       {/* 3. Thanh Filter Bar */}
-      <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-3">
+      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Ô tìm kiếm */}
           <div className="relative">
@@ -313,7 +313,7 @@ export default function AdminOrdersPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm mã đơn, tên KH, SĐT, công ty..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white"
             />
           </div>
 
@@ -325,7 +325,7 @@ export default function AdminOrdersPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
             >
               {STATUS_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -344,7 +344,7 @@ export default function AdminOrdersPage() {
                 setDateFrom(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
               title="Từ ngày"
             />
           </div>
@@ -358,14 +358,14 @@ export default function AdminOrdersPage() {
                 setDateTo(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+              className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white"
               title="Đến ngày"
             />
             {(searchTerm || statusFilter || dateFrom || dateTo) && (
               <button
                 type="button"
                 onClick={handleResetFilters}
-                className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition-colors shrink-0"
+                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 border border-slate-200 transition-colors shrink-0"
                 title="Đặt lại bộ lọc"
               >
                 <RotateCcw className="w-4 h-4" />

@@ -6,30 +6,30 @@ const STATUS_CONFIG = [
   {
     key: "pending",
     label: "Chờ xử lý",
-    color: "#eab308", // amber-500
+    color: "#f59e0b", // amber-500
     bgClass: "bg-amber-500",
-    textClass: "text-amber-400",
+    textClass: "text-amber-600",
   },
   {
     key: "producing",
     label: "Đang may",
-    color: "#3b82f6", // blue-500
-    bgClass: "bg-blue-500",
-    textClass: "text-blue-400",
+    color: "#0097b2", // HDC Teal
+    bgClass: "bg-brand-500",
+    textClass: "text-brand-600",
   },
   {
     key: "completed",
     label: "Hoàn thành",
     color: "#10b981", // emerald-500
     bgClass: "bg-emerald-500",
-    textClass: "text-emerald-400",
+    textClass: "text-emerald-600",
   },
   {
     key: "cancelled",
     label: "Đã huỷ",
     color: "#ef4444", // rose-500
     bgClass: "bg-rose-500",
-    textClass: "text-rose-400",
+    textClass: "text-rose-600",
   },
 ];
 
@@ -72,18 +72,18 @@ export default function OrderStatusChart({ statusCounts = {} }) {
   });
 
   return (
-    <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl flex flex-col justify-between h-full">
+    <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-sm transition-shadow flex flex-col justify-between h-full">
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
             <span>Phân Bổ Trạng Thái Đơn Hàng</span>
           </h3>
-          <span className="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 font-medium">
+          <span className="text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-bold border border-slate-200/60">
             Tổng: {total} đơn
           </span>
         </div>
-        <p className="text-xs text-slate-400 mb-6">
-          Tỷ lệ đơn hàng theo quy trình xử lý tại xưởng may
+        <p className="text-xs text-slate-500 mb-6">
+          Tỷ lệ đơn hàng theo quy trình xử lý tại xưởng may HDC
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export default function OrderStatusChart({ statusCounts = {} }) {
               cy={center}
               r={radius}
               fill="transparent"
-              stroke="#1e293b"
+              stroke="#f1f5f9"
               strokeWidth={strokeWidth}
             />
 
@@ -137,13 +137,13 @@ export default function OrderStatusChart({ statusCounts = {} }) {
                 const active = slices.find((s) => s.key === hoveredKey);
                 return (
                   <>
-                    <span className="text-xl font-extrabold text-white font-mono">
+                    <span className="text-xl font-extrabold text-slate-900 font-mono">
                       {active?.count}
                     </span>
-                    <span className="text-[11px] font-medium text-slate-400 max-w-[80px] truncate">
+                    <span className="text-[11px] font-medium text-slate-500 max-w-[80px] truncate">
                       {active?.label}
                     </span>
-                    <span className="text-[10px] text-blue-400 font-bold">
+                    <span className="text-[10px] text-brand-600 font-bold">
                       {active?.percentage}%
                     </span>
                   </>
@@ -151,10 +151,10 @@ export default function OrderStatusChart({ statusCounts = {} }) {
               })()
             ) : (
               <>
-                <span className="text-2xl font-extrabold text-white font-mono">
+                <span className="text-2xl font-extrabold text-slate-900 font-mono">
                   {total}
                 </span>
-                <span className="text-xs text-slate-400 font-medium">
+                <span className="text-xs text-slate-500 font-medium">
                   Đơn Hàng
                 </span>
               </>
@@ -171,21 +171,21 @@ export default function OrderStatusChart({ statusCounts = {} }) {
                 key={slice.key}
                 onMouseEnter={() => setHoveredKey(slice.key)}
                 onMouseLeave={() => setHoveredKey(null)}
-                className={`flex items-center justify-between p-2 rounded-xl text-xs transition-colors cursor-pointer ${
-                  isHovered ? "bg-slate-800/80" : "hover:bg-slate-800/40"
+                className={`flex items-center justify-between p-2 rounded-xl text-xs transition-colors cursor-pointer border ${
+                  isHovered ? "bg-slate-50 border-slate-200" : "border-transparent hover:bg-slate-50"
                 }`}
               >
                 <div className="flex items-center gap-2.5">
                   <span
-                    className={`w-3 h-3 rounded-full ${slice.bgClass} shadow-sm`}
+                    className={`w-3 h-3 rounded-full ${slice.bgClass} shadow-xs`}
                   />
-                  <span className="text-slate-300 font-medium">
+                  <span className="text-slate-700 font-medium">
                     {slice.label}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 font-mono">
-                  <span className="font-bold text-white">{slice.count}</span>
-                  <span className="text-slate-500 w-8 text-right">
+                  <span className="font-bold text-slate-900">{slice.count}</span>
+                  <span className="text-slate-400 w-8 text-right">
                     {total > 0 ? `${slice.percentage}%` : "0%"}
                   </span>
                 </div>
@@ -195,9 +195,12 @@ export default function OrderStatusChart({ statusCounts = {} }) {
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-slate-800/80 text-[11px] text-slate-400 flex items-center justify-between">
+      <div className="mt-4 pt-4 border-t border-slate-100 text-[11px] text-slate-500 flex items-center justify-between">
         <span>Cập nhật theo thời gian thực</span>
-        <span className="text-emerald-400 font-medium">Đồng bộ tự động</span>
+        <span className="text-emerald-600 font-semibold flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          Đồng bộ tự động
+        </span>
       </div>
     </div>
   );

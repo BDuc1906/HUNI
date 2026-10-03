@@ -355,7 +355,7 @@ export default function QuickQuoteSection() {
                       href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                      className="w-full sm:w-auto px-5 py-2.5 bg-[#0068FF] hover:bg-[#0055d4] text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2"
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Chat Zalo Nhận Báo Giá Ngay</span>

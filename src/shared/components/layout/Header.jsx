@@ -93,14 +93,15 @@ const MAIN_NAV = [
   { label: "Bảng Vải", href: "/bang-vai" },
   { label: "Quy Trình", href: "/quy-trinh-may-dong-phuc-doanh-nghiep" },
   { label: "Liên Hệ", href: "/lien-he" },
-  { label: "⚡ Quản Trị (Admin Demo)", href: "/admin", isHighlight: true },
 ];
 
 // ============================================================
 // HOVER DELAY — Chờ 150ms trước khi đóng menu
+// để user có thời gian di chuột từ button xuống dropdown
 // ============================================================
 const HOVER_CLOSE_DELAY = 180;
 
+// Các nội dung thuộc module Quy Trình dùng chung một trạng thái active trong navigation.
 const PROCESS_MODULE_PATHS = new Set([
   "/quy-trinh-may-dong-phuc-doanh-nghiep",
   "/bao-gia-dong-phuc-cong-ty",
@@ -126,11 +127,16 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
 
+  // ✅ Dropdown hover state
   const [openDropdown, setOpenDropdown] = useState(null);
   const closeTimerRef = useRef(null);
 
+  // Mobile menu: category sub-menu mở/đóng
   const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
 
+  // ============================================================
+  // HOVER HANDLERS
+  // ============================================================
   const handleMouseEnter = (menuLabel) => {
     if (closeTimerRef.current) {
       clearTimeout(closeTimerRef.current);
@@ -145,17 +151,32 @@ export default function Header() {
     }, HOVER_CLOSE_DELAY);
   };
 
+  // Cleanup timer khi unmount
   useEffect(() => {
     return () => {
       if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
     };
   }, []);
 
+  // Đóng dropdown khi đổi route
   useEffect(() => {
     setOpenDropdown(null);
     setMobileMenuOpen(false);
   }, [pathname]);
 
+  // Lắng nghe scroll để áp dụng hiệu ứng nổi cố định cho Header
+  const [isScrolled, setIsScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // ============================================================
+  // SEARCH
+  // ============================================================
   const searchResults = searchQuery.trim()
     ? PRODUCTS.filter(
         (p) =>
@@ -172,6 +193,9 @@ export default function Header() {
     setMobileSearchOpen(false);
   };
 
+  // ============================================================
+  // HELPER: Check link active
+  // ============================================================
   const isActive = (href) => {
     if (href === "/" && pathname === "/") return true;
     if (
@@ -190,7 +214,11 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#004f5e] text-white border-b border-brand-400/20 shadow-xl">
+    <header
+      className={`sticky top-0 z-40 bg-[#004f5e]/95 backdrop-blur-md text-white border-b border-brand-400/20 transition-shadow duration-300 ${
+        isScrolled ? "shadow-2xl shadow-slate-950/30" : "shadow-lg"
+      }`}
+    >
       {/* =============================================
           TOP BAR
           ============================================= */}
@@ -236,14 +264,6 @@ export default function Header() {
               <ClipboardList className="w-3.5 h-3.5" />
               <span>Tra cứu đơn hàng</span>
             </button>
-            <span className="text-slate-600">|</span>
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] shadow-sm transition-all"
-            >
-              <ShieldCheck className="w-3 h-3 text-blue-200" />
-              <span>Admin (Demo)</span>
-            </Link>
           </div>
         </div>
       </div>
@@ -405,13 +425,14 @@ export default function Header() {
 
           <UserMenu />
 
+          {/* Lối tắt vào trang Quản Trị (Admin) */}
           <Link
             href="/admin"
-            title="Vào trang quản trị Admin Demo"
-            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs shadow-md shadow-amber-500/25 transition-all hover:scale-105"
+            title="Vào trang Quản Trị Hệ Thống (Admin)"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-500/20 hover:bg-brand-500 text-brand-300 hover:text-white border border-brand-500/40 text-xs font-bold transition-all shadow-sm shrink-0"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-slate-950" />
-            <span>Admin Demo</span>
+            <ShieldCheck className="w-3.5 h-3.5 text-brand-400" />
+            <span>Quản Trị</span>
           </Link>
 
           <button
@@ -461,6 +482,7 @@ export default function Header() {
                     />
                   </button>
 
+                  {/* DROPDOWN PANEL */}
                   {isOpen && (
                     <div
                       className="absolute left-0 top-full pt-1 z-50"
@@ -521,6 +543,7 @@ export default function Header() {
                           );
                         })}
 
+                        {/* Footer của dropdown */}
                         <div className="mt-1 pt-2 border-t border-slate-100 px-3 pb-1 flex items-center justify-between">
                           <span className="text-[11px] text-slate-500">
                             Cần tư vấn riêng cho doanh nghiệp?
@@ -537,20 +560,6 @@ export default function Header() {
                     </div>
                   )}
                 </div>
-              );
-            }
-
-            if (item.isHighlight) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  style={{ whiteSpace: "nowrap" }}
-                  className="ml-auto inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-500/30 transition-all hover:scale-105 my-1.5"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5 text-blue-200" />
-                  <span>{item.label}</span>
-                </Link>
               );
             }
 
@@ -600,7 +609,7 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto overscroll-contain">
+          <div className="flex-1 overflow-y-auto">
             {searchQuery.trim() ? (
               searchResults.length > 0 ? (
                 <div className="space-y-2">
@@ -670,7 +679,6 @@ export default function Header() {
 
       {/* =============================================
           MOBILE DRAWER NAV
-          ✅ FIX: tách header cố định + body cuộn được
           ============================================= */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40">
@@ -679,9 +687,8 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 flex flex-col">
-            {/* Header cố định trên cùng */}
-            <div className="bg-[#004f5e] p-4 border-b border-slate-800 flex items-center justify-between shrink-0">
+          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 overflow-y-auto">
+            <div className="sticky top-0 bg-[#004f5e] p-4 border-b border-slate-800 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
                 <div className="relative w-9 h-9 aspect-square overflow-hidden bg-white rounded-lg flex items-center justify-center shadow-md">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -703,8 +710,7 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Body cuộn được */}
-            <div className="flex-1 overflow-y-auto overscroll-contain p-4 space-y-5">
+            <div className="p-4 space-y-5">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
@@ -716,18 +722,20 @@ export default function Header() {
                 Nhận Báo Giá Nhanh 3 Phút
               </button>
 
+              {/* Lối tắt quản trị trên Mobile */}
               <Link
                 href="/admin"
                 onClick={() => setMobileMenuOpen(false)}
-                className="w-full py-2.5 px-3.5 bg-blue-600/20 hover:bg-blue-600 border border-blue-500/40 text-blue-300 hover:text-white font-bold text-xs rounded-xl flex items-center justify-between transition-all"
+                className="w-full py-2.5 px-3.5 bg-brand-500/10 hover:bg-brand-500/20 border border-brand-500/30 text-brand-300 font-bold text-xs rounded-xl flex items-center justify-between transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-blue-400" />
-                  <span>Trang Quản Trị Admin (Demo)</span>
+                  <ShieldCheck className="w-4 h-4 text-brand-400" />
+                  <span>Trang Quản Trị (Admin)</span>
                 </div>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
 
+              {/* NAV CHÍNH */}
               <div className="space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 block mb-2">
                   Điều hướng
@@ -810,6 +818,7 @@ export default function Header() {
                 })}
               </div>
 
+              {/* CALLS */}
               <div className="pt-3 border-t border-slate-800 space-y-2">
                 <a
                   href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
@@ -822,7 +831,7 @@ export default function Header() {
                   href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 bg-blue-600 text-white font-bold text-center rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors"
+                  className="w-full py-3 bg-[#0068FF] text-white font-bold text-center rounded-xl text-sm flex items-center justify-center gap-2 hover:bg-[#0055d4] shadow-md shadow-blue-500/20 transition-all"
                 >
                   Chat Zalo ngay
                 </a>

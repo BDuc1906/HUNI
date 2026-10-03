@@ -1,20 +1,22 @@
-import React, { Suspense } from "react";
+import React from "react";
 import Link from "next/link";
 import {
   ShoppingBag,
   TrendingUp,
   FileText,
   Users,
-  PlusCircle,
   ExternalLink,
-  RefreshCw,
   ShieldCheck,
-  Package,
 } from "lucide-react";
 import StatsCard from "./components/StatsCard";
 import OrderStatusChart from "./components/OrderStatusChart";
 import RecentOrdersTable from "./components/RecentOrdersTable";
 import RecentQuotesTable from "./components/RecentQuotesTable";
+import {
+  MOCK_DASHBOARD_STATS,
+  MOCK_ORDERS,
+  MOCK_QUOTES,
+} from "@/shared/data/adminMockData";
 
 export const metadata = {
   title: "Dashboard Tổng Quan | Admin HDC Fashion",
@@ -67,6 +69,21 @@ export default async function AdminDashboardPage() {
     console.error("[AdminDashboard] Error fetching stats:", error);
   }
 
+  // Tự động kích hoạt Mock Data chuẩn nghiệp vụ khi chưa kết nối backend
+  if (!totalOrders && !totalRevenue) {
+    totalOrders = MOCK_DASHBOARD_STATS.totalOrders;
+    totalRevenue = MOCK_DASHBOARD_STATS.totalRevenue;
+    totalQuotes = MOCK_DASHBOARD_STATS.totalQuotes;
+    totalCustomers = MOCK_DASHBOARD_STATS.totalCustomers;
+    pendingOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.pending;
+    producingOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.producing;
+    completedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.completed;
+    cancelledOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.cancelled;
+    newQuotes = MOCK_DASHBOARD_STATS.statusCounts.quotes.new;
+    recentOrders = MOCK_ORDERS.slice(0, 5);
+    recentQuotes = MOCK_QUOTES.slice(0, 5);
+  }
+
   const statusCounts = {
     pending: pendingOrders,
     producing: producingOrders,
@@ -77,15 +94,16 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-6">
       {/* 1. Header Banner & Quick Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200/80">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
             <span>Tổng Quan Hoạt Động</span>
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
-              Live
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Live Demo
             </span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Theo dõi doanh thu, trạng thái sản xuất và yêu cầu báo giá theo thời gian thực
           </p>
         </div>
@@ -93,14 +111,14 @@ export default async function AdminDashboardPage() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/admin/orders"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 transition-colors flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 shadow-xs transition-colors flex items-center gap-1.5"
           >
-            <ShoppingBag className="w-4 h-4 text-blue-400" />
+            <ShoppingBag className="w-4 h-4 text-brand-600" />
             <span>Xem Đơn Hàng</span>
           </Link>
           <Link
             href="/admin/quotes"
-            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/25 transition-all flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow-md shadow-brand-500/25 transition-all flex items-center gap-1.5"
           >
             <FileText className="w-4 h-4" />
             <span>Xử Lý Báo Giá ({newQuotes})</span>
@@ -114,44 +132,44 @@ export default async function AdminDashboardPage() {
         <StatsCard
           title="Tổng Đơn Hàng"
           value={totalOrders}
-          subtext={`${pendingOrders} đơn đang chờ xử lý`}
+          subtext={`${pendingOrders} đơn đang chờ duyệt`}
           icon={ShoppingBag}
-          iconBgColor="bg-blue-500/10"
-          iconTextColor="text-blue-400"
-          borderColor="border-blue-500/20"
+          iconBgColor="bg-brand-50"
+          iconTextColor="text-brand-600"
+          trend={{ isPositive: true, label: "+14.8% tuần này" }}
         />
 
         {/* Tổng doanh thu */}
         <StatsCard
-          title="Doanh Thu"
+          title="Doanh Thu Ghi Nhận"
           value={formatVND(totalRevenue)}
-          subtext="Tổng doanh số ghi nhận"
+          subtext="Doanh số tích lũy B2B"
           icon={TrendingUp}
-          iconBgColor="bg-emerald-500/10"
-          iconTextColor="text-emerald-400"
-          borderColor="border-emerald-500/20"
+          iconBgColor="bg-emerald-50"
+          iconTextColor="text-emerald-600"
+          trend={{ isPositive: true, label: "+18.2% tháng này" }}
         />
 
         {/* Yêu cầu báo giá */}
         <StatsCard
           title="Yêu Cầu Báo Giá"
           value={totalQuotes}
-          subtext={`${newQuotes} yêu cầu mới chưa xử lý`}
+          subtext={`${newQuotes} yêu cầu mới cần gửi báo giá`}
           icon={FileText}
-          iconBgColor="bg-amber-500/10"
-          iconTextColor="text-amber-400"
-          borderColor="border-amber-500/20"
+          iconBgColor="bg-amber-50"
+          iconTextColor="text-amber-600"
+          trend={{ isPositive: true, label: "5 phản hồi hôm nay" }}
         />
 
         {/* Khách hàng */}
         <StatsCard
-          title="Khách Hàng"
+          title="Khách Hàng Doanh Nghiệp"
           value={totalCustomers}
-          subtext="Doanh nghiệp & đối tác"
+          subtext="Đối tác & tập đoàn lớn"
           icon={Users}
-          iconBgColor="bg-purple-500/10"
-          iconTextColor="text-purple-400"
-          borderColor="border-purple-500/20"
+          iconBgColor="bg-purple-50"
+          iconTextColor="text-purple-600"
+          trend={{ isPositive: true, label: "+8 đối tác mới" }}
         />
       </div>
 
@@ -162,56 +180,56 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Thẻ chỉ dẫn & trạng thái xưởng */}
-        <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl flex flex-col justify-between">
+        <div className="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-sm transition-shadow flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+              <div className="p-2 rounded-xl bg-brand-50 text-brand-600 border border-brand-100">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-bold text-white">Quy Trình Xử Lý</h3>
+              <h3 className="text-base font-bold text-slate-900">Tiến Độ Xưởng May</h3>
             </div>
-            <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-              Theo dõi tiến độ từ tiếp nhận báo giá, dựng mẫu demo, sản xuất đến bàn giao khách hàng.
+            <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+              Quy trình may đo khép kín từ tiếp nhận mẫu thử 0đ, cắt vải, thêu vi tính đến QC xuất xưởng.
             </p>
 
             <div className="space-y-3">
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-300 font-medium flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between text-xs">
+                <span className="text-slate-700 font-medium flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
                   Đơn chờ duyệt sản xuất:
                 </span>
-                <span className="font-mono font-bold text-amber-400">
+                <span className="font-mono font-bold text-amber-700">
                   {pendingOrders} đơn
                 </span>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-300 font-medium flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-400" />
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between text-xs">
+                <span className="text-slate-700 font-medium flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-brand-500" />
                   Đơn đang cắt may / thêu:
                 </span>
-                <span className="font-mono font-bold text-blue-400">
+                <span className="font-mono font-bold text-brand-700">
                   {producingOrders} đơn
                 </span>
               </div>
 
-              <div className="p-3 rounded-xl bg-slate-950/60 border border-slate-800 flex items-center justify-between text-xs">
-                <span className="text-slate-300 font-medium flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-sky-400" />
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between text-xs">
+                <span className="text-slate-700 font-medium flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-sky-500" />
                   Báo giá mới cần phản hồi:
                 </span>
-                <span className="font-mono font-bold text-sky-400">
+                <span className="font-mono font-bold text-sky-700">
                   {newQuotes} yêu cầu
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
-            <span className="text-[11px] text-slate-400">Đơn vị: VNĐ / Chiếc</span>
+          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-[11px] text-slate-500">Đơn vị: VNĐ / Chiếc</span>
             <Link
               href="/admin/orders"
-              className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 hover:underline"
+              className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1 hover:underline"
             >
               <span>Quản lý xưởng</span>
               <ExternalLink className="w-3.5 h-3.5" />

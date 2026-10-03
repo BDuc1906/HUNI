@@ -93,24 +93,24 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="w-full max-w-lg bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-950/40">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+            <div className="p-2 rounded-xl bg-brand-50 text-brand-600 border border-brand-200">
               <Tag className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">Tạo Mã Voucher Mới</h3>
-              <p className="text-xs text-slate-400">Thiết lập chiết khấu cho khách hàng</p>
+              <h3 className="text-base font-bold text-slate-900">Tạo Mã Voucher Mới</h3>
+              <p className="text-xs text-slate-500">Thiết lập chiết khấu cho khách hàng</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -119,17 +119,17 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {errorMessage && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
               <span>{errorMessage}</span>
             </div>
           )}
 
           {/* Real-time preview */}
-          <div className="p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/25 flex items-start gap-2.5 text-xs text-blue-200">
-            <Sparkles className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-brand-50 border border-brand-200 flex items-start gap-2.5 text-xs text-brand-900">
+            <Sparkles className="w-4 h-4 text-brand-600 shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold text-blue-300 block text-[11px] uppercase">
+              <span className="font-bold text-brand-800 block text-[11px] uppercase">
                 Bản xem trước voucher:
               </span>
               <span className="mt-0.5 block">{previewText()}</span>
@@ -138,29 +138,29 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
 
           {/* Mã voucher */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Mã voucher <span className="text-rose-400">*</span>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Mã voucher <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
               value={code}
               onChange={handleCodeChange}
               placeholder="VD: HUNI2026, VIP10, CHAOHOPDONG"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm font-mono font-bold text-white uppercase placeholder-slate-500 focus:outline-none focus:border-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-mono font-bold text-slate-900 uppercase placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-2xs"
             />
           </div>
 
           {/* Loại giảm */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Hình thức giảm giá <span className="text-rose-400">*</span>
+            <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+              Hình thức giảm giá <span className="text-rose-500">*</span>
             </label>
             <div className="grid grid-cols-2 gap-3">
               <label
                 className={`flex items-center justify-center gap-2 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
                   type === "percentage"
-                    ? "bg-blue-600/20 border-blue-500 text-blue-300"
-                    : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                    ? "bg-brand-50 border-brand-500 text-brand-700 ring-2 ring-brand-500/20"
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                 }`}
               >
                 <input
@@ -177,8 +177,8 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
               <label
                 className={`flex items-center justify-center gap-2 p-2.5 rounded-xl border text-xs font-bold cursor-pointer transition-all ${
                   type === "fixed"
-                    ? "bg-blue-600/20 border-blue-500 text-blue-300"
-                    : "bg-slate-950 border-slate-800 text-slate-400 hover:text-white"
+                    ? "bg-brand-50 border-brand-500 text-brand-700 ring-2 ring-brand-500/20"
+                    : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
                 }`}
               >
                 <input
@@ -197,9 +197,9 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
           {/* Mức giảm & Giảm tối đa */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Mức giảm {type === "percentage" ? "(%)" : "(VNĐ)"}{" "}
-                <span className="text-rose-400">*</span>
+                <span className="text-rose-500">*</span>
               </label>
               <input
                 type="number"
@@ -208,13 +208,13 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
                 value={discount}
                 onChange={(e) => setDiscount(e.target.value)}
                 placeholder={type === "percentage" ? "VD: 10" : "VD: 200000"}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 font-mono focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-2xs"
               />
             </div>
 
             {type === "percentage" ? (
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Giảm tối đa (VNĐ)
                 </label>
                 <input
@@ -224,12 +224,12 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
                   value={maxDiscount}
                   onChange={(e) => setMaxDiscount(e.target.value)}
                   placeholder="VD: 500000 (để trống: vô hạn)"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 font-mono focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-2xs"
                 />
               </div>
             ) : (
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                   Giới hạn lượt dùng
                 </label>
                 <input
@@ -238,7 +238,7 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
                   value={usageLimit}
                   onChange={(e) => setUsageLimit(e.target.value)}
                   placeholder="Để trống = Không giới hạn"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 font-mono focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-2xs"
                 />
               </div>
             )}
@@ -247,7 +247,7 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
           {/* Đơn hàng tối thiểu & Hết hạn */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Đơn hàng tối thiểu (VNĐ)
               </label>
               <input
@@ -257,28 +257,28 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
                 value={minOrder}
                 onChange={(e) => setMinOrder(e.target.value)}
                 placeholder="VD: 1000000"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 font-mono focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-2xs"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                 Ngày hết hạn (tuỳ chọn)
               </label>
               <input
                 type="date"
                 value={expiresAt}
                 onChange={(e) => setExpiresAt(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 shadow-2xs"
               />
             </div>
           </div>
 
           {/* Kích hoạt ngay */}
-          <label className="flex items-center justify-between p-3 rounded-xl bg-slate-950/60 border border-slate-800 cursor-pointer">
+          <label className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
             <div>
-              <span className="text-xs font-bold text-white block">Kích hoạt ngay</span>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-xs font-bold text-slate-900 block">Kích hoạt ngay</span>
+              <span className="text-[11px] text-slate-500">
                 Cho phép khách áp dụng mã ngay khi đặt hàng
               </span>
             </div>
@@ -286,24 +286,24 @@ export default function CreateVoucherModal({ isOpen, onClose, onSuccess }) {
               type="checkbox"
               checked={active}
               onChange={(e) => setActive(e.target.checked)}
-              className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
+              className="w-4 h-4 accent-brand-600 rounded cursor-pointer"
             />
           </label>
 
           {/* Footer buttons */}
-          <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-800">
+          <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-200">
             <button
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+              className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
             >
               Huỷ bỏ
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-brand-600 hover:bg-brand-700 text-white shadow-sm shadow-brand-600/20 transition-all flex items-center gap-2 disabled:opacity-50"
             >
               {loading ? (
                 <>

@@ -15,6 +15,7 @@ import {
 
 // ============================================================
 // 5 DANH MỤC CHÍNH — Dẫn link tới 5 trang con
+// Ảnh phụ kiện đã sửa: dùng 04_culture_accessories_01.jpg
 // ============================================================
 const CATEGORIES_DATA = [
   {
@@ -70,6 +71,7 @@ const CATEGORIES_DATA = [
     name: "Phụ Kiện Doanh Nghiệp",
     shortName: "Phụ Kiện",
     desc: "Mũ nón, cặp da, cà vạt, túi quà tặng thương hiệu",
+    // ✅ ĐÃ SỬA: từ uniform_accessories.jpg → 04_culture_accessories_01.jpg
     image: "/images/04_culture_accessories_01.jpg",
     icon: PackageCheck,
     href: "/phu-kien-doanh-nghiep",
@@ -86,7 +88,9 @@ export default function CategoryShowcase() {
       className="py-14 sm:py-20 bg-gradient-to-b from-white via-brand-50/20 to-white border-t border-slate-200"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
-        {/* HEADER */}
+        {/* ============================================
+            HEADER
+            ============================================ */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2 sm:space-y-3">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-brand-500" />
@@ -105,86 +109,85 @@ export default function CategoryShowcase() {
 
         {/* ============================================
             GRID 5 DANH MỤC
-            ✅ Mobile: scroll ngang snap
-            ✅ Desktop (lg+): grid 5 cột
             ============================================ */}
-        <div className="lg:grid lg:grid-cols-5 lg:gap-5">
-          {/* Scroll container cho mobile */}
-          <div className="flex lg:contents gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2 -mx-3 px-3 lg:mx-0 lg:px-0 lg:overflow-visible lg:pb-0">
-            {CATEGORIES_DATA.map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <Link
-                  key={cat.id}
-                  href={cat.href}
-                  className="group relative bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col transform hover:-translate-y-2 active:scale-[0.98] shrink-0 w-[78vw] xs:w-[72vw] sm:w-[56vw] lg:w-auto snap-start"
-                >
-                  {/* Image + Gradient Overlay */}
-                  <div className="relative h-36 sm:h-44 lg:h-48 w-full overflow-hidden bg-slate-100">
-                    <Image
-                      src={cat.image}
-                      alt={cat.name}
-                      fill
-                      sizes="(max-width: 640px) 78vw, (max-width: 1024px) 56vw, 20vw"
-                      quality={85}
-                      className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
-                      style={{ imageRendering: "-webkit-optimize-contrast" }}
-                    />
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5">
+          {CATEGORIES_DATA.map((cat) => {
+            const Icon = cat.icon;
+            return (
+              <Link
+                key={cat.id}
+                href={cat.href}
+                className="group relative bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-brand-400 shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col transform hover:-translate-y-2 active:scale-[0.98]"
+              >
+                {/* ==========================================
+                    Image + Gradient Overlay
+                    ========================================== */}
+                <div className="relative h-36 sm:h-44 lg:h-48 w-full overflow-hidden bg-slate-100">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                    quality={85}
+                    className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                    style={{ imageRendering: "-webkit-optimize-contrast" }}
+                  />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-                    <div
-                      className={`absolute top-2.5 right-2.5 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-white shadow-xl ring-2 ring-white/40 group-hover:scale-110 transition-transform`}
-                    >
-                      <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-
-                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#004f5e] shadow-md">
-                      {cat.badge}
-                    </div>
-
-                    <div className="absolute bottom-3 left-3 right-3">
-                      <div className="text-white text-xs sm:text-sm font-black uppercase tracking-wider leading-tight line-clamp-2 drop-shadow-lg">
-                        {cat.shortName}
-                      </div>
-                      <div className="text-brand-200 text-[10px] font-semibold mt-0.5">
-                        {cat.count}
-                      </div>
-                    </div>
+                  {/* Icon badge — góc trên phải */}
+                  <div
+                    className={`absolute top-2.5 right-2.5 w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-white shadow-xl ring-2 ring-white/40 group-hover:scale-110 transition-transform`}
+                  >
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
 
-                  {/* Content */}
-                  <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h3 className="font-black text-[#004f5e] text-xs sm:text-sm lg:text-base leading-tight line-clamp-2 group-hover:text-brand-700 transition-colors">
-                        {cat.name}
-                      </h3>
-                      <p className="text-[10px] sm:text-xs text-slate-500 mt-1.5 leading-snug line-clamp-2 hidden sm:block">
-                        {cat.desc}
-                      </p>
-                    </div>
+                  {/* Badge — góc trên trái */}
+                  <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-white/95 backdrop-blur-md text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-[#004f5e] shadow-md">
+                    {cat.badge}
+                  </div>
 
-                    <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] sm:text-xs font-bold">
-                      <span className="text-brand-700 group-hover:text-brand-800 transition-colors whitespace-nowrap">
-                        Xem danh mục
-                      </span>
-                      <ArrowRight className="w-3.5 h-3.5 text-brand-500 group-hover:translate-x-1 group-hover:text-brand-700 transition-all" />
+                  {/* Short name — góc dưới */}
+                  <div className="absolute bottom-3 left-3 right-3">
+                    <div className="text-white text-xs sm:text-sm font-black uppercase tracking-wider leading-tight line-clamp-2 drop-shadow-lg">
+                      {cat.shortName}
+                    </div>
+                    <div className="text-brand-200 text-[10px] font-semibold mt-0.5">
+                      {cat.count}
                     </div>
                   </div>
-                </Link>
-              );
-            })}
-          </div>
+                </div>
+
+                {/* ==========================================
+                    Content
+                    ========================================== */}
+                <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="font-black text-[#004f5e] text-xs sm:text-sm lg:text-base leading-tight line-clamp-2 group-hover:text-brand-700 transition-colors">
+                      {cat.name}
+                    </h3>
+                    <p className="text-[10px] sm:text-xs text-slate-500 mt-1.5 leading-snug line-clamp-2 hidden sm:block">
+                      {cat.desc}
+                    </p>
+                  </div>
+
+                  {/* CTA */}
+                  <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-[10px] sm:text-xs font-bold">
+                    <span className="text-brand-700 group-hover:text-brand-800 transition-colors whitespace-nowrap">
+                      Xem danh mục
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 text-brand-500 group-hover:translate-x-1 group-hover:text-brand-700 transition-all" />
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
-        {/* Gợi ý vuốt — chỉ mobile */}
-        <div className="lg:hidden mt-3 text-center text-[11px] text-slate-400 font-medium flex items-center justify-center gap-1.5">
-          <span>←</span>
-          <span>Vuốt để xem thêm danh mục</span>
-          <span>→</span>
-        </div>
-
-        {/* BOTTOM CTA */}
+        {/* ============================================
+            BOTTOM CTA
+            ============================================ */}
         <div className="mt-10 sm:mt-12 text-center">
           <a
             href="#catalog-section"

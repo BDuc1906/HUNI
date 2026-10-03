@@ -123,7 +123,7 @@ export default function ContactHero() {
                   href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1 transition-colors shadow-sm"
+                  className="px-3 py-1.5 rounded-lg bg-[#0068FF] hover:bg-[#0055d4] text-white font-bold text-xs flex items-center gap-1 transition-colors shadow-sm"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
                   Zalo

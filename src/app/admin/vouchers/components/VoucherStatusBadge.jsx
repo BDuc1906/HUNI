@@ -11,8 +11,8 @@ export default function VoucherStatusBadge({ voucher }) {
 
   if (isExpired) {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-500/15 text-rose-400 border border-rose-500/30">
-        <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80">
+        <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
         <span>Hết hạn</span>
       </span>
     );
@@ -20,8 +20,8 @@ export default function VoucherStatusBadge({ voucher }) {
 
   if (isExhausted) {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">
-        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/80">
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
         <span>Đã dùng hết</span>
       </span>
     );
@@ -29,7 +29,7 @@ export default function VoucherStatusBadge({ voucher }) {
 
   if (!voucher.active) {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-700/25 text-slate-400 border border-slate-700/40">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
         <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
         <span>Đã tắt</span>
       </span>
@@ -37,8 +37,8 @@ export default function VoucherStatusBadge({ voucher }) {
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
       <span>Hoạt động</span>
     </span>
   );

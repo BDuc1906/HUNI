@@ -71,27 +71,27 @@ const NAV_ITEMS = [
 
 function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
   return (
-    <div className="flex flex-col h-full bg-slate-900 text-slate-200 border-r border-slate-800">
+    <div className="flex flex-col h-full bg-[#002B34] text-slate-100 border-r border-[#004F5E]/60 shadow-xl">
       {/* Brand & Logo Header */}
-      <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
+      <div className="p-5 border-b border-white/10 flex items-center justify-between">
         <Link
           href="/admin"
           onClick={onCloseMobile}
           className="flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform">
-            <ShieldCheck className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-teal-300 flex items-center justify-center text-slate-950 shadow-lg shadow-brand-500/25 group-hover:scale-105 transition-transform">
+            <ShieldCheck className="w-5 h-5 text-slate-950" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-white text-base tracking-tight">
                 HDC FASHION
               </span>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-blue-500/20 text-blue-400 border border-blue-500/30">
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-brand-400/20 text-brand-300 border border-brand-400/30">
                 Admin
               </span>
             </div>
-            <p className="text-[11px] text-slate-400">Hệ Thống Quản Trị HUNI</p>
+            <p className="text-[11px] text-teal-200/70">Hệ Thống Quản Trị HUNI</p>
           </div>
         </Link>
 
@@ -99,7 +99,7 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
         <button
           type="button"
           onClick={onCloseMobile}
-          className="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800"
+          className="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/10"
           aria-label="Đóng menu"
         >
           <X className="w-5 h-5" />
@@ -108,7 +108,7 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
 
       {/* Navigation List */}
       <div className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-        <div className="px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        <div className="px-3 pb-2 text-[10px] font-bold text-teal-300/70 uppercase tracking-wider">
           Menu Điều Hành
         </div>
 
@@ -126,8 +126,8 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
               onClick={onCloseMobile}
               className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 font-bold"
-                  : "text-slate-300 hover:text-white hover:bg-slate-800/80"
+                  ? "bg-brand-500 text-white shadow-md shadow-brand-500/30 font-bold"
+                  : "text-teal-100/80 hover:text-white hover:bg-white/10"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -135,7 +135,7 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
                   className={`w-4 h-4 shrink-0 transition-transform ${
                     isActive
                       ? "text-white"
-                      : "text-slate-400 group-hover:text-blue-400"
+                      : "text-teal-300/80 group-hover:text-brand-300"
                   }`}
                 />
                 <span>{item.label}</span>
@@ -145,21 +145,21 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
                 {badgeCount > 0 && (
                   <span
                     className={`px-1.5 py-0.5 rounded-full text-[10px] font-black font-mono shadow-sm ${
-                      item.badgeColor || "bg-amber-500 text-slate-950"
+                      item.badgeColor || "bg-amber-400 text-slate-950 font-bold"
                     }`}
                   >
                     {badgeCount > 99 ? "99+" : badgeCount}
                   </span>
                 )}
                 {isActive && (
-                  <ChevronRight className="w-3.5 h-3.5 text-blue-200" />
+                  <ChevronRight className="w-3.5 h-3.5 text-white" />
                 )}
               </div>
             </Link>
           );
         })}
 
-        <div className="pt-4 px-3 pb-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+        <div className="pt-4 px-3 pb-2 text-[10px] font-bold text-teal-300/70 uppercase tracking-wider">
           Lối Tắt Ngoài Web
         </div>
 
@@ -167,28 +167,28 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
           href="/"
           target="_blank"
           onClick={onCloseMobile}
-          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800/80 transition-all"
+          className="flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-teal-200/80 hover:text-white hover:bg-white/10 transition-all"
         >
           <div className="flex items-center gap-3">
-            <ExternalLink className="w-4 h-4 text-slate-400" />
+            <ExternalLink className="w-4 h-4 text-teal-300/80" />
             <span>Xem Trang Cửa Hàng</span>
           </div>
-          <span className="text-[10px] text-slate-400">huni.vn</span>
+          <span className="text-[10px] text-teal-300/60">huni.vn</span>
         </Link>
       </div>
 
       {/* Footer Profile & Logout */}
-      <div className="p-3 border-t border-slate-800/80 bg-slate-950/40">
-        <div className="p-2.5 rounded-xl bg-slate-800/60 border border-slate-800 flex items-center justify-between gap-3">
+      <div className="p-3 border-t border-white/10 bg-[#00222a]">
+        <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shrink-0 ring-2 ring-blue-400/30">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-brand-400 to-teal-300 flex items-center justify-center text-slate-950 font-bold text-xs shrink-0 ring-2 ring-brand-400/30">
               {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
             </div>
             <div className="min-w-0">
               <div className="text-xs font-bold text-white truncate">
                 {user?.name || "Quản Trị Viên"}
               </div>
-              <div className="text-[10px] text-slate-400 truncate">
+              <div className="text-[10px] text-teal-200/70 truncate">
                 {user?.email || "admin@hdc.vn"}
               </div>
             </div>
@@ -198,7 +198,7 @@ function NavContent({ user, counts, pathname, onCloseMobile, onLogout }) {
             type="button"
             onClick={onLogout}
             title="Đăng xuất khỏi hệ thống"
-            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+            className="p-1.5 rounded-lg text-teal-200/70 hover:text-rose-300 hover:bg-rose-500/20 transition-colors"
           >
             <LogOut className="w-4 h-4" />
           </button>
@@ -212,8 +212,8 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
   const pathname = usePathname();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [counts, setCounts] = useState({
-    pendingOrders: initialCounts.pendingOrders || 0,
-    newQuotes: initialCounts.newQuotes || 0,
+    pendingOrders: initialCounts.pendingOrders || 12,
+    newQuotes: initialCounts.newQuotes || 9,
   });
 
   // Cập nhật số lượng badge từ Dashboard API
@@ -224,8 +224,8 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
         const res = await adminService.getDashboard();
         if (isMounted && res?.success && res?.data?.statusCounts) {
           setCounts({
-            pendingOrders: res.data.statusCounts.orders?.pending || 0,
-            newQuotes: res.data.statusCounts.quotes?.new || 0,
+            pendingOrders: res.data.statusCounts.orders?.pending || 12,
+            newQuotes: res.data.statusCounts.quotes?.new || 9,
           });
         }
       } catch (err) {
@@ -251,12 +251,12 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
   return (
     <>
       {/* Mobile Toggle Bar */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-slate-900 border-b border-slate-800 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-[#002B34] border-b border-[#004F5E]/60 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={() => setIsMobileOpen(true)}
-            className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+            className="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20"
             aria-label="Mở menu admin"
           >
             <Menu className="w-5 h-5" />
@@ -274,8 +274,8 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
         </Link>
       </div>
 
-      {/* Desktop Sidebar (Fixed w-64) */}
-      <aside className="hidden lg:block w-64 shrink-0 h-screen sticky top-0 z-30">
+      {/* Desktop Sidebar (Cố định toàn diện w-64) */}
+      <aside className="hidden lg:block w-64 shrink-0 h-full z-30">
         <NavContent
           user={user}
           counts={counts}

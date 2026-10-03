@@ -22,23 +22,23 @@ import {
 const STATUS_BADGES = {
   PENDING: {
     label: "Chờ Tiếp Nhận",
-    color: "bg-amber-500/10 text-amber-400 border-amber-500/30",
+    color: "bg-amber-50 text-amber-700 border-amber-200/80",
   },
   PROCESSING: {
     label: "Đang Xử Lý",
-    color: "bg-blue-500/10 text-blue-400 border-blue-500/30",
+    color: "bg-brand-50 text-brand-700 border-brand-200/80",
   },
   EXCHANGED: {
     label: "Đã Đổi Hàng",
-    color: "bg-purple-500/10 text-purple-400 border-purple-500/30",
+    color: "bg-purple-50 text-purple-700 border-purple-200/80",
   },
   REFUNDED: {
     label: "Đã Hoàn Tiền",
-    color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
+    color: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
   },
   REJECTED: {
     label: "Từ Chối",
-    color: "bg-rose-500/10 text-rose-400 border-rose-500/30",
+    color: "bg-rose-50 text-rose-700 border-rose-200/80",
   },
 };
 
@@ -131,9 +131,9 @@ export default function ReturnsTable({
     <div className="space-y-4">
       {/* THANH THAO TÁC HÀNG LOẠT (BULK ACTIONS BAR) */}
       {selectedIds.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-gradient-to-r from-indigo-950/90 to-slate-900 border border-indigo-700/50 rounded-2xl shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-[#002B34] border border-brand-500/30 rounded-2xl shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2.5">
-            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-indigo-500 text-xs font-black text-white">
+            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-brand-500 text-xs font-black text-white">
               {selectedIds.length}
             </span>
             <span className="text-xs font-semibold text-slate-200">
@@ -145,7 +145,7 @@ export default function ReturnsTable({
             <button
               type="button"
               onClick={() => handleBulkStatusChange("PROCESSING")}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/40 transition-colors flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-600/30 hover:bg-brand-600/50 text-brand-300 border border-brand-500/40 transition-colors flex items-center gap-1.5"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Chuyển sang Đang xử lý</span>
@@ -190,26 +190,26 @@ export default function ReturnsTable({
       )}
 
       {/* BẢNG DỮ LIỆU */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 font-bold uppercase tracking-wider select-none">
+              <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 font-bold uppercase tracking-wider select-none text-[11px]">
                 <th className="py-3.5 px-4 w-12 text-center">
                   <button
                     type="button"
                     onClick={toggleSelectAll}
-                    className="p-1 rounded hover:bg-slate-800 transition-colors text-slate-400 hover:text-white"
+                    className="p-1 rounded hover:bg-slate-200/60 transition-colors text-slate-400 hover:text-slate-700"
                     title={isAllSelected ? "Bỏ chọn tất cả" : "Chọn tất cả"}
                   >
                     {isAllSelected ? (
-                      <CheckSquare className="w-4 h-4 text-indigo-400" />
+                      <CheckSquare className="w-4 h-4 text-brand-600" />
                     ) : isPartiallySelected ? (
-                      <div className="w-4 h-4 rounded bg-indigo-500/30 border border-indigo-400 flex items-center justify-center">
-                        <div className="w-2 h-0.5 bg-indigo-400" />
+                      <div className="w-4 h-4 rounded bg-brand-50 border border-brand-500 flex items-center justify-center">
+                        <div className="w-2 h-0.5 bg-brand-600" />
                       </div>
                     ) : (
-                      <Square className="w-4 h-4 text-slate-500" />
+                      <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
                     )}
                   </button>
                 </th>
@@ -223,19 +223,19 @@ export default function ReturnsTable({
               </tr>
             </thead>
 
-            <tbody className="divide-y divide-slate-800/80">
+            <tbody className="divide-y divide-slate-100">
               {loading && returns.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="py-16 text-center text-slate-400">
-                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-indigo-500" />
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-brand-600" />
                     <span>Đang tải danh sách yêu cầu đổi trả & hoàn tiền...</span>
                   </td>
                 </tr>
               ) : returns.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-16 text-center text-slate-400">
-                    <RotateCcw className="w-10 h-10 mx-auto mb-3 text-slate-600" />
-                    <p className="font-semibold text-slate-300">Không tìm thấy yêu cầu đổi trả nào</p>
+                  <td colSpan={8} className="py-16 text-center text-slate-500">
+                    <RotateCcw className="w-10 h-10 mx-auto mb-3 text-slate-300" />
+                    <p className="font-semibold text-slate-800">Không tìm thấy yêu cầu đổi trả nào</p>
                     <p className="text-[11px] text-slate-500 mt-1">
                       Thử điều chỉnh lại từ khoá tìm kiếm hoặc bộ lọc trạng thái
                     </p>
@@ -249,8 +249,8 @@ export default function ReturnsTable({
                   return (
                     <tr
                       key={item.id}
-                      className={`hover:bg-slate-800/40 transition-colors ${
-                        isSelected ? "bg-indigo-950/20" : ""
+                      className={`hover:bg-slate-50/80 transition-colors ${
+                        isSelected ? "bg-brand-50/40" : ""
                       }`}
                     >
                       {/* Checkbox chọn */}
@@ -258,12 +258,12 @@ export default function ReturnsTable({
                         <button
                           type="button"
                           onClick={() => toggleSelectOne(item.id)}
-                          className="p-1 rounded hover:bg-slate-800 transition-colors text-slate-400 hover:text-white"
+                          className="p-1 rounded hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-700"
                         >
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-indigo-400" />
+                            <CheckSquare className="w-4 h-4 text-brand-600" />
                           ) : (
-                            <Square className="w-4 h-4 text-slate-600" />
+                            <Square className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
                           )}
                         </button>
                       </td>
@@ -272,7 +272,7 @@ export default function ReturnsTable({
                       <td className="py-3.5 px-4">
                         <button
                           onClick={() => onOpenDetailModal(item)}
-                          className="font-bold text-white font-mono hover:text-indigo-400 transition-colors text-left"
+                          className="font-bold text-slate-900 font-mono hover:text-brand-600 transition-colors text-left"
                         >
                           {item.id}
                         </button>
@@ -283,19 +283,19 @@ export default function ReturnsTable({
 
                       {/* Khách hàng & Đơn hàng */}
                       <td className="py-3.5 px-4">
-                        <div className="font-semibold text-white">{item.customerName}</div>
-                        <div className="text-[11px] text-slate-400">{item.customerPhone}</div>
-                        <div className="text-[10px] text-indigo-400 font-mono mt-0.5">
+                        <div className="font-semibold text-slate-900">{item.customerName}</div>
+                        <div className="text-[11px] text-brand-600 font-mono font-medium">{item.customerPhone}</div>
+                        <div className="text-[10px] text-slate-500 font-mono mt-0.5">
                           Đơn: {item.orderNumber}
                         </div>
                       </td>
 
                       {/* Sản phẩm & SL */}
                       <td className="py-3.5 px-4">
-                        <div className="font-medium text-slate-200 line-clamp-1 max-w-[200px]" title={item.productTitle}>
+                        <div className="font-medium text-slate-900 line-clamp-1 max-w-[200px]" title={item.productTitle}>
                           {item.productTitle}
                         </div>
-                        <div className="text-[11px] text-amber-400 font-bold mt-0.5">
+                        <div className="text-[11px] text-amber-700 font-bold mt-0.5">
                           SL: {item.quantity} cái
                         </div>
                       </td>
@@ -305,8 +305,8 @@ export default function ReturnsTable({
                         <span
                           className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${
                             item.type === "REFUND"
-                              ? "bg-rose-500/10 text-rose-300 border border-rose-500/30"
-                              : "bg-purple-500/10 text-purple-300 border border-purple-500/30"
+                              ? "bg-rose-50 text-rose-700 border border-rose-200/80"
+                              : "bg-purple-50 text-purple-700 border border-purple-200/80"
                           }`}
                         >
                           {item.type === "REFUND" ? "💸 Hoàn Tiền" : "🔄 Đổi 1 - 1"}
@@ -316,11 +316,11 @@ export default function ReturnsTable({
                       {/* Số tiền hoàn */}
                       <td className="py-3.5 px-4 font-mono font-bold">
                         {item.refundAmount > 0 ? (
-                          <span className="text-emerald-400">
+                          <span className="text-emerald-600">
                             {item.refundAmount.toLocaleString("vi-VN")} đ
                           </span>
                         ) : (
-                          <span className="text-slate-500 font-normal">--</span>
+                          <span className="text-slate-400 font-normal">--</span>
                         )}
                       </td>
 
@@ -339,7 +339,7 @@ export default function ReturnsTable({
                           <button
                             type="button"
                             onClick={() => onOpenDetailModal(item)}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
                             title="Xem chi tiết & Xử lý"
                           >
                             <Eye className="w-4 h-4" />
@@ -348,7 +348,7 @@ export default function ReturnsTable({
                           <button
                             type="button"
                             onClick={() => setDeleteTarget(item)}
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-rose-900/40 text-slate-400 hover:text-rose-300 transition-colors"
+                            className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 transition-colors"
                             title="Xoá yêu cầu"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -365,9 +365,9 @@ export default function ReturnsTable({
 
         {/* Phân Trang */}
         {returns.length > 0 && (
-          <div className="p-4 border-t border-slate-800 flex items-center justify-between flex-wrap gap-3 text-xs text-slate-400">
+          <div className="p-4 border-t border-slate-200 bg-slate-50/50 flex items-center justify-between flex-wrap gap-3 text-xs text-slate-600">
             <div>
-              Tổng cộng: <span className="font-bold text-white">{total}</span> yêu cầu
+              Tổng cộng: <span className="font-bold text-slate-900">{total}</span> yêu cầu
             </div>
 
             <div className="flex items-center gap-1.5">
@@ -375,12 +375,12 @@ export default function ReturnsTable({
                 type="button"
                 disabled={page <= 1}
                 onClick={() => onPageChange(page - 1)}
-                className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg bg-white text-slate-700 hover:text-slate-900 border border-slate-200 disabled:opacity-40 transition-colors shadow-2xs"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
 
-              <span className="px-3 py-1 font-semibold text-white">
+              <span className="px-3 py-1 font-semibold text-slate-700">
                 Trang {page} / {totalPages || 1}
               </span>
 
@@ -388,7 +388,7 @@ export default function ReturnsTable({
                 type="button"
                 disabled={page >= totalPages}
                 onClick={() => onPageChange(page + 1)}
-                className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-lg bg-white text-slate-700 hover:text-slate-900 border border-slate-200 disabled:opacity-40 transition-colors shadow-2xs"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -399,18 +399,18 @@ export default function ReturnsTable({
 
       {/* MODAL XÁC NHẬN XOÁ ĐƠN LẺ */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
               <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-slate-900">
                 Xác nhận xoá yêu cầu {deleteTarget.id}?
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Yêu cầu đổi trả của khách hàng{" "}
-                <span className="font-semibold text-white">{deleteTarget.customerName}</span> sẽ
+                <span className="font-semibold text-slate-900">{deleteTarget.customerName}</span> sẽ
                 bị xoá khỏi hệ thống.
               </p>
             </div>
@@ -419,7 +419,7 @@ export default function ReturnsTable({
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
               >
                 Huỷ bỏ
               </button>
@@ -427,7 +427,7 @@ export default function ReturnsTable({
                 type="button"
                 disabled={isDeleting}
                 onClick={confirmSingleDelete}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/25 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-sm shadow-rose-600/20 flex items-center gap-1.5"
               >
                 {isDeleting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -443,16 +443,16 @@ export default function ReturnsTable({
 
       {/* MODAL XÁC NHẬN XOÁ HÀNG LOẠT */}
       {isBulkDeleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 flex items-center justify-center">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-slate-900">
                 Xoá hàng loạt {selectedIds.length} yêu cầu?
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Tất cả {selectedIds.length} yêu cầu đổi trả đang chọn sẽ bị xoá vĩnh viễn. Hành động này không thể hoàn tác.
               </p>
             </div>
@@ -461,7 +461,7 @@ export default function ReturnsTable({
               <button
                 type="button"
                 onClick={() => setIsBulkDeleting(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors"
+                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors"
               >
                 Huỷ bỏ
               </button>
@@ -469,7 +469,7 @@ export default function ReturnsTable({
                 type="button"
                 disabled={isBulkSubmitting}
                 onClick={confirmBulkDelete}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition-all shadow-lg shadow-rose-600/25 flex items-center gap-1.5"
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all shadow-sm shadow-rose-600/20 flex items-center gap-1.5"
               >
                 {isBulkSubmitting ? (
                   <Loader2 className="w-4 h-4 animate-spin" />

@@ -7,27 +7,41 @@ import ProductCard from "@/features/catalog/components/ProductCard";
 import { Sparkles, ArrowRight, Award, Package } from "lucide-react";
 
 // ============================================================
-// FEATURED PRODUCTS — 5 SP đại diện 5 loại
-// ✅ Mobile: scroll ngang snap
-// ✅ Tablet+: grid 3/5 cột
+// FEATURED PRODUCTS — 1 hàng · 5 sản phẩm đại diện 5 loại
+//
+// 📐 LAYOUT:
+//   - 1 HÀNG DUY NHẤT (không chia nhóm theo category)
+//   - 5 cột trên desktop: mỗi cột 1 SP đại diện 1 loại
+//   - Mobile: 2 SP/hàng, Tablet: 3 SP/hàng
+//
+// 🎯 LOGIC LẤY SP:
+//   - Với mỗi category → lấy 1 SP đầu tiên (hoặc SP bestseller của category)
+//   - Tổng cộng 5 SP → xếp vào 1 hàng
 // ============================================================
 
+// 5 loại cần hiển thị — mỗi loại lấy 1 SP đại diện
 const CATEGORY_IDS = [
-  "corporate",
-  "bespoke_suit",
-  "sport_golf",
-  "school",
-  "accessories",
+  "corporate",      // Đồng phục doanh nghiệp
+  "bespoke_suit",   // May đo cao cấp
+  "sport_golf",     // Thể thao & Golf
+  "school",         // Trường học
+  "accessories",    // Phụ kiện doanh nghiệp
 ];
 
 export default function FeaturedProductsSection() {
+  // ============================================================
+  // LẤY 1 SP ĐẠI DIỆN CHO MỖI LOẠI
+  // Ưu tiên: SP có flag isBestseller > SP có badge > SP đầu tiên
+  // ============================================================
   const featuredProducts = CATEGORY_IDS.map((catId) => {
     const productsInCat = PRODUCTS.filter((p) => p.category === catId);
     if (productsInCat.length === 0) return null;
 
+    // Ưu tiên bestseller
     const bestseller = productsInCat.find((p) => p.isBestseller === true);
     if (bestseller) return bestseller;
 
+    // Fallback: SP có badge "Best Seller" hoặc "Bán Chạy"
     const badged = productsInCat.find(
       (p) =>
         p.badge &&
@@ -36,6 +50,7 @@ export default function FeaturedProductsSection() {
     );
     if (badged) return badged;
 
+    // Fallback cuối: SP đầu tiên
     return productsInCat[0];
   }).filter(Boolean);
 
@@ -47,7 +62,9 @@ export default function FeaturedProductsSection() {
       className="py-14 sm:py-20 bg-slate-50 border-t border-slate-200"
     >
       <div className="max-w-7xl mx-auto px-3 sm:px-4">
-        {/* HEADER */}
+        {/* ============================================
+            HEADER
+            ============================================ */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 space-y-2 sm:space-y-3">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
             <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500" />
@@ -64,34 +81,20 @@ export default function FeaturedProductsSection() {
           </p>
         </div>
 
+        {/* ============================================
+            GRID 1 HÀNG · 5 SP ĐẠI DIỆN 5 LOẠI
+            ============================================ */}
         {hasData ? (
           <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-5">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
             {/* ============================================
-                GRID / SCROLL CONTAINER
-                ✅ Mobile: scroll ngang snap
-                ✅ Tablet+: grid 3/5 cột
+                CTA — Xem tất cả
                 ============================================ */}
-            <div className="sm:grid sm:grid-cols-3 lg:grid-cols-5 sm:gap-4 lg:gap-5">
-              <div className="flex sm:contents gap-3 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 sm:overflow-visible sm:pb-0">
-                {featuredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="shrink-0 w-[68vw] xs:w-[62vw] sm:w-auto snap-start"
-                  >
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Gợi ý vuốt cho mobile */}
-            <div className="sm:hidden mt-3 text-center text-[11px] text-slate-400 font-medium flex items-center justify-center gap-1.5">
-              <span>←</span>
-              <span>Vuốt xem {featuredProducts.length} sản phẩm nổi bật</span>
-              <span>→</span>
-            </div>
-
-            {/* CTA */}
             <div className="mt-10 sm:mt-12 text-center">
               <Link
                 href="/dong-phuc-doanh-nghiep"
@@ -108,6 +111,9 @@ export default function FeaturedProductsSection() {
             </div>
           </>
         ) : (
+          /* ============================================
+              PLACEHOLDER — khi chưa có SP nào
+              ============================================ */
           <div className="bg-white rounded-3xl border-2 border-dashed border-slate-300 p-8 sm:p-12 text-center max-w-2xl mx-auto">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center mx-auto mb-4">
               <Package className="w-8 h-8 sm:w-10 sm:h-10" />

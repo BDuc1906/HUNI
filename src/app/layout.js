@@ -244,7 +244,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        className="min-h-screen bg-[#f6f8ff] text-slate-800 antialiased font-[var(--font-jakarta)]"
+        className="min-h-screen bg-[#f8fafc] text-slate-900 antialiased font-[var(--font-jakarta)] selection:bg-brand-500 selection:text-white"
         suppressHydrationWarning
       >
         {/* ============================================================

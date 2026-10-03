@@ -263,7 +263,7 @@ export default function ContactView() {
       <section className="bg-gradient-to-br from-[#003843] via-[#004f5e] to-[#00677a] text-white py-12 sm:py-16 md:py-20 border-b border-brand-400/20 relative overflow-hidden">
         {/* Glow ambient effects */}
         <div className="absolute top-0 right-10 w-96 h-96 bg-brand-400/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-10 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-10 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
           {/* Breadcrumbs */}
@@ -309,7 +309,7 @@ export default function ContactView() {
                 rel="noopener noreferrer"
                 className="bg-white/10 hover:bg-white/20 backdrop-blur-md rounded-2xl p-3.5 border border-white/15 transition-all group block"
               >
-                <MessageCircle className="w-5 h-5 text-blue-300 mb-2 group-hover:scale-110 transition-transform" />
+                <MessageCircle className="w-5 h-5 text-brand-300 mb-2 group-hover:scale-110 transition-transform" />
                 <div className="text-[11px] text-slate-300 font-medium">Chat Zalo OA</div>
                 <div className="text-sm sm:text-base font-bold text-white">Phản hồi tức thì</div>
               </a>
@@ -424,7 +424,7 @@ export default function ContactView() {
                           href={`https://zalo.me/${BRAND_INFO.contact.zalo}?text=Chào%20HDC,%20tôi%20vừa%20gửi%20yêu%20cầu%20báo%20giá%20mã%20${submittedData.quoteId}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-md transition-all"
+                          className="w-full sm:w-auto px-6 py-3 bg-[#0068FF] hover:bg-[#0055d4] text-white font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-md transition-all"
                         >
                           <MessageCircle className="w-4 h-4" />
                           <span>Mở Zalo Chat Ngay</span>
@@ -721,18 +721,18 @@ export default function ContactView() {
                       href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3.5 bg-blue-600 hover:bg-blue-500 rounded-2xl flex items-center justify-between text-white transition-all shadow-md group"
+                      className="p-3.5 bg-[#0068FF] hover:bg-[#0055d4] rounded-2xl flex items-center justify-between text-white transition-all shadow-md group"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-white text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform font-bold">
+                        <div className="w-10 h-10 rounded-xl bg-white text-[#0068FF] flex items-center justify-center group-hover:scale-105 transition-transform font-bold">
                           <MessageCircle className="w-5 h-5" />
                         </div>
                         <div>
-                          <div className="text-[10px] uppercase font-bold text-blue-100">Chat Zalo Chính Thức</div>
+                          <div className="text-[10px] uppercase font-bold text-sky-100">Chat Zalo Chính Thức</div>
                           <div className="text-sm sm:text-base font-extrabold text-white">Zalo: {BRAND_INFO.contact.zalo}</div>
                         </div>
                       </div>
-                      <div className="text-xs font-bold text-blue-100 flex items-center gap-1">
+                      <div className="text-xs font-bold text-sky-100 flex items-center gap-1">
                         <span>Nhắn tin</span>
                         <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                       </div>
@@ -1048,7 +1048,7 @@ export default function ContactView() {
               href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-7 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all"
+              className="w-full sm:w-auto px-7 py-3.5 bg-[#0068FF] hover:bg-[#0055d4] text-white font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Chat Zalo Với Chuyên Viên</span>

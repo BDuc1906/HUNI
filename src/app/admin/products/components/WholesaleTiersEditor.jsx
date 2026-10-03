@@ -64,11 +64,11 @@ export default function WholesaleTiersEditor({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-            <Tag className="w-4 h-4 text-blue-400" />
+          <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+            <Tag className="w-4 h-4 text-brand-600" />
             <span>Bảng Giá Sỉ Theo Số Lượng (Wholesale Tiers)</span>
           </h4>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-slate-500 mt-0.5">
             Áp dụng giá ưu đãi khi doanh nghiệp đặt may số lượng lớn
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function WholesaleTiersEditor({
         <button
           type="button"
           onClick={handleAddTier}
-          className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/30 transition-all flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-brand-50 text-brand-700 hover:bg-brand-100 border border-brand-200 transition-all flex items-center gap-1.5"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Thêm mốc giá sỉ</span>
@@ -84,12 +84,12 @@ export default function WholesaleTiersEditor({
       </div>
 
       {tiers.length === 0 ? (
-        <div className="p-4 rounded-xl bg-slate-950/40 border border-slate-800 text-center text-xs text-slate-500">
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-500">
           Chưa thiết lập mốc giá sỉ nào. Bấm &quot;Thêm mốc giá sỉ&quot; để cài đặt.
         </div>
       ) : (
-        <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-950/60">
-          <div className="grid grid-cols-12 gap-2 p-3 border-b border-slate-800 bg-slate-900/60 text-[11px] font-semibold text-slate-400 uppercase">
+        <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-xs">
+          <div className="grid grid-cols-12 gap-2 p-3 border-b border-slate-200 bg-slate-50 text-[11px] font-semibold text-slate-600 uppercase">
             <div className="col-span-3">Từ (Tối thiểu)</div>
             <div className="col-span-3">Đến (Tối đa)</div>
             <div className="col-span-3">Đơn giá (VNĐ)</div>
@@ -97,7 +97,7 @@ export default function WholesaleTiersEditor({
             <div className="col-span-1 text-center">Xóa</div>
           </div>
 
-          <div className="divide-y divide-slate-800/60 p-2 space-y-2">
+          <div className="divide-y divide-slate-100 p-2 space-y-2">
             {tiers.map((tier, idx) => {
               const diff = basePrice > 0 ? basePrice - (tier.price || 0) : 0;
               const savingsPercent =
@@ -115,7 +115,7 @@ export default function WholesaleTiersEditor({
                       value={tier.min || ""}
                       onChange={(e) => handleChangeTier(idx, "min", e.target.value)}
                       placeholder="VD: 10"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white font-mono focus:outline-none focus:border-blue-500 text-xs"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-900 font-mono focus:outline-none focus:border-brand-500 text-xs shadow-2xs"
                     />
                   </div>
 
@@ -126,7 +126,7 @@ export default function WholesaleTiersEditor({
                       value={tier.max === null || tier.max === undefined ? "" : tier.max}
                       onChange={(e) => handleChangeTier(idx, "max", e.target.value)}
                       placeholder="Không GH"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white font-mono focus:outline-none focus:border-blue-500 text-xs"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-slate-900 font-mono focus:outline-none focus:border-brand-500 text-xs shadow-2xs"
                     />
                   </div>
 
@@ -138,18 +138,18 @@ export default function WholesaleTiersEditor({
                       value={tier.price || ""}
                       onChange={(e) => handleChangeTier(idx, "price", e.target.value)}
                       placeholder="VD: 150000"
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-emerald-400 font-mono font-bold focus:outline-none focus:border-blue-500 text-xs"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-emerald-600 font-mono font-bold focus:outline-none focus:border-brand-500 text-xs shadow-2xs"
                     />
                   </div>
 
                   <div className="col-span-2 text-[11px] font-mono">
                     {diff > 0 ? (
-                      <span className="text-emerald-400 flex items-center gap-1">
+                      <span className="text-emerald-600 font-bold flex items-center gap-1">
                         <TrendingDown className="w-3 h-3 shrink-0" />
                         <span>-{savingsPercent}%</span>
                       </span>
                     ) : (
-                      <span className="text-slate-500">—</span>
+                      <span className="text-slate-400">—</span>
                     )}
                   </div>
 
@@ -157,7 +157,7 @@ export default function WholesaleTiersEditor({
                     <button
                       type="button"
                       onClick={() => handleRemoveTier(idx)}
-                      className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                      className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                       title="Xóa mốc này"
                     >
                       <Trash2 className="w-4 h-4 mx-auto" />

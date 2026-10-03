@@ -171,24 +171,24 @@ export default function AdminReturnsPage() {
     <div className="space-y-6">
       {/* Toast thông báo */}
       {toastMessage && (
-        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-2xl text-xs font-bold animate-in fade-in slide-in-from-top duration-300">
+        <div className="fixed top-20 right-6 z-50 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-bold animate-in fade-in slide-in-from-top duration-300">
           {toastMessage}
         </div>
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 border border-brand-200 flex items-center justify-center">
               <RotateCcw className="w-5 h-5" />
             </div>
             <span>Đổi Trả & Hoàn Tiền</span>
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono font-normal">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 font-mono font-semibold">
               {totalCount} yêu cầu
             </span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Tiếp nhận khiếu nại, thẩm định chất lượng đồng phục, giải quyết chính sách 1 đổi 1 và hoàn tiền
           </p>
         </div>
@@ -198,7 +198,7 @@ export default function AdminReturnsPage() {
             type="button"
             onClick={handleManualRefresh}
             disabled={loading}
-            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+            className="p-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 border border-slate-200 shadow-2xs transition-colors"
             title="Tải lại dữ liệu"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -209,64 +209,64 @@ export default function AdminReturnsPage() {
       {/* Thẻ Thống Kê Tổng Quan (Stats Cards) */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Tổng yêu cầu */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <RotateCcw className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Tổng Yêu Cầu
             </div>
-            <div className="text-2xl font-black text-white mt-0.5">{totalCount}</div>
+            <div className="text-2xl font-black text-slate-900 mt-0.5">{totalCount}</div>
             <div className="text-[10px] text-slate-400 mt-0.5">Tất cả thời gian</div>
           </div>
         </div>
 
         {/* Card 2: Chờ tiếp nhận */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Chờ Tiếp Nhận
             </div>
-            <div className="text-2xl font-black text-amber-300 mt-0.5">{pendingCount}</div>
-            <div className="text-[10px] text-amber-400 font-semibold mt-0.5">Cần liên hệ khách ngay</div>
+            <div className="text-2xl font-black text-amber-600 mt-0.5">{pendingCount}</div>
+            <div className="text-[10px] text-amber-600 font-semibold mt-0.5">Cần liên hệ khách ngay</div>
           </div>
         </div>
 
         {/* Card 3: Đang kiểm hàng */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-blue-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0">
             <Truck className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Đang Xử Lý / Thu Hồi
             </div>
-            <div className="text-2xl font-black text-blue-400 mt-0.5">{processingCount}</div>
+            <div className="text-2xl font-black text-brand-600 mt-0.5">{processingCount}</div>
             <div className="text-[10px] text-slate-400 mt-0.5">Shipper đang giao nhận</div>
           </div>
         </div>
 
         {/* Card 4: Đã hoàn tất */}
-        <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+        <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+            <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
               Đã Giải Quyết Xong
             </div>
-            <div className="text-2xl font-black text-emerald-400 mt-0.5">{resolvedCount}</div>
+            <div className="text-2xl font-black text-emerald-600 mt-0.5">{resolvedCount}</div>
             <div className="text-[10px] text-slate-400 mt-0.5">Đổi mới & Hoàn tiền đủ</div>
           </div>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl space-y-3">
+      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs space-y-3">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-center">
           {/* Ô tìm kiếm (5 cols) */}
           <div className="lg:col-span-5 relative">
@@ -276,7 +276,7 @@ export default function AdminReturnsPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm theo mã RT, đơn hàng, khách hàng, số điện thoại..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              className="w-full pl-9 pr-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
             />
           </div>
 
@@ -288,7 +288,7 @@ export default function AdminReturnsPage() {
                 setTypeFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
             >
               {TYPE_FILTERS.map((t) => (
                 <option key={t.value} value={t.value}>
@@ -306,7 +306,7 @@ export default function AdminReturnsPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white focus:outline-none focus:border-indigo-500"
+              className="w-full px-3 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-brand-500 focus:bg-white transition-colors"
             >
               {STATUS_FILTERS.map((s) => (
                 <option key={s.value} value={s.value}>
@@ -322,7 +322,7 @@ export default function AdminReturnsPage() {
               type="button"
               onClick={handleResetFilters}
               title="Đặt lại bộ lọc"
-              className="w-full sm:w-auto p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white border border-slate-700 transition-colors flex items-center justify-center"
+              className="w-full sm:w-auto p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center"
             >
               <RotateCcw className="w-4 h-4" />
             </button>

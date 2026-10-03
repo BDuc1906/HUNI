@@ -26,39 +26,82 @@
 /* ---------- Base tokens ---------- */
 @layer base {
   :root {
-    --bg-page: #f6f8ff;
+    --bg-page: #f8fafc;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
-    --text-main: #111827;
-    --text-muted: #52525b;
-    --text-sub: #71717a;
-    --border-color: #e4e4e7;
-    --border-subtle: #f4f4f5;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --text-sub: #64748b;
+    --border-color: #e2e8f0;
+    --border-subtle: #f1f5f9;
   }
 
   .dark {
-    --bg-page: #00222a;
-    --bg-surface: #003843;
-    --bg-card: #003843;
-    --text-main: #f4f4f5;
-    --text-muted: #a1a1aa;
-    --text-sub: #71717a;
-    --border-color: #00566a;
-    --border-subtle: #003843;
+    --bg-page: #041014;
+    --bg-surface: #071a21;
+    --bg-card: #08212a;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-sub: #64748b;
+    --border-color: #0b3440;
+    --border-subtle: #08252e;
   }
+}
+
+/* Glassmorphism & Luxury Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-panel-dark {
+  background: rgba(8, 33, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 151, 178, 0.2);
+}
+
+.luxury-card {
+  background: #ffffff;
+  border-radius: 1.25rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 32px -4px rgba(0, 151, 178, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+  border-color: rgba(0, 151, 178, 0.3);
+}
+
+.luxury-card-dark {
+  background: #09232d;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(0, 151, 178, 0.15);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-card-dark:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -4px rgba(0, 151, 178, 0.25);
+  border-color: rgba(0, 151, 178, 0.4);
 }
 
 /* ---------- Scroll behavior ---------- */
 html {
   scroll-behavior: smooth;
   color-scheme: light dark;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--bg-page);
   color: var(--text-main);
-  overflow-x: hidden;
+  overflow-x: clip;
   /* Font self-host qua next/font — không FOUT */
   font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -102,10 +145,12 @@ main[id] {
 
 /* =========================================================
    Mobile — chừa chỗ cho bottom action bar cố định
-   ✅ FIX #1: Xóa `body { padding-bottom: 64px }` vì AppShell
-   đã có `pb-16` trên thẻ <main> → tránh double padding
    ========================================================= */
 @media (max-width: 767px) {
+  body {
+    padding-bottom: 64px;
+  }
+
   /* Tối ưu tap target cho mobile — tránh double-tap zoom */
   button,
   a {
@@ -336,3 +381,6 @@ nextjs-portal,
   pointer-events: none;
   z-index: 25;
 }
+
+
+

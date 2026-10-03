@@ -6,8 +6,8 @@ import { Plus, Trash2, Palette } from "lucide-react";
 export default function ColorEditor({ colors = [], onChange }) {
   const handleAddColor = () => {
     const newColor = {
-      name: "Màu mới",
-      code: "#1e3a8a",
+      name: "Xanh HDC Teal",
+      code: "#0097b2",
     };
     onChange([...colors, newColor]);
   };
@@ -29,14 +29,14 @@ export default function ColorEditor({ colors = [], onChange }) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-          <Palette className="w-3.5 h-3.5 text-blue-400" />
+        <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+          <Palette className="w-3.5 h-3.5 text-brand-600" />
           <span>Bảng Màu Sắc ({colors.length})</span>
         </label>
         <button
           type="button"
           onClick={handleAddColor}
-          className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 hover:underline"
+          className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1 hover:underline"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Thêm màu</span>
@@ -44,7 +44,7 @@ export default function ColorEditor({ colors = [], onChange }) {
       </div>
 
       {colors.length === 0 ? (
-        <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800 text-center text-xs text-slate-500">
+        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-center text-xs text-slate-400">
           Chưa thêm màu sắc nào.
         </div>
       ) : (
@@ -52,10 +52,10 @@ export default function ColorEditor({ colors = [], onChange }) {
           {colors.map((color, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-2 p-2 rounded-xl bg-slate-950/60 border border-slate-800"
+              className="flex items-center gap-2 p-2 rounded-xl bg-slate-50 border border-slate-200"
             >
               {/* Color swatch picker */}
-              <div className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-700">
+              <div className="relative w-8 h-8 rounded-lg overflow-hidden shrink-0 border border-slate-300 shadow-2xs">
                 <input
                   type="color"
                   value={color.code || "#000000"}
@@ -70,11 +70,11 @@ export default function ColorEditor({ colors = [], onChange }) {
                 value={color.name || ""}
                 onChange={(e) => handleChange(idx, "name", e.target.value)}
                 placeholder="Tên màu (VD: Xanh Navy)"
-                className="flex-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white focus:outline-none focus:border-blue-500"
+                className="flex-1 px-2.5 py-1.5 rounded-lg bg-white border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-brand-500 shadow-2xs"
               />
 
               {/* Mã Hex */}
-              <span className="text-[11px] font-mono text-slate-400 uppercase w-16">
+              <span className="text-[11px] font-mono text-slate-500 uppercase w-16">
                 {color.code}
               </span>
 
@@ -82,7 +82,7 @@ export default function ColorEditor({ colors = [], onChange }) {
               <button
                 type="button"
                 onClick={() => handleRemoveColor(idx)}
-                className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                className="p-1 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                 title="Xóa màu"
               >
                 <Trash2 className="w-3.5 h-3.5" />

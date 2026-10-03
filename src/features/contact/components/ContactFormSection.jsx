@@ -217,7 +217,7 @@ export default function ContactFormSection() {
                     href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors"
+                    className="w-full sm:w-auto px-6 py-3.5 bg-[#0068FF] hover:bg-[#0055d4] text-white font-bold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors"
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span>Nhắn Zalo nhận mẫu ngay</span>
@@ -573,7 +573,7 @@ export default function ContactFormSection() {
                   href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm"
+                  className="w-full py-3 px-4 rounded-xl bg-[#0068FF] hover:bg-[#0055d4] text-white font-extrabold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
                   <MessageCircle className="w-4 h-4" />
                   <span>Chat Trực Tiếp Qua Zalo</span>

@@ -2,28 +2,28 @@ import React from "react";
 
 export const QUOTE_STATUS_MAP = {
   NEW: {
-    label: "🔔 Mới",
-    badgeClass: "bg-sky-500/15 text-sky-400 border-sky-500/30",
-    dotClass: "bg-sky-400",
+    label: "🔔 Mới tiếp nhận",
+    badgeClass: "bg-sky-50 text-sky-700 border-sky-200/80",
+    dotClass: "bg-sky-500",
   },
   CONTACTED: {
     label: "📞 Đã liên hệ",
-    badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
-    dotClass: "bg-amber-400",
+    badgeClass: "bg-amber-50 text-amber-700 border-amber-200/80",
+    dotClass: "bg-amber-500",
   },
   QUOTED: {
     label: "📄 Đã báo giá",
-    badgeClass: "bg-purple-500/15 text-purple-400 border-purple-500/30",
-    dotClass: "bg-purple-400",
+    badgeClass: "bg-purple-50 text-purple-700 border-purple-200/80",
+    dotClass: "bg-purple-500",
   },
   CONVERTED: {
-    label: "✅ Chuyển đơn",
-    badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
-    dotClass: "bg-emerald-400",
+    label: "✅ Đã chốt đơn",
+    badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+    dotClass: "bg-emerald-500",
   },
   CLOSED: {
-    label: "🔒 Đóng",
-    badgeClass: "bg-slate-600/20 text-slate-400 border-slate-600/30",
+    label: "🔒 Đã đóng",
+    badgeClass: "bg-slate-100 text-slate-600 border-slate-200",
     dotClass: "bg-slate-400",
   },
 };
@@ -31,7 +31,7 @@ export const QUOTE_STATUS_MAP = {
 export default function QuoteStatusBadge({ status, className = "" }) {
   const config = QUOTE_STATUS_MAP[status] || {
     label: status || "Không xác định",
-    badgeClass: "bg-slate-700/20 text-slate-300 border-slate-700/40",
+    badgeClass: "bg-slate-100 text-slate-600 border-slate-200",
     dotClass: "bg-slate-400",
   };
 

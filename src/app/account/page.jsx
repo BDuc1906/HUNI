@@ -1,6 +1,7 @@
 "use client";
 
 import React, { Suspense, useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@/shared/providers/AuthProvider";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useShop } from "@/shared/providers/ShopProvider";
@@ -391,19 +392,19 @@ function InfoRow({ icon: Icon, label, value, isLast }) {
 const STATUS_MAP = {
   PENDING: { label: "Chờ xác nhận", color: "brand" },
   QUOTED: { label: "Đã báo giá", color: "brand" },
-  CONFIRMED: { label: "Đã xác nhận", color: "blue" },
-  PRODUCING: { label: "Đang sản xuất", color: "blue" },
-  SHIPPED: { label: "Đang giao hàng", color: "purple" },
+  CONFIRMED: { label: "Đã xác nhận", color: "brandDark" },
+  PRODUCING: { label: "Đang sản xuất", color: "brand" },
+  SHIPPED: { label: "Đang giao hàng", color: "sky" },
   COMPLETED: { label: "Hoàn thành", color: "emerald" },
   CANCELLED: { label: "Đã hủy", color: "rose" },
 };
 
 const COLOR_CLASSES = {
-  brand: "bg-brand-100 text-brand-800 border-brand-200",
-  blue: "bg-blue-100 text-blue-800 border-blue-200",
-  purple: "bg-purple-100 text-purple-800 border-purple-200",
-  emerald: "bg-emerald-100 text-emerald-800 border-emerald-200",
-  rose: "bg-rose-100 text-rose-800 border-rose-200",
+  brand: "bg-brand-50 text-brand-700 border-brand-200",
+  brandDark: "bg-[#003843] text-brand-200 border-brand-500/30",
+  sky: "bg-sky-50 text-sky-700 border-sky-200",
+  emerald: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  rose: "bg-rose-50 text-rose-700 border-rose-200",
 };
 
 const ORDER_FILTERS = [

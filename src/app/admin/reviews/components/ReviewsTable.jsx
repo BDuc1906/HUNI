@@ -109,9 +109,9 @@ export default function ReviewsTable({
     <div className="space-y-3">
       {/* THANH THAO TÁC HÀNG LOẠT */}
       {selectedIds.length > 0 && (
-        <div className="bg-gradient-to-r from-blue-950/90 via-slate-900 to-blue-950/90 border border-blue-500/40 px-4 py-3 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="bg-[#002B34] border border-brand-500/30 px-4 py-3 rounded-2xl shadow-xl flex flex-wrap items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-2.5">
-            <span className="w-7 h-7 rounded-lg bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-300 font-bold text-xs">
+            <span className="w-7 h-7 rounded-lg bg-brand-500/20 border border-brand-400/30 flex items-center justify-center text-brand-300 font-bold text-xs">
               {selectedIds.length}
             </span>
             <span className="text-xs text-slate-200 font-medium">
@@ -156,17 +156,17 @@ export default function ReviewsTable({
       )}
 
       {/* BẢNG DỮ LIỆU */}
-      <div className="rounded-2xl bg-slate-900/90 border border-slate-800 shadow-xl overflow-hidden flex flex-col justify-between">
+      <div className="rounded-2xl bg-white border border-slate-200/80 shadow-xs overflow-hidden flex flex-col justify-between">
         <div className="overflow-x-auto min-h-[300px]">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-              <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
+              <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin mb-3" />
               <span className="text-xs">Đang tải danh sách đánh giá...</span>
             </div>
           ) : reviews.length === 0 ? (
             <div className="p-12 text-center text-slate-500">
-              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-600 opacity-50" />
-              <h4 className="text-sm font-bold text-slate-300 mb-1">
+              <MessageSquare className="w-12 h-12 mx-auto mb-3 text-slate-300" />
+              <h4 className="text-sm font-bold text-slate-800 mb-1">
                 Chưa có đánh giá nào
               </h4>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
@@ -176,23 +176,23 @@ export default function ReviewsTable({
           ) : (
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-950/60 text-slate-400 uppercase tracking-wider text-[11px]">
+                <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 uppercase tracking-wider text-[11px]">
                   {/* Hộp kiểm chọn tất cả */}
                   <th className="py-3.5 px-3 w-10 text-center">
                     <button
                       type="button"
                       onClick={toggleSelectAll}
-                      className="p-1 rounded text-slate-400 hover:text-white transition-colors"
+                      className="p-1 rounded text-slate-400 hover:text-slate-700 transition-colors"
                       title={isAllSelected ? "Bỏ chọn tất cả" : "Chọn tất cả trang này"}
                     >
                       {isAllSelected ? (
-                        <CheckSquare className="w-4 h-4 text-blue-500" />
+                        <CheckSquare className="w-4 h-4 text-brand-600" />
                       ) : isPartiallySelected ? (
-                        <div className="w-4 h-4 rounded bg-blue-600/30 border border-blue-500 flex items-center justify-center">
-                          <span className="w-2 h-0.5 bg-blue-400" />
+                        <div className="w-4 h-4 rounded bg-brand-50 border border-brand-500 flex items-center justify-center">
+                          <span className="w-2 h-0.5 bg-brand-600" />
                         </div>
                       ) : (
-                        <Square className="w-4 h-4 text-slate-600 hover:text-slate-400" />
+                        <Square className="w-4 h-4 text-slate-400 hover:text-slate-600" />
                       )}
                     </button>
                   </th>
@@ -204,7 +204,7 @@ export default function ReviewsTable({
                   <th className="py-3.5 px-4 font-semibold text-right">Hành động</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-100">
                 {reviews.map((rev) => {
                   const isSelected = selectedIds.includes(rev.id);
                   const initial = rev.customerName?.charAt(0).toUpperCase() || "K";
@@ -214,8 +214,8 @@ export default function ReviewsTable({
                       key={rev.id}
                       className={`transition-colors group ${
                         isSelected
-                          ? "bg-blue-600/10 hover:bg-blue-600/15"
-                          : "hover:bg-slate-800/40"
+                          ? "bg-brand-50/50 hover:bg-brand-50/80"
+                          : "hover:bg-slate-50/80"
                       }`}
                     >
                       {/* Checkbox */}
@@ -223,12 +223,12 @@ export default function ReviewsTable({
                         <button
                           type="button"
                           onClick={() => toggleSelectOne(rev.id)}
-                          className="p-1 rounded text-slate-400 hover:text-white transition-colors"
+                          className="p-1 rounded text-slate-400 hover:text-slate-700 transition-colors"
                         >
                           {isSelected ? (
-                            <CheckSquare className="w-4 h-4 text-blue-500" />
+                            <CheckSquare className="w-4 h-4 text-brand-600" />
                           ) : (
-                            <Square className="w-4 h-4 text-slate-600 group-hover:text-slate-400" />
+                            <Square className="w-4 h-4 text-slate-400 group-hover:text-slate-600" />
                           )}
                         </button>
                       </td>
@@ -236,17 +236,17 @@ export default function ReviewsTable({
                       {/* Khách hàng */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-md">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-brand-600 to-[#003843] flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-xs">
                             {initial}
                           </div>
                           <div>
-                            <div className="font-bold text-white text-xs">
+                            <div className="font-bold text-slate-900 text-xs">
                               {rev.customerName}
                             </div>
-                            <div className="text-[11px] text-slate-400 font-mono">
+                            <div className="text-[11px] text-brand-600 font-mono font-medium">
                               {rev.customerPhone}
                             </div>
-                            <div className="text-[10px] text-slate-500 truncate max-w-[150px]">
+                            <div className="text-[10px] text-slate-400 truncate max-w-[150px]">
                               {rev.customerEmail}
                             </div>
                           </div>
@@ -256,7 +256,7 @@ export default function ReviewsTable({
                       {/* Sản phẩm */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-950 border border-slate-800 relative shrink-0">
+                          <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 relative shrink-0">
                             <Image
                               src={rev.productImage || "/images/06_polo_01.jpg"}
                               alt={rev.productTitle}
@@ -266,7 +266,7 @@ export default function ReviewsTable({
                             />
                           </div>
                           <div className="min-w-0 max-w-[180px]">
-                            <div className="font-semibold text-slate-200 truncate text-xs hover:text-blue-400">
+                            <div className="font-semibold text-slate-900 truncate text-xs hover:text-brand-600 transition-colors">
                               {rev.productTitle}
                             </div>
                             <div className="text-[10px] font-mono text-slate-400">
@@ -286,12 +286,12 @@ export default function ReviewsTable({
                                 className={`w-3.5 h-3.5 ${
                                   i < rev.rating
                                     ? "text-amber-400 fill-amber-400"
-                                    : "text-slate-600"
+                                    : "text-slate-200"
                                 }`}
                               />
                             ))}
                           </div>
-                          <span className="text-[11px] font-bold text-amber-400 font-mono">
+                          <span className="text-[11px] font-bold text-amber-600 font-mono">
                             {rev.rating}.0 / 5
                           </span>
                         </div>
@@ -299,10 +299,10 @@ export default function ReviewsTable({
 
                       {/* Nội dung đánh giá & Phản hồi */}
                       <td className="py-3.5 px-4 max-w-[340px]">
-                        <p className="text-slate-200 text-xs line-clamp-2 leading-relaxed font-normal">
+                        <p className="text-slate-800 text-xs line-clamp-2 leading-relaxed font-normal">
                           &ldquo;{rev.content}&rdquo;
                         </p>
-                        <div className="text-[10px] text-slate-500 mt-1 flex items-center gap-2">
+                        <div className="text-[10px] text-slate-400 mt-1 flex items-center gap-2">
                           <span>
                             {new Date(rev.createdAt).toLocaleDateString("vi-VN", {
                               day: "2-digit",
@@ -316,12 +316,12 @@ export default function ReviewsTable({
 
                         {/* Phản hồi từ Admin nếu có */}
                         {rev.adminReply && (
-                          <div className="mt-2 p-2 rounded-xl bg-blue-950/40 border border-blue-500/20 text-[11px] space-y-1">
-                            <div className="flex items-center gap-1.5 text-blue-300 font-bold">
-                              <Sparkles className="w-3 h-3 text-blue-400" />
+                          <div className="mt-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] space-y-1">
+                            <div className="flex items-center gap-1.5 text-brand-700 font-bold">
+                              <Sparkles className="w-3 h-3 text-brand-600" />
                               <span>HDC Fashion phản hồi:</span>
                             </div>
-                            <p className="text-slate-300 italic line-clamp-2">
+                            <p className="text-slate-600 italic line-clamp-2">
                               {rev.adminReply}
                             </p>
                           </div>
@@ -331,16 +331,16 @@ export default function ReviewsTable({
                       {/* Trạng thái */}
                       <td className="py-3.5 px-4 text-center">
                         {rev.status === "APPROVED" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
                             <CheckCircle2 className="w-3 h-3" />
                             <span>Đã duyệt</span>
                           </span>
                         ) : rev.status === "PENDING" ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30 animate-pulse">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 animate-pulse">
                             <span>Chờ duyệt</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
                             <EyeOff className="w-3 h-3" />
                             <span>Đã ẩn</span>
                           </span>
@@ -355,7 +355,7 @@ export default function ReviewsTable({
                               type="button"
                               onClick={() => onUpdateStatus(rev.id, { status: "HIDDEN" })}
                               title="Ẩn đánh giá này khỏi web"
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-amber-300 bg-slate-800 hover:bg-amber-500/10 border border-slate-700 transition-colors"
+                              className="p-1.5 rounded-lg text-slate-600 hover:text-amber-700 bg-slate-100 hover:bg-amber-50 border border-slate-200 transition-colors"
                             >
                               <EyeOff className="w-3.5 h-3.5" />
                             </button>
@@ -364,7 +364,7 @@ export default function ReviewsTable({
                               type="button"
                               onClick={() => onUpdateStatus(rev.id, { status: "APPROVED" })}
                               title="Duyệt hiển thị đánh giá này"
-                              className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 transition-colors"
+                              className="p-1.5 rounded-lg text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
                             >
                               <CheckCircle2 className="w-3.5 h-3.5" />
                             </button>
@@ -374,7 +374,7 @@ export default function ReviewsTable({
                             type="button"
                             onClick={() => onOpenReplyModal(rev)}
                             title="Soạn câu trả lời gửi khách hàng"
-                            className="px-2 py-1.5 rounded-lg text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 font-medium text-xs transition-colors flex items-center gap-1"
+                            className="px-2.5 py-1.5 rounded-lg text-brand-700 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 border border-brand-200 font-medium text-xs transition-colors flex items-center gap-1"
                           >
                             <MessageSquare className="w-3 h-3" />
                             <span>{rev.adminReply ? "Sửa TL" : "Trả lời"}</span>
@@ -384,7 +384,7 @@ export default function ReviewsTable({
                             type="button"
                             onClick={() => setDeleteTarget(rev)}
                             title="Xoá vĩnh viễn đánh giá này"
-                            className="p-1.5 rounded-lg text-rose-400 hover:text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 transition-colors"
+                            className="p-1.5 rounded-lg text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -399,10 +399,10 @@ export default function ReviewsTable({
         </div>
 
         {/* Phân trang */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/40 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div className="p-4 border-t border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
           <div>
-            Hiển thị <span className="font-bold text-white">{reviews.length}</span>{" "}
-            trên tổng số <span className="font-bold text-white">{total}</span> đánh giá
+            Hiển thị <span className="font-bold text-slate-900">{reviews.length}</span>{" "}
+            trên tổng số <span className="font-bold text-slate-900">{total}</span> đánh giá
           </div>
 
           <div className="flex items-center gap-2">
@@ -410,12 +410,12 @@ export default function ReviewsTable({
               type="button"
               disabled={page <= 1 || loading}
               onClick={() => onPageChange(page - 1)}
-              className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed border border-slate-700 transition-colors"
+              className="p-1.5 rounded-lg bg-white text-slate-700 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed border border-slate-200 shadow-2xs transition-colors"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="font-mono text-slate-300 px-2 font-medium">
+            <span className="font-mono text-slate-700 px-2 font-medium">
               Trang {page} / {Math.max(1, totalPages)}
             </span>
 
@@ -423,7 +423,7 @@ export default function ReviewsTable({
               type="button"
               disabled={page >= totalPages || loading}
               onClick={() => onPageChange(page + 1)}
-              className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed border border-slate-700 transition-colors"
+              className="p-1.5 rounded-lg bg-white text-slate-700 hover:text-slate-900 disabled:opacity-40 disabled:cursor-not-allowed border border-slate-200 shadow-2xs transition-colors"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -433,17 +433,17 @@ export default function ReviewsTable({
 
       {/* Delete Single Modal */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center mx-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-6 h-6" />
             </div>
 
             <div className="text-center space-y-1">
-              <h3 className="text-base font-bold text-white">Xác nhận xoá đánh giá?</h3>
-              <p className="text-xs text-slate-400">
-                Xoá đánh giá của <strong className="text-white">{deleteTarget.customerName}</strong> cho sản phẩm{" "}
-                <strong className="text-white">{deleteTarget.productTitle}</strong>?
+              <h3 className="text-base font-bold text-slate-900">Xác nhận xoá đánh giá?</h3>
+              <p className="text-xs text-slate-500">
+                Xoá đánh giá của <strong className="text-slate-900">{deleteTarget.customerName}</strong> cho sản phẩm{" "}
+                <strong className="text-slate-900">{deleteTarget.productTitle}</strong>?
               </p>
             </div>
 
@@ -452,7 +452,7 @@ export default function ReviewsTable({
                 type="button"
                 onClick={() => setDeleteTarget(null)}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
               >
                 Huỷ bỏ
               </button>
@@ -460,7 +460,7 @@ export default function ReviewsTable({
                 type="button"
                 onClick={confirmSingleDelete}
                 disabled={isDeleting}
-                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/20 transition-all flex items-center justify-center gap-1.5"
+                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-sm shadow-rose-600/20 transition-all flex items-center justify-center gap-1.5"
               >
                 {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 <span>{isDeleting ? "Đang xoá..." : "Xoá vĩnh viễn"}</span>
@@ -472,18 +472,18 @@ export default function ReviewsTable({
 
       {/* Delete Multiple Modal */}
       {isBulkDeleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center mx-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl shadow-2xl p-6 space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center mx-auto">
               <AlertTriangle className="w-6 h-6" />
             </div>
 
             <div className="text-center space-y-1">
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-slate-900">
                 Xoá hàng loạt {selectedIds.length} đánh giá?
               </h3>
-              <p className="text-xs text-slate-400">
-                Toàn bộ <strong className="text-rose-400">{selectedIds.length}</strong> đánh giá đã chọn sẽ bị xoá vĩnh viễn khỏi hệ thống.
+              <p className="text-xs text-slate-500">
+                Toàn bộ <strong className="text-rose-600 font-bold">{selectedIds.length}</strong> đánh giá đã chọn sẽ bị xoá vĩnh viễn khỏi hệ thống.
               </p>
             </div>
 
@@ -492,7 +492,7 @@ export default function ReviewsTable({
                 type="button"
                 onClick={() => setIsBulkDeleting(false)}
                 disabled={isBulkSubmitting}
-                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
               >
                 Huỷ bỏ
               </button>
@@ -500,7 +500,7 @@ export default function ReviewsTable({
                 type="button"
                 onClick={confirmBulkDelete}
                 disabled={isBulkSubmitting}
-                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/20 transition-all flex items-center justify-center gap-1.5"
+                className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-sm shadow-rose-600/20 transition-all flex items-center justify-center gap-1.5"
               >
                 {isBulkSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
                 <span>{isBulkSubmitting ? "Đang xoá..." : "Xác nhận xoá"}</span>

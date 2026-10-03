@@ -73,35 +73,35 @@ export default function EditProductPage({ params }) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-2 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <Link
             href="/admin/products"
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition-colors"
+            className="p-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border border-slate-200 shadow-2xs transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
-              <Edit className="w-5 h-5 text-blue-400" />
+            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <Edit className="w-5 h-5 text-brand-600" />
               <span>Chỉnh Sửa Sản Phẩm</span>
             </h1>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Mã ID: <span className="font-mono text-blue-400">{productId}</span>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Mã ID: <span className="font-mono text-brand-600 font-bold">{productId}</span>
             </p>
           </div>
         </div>
       </div>
 
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs">
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
           {errorMessage}
         </div>
       )}
 
       {fetching ? (
         <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-3" />
+          <Loader2 className="w-8 h-8 animate-spin text-brand-600 mb-3" />
           <span className="text-xs">Đang tải dữ liệu sản phẩm...</span>
         </div>
       ) : product ? (

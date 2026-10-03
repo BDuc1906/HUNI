@@ -391,7 +391,7 @@ export default function MapSection() {
                     href={`https://zalo.me/${BRAND_INFO.contact.zalo}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[11px] sm:text-sm rounded-xl shadow-md active:scale-[0.98] transition-all"
+                    className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 bg-[#0068FF] hover:bg-[#0055d4] text-white font-bold text-[11px] sm:text-sm rounded-xl shadow-md shadow-blue-500/20 active:scale-[0.98] transition-all"
                   >
                     <MessageCircle className="w-4 h-4 shrink-0" />
                     <span>Chat Zalo</span>

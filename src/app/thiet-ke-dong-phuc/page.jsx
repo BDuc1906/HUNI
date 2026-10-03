@@ -241,7 +241,7 @@ export default function ThietKeDongPhucPage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
                 href={`tel:${BRAND_INFO.contact.hotlineRaw}`}
-                className="py-3 px-6 rounded-xl bg-brand-500 hover:bg-brand-400 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg"
+                className="py-3 px-6 rounded-xl bg-brand-500 hover:bg-brand-400 text-white font-black text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-brand-500/25"
               >
                 <Phone className="w-4 h-4" />
                 Hotline: {BRAND_INFO.contact.hotline}
