@@ -309,4 +309,33 @@ public class AdminControllersTests : IClassFixture<HuniWebAppFactory>
         using var delDoc = JsonDocument.Parse(delJson);
         delDoc.RootElement.GetProperty("deletedCount").GetInt32().Should().BeGreaterThanOrEqualTo(1);
     }
+
+    [Fact]
+    public async Task SeedProduction_WithInvalidSecret_ReturnsUnauthorized()
+    {
+        var response = await _client.PostAsJsonAsync("/api/admin/seed-production", new
+        {
+            secret = "wrong-secret",
+            adminEmail = "admin@huni.vn",
+            adminPassword = "Admin123!"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    [Fact]
+    public async Task SeedProduction_WhenAdminAlreadyExists_ReturnsConflict()
+    {
+        // Ensure at least one admin exists
+        await GetAdminTokenAsync();
+
+        var response = await _client.PostAsJsonAsync("/api/admin/seed-production", new
+        {
+            secret = "huni-seed-2026-change-this",
+            adminEmail = "admin@huni.vn",
+            adminPassword = "Admin123!"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+    }
 }

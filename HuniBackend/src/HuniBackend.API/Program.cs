@@ -342,16 +342,19 @@ app.MapGet("/api/test-error", () =>
     throw new Exception("Test Sentry integration");
 });
 
-// Tự động apply migrations khi khởi động (chỉ ở Development)
-if (app.Environment.IsDevelopment())
+// Apply migrations khi khởi động (cả Production + Development)
+try
 {
-    try
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    if (db.Database.CanConnect())
     {
-        using var scope = app.Services.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        if (db.Database.CanConnect())
+        db.Database.Migrate();
+        Log.Information("Database migrations applied successfully");
+
+        // Seed admin chỉ khi Development
+        if (app.Environment.IsDevelopment())
         {
-            db.Database.Migrate();
             if (!db.Users.Any(u => u.Email == "admin@huni.vn"))
             {
                 db.Users.Add(new HuniBackend.Domain.Entities.User
@@ -365,13 +368,14 @@ if (app.Environment.IsDevelopment())
                     UpdatedAt = DateTime.UtcNow
                 });
                 db.SaveChanges();
+                Log.Information("Admin user seeded for development");
             }
         }
     }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"[DB Startup Notice] Could not connect to DB yet: {ex.Message}");
-    }
+}
+catch (Exception ex)
+{
+    Log.Warning("DB startup: {Message}", ex.Message);
 }
 
 app.Run();
