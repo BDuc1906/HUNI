@@ -35,7 +35,7 @@ public class CreateQuoteValidator : AbstractValidator<CreateQuoteRequest>
             .WithMessage("Danh mục phải thuộc: polo, shirt, suit, golf, school, accessories.");
 
         RuleFor(x => x.Quantity)
-            .GreaterThanOrEqualTo(10).WithMessage("Số lượng yêu cầu báo giá tối thiểu từ 10 sản phẩm.");
+            .GreaterThanOrEqualTo(10).WithMessage("Số lượng tối thiểu 10");
 
         RuleFor(x => x.EstimatedPrice)
             .GreaterThanOrEqualTo(0).WithMessage("Ngân sách dự kiến không được âm.")

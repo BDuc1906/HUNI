@@ -1,5 +1,40 @@
 [
   {
+    "id": "ao-polo-hdc",
+    "slug": "ao-polo-hdc",
+    "sku": "HN-POLO-HDC",
+    "title": "Áo Polo Doanh Nghiệp HDC Classic Gold",
+    "description": "Dòng áo polo đồng phục doanh nghiệp cao cấp được HDC thiết kế riêng cho các công ty, tập đoàn muốn xây dựng hình ảnh chuyên nghiệp, năng động và chỉn chu.",
+    "category": "polo",
+    "material": "Cá Sấu Cotton Cao Cấp 100%",
+    "price": 185000,
+    "originalPrice": 250000,
+    "stock": 100,
+    "images": [
+      "/images/uniform_polo_corporate.jpg",
+      "/images/06_polo_01.jpg"
+    ],
+    "features": [
+      "Vải cá sấu cotton 100% thấm hút mồ hôi",
+      "Form dáng regular fit hiện đại",
+      "Cổ dệt bo viền chống quăn mép",
+      "Thêu/in logo sắc nét độ bền cao",
+      "Nhận may từ 10 áo"
+    ],
+    "colors": "[{\"name\":\"Vàng Gold\",\"code\":\"#D97706\"},{\"name\":\"Navy\",\"code\":\"#1E3A8A\"},{\"name\":\"Trắng\",\"code\":\"#FFFFFF\"}]",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "2XL",
+      "3XL"
+    ],
+    "wholesaleTiers": "[{\"min\":10,\"max\":49,\"price\":185000,\"label\":\"10 - 49 áo\"},{\"min\":50,\"max\":99,\"price\":165000,\"label\":\"50 - 99 áo\"},{\"min\":100,\"max\":299,\"price\":145000,\"label\":\"100 - 299 áo\"},{\"min\":300,\"max\":9999,\"price\":125000,\"label\":\"Từ 300 áo trở lên\"}]",
+    "published": true,
+    "featured": true
+  },
+  {
     "id": "hdc-shirt-short-1",
     "slug": "hdc-shirt-short-1",
     "sku": "HDC-SHIRT-SHORT-01",

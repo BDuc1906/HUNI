@@ -1,6 +1,7 @@
+using FluentValidation;
 using HuniBackend.Application.DTOs;
+using HuniBackend.Application.DTOs.Products;
 using HuniBackend.Application.Interfaces;
-using HuniBackend.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
@@ -8,11 +9,14 @@ using Microsoft.AspNetCore.OutputCaching;
 namespace HuniBackend.API.Controllers;
 
 [Route("api/products")]
-public class ProductsController(IProductService productService, IOutputCacheStore? cacheStore = null) : BaseApiController
+public class ProductsController(
+    IProductService productService,
+    IValidator<CreateProductRequest> validator,
+    IOutputCacheStore? cacheStore = null) : BaseApiController
 {
     [HttpGet]
     [AllowAnonymous]
-    [OutputCache(PolicyName = "Products5min")]
+    [OutputCache(PolicyName = "Products")]
     public async Task<IActionResult> GetProducts(
         [FromQuery] string? category,
         [FromQuery] string? search,
@@ -63,30 +67,18 @@ public class ProductsController(IProductService productService, IOutputCacheStor
 
     [HttpPost]
     [Authorize(Roles = "ADMIN")]
-    public async Task<IActionResult> CreateProduct([FromBody] Product product)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductRequest request)
     {
-        var errors = new List<ValidationError>();
-        if (string.IsNullOrWhiteSpace(product.Slug) || product.Slug.Length < 2)
-            errors.Add(new ValidationError("slug", "Slug phải từ 2 ký tự trở lên."));
-        if (string.IsNullOrWhiteSpace(product.Sku) || product.Sku.Length < 2)
-            errors.Add(new ValidationError("sku", "Mã SKU phải từ 2 ký tự trở lên."));
-        if (string.IsNullOrWhiteSpace(product.Title) || product.Title.Length < 2)
-            errors.Add(new ValidationError("title", "Tiêu đề sản phẩm phải từ 2 ký tự trở lên."));
-        if (string.IsNullOrWhiteSpace(product.Description) || product.Description.Length < 5)
-            errors.Add(new ValidationError("description", "Mô tả sản phẩm phải từ 5 ký tự trở lên."));
-        if (string.IsNullOrWhiteSpace(product.Category))
-            errors.Add(new ValidationError("category", "Danh mục không được để trống."));
-        if (product.Price < 0)
-            errors.Add(new ValidationError("price", "Giá sản phẩm phải lớn hơn hoặc bằng 0."));
-        if (product.Images == null || product.Images.Length == 0)
-            errors.Add(new ValidationError("images", "Sản phẩm phải có ít nhất 1 hình ảnh."));
-
-        if (errors.Count > 0)
+        var validationResult = await validator.ValidateAsync(request);
+        if (!validationResult.IsValid)
         {
+            var errors = validationResult.Errors
+                .Select(e => new ValidationError(e.PropertyName, e.ErrorMessage))
+                .ToList();
             return ApiBadRequest("Dữ liệu sản phẩm không hợp lệ.", errors);
         }
 
-        var (success, error, created) = await productService.CreateProductAsync(product);
+        var (success, error, created) = await productService.CreateProductAsync(request);
         if (!success)
         {
             return ApiConflict(error ?? "Không thể tạo sản phẩm.");
@@ -102,9 +94,9 @@ public class ProductsController(IProductService productService, IOutputCacheStor
 
     [HttpPut("{id}")]
     [Authorize(Roles = "ADMIN")]
-    public async Task<IActionResult> UpdateProduct(string id, [FromBody] Product product)
+    public async Task<IActionResult> UpdateProduct(string id, [FromBody] UpdateProductRequest request)
     {
-        var (success, error, updated) = await productService.UpdateProductAsync(id, product);
+        var (success, error, updated) = await productService.UpdateProductAsync(id, request);
         if (!success)
         {
             if (error?.Contains("Không tìm thấy", StringComparison.OrdinalIgnoreCase) == true)

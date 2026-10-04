@@ -6,6 +6,7 @@ using HuniBackend.Application.Interfaces;
 using HuniBackend.Domain.Entities;
 using HuniBackend.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace HuniBackend.Application.Services;
 
@@ -58,13 +59,14 @@ public class AuthService(
     public async Task<(bool Success, string? Error, AuthResponse? Response, List<ValidationError>? ValidationErrors)> LoginAsync(
         LoginRequest request, string? clientIp = null)
     {
+        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
         var attemptKey = string.IsNullOrWhiteSpace(clientIp)
-            ? request.Email.Trim().ToLowerInvariant()
-            : $"{clientIp}:{request.Email.Trim().ToLowerInvariant()}";
+            ? normalizedEmail
+            : $"{clientIp}:{normalizedEmail}";
 
-        if (loginAttemptTracker.IsLockedOut(attemptKey))
+        if (loginAttemptTracker.IsLocked(normalizedEmail) || loginAttemptTracker.IsLockedOut(attemptKey))
         {
-            return (false, "Tài khoản tạm thời bị khóa do nhiều lần đăng nhập không thành công. Vui lòng thử lại sau 15 phút.", null, null);
+            return (false, "Tài khoản bị khóa 15 phút do nhập sai mật khẩu nhiều lần. Vui lòng thử lại sau.", null, null);
         }
 
         var validationResult = await loginValidator.ValidateAsync(request);
@@ -76,18 +78,31 @@ public class AuthService(
             return (false, "Dữ liệu không hợp lệ.", null, errors);
         }
 
-        var normalizedEmail = request.Email.Trim().ToLowerInvariant();
         var user = await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == normalizedEmail);
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
         {
-            loginAttemptTracker.RecordFailedAttempt(attemptKey);
+            loginAttemptTracker.RecordFailure(normalizedEmail);
+            if (!string.Equals(attemptKey, normalizedEmail, StringComparison.OrdinalIgnoreCase))
+            {
+                loginAttemptTracker.RecordFailedAttempt(attemptKey);
+            }
+
+            var count = loginAttemptTracker.GetFailedAttempts(normalizedEmail);
+            Log.Warning("Login failed for {Email} - attempt {Count}/5", normalizedEmail, count);
+
             return (false, "Email hoặc mật khẩu không đúng", null, null);
         }
 
-        loginAttemptTracker.ResetAttempts(attemptKey);
+        loginAttemptTracker.Reset(normalizedEmail);
+        if (!string.Equals(attemptKey, normalizedEmail, StringComparison.OrdinalIgnoreCase))
+        {
+            loginAttemptTracker.ResetAttempts(attemptKey);
+        }
         user.LastLoginAt = DateTime.UtcNow;
         await db.SaveChangesAsync();
+
+        Log.Information("Login success: {Email} | Role: {Role}", user.Email, user.Role);
 
         var (token, expiresAt) = jwtService.GenerateToken(user);
         var userDto = new AuthUserDto(

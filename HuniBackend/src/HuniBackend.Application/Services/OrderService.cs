@@ -8,6 +8,7 @@ using HuniBackend.Domain.Common;
 using HuniBackend.Domain.Entities;
 using HuniBackend.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace HuniBackend.Application.Services;
 
@@ -210,7 +211,7 @@ public class OrderService(
             Subtotal = subtotal,
             Discount = discount,
             Total = Math.Max(0, subtotal - discount),
-            Notes = string.IsNullOrWhiteSpace(request.Notes) ? null : request.Notes.Trim(),
+            Notes = string.IsNullOrWhiteSpace(request.Notes) ? null : InputSanitizer.StripHtml(request.Notes),
             VatInfo = request.VatInfo != null ? JsonSerializer.Serialize(request.VatInfo) : null,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -235,6 +236,9 @@ public class OrderService(
 
         db.Orders.Add(order);
         await db.SaveChangesAsync();
+
+        Log.Information("Order created: {OrderNumber} | Customer: {Phone} | Total: {Total:N0}đ",
+            order.OrderNumber, customer.Phone, order.Total);
 
         if (!string.IsNullOrEmpty(voucherApplied))
         {

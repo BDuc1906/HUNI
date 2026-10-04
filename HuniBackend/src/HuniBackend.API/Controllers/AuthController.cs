@@ -57,7 +57,7 @@ public class AuthController(IAuthService authService) : BaseApiController
                 return ApiBadRequest(error ?? "Dữ liệu không hợp lệ.", validationErrors);
             }
 
-            if (error != null && error.Contains("tạm thời bị khóa", StringComparison.OrdinalIgnoreCase))
+            if (error != null && (error.Contains("bị khóa", StringComparison.OrdinalIgnoreCase) || error.Contains("tạm thời", StringComparison.OrdinalIgnoreCase)))
             {
                 return StatusCode(StatusCodes.Status429TooManyRequests, new { success = false, error });
             }

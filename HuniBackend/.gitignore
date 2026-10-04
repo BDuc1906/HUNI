@@ -1,12 +1,24 @@
 # HuniBackend .gitignore
 appsettings.Development.json
 appsettings.Production.json
+appsettings.Staging.json
 .env
-*.user
-bin/
-obj/
+*.env.*
+secrets.json
+**/*.pfx
+**/*.p12
+.user-secrets/
+
+# IDE & OS
 .vs/
 .idea/
+.vscode/settings.json
+*.user
 *.suo
 *.userosscache
+
+# Build & Publish
+bin/
+obj/
+publish/
 logs/

@@ -1,14 +1,17 @@
 using HuniBackend.API.Extensions;
 using HuniBackend.API.Middleware;
+using HuniBackend.Application.Common;
 using HuniBackend.Application.DTOs.Orders;
 using HuniBackend.Application.Interfaces;
+using HuniBackend.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HuniBackend.API.Controllers;
 
 [Route("api/orders")]
-public class OrdersController(IOrderService orderService) : BaseApiController
+public class OrdersController(IOrderService orderService, IAppDbContext db) : BaseApiController
 {
     [HttpPost]
     [AllowAnonymous]
@@ -95,10 +98,39 @@ public class OrdersController(IOrderService orderService) : BaseApiController
     [AllowAnonymous]
     public async Task<IActionResult> GetOrderByNumber(string orderNumber, [FromQuery] string? phone)
     {
-        var order = await orderService.GetOrderByNumberAsync(orderNumber, phone);
+        var order = await orderService.GetOrderByNumberAsync(orderNumber);
         if (order == null)
         {
             return ApiNotFound($"Không tìm thấy đơn hàng '{orderNumber}'.");
+        }
+
+        // 🔐 Resource-based Auth check
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            if (!User.IsAdmin())
+            {
+                var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value?.ToLowerInvariant();
+                var userPhone = User.FindFirst(System.Security.Claims.ClaimTypes.MobilePhone)?.Value;
+                var normalizedUserPhone = !string.IsNullOrEmpty(userPhone) ? PhoneNormalizer.NormalizePhone(userPhone) : null;
+                var normalizedOrderPhone = PhoneNormalizer.NormalizePhone(order.Customer.Phone);
+
+                bool isOwner = (!string.IsNullOrEmpty(userEmail) && order.Customer.Email?.ToLowerInvariant() == userEmail) ||
+                               (normalizedUserPhone != null && normalizedOrderPhone == normalizedUserPhone);
+
+                if (!isOwner)
+                {
+                    return ApiForbidden("Bạn không có quyền xem đơn hàng này.");
+                }
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(phone))
+        {
+            var normalizedPhone = PhoneNormalizer.NormalizePhone(phone);
+            var normalizedOrderPhone = PhoneNormalizer.NormalizePhone(order.Customer.Phone);
+            if (!normalizedOrderPhone.Contains(normalizedPhone))
+            {
+                return ApiForbidden("Bạn không có quyền xem đơn hàng này.");
+            }
         }
 
         object? parsedVat = null;
@@ -150,5 +182,73 @@ public class OrdersController(IOrderService orderService) : BaseApiController
         );
 
         return ApiOk(dto);
+    }
+
+    public record UpdateOrderRequest(string? Notes);
+
+    [HttpPatch("{orderNumber}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> UpdateOrder(string orderNumber, [FromBody] UpdateOrderRequest request, [FromQuery] string? phone)
+    {
+        var order = await db.Orders
+            .Include(o => o.Customer)
+            .FirstOrDefaultAsync(o => o.OrderNumber == orderNumber || o.Id == orderNumber);
+
+        if (order == null)
+        {
+            return ApiNotFound($"Không tìm thấy đơn hàng '{orderNumber}'.");
+        }
+
+        // 🔐 Resource-based check
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            if (!User.IsAdmin())
+            {
+                var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value?.ToLowerInvariant();
+                var userPhone = User.FindFirst(System.Security.Claims.ClaimTypes.MobilePhone)?.Value;
+                var normalizedUserPhone = !string.IsNullOrEmpty(userPhone) ? PhoneNormalizer.NormalizePhone(userPhone) : null;
+                var normalizedOrderPhone = PhoneNormalizer.NormalizePhone(order.Customer.Phone);
+
+                bool isOwner = (!string.IsNullOrEmpty(userEmail) && order.Customer.Email?.ToLowerInvariant() == userEmail) ||
+                               (normalizedUserPhone != null && normalizedOrderPhone == normalizedUserPhone);
+
+                if (!isOwner)
+                {
+                    return ApiForbidden("Bạn không có quyền chỉnh sửa đơn hàng này.");
+                }
+            }
+        }
+        else
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                return ApiForbidden("Vui lòng cung cấp số điện thoại để xác thực chỉnh sửa đơn hàng.");
+            }
+
+            var normalizedPhone = PhoneNormalizer.NormalizePhone(phone);
+            var normalizedOrderPhone = PhoneNormalizer.NormalizePhone(order.Customer.Phone);
+            if (!normalizedOrderPhone.Contains(normalizedPhone))
+            {
+                return ApiForbidden("Bạn không có quyền chỉnh sửa đơn hàng này.");
+            }
+        }
+
+        // Chặn sửa khi đơn đã hoàn thành hoặc hủy
+        if (order.Status is OrderStatus.COMPLETED or OrderStatus.CANCELLED)
+        {
+            return ApiBadRequest("Đơn hàng đã hoàn thành hoặc đã hủy, không thể chỉnh sửa.");
+        }
+
+        if (request.Notes != null && request.Notes.Length > 500)
+        {
+            return ApiBadRequest("Ghi chú tối đa 500 ký tự.");
+        }
+
+        order.Notes = string.IsNullOrWhiteSpace(request.Notes) ? null : InputSanitizer.StripHtml(request.Notes);
+        order.UpdatedAt = DateTime.UtcNow;
+
+        await db.SaveChangesAsync();
+
+        return ApiOk(new { order.OrderNumber, order.Notes, order.UpdatedAt }, "Cập nhật đơn hàng thành công.");
     }
 }

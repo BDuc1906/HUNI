@@ -1,39 +1,51 @@
+using System;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Ganss.Xss;
 
 namespace HuniBackend.Application.Common;
 
 public static class InputSanitizer
 {
+    private static readonly HtmlSanitizer _sanitizer = new()
+    {
+        KeepChildNodes = true
+    };
     private static readonly Regex ScriptTagRegex = new(@"<script[^>]*>[\s\S]*?</script>", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly Regex HtmlTagRegex = new(@"<[^>]+>", RegexOptions.Compiled);
 
-    private static readonly Regex MaliciousContentRegex = new(
-        @"(<script[^>]*>|javascript:|onload=|onerror=|onclick=|<iframe|<embed)",
-        RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    static InputSanitizer()
+    {
+        // Strip tất cả HTML tags, chỉ giữ lại text thuần theo P10-F
+        _sanitizer.AllowedTags.Clear();
+        _sanitizer.AllowedAttributes.Clear();
+        _sanitizer.AllowedCssProperties.Clear();
+        _sanitizer.AllowedSchemes.Clear();
+    }
 
     public static string Sanitize(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
-
-        // 1. Remove dangerous script tags
-        var cleaned = ScriptTagRegex.Replace(input, string.Empty);
-
-        // 2. HTML encode special characters to prevent stored XSS
-        return WebUtility.HtmlEncode(cleaned.Trim());
+        var stripped = StripHtml(input);
+        return WebUtility.HtmlEncode(stripped);
     }
 
     public static string StripHtml(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
         var withoutScripts = ScriptTagRegex.Replace(input, string.Empty);
-        var stripped = HtmlTagRegex.Replace(withoutScripts, string.Empty);
+        var sanitized = _sanitizer.Sanitize(withoutScripts);
+        var stripped = HtmlTagRegex.Replace(sanitized, string.Empty);
         return stripped.Trim();
     }
 
     public static bool ContainsMaliciousContent(string? input)
     {
         if (string.IsNullOrWhiteSpace(input)) return false;
-        return MaliciousContentRegex.IsMatch(input);
+        var patterns = new[] { "<script", "javascript:", "onerror=", "onload=", "onclick=", "<iframe", "<embed", "DROP TABLE", "1=1", "--" };
+        return patterns.Any(p => input.Contains(p, StringComparison.OrdinalIgnoreCase));
     }
+
+    public static bool ContainsMalicious(string? input) => ContainsMaliciousContent(input);
 }

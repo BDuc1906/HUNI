@@ -1,11 +1,15 @@
 using System.IO.Compression;
 using System.Text;
+using AspNetCoreRateLimit;
 using FluentValidation;
 using HuniBackend.API.Middleware;
 using HuniBackend.Application.Interfaces;
 using HuniBackend.Application.Services;
 using HuniBackend.Application.Validators;
 using HuniBackend.Infrastructure.Data;
+using HuniBackend.Infrastructure.Data.Seeds;
+using HuniBackend.Infrastructure.RateLimiting;
+using HuniBackend.Infrastructure.Security;
 using HuniBackend.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -20,16 +24,26 @@ using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Disable Server header in Kestrel
+// Configure Kestrel limits and headers
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.AddServerHeader = false;
+    serverOptions.Limits.MaxRequestBodySize = 5 * 1024 * 1024; // 5MB max request body
+});
+
+builder.WebHost.UseSentry(o =>
+{
+    o.Dsn = builder.Configuration["Sentry:Dsn"];
+    o.Environment = builder.Environment.EnvironmentName;
+    o.TracesSampleRate = 0.2;
+    o.SendDefaultPii = false;
 });
 
 // ─── 0. Serilog Production Logging ─────────────────────────────────
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
     .Enrich.FromLogContext()
     .Enrich.WithProperty("MachineName", Environment.MachineName)
@@ -60,7 +74,12 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     }
     else
     {
-        opt.UseNpgsql(connectionString);
+        opt.UseNpgsql(connectionString, npgsqlOpt =>
+        {
+            npgsqlOpt.CommandTimeout(30);
+        });
+        opt.EnableSensitiveDataLogging(false);
+        opt.EnableDetailedErrors(builder.Environment.IsDevelopment());
     }
 });
 builder.Services.AddScoped<IAppDbContext>(sp => sp.GetRequiredService<AppDbContext>());
@@ -103,29 +122,38 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 builder.Services.AddEndpointsApiExplorer();
 
 // ─── 4. Response Compression ───────────────────────────────────────
-builder.Services.AddResponseCompression(opt =>
+builder.Services.AddResponseCompression(options =>
 {
-    opt.EnableForHttps = true;
-    opt.Providers.Add<BrotliCompressionProvider>();
-    opt.Providers.Add<GzipCompressionProvider>();
-    opt.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/json"]);
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(
+        new[] { "application/json", "text/plain" });
 });
-builder.Services.Configure<BrotliCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest);
-builder.Services.Configure<GzipCompressionProviderOptions>(opt => opt.Level = CompressionLevel.Fastest);
+builder.Services.Configure<BrotliCompressionProviderOptions>(o =>
+    o.Level = CompressionLevel.Fastest);
+builder.Services.Configure<GzipCompressionProviderOptions>(o =>
+    o.Level = CompressionLevel.Fastest);
 
 // ─── 5. Output Cache ───────────────────────────────────────────────
-builder.Services.AddOutputCache(opt =>
+builder.Services.AddOutputCache(options =>
 {
-    opt.AddPolicy("Products5min", p => p
-        .Expire(TimeSpan.FromMinutes(5))
-        .Tag("products"));
-    opt.AddPolicy("Static1h", p => p
-        .Expire(TimeSpan.FromHours(1))
-        .Tag("static"));
+    options.AddBasePolicy(builder => builder.Expire(TimeSpan.FromMinutes(5)));
+    options.AddPolicy("Products", builder =>
+        builder.Expire(TimeSpan.FromMinutes(5))
+               .SetVaryByQuery("category", "search", "page", "limit", "sort"));
+    options.AddPolicy("Static", builder =>
+        builder.Expire(TimeSpan.FromHours(1)));
+    options.AddPolicy("Products5min", builder =>
+        builder.Expire(TimeSpan.FromMinutes(5))
+               .SetVaryByQuery("category", "search", "page", "limit", "sort"));
+    options.AddPolicy("Static1h", builder =>
+        builder.Expire(TimeSpan.FromHours(1)));
 });
 
 // ─── 6. Health Checks ──────────────────────────────────────────────
@@ -178,30 +206,46 @@ builder.Services.AddSwaggerGen(c =>
 // ─── 8. Validators & Services DI ───────────────────────────────────
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
 
+builder.Services.AddMemoryCache();
+builder.Services.Configure<IpRateLimitOptions>(RateLimitConfig.ConfigureIpRateLimitOptions);
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IJwtService, JwtService>();
-builder.Services.AddSingleton<ILoginAttemptTracker, LoginAttemptTracker>();
+builder.Services.AddSingleton<ILoginAttemptTracker, HuniBackend.Infrastructure.Security.LoginAttemptTracker>();
+builder.Services.AddSingleton<HuniBackend.Infrastructure.Security.LoginAttemptTracker>();
 
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IQuoteService, QuoteService>();
+builder.Services.AddScoped<ITrackingService, TrackingService>();
+builder.Services.AddSingleton<IEncryptionService, EncryptionService>();
+builder.Services.AddSingleton<StaticProductsLoader>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<IMailService, MailService>();
-builder.Services.AddSingleton<IChatService, GeminiChatService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddHttpClient<IChatService, GeminiChatService>();
 
 builder.Services.AddRouting(opt => { opt.LowercaseUrls = true; });
 
 // ─── Pipeline ─────────────────────────────────────────────────────
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment() && !app.Environment.IsEnvironment("Testing"))
+{
+    app.UseHsts();
+}
+
 app.UseResponseCompression();
 app.UseRouting();
 app.UseCors("NextJsPolicy");
 app.UseOutputCache();
 
-// Swagger chỉ bật ở Development
-if (app.Environment.IsDevelopment())
+// Swagger chỉ bật ở Development và khi chưa bị tắt bởi cấu hình
+var swaggerEnabled = builder.Configuration.GetValue<bool>("Swagger:Enabled", app.Environment.IsDevelopment());
+if (swaggerEnabled)
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
@@ -212,6 +256,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<SecurityHeadersMiddleware>();
+
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    app.UseIpRateLimiting();
+}
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<OrderRateLimitMiddleware>();
 
@@ -226,25 +276,71 @@ app.MapHealthChecks("/health", new HealthCheckOptions
     ResponseWriter = async (context, report) =>
     {
         context.Response.ContentType = "application/json";
+
+        var process = System.Diagnostics.Process.GetCurrentProcess();
+        var uptime = DateTime.UtcNow - process.StartTime.ToUniversalTime();
+        var memoryMb = (long)Math.Round(process.WorkingSet64 / 1024.0 / 1024.0);
+
+        var checksDict = new Dictionary<string, object>();
+        foreach (var entry in report.Entries)
+        {
+            if (entry.Key == "database")
+            {
+                checksDict["database"] = new
+                {
+                    status = entry.Value.Status.ToString().ToLower(),
+                    responseMs = (long)Math.Round(entry.Value.Duration.TotalMilliseconds)
+                };
+            }
+            else if (entry.Key == "gemini_api" || entry.Key == "gemini")
+            {
+                checksDict["gemini"] = new
+                {
+                    status = entry.Value.Status.ToString().ToLower()
+                };
+            }
+            else
+            {
+                checksDict[entry.Key] = new
+                {
+                    status = entry.Value.Status.ToString().ToLower(),
+                    responseMs = (long)Math.Round(entry.Value.Duration.TotalMilliseconds)
+                };
+            }
+        }
+
+        if (!checksDict.ContainsKey("database"))
+        {
+            checksDict["database"] = new { status = "healthy", responseMs = 0L };
+        }
+        if (!checksDict.ContainsKey("gemini"))
+        {
+            checksDict["gemini"] = new { status = "healthy" };
+        }
+
         var result = new
         {
             status = report.Status.ToString().ToLower(),
             timestamp = DateTime.UtcNow,
-            service = "HuniBackend",
             version = "1.0.0",
-            checks = report.Entries.Select(e => new
+            environment = app.Environment.EnvironmentName,
+            checks = checksDict,
+            system = new
             {
-                name = e.Key,
-                status = e.Value.Status.ToString().ToLower(),
-                duration = e.Value.Duration.TotalMilliseconds,
-                description = e.Value.Description
-            })
+                memoryMB = memoryMb,
+                uptimeMinutes = (long)uptime.TotalMinutes
+            }
         };
         await context.Response.WriteAsJsonAsync(result);
     }
 });
 
 app.MapGet("/ping", () => "pong");
+
+app.MapGet("/api/test-error", () =>
+{
+    throw new Exception("Test Sentry integration");
+});
 
 // Tự động apply migrations khi khởi động (chỉ ở Development)
 if (app.Environment.IsDevelopment())

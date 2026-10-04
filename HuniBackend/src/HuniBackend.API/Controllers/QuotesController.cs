@@ -12,7 +12,8 @@ public class QuotesController(IQuoteService quoteService) : BaseApiController
     [AllowAnonymous]
     public async Task<IActionResult> CreateQuote([FromBody] CreateQuoteRequest request)
     {
-        var (success, error, validationErrors, quoteId) = await quoteService.CreateQuoteAsync(request);
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var (success, error, validationErrors, quoteId) = await quoteService.CreateQuoteAsync(request, ipAddress);
 
         if (!success)
         {

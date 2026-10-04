@@ -15,7 +15,8 @@ public class QuoteService(
     IValidator<CreateQuoteRequest> validator,
     IMailService mailService) : IQuoteService
 {
-    public async Task<(bool Success, string? Error, List<ValidationError>? ValidationErrors, string? QuoteId)> CreateQuoteAsync(CreateQuoteRequest request)
+    public async Task<(bool Success, string? Error, List<ValidationError>? ValidationErrors, string? QuoteId)> CreateQuoteAsync(
+        CreateQuoteRequest request, string? ipAddress = null)
     {
         var valResult = await validator.ValidateAsync(request);
         if (!valResult.IsValid)
@@ -23,7 +24,8 @@ public class QuoteService(
             var errors = valResult.Errors
                 .Select(e => new ValidationError(e.PropertyName, e.ErrorMessage))
                 .ToList();
-            return (false, "Dữ liệu không hợp lệ", errors, null);
+            var firstError = valResult.Errors.FirstOrDefault()?.ErrorMessage ?? "Dữ liệu không hợp lệ";
+            return (false, firstError, errors, null);
         }
 
         // Upsert customer theo SĐT
@@ -52,6 +54,17 @@ public class QuoteService(
             customer.UpdatedAt = DateTime.UtcNow;
         }
 
+        if (!string.IsNullOrWhiteSpace(request.Notes))
+        {
+            if (HuniBackend.Application.Common.InputSanitizer.ContainsMalicious(request.Notes))
+            {
+                return (false, "Nội dung không hợp lệ", null, null);
+            }
+        }
+        var sanitizedNotes = string.IsNullOrWhiteSpace(request.Notes)
+            ? null
+            : HuniBackend.Application.Common.InputSanitizer.StripHtml(request.Notes);
+
         var quote = new Quote
         {
             Id = CuidGenerator.NewCuid(),
@@ -60,7 +73,7 @@ public class QuoteService(
             Category = request.Category.Trim().ToLowerInvariant(),
             Quantity = request.Quantity,
             EstimatedPrice = request.EstimatedPrice,
-            Notes = string.IsNullOrWhiteSpace(request.Notes) ? null : request.Notes.Trim(),
+            Notes = sanitizedNotes,
             Status = QuoteStatus.NEW,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow

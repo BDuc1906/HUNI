@@ -2,7 +2,7 @@
 ## Copy từng prompt giao thẳng cho AI Agent
 
 > **Thứ tự bắt buộc:** P4 → P5 → P6 → P7 → P8 → P9 → P10
-> **Trạng thái hiện tại:** P0✅ P1✅ P2✅ P3✅ → Bắt đầu từ P4
+> **Trạng thái hiện tại:** P0✅ P1✅ P2✅ P3✅ P4✅ P5✅ P6✅ P7✅ → Tiếp theo là P8
 
 ---
 
@@ -735,13 +735,13 @@ Test bảo mật:
 ✅ Prompt 1  — Database + EF Core + Migrations
 ✅ Prompt 2  — Auth (Register + Login + JWT)
 ✅ Prompt 3  — Orders API
-⬜ Prompt 4  — Quotes + Tracking + Chat
-⬜ Prompt 5  — Products API
-⬜ Prompt 6  — Reviews API
-⬜ Prompt 7  — Admin APIs (7 controllers)
+✅ Prompt 4  — Quotes + Tracking + Chat
+✅ Prompt 5  — Products API
+✅ Prompt 6  — Reviews API
+✅ Prompt 7  — Admin APIs (7 controllers)
 ⬜ Prompt 8  — Frontend refactor (xóa API routes)
-⬜ Prompt 9  — Docker Compose
-⬜ Prompt 10 — Security Hardening
+✅ Prompt 9  — Docker Compose
+✅ Prompt 10 — Security Hardening
 ```
 
 ---

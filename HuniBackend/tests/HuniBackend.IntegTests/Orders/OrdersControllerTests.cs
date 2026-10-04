@@ -130,4 +130,41 @@ public class OrdersControllerTests : IClassFixture<HuniWebAppFactory>
         json.Should().Contain("\"success\":true");
         json.Should().Contain("\"orders\":");
     }
+
+    [Fact]
+    public async Task PATCH_Orders_SanitizesHtmlAndUpdatesNotes()
+    {
+        HuniBackend.API.Middleware.OrderRateLimitMiddleware.Reset();
+        var req = CreateSampleOrder();
+        var createRes = await _client.PostAsJsonAsync("/api/orders", req);
+        createRes.StatusCode.Should().Be(HttpStatusCode.Created);
+        var createJson = await createRes.Content.ReadAsStringAsync();
+        using var doc = JsonDocument.Parse(createJson);
+        var orderNumber = doc.RootElement.GetProperty("order").GetProperty("orderNumber").GetString();
+
+        var patchBody = new { Notes = "<script>alert('xss')</script>Giao gap trong tuan" };
+        var patchRes = await _client.PatchAsJsonAsync($"/api/orders/{orderNumber}?phone={req.Customer.Phone}", patchBody);
+        patchRes.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var getRes = await _client.GetAsync($"/api/orders/{orderNumber}?phone={req.Customer.Phone}");
+        getRes.StatusCode.Should().Be(HttpStatusCode.OK);
+        var getJson = await getRes.Content.ReadAsStringAsync();
+        getJson.Should().NotContain("<script>");
+        getJson.Should().Contain("Giao gap trong tuan");
+    }
+
+    [Fact]
+    public async Task GET_OrderByNumber_WrongPhone_Returns403()
+    {
+        HuniBackend.API.Middleware.OrderRateLimitMiddleware.Reset();
+        var req = CreateSampleOrder();
+        var createRes = await _client.PostAsJsonAsync("/api/orders", req);
+        createRes.StatusCode.Should().Be(HttpStatusCode.Created);
+        var createJson = await createRes.Content.ReadAsStringAsync();
+        using var doc = JsonDocument.Parse(createJson);
+        var orderNumber = doc.RootElement.GetProperty("order").GetProperty("orderNumber").GetString();
+
+        var getRes = await _client.GetAsync($"/api/orders/{orderNumber}?phone=0999999999");
+        getRes.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
 }

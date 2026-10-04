@@ -102,4 +102,37 @@ public class AuthControllerTests : IClassFixture<HuniWebAppFactory>
         var response = await _client.GetAsync("/api/auth/me");
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task POST_Login_SixFailedAttempts_LocksOutAndReturns429()
+    {
+        var attackerEmail = $"attacker_{Guid.NewGuid():N}@test.com";
+        var req = new LoginRequest(attackerEmail, "WrongPassword!");
+
+        // 5 failed attempts
+        for (int i = 0; i < 5; i++)
+        {
+            var res = await _client.PostAsJsonAsync("/api/auth/login", req);
+            res.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
+        // 6th attempt is locked out
+        var lockedRes = await _client.PostAsJsonAsync("/api/auth/login", req);
+        lockedRes.StatusCode.Should().Be(HttpStatusCode.TooManyRequests);
+        var json = await lockedRes.Content.ReadAsStringAsync();
+        json.Should().Contain("bị khóa");
+    }
+
+    [Fact]
+    public async Task SecurityHeaders_ArePresentInResponse_AndServerHeaderIsAbsent()
+    {
+        var response = await _client.GetAsync("/health");
+
+        response.Headers.Should().NotContainKey("Server");
+        response.Headers.Should().NotContainKey("X-Powered-By");
+
+        response.Headers.GetValues("X-Content-Type-Options").Should().Contain("nosniff");
+        response.Headers.GetValues("X-Frame-Options").Should().Contain("DENY");
+        response.Headers.GetValues("Strict-Transport-Security").Should().ContainMatch("*max-age=31536000*");
+    }
 }

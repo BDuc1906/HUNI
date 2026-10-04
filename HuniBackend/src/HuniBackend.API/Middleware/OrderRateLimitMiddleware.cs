@@ -13,7 +13,8 @@ public class OrderRateLimitMiddleware(RequestDelegate next, IConfiguration confi
         if (context.Request.Path.Equals("/api/orders", StringComparison.OrdinalIgnoreCase) &&
             context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
         {
-            var ip = context.Connection.RemoteIpAddress?.ToString();
+            var ip = context.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                     ?? context.Connection.RemoteIpAddress?.ToString();
             if (string.IsNullOrWhiteSpace(ip) || ip == "::1")
             {
                 ip = "127.0.0.1";
@@ -82,5 +83,17 @@ public class OrderRateLimitMiddleware(RequestDelegate next, IConfiguration confi
             }
         }
         return maxOrdersPerHour;
+    }
+
+    public static void Reset(string? ip = null)
+    {
+        if (ip != null)
+        {
+            RequestTracker.TryRemove(ip, out _);
+        }
+        else
+        {
+            RequestTracker.Clear();
+        }
     }
 }

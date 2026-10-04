@@ -1,7 +1,3 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-WORKDIR /app
-EXPOSE 8080
-
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY ["src/HuniBackend.API/HuniBackend.API.csproj", "src/HuniBackend.API/"]
@@ -10,12 +6,12 @@ COPY ["src/HuniBackend.Domain/HuniBackend.Domain.csproj", "src/HuniBackend.Domai
 COPY ["src/HuniBackend.Infrastructure/HuniBackend.Infrastructure.csproj", "src/HuniBackend.Infrastructure/"]
 RUN dotnet restore "src/HuniBackend.API/HuniBackend.API.csproj"
 COPY . .
-RUN dotnet build "src/HuniBackend.API/HuniBackend.API.csproj" -c Release -o /app/build
+RUN dotnet publish "src/HuniBackend.API/HuniBackend.API.csproj" \
+    -c Release -o /app/publish
 
-FROM build AS publish
-RUN dotnet publish "src/HuniBackend.API/HuniBackend.API.csproj" -c Release -o /app/publish
-
-FROM base AS final
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+COPY --from=build /app/publish .
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "HuniBackend.API.dll"]
