@@ -303,8 +303,23 @@ export function ShopProvider({ children }) {
       vatInfo: orderData.vatInfo || undefined,
     };
 
+    // Lấy key cũ nếu có (user nhấn lại do lỗi mạng) hoặc tạo key mới cho lần checkout này
+    let idempotencyKey = typeof window !== "undefined" ? sessionStorage.getItem("huni_checkout_key") : null;
+    if (!idempotencyKey) {
+      idempotencyKey = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("huni_checkout_key", idempotencyKey);
+      }
+    }
+
     // Gọi API C# Backend
-    const result = await apiClient.post("/api/orders", apiPayload);
+    const result = await apiClient.post("/api/orders", apiPayload, {
+      headers: { "Idempotency-Key": idempotencyKey },
+    });
+
+    if (result.success && typeof window !== "undefined") {
+      sessionStorage.removeItem("huni_checkout_key");
+    }
 
     if (!result.success) {
       // Nếu là lỗi voucher → xóa voucher đã áp dụng để user biết

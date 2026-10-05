@@ -542,8 +542,7 @@ export default function CheckoutModal() {
               </p>
             </div>
 
-            ✅ ĐOẠN MỚI:
-{placedOrder && (
+            {placedOrder && (
   <div className="bg-brand-50 border border-brand-200 rounded-xl sm:rounded-2xl p-3 sm:p-4 max-w-md mx-auto text-left text-xs space-y-1.5">
     <div className="flex justify-between gap-2">
       <span className="text-slate-500 shrink-0">Mã đơn hàng:</span>

@@ -14,6 +14,7 @@ public interface IAppDbContext
     DbSet<Review> Reviews { get; }
     DbSet<Voucher> Vouchers { get; }
     DbSet<ReturnRequest> ReturnRequests { get; }
+    DbSet<IdempotencyRecord> IdempotencyRecords { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

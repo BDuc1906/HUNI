@@ -89,10 +89,22 @@ var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get
                      ?? ["http://localhost:3000", "https://hunistore.com", "https://www.hunistore.com"];
 builder.Services.AddCors(opt =>
     opt.AddPolicy("NextJsPolicy", p =>
-        p.WithOrigins(allowedOrigins)
-         .AllowAnyMethod()
-         .AllowAnyHeader()
-         .AllowCredentials()));
+        p.SetIsOriginAllowed(origin =>
+        {
+            if (string.IsNullOrEmpty(origin)) return false;
+            if (Uri.TryCreate(origin, UriKind.Absolute, out var uri))
+            {
+                return uri.Host == "localhost" 
+                    || uri.Host.EndsWith(".vercel.app") 
+                    || uri.Host == "hunistore.com" 
+                    || uri.Host.EndsWith(".hunistore.com")
+                    || allowedOrigins.Contains(origin);
+            }
+            return false;
+        })
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials()));
 
 // ─── 3. JWT Authentication ────────────────────────────────────────
 var rawSecret = builder.Configuration.GetSection("Jwt")["SecretKey"];
@@ -227,6 +239,7 @@ builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddHttpClient<IChatService, GeminiChatService>();
+builder.Services.AddHostedService<IdempotencyCleanupService>();
 
 builder.Services.AddRouting(opt => { opt.LowercaseUrls = true; });
 
@@ -268,6 +281,7 @@ app.UseMiddleware<OrderRateLimitMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<IdempotencyMiddleware>();
 app.MapControllers();
 
 // Health Check Endpoints

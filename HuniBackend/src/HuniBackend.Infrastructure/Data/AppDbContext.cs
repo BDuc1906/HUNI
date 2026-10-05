@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<Voucher> Vouchers => Set<Voucher>();
     public DbSet<ReturnRequest> ReturnRequests => Set<ReturnRequest>();
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -119,6 +120,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasForeignKey(r => r.CustomerId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
+
+        // IdempotencyRecord configuration
+        modelBuilder.Entity<IdempotencyRecord>(e =>
+        {
+            e.HasKey(x => x.Id);
+            e.HasIndex(x => x.Key).IsUnique();
+            e.HasIndex(x => x.ExpiresAt);
+            e.Property(x => x.Key).HasMaxLength(128).IsRequired();
+            e.Property(x => x.ResponseBody).HasColumnType("text");
+        });
     }
 
     private static string ToSnakeCase(string name) =>

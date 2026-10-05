@@ -167,4 +167,40 @@ public class OrdersControllerTests : IClassFixture<HuniWebAppFactory>
         var getRes = await _client.GetAsync($"/api/orders/{orderNumber}?phone=0999999999");
         getRes.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
+
+    [Fact]
+    public async Task PostOrder_WithSameIdempotencyKey_ShouldNotCreateDuplicate()
+    {
+        HuniBackend.API.Middleware.OrderRateLimitMiddleware.Reset();
+        var client = _factory.CreateClient();
+
+        var key = Guid.NewGuid().ToString();
+        var orderPayload = CreateSampleOrder();
+
+        var request1 = new HttpRequestMessage(HttpMethod.Post, "/api/orders");
+        request1.Headers.Add("Idempotency-Key", key);
+        request1.Content = JsonContent.Create(orderPayload);
+
+        var request2 = new HttpRequestMessage(HttpMethod.Post, "/api/orders");
+        request2.Headers.Add("Idempotency-Key", key); // cùng key!
+        request2.Content = JsonContent.Create(orderPayload);
+
+        var response1 = await client.SendAsync(request1);
+        var response2 = await client.SendAsync(request2);
+
+        Assert.Equal(HttpStatusCode.Created, response1.StatusCode);
+        Assert.Equal(HttpStatusCode.Created, response2.StatusCode); // trả 201 từ cache
+
+        var json1 = await response1.Content.ReadFromJsonAsync<JsonElement>();
+        var json2 = await response2.Content.ReadFromJsonAsync<JsonElement>();
+
+        // Phải là cùng 1 order number
+        Assert.Equal(
+            json1.GetProperty("order").GetProperty("orderNumber").GetString(),
+            json2.GetProperty("order").GetProperty("orderNumber").GetString()
+        );
+
+        // Header đánh dấu response được lấy từ cache
+        Assert.True(response2.Headers.Contains("X-Idempotent-Replayed"));
+    }
 }
