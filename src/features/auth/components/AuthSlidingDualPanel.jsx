@@ -174,6 +174,7 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
       }
 
       setLoginEmail(regEmail);
+      setLoginPassword(regPassword);
       setLoginSuccess(true);
       switchMode("login");
     } catch (err) {

@@ -39,24 +39,33 @@ export default function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  async function login(credentials) {
-    const res = await authService.login(credentials);
+  const login = async (emailOrObj, maybePassword) => {
+    let email, password;
+    if (typeof emailOrObj === "object" && emailOrObj !== null) {
+      email = emailOrObj.email;
+      password = emailOrObj.password;
+    } else {
+      email = emailOrObj;
+      password = maybePassword;
+    }
+
+    const res = await authService.login({ email, password });
     if (res?.success && res?.user) {
       setUser(res.user);
     }
     return res;
-  }
+  };
 
-  async function register(data) {
+  const register = async (data) => {
     return authService.register(data);
-  }
+  };
 
-  function logout() {
+  const logout = () => {
     try {
       authService.logout();
     } catch {}
     setUser(null);
-  }
+  };
 
   return (
     <AuthContext.Provider value={{ user, loading, login, register, logout, setUser }}>

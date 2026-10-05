@@ -726,17 +726,37 @@ export const authService = {
   /**
    * Đăng ký tài khoản khách hàng mới
    */
-  async register({ fullName, email, phone, password }) {
+  async register(dataOrName, maybeEmail, maybePhone, maybePassword) {
+    let payload;
+    if (typeof dataOrName === "object" && dataOrName !== null) {
+      payload = dataOrName;
+    } else {
+      payload = {
+        fullName: dataOrName,
+        email: maybeEmail,
+        phone: maybePhone,
+        password: maybePassword,
+      };
+    }
     return apiFetch("/api/auth/register", {
       method: "POST",
-      body: JSON.stringify({ fullName, email, phone, password }),
+      body: JSON.stringify(payload),
     });
   },
 
   /**
    * Đăng nhập tài khoản bằng email & password
    */
-  async login({ email, password }) {
+  async login(emailOrObj, maybePassword) {
+    let email, password;
+    if (typeof emailOrObj === "object" && emailOrObj !== null) {
+      email = emailOrObj.email;
+      password = emailOrObj.password;
+    } else {
+      email = emailOrObj;
+      password = maybePassword;
+    }
+
     const res = await apiFetch("/api/auth/login", {
       method: "POST",
       body: JSON.stringify({ email, password }),
