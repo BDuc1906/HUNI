@@ -27,6 +27,7 @@ import {
   Palette,
 } from "lucide-react";
 import { CATEGORIES } from "@/shared/data";
+import { SITE_HIERARCHY } from "@/shared/data/siteHierarchy";
 
 // ============================================================
 // MAP ICON CHO CATEGORY
@@ -94,6 +95,26 @@ const MAIN_NAV = [
   { label: "Quy Trình", href: "/quy-trinh-may-dong-phuc-doanh-nghiep" },
   { label: "Liên Hệ", href: "/lien-he" },
 ];
+
+// Dùng lại danh mục, URL và ảnh hiện có cho phần trình bày mega menu.
+const PRODUCT_MENU_COLUMNS = MAIN_NAV.find((item) => item.hasDropdown)
+  .children.flatMap((child) => {
+    const category = SITE_HIERARCHY.categories[child.href.slice(1)];
+    if (!category) return [];
+
+    return [{
+      ...child,
+      title: category.shortTitle,
+      image: CATEGORIES.find((entry) => entry.slug === category.id)?.image,
+      links: category.subcategories
+        .map((href) => SITE_HIERARCHY.categories[href.slice(1)])
+        .filter(Boolean),
+    }];
+  });
+
+const PRODUCT_MENU_BANNERS = PRODUCT_MENU_COLUMNS.filter(
+  (column) => column.icon === "Briefcase" || column.icon === "Activity"
+);
 
 // ============================================================
 // HOVER DELAY — Chờ 150ms trước khi đóng menu
@@ -451,7 +472,7 @@ export default function Header() {
       {/* =============================================
           DESKTOP NAV — DROPDOWN HOVER
           ============================================= */}
-      <nav className="hidden lg:block bg-[#003843] border-t border-slate-800/80">
+      <nav className="relative hidden lg:block bg-[#003843] border-t border-slate-800/80">
         <div className="max-w-7xl mx-auto px-2 xl:px-4 flex items-center text-[13px] font-medium">
           {MAIN_NAV.map((item) => {
             const active = isActive(item.href) || isDropdownActive(item);
@@ -462,7 +483,6 @@ export default function Header() {
               return (
                 <div
                   key={item.label}
-                  className="relative"
                   onMouseEnter={() => handleMouseEnter(item.label)}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -485,76 +505,110 @@ export default function Header() {
                   {/* DROPDOWN PANEL */}
                   {isOpen && (
                     <div
-                      className="absolute left-0 top-full pt-1 z-50"
+                      className="absolute inset-x-4 top-full z-50 pt-1 xl:inset-x-6"
                       onMouseEnter={() => handleMouseEnter(item.label)}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <div className="w-[480px] bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-2 animate-in fade-in slide-in-from-top-1 duration-150">
-                        {item.children.map((child) => {
-                          const Icon = catIconMap[child.icon] || Briefcase;
-                          const childActive = pathname === child.href;
+                      <div className="max-h-[calc(100dvh-11rem)] overflow-y-auto overscroll-contain rounded-xl border border-slate-200 bg-white text-slate-800 shadow-xl shadow-slate-950/10 animate-in fade-in slide-in-from-top-1 duration-150">
+                        <div className="grid grid-cols-[minmax(0,1fr)_240px] items-start gap-6 p-6 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-8 xl:p-8 2xl:grid-cols-[minmax(0,1fr)_360px] 2xl:gap-10 2xl:p-10">
+                          <div className="grid min-w-0 grid-cols-3 gap-x-6 gap-y-8 xl:grid-cols-5 xl:gap-x-5 2xl:gap-x-8">
+                            {PRODUCT_MENU_COLUMNS.map((column) => (
+                              <div key={column.href} className="min-w-0">
+                                <Link
+                                  href={column.href}
+                                  title={column.label}
+                                  className={`group mb-3 flex min-h-10 items-start justify-between gap-2 text-[13px] font-extrabold uppercase leading-5 tracking-wide transition-colors hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600 ${
+                                    pathname.startsWith(column.href)
+                                      ? "text-brand-700"
+                                      : "text-slate-900"
+                                  }`}
+                                >
+                                  <span>{column.title}</span>
+                                  <ArrowRight className="mt-0.5 h-3.5 w-3.5 shrink-0 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                                </Link>
+                                <ul className="space-y-1 text-[13px] leading-6 xl:text-sm">
+                                  <li>
+                                    <Link
+                                      href={column.href}
+                                      aria-current={pathname === column.href ? "page" : undefined}
+                                      className={`block py-1 transition-colors hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-brand-600 ${pathname === column.href ? "font-semibold text-brand-700" : "text-slate-600"}`}
+                                    >
+                                      Tất cả
+                                    </Link>
+                                  </li>
+                                  {column.links.map((category) => (
+                                    <li key={category.url}>
+                                      <Link
+                                        href={category.url}
+                                        aria-current={pathname === category.url ? "page" : undefined}
+                                        className={`block py-1 transition-colors hover:text-brand-600 focus-visible:outline-2 focus-visible:outline-brand-600 ${pathname === category.url ? "font-semibold text-brand-700" : "text-slate-600"}`}
+                                      >
+                                        {category.shortTitle}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
 
-                          return (
+                          <div className="min-w-0 space-y-4 2xl:space-y-5">
+                            {PRODUCT_MENU_BANNERS.map((banner) => (
+                              <Link
+                                key={banner.href}
+                                href={banner.href}
+                                className="group relative block aspect-[2.5/1] overflow-hidden rounded-xl bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-600"
+                              >
+                                <Image
+                                  src={banner.image}
+                                  alt={banner.label}
+                                  fill
+                                  sizes="(min-width: 1536px) 360px, (min-width: 1280px) 300px, 240px"
+                                  quality={85}
+                                  className="object-cover object-[center_35%] transition-transform duration-300 group-hover:scale-105"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-r from-slate-950/80 via-slate-950/35 to-transparent" />
+                                <div className="absolute inset-0 flex items-end justify-between gap-3 p-4 text-white xl:p-5">
+                                  <span className="max-w-[80%] text-sm font-extrabold leading-5 xl:text-base">
+                                    {banner.label}
+                                  </span>
+                                  <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                                </div>
+                              </Link>
+                            ))}
+                            <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                              <span className="text-slate-500">
+                                Cần tư vấn riêng cho doanh nghiệp?
+                              </span>
+                              <button
+                                onClick={() => setIsQuickQuoteOpen(true)}
+                                className="flex items-center gap-1 font-bold text-brand-600 transition-colors hover:text-brand-700"
+                              >
+                                <Sparkles className="h-3 w-3" />
+                                Báo giá ngay
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-flow-col auto-cols-fr items-stretch divide-x divide-slate-200 border-t border-slate-200 bg-[#f5f5f5] text-center text-[11px] font-bold uppercase leading-5 tracking-wide xl:text-xs">
+                          <span className="flex items-center justify-center px-3 py-4 text-slate-500">
+                            Theo nhu cầu
+                          </span>
+                          {item.children.map((child) => (
                             <Link
                               key={child.href}
                               href={child.href}
-                              className={`flex items-start gap-3 p-3 rounded-xl transition-colors ${
-                                childActive
-                                  ? "bg-brand-50 ring-1 ring-brand-300"
-                                  : "hover:bg-slate-50"
-                              }`}
+                              className="flex min-w-0 flex-wrap items-center justify-center gap-x-1.5 gap-y-1 px-3 py-4 text-slate-700 transition-colors hover:bg-white hover:text-brand-600 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-600"
                             >
-                              <div
-                                className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${
-                                  childActive
-                                    ? "bg-brand-500 text-white"
-                                    : "bg-brand-100 text-brand-700"
-                                }`}
-                              >
-                                <Icon className="w-5 h-5" />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div
-                                  className={`font-bold text-sm flex items-center gap-1.5 ${
-                                    childActive
-                                      ? "text-brand-800"
-                                      : "text-slate-800"
-                                  }`}
-                                >
-                                  <span>{child.label}</span>
-                                  {child.badge && (
-                                    <span className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase bg-amber-400 text-slate-950 tracking-wider">
-                                      {child.badge}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-xs text-slate-500 mt-0.5 line-clamp-1">
-                                  {child.desc}
-                                </div>
-                              </div>
-                              <ArrowRight
-                                className={`w-4 h-4 mt-1.5 shrink-0 ${
-                                  childActive
-                                    ? "text-brand-600"
-                                    : "text-slate-300"
-                                }`}
-                              />
+                              <span>{PRODUCT_MENU_COLUMNS.find((column) => column.href === child.href)?.title || child.label}</span>
+                              {child.badge && (
+                                <span className="rounded bg-amber-400 px-1.5 py-0.5 text-[9px] font-black leading-3 text-slate-950">
+                                  {child.badge}
+                                </span>
+                              )}
                             </Link>
-                          );
-                        })}
-
-                        {/* Footer của dropdown */}
-                        <div className="mt-1 pt-2 border-t border-slate-100 px-3 pb-1 flex items-center justify-between">
-                          <span className="text-[11px] text-slate-500">
-                            Cần tư vấn riêng cho doanh nghiệp?
-                          </span>
-                          <button
-                            onClick={() => setIsQuickQuoteOpen(true)}
-                            className="text-[11px] font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1"
-                          >
-                            <Sparkles className="w-3 h-3" />
-                            Báo giá ngay
-                          </button>
+                          ))}
                         </div>
                       </div>
                     </div>
@@ -687,7 +741,7 @@ export default function Header() {
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          <div className="absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 overflow-y-auto">
+          <div className={`absolute top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#004f5e] border-l border-slate-800 overflow-y-auto ${mobileCategoryOpen ? "md:w-[760px]" : ""}`}>
             <div className="sticky top-0 bg-[#004f5e] p-4 border-b border-slate-800 flex items-center justify-between z-10">
               <div className="flex items-center gap-2">
                 <div className="relative w-9 h-9 aspect-square overflow-hidden bg-white rounded-lg flex items-center justify-center shadow-md">
@@ -767,7 +821,7 @@ export default function Header() {
                         </button>
 
                         {mobileCategoryOpen && (
-                          <div className="ml-3 mt-1 space-y-1 border-l-2 border-brand-500/40 pl-3">
+                          <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 border-l-2 border-brand-500/40 pl-2 md:pl-3">
                             {item.children.map((child) => {
                               const Icon =
                                 catIconMap[child.icon] || Briefcase;
@@ -777,21 +831,29 @@ export default function Header() {
                                   key={child.href}
                                   href={child.href}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className={`flex items-center gap-2 py-2 px-2 rounded-lg text-sm transition-colors ${
+                                  className={`flex items-center w-full min-w-0 gap-2 p-2 md:gap-3 md:p-3 rounded-xl text-sm transition-colors ${
                                     childActive
                                       ? "text-brand-300 font-bold bg-slate-800"
                                       : "text-slate-300 hover:bg-slate-800"
                                   }`}
                                 >
-                                  <Icon className="w-4 h-4 shrink-0" />
-                                  <span className="truncate">
-                                    {child.label}
-                                  </span>
-                                  {child.badge && (
-                                    <span className="px-1.5 py-0.5 text-[8px] font-black uppercase rounded bg-amber-400 text-slate-950 ml-auto">
-                                      {child.badge}
-                                    </span>
-                                  )}
+                                  <div className="w-10 h-10 rounded-lg bg-brand-500/20 text-brand-300 flex items-center justify-center shrink-0">
+                                    <Icon className="w-5 h-5" />
+                                  </div>
+                                  <div className="flex-1 min-w-0 wrap-break-word">
+                                    <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 font-bold leading-5">
+                                      <span>{child.label}</span>
+                                      {child.badge && (
+                                        <span className="shrink-0 px-1.5 py-0.5 text-[8px] font-black uppercase rounded bg-amber-400 text-slate-950">
+                                          {child.badge}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="mt-1 text-xs leading-5 font-normal text-slate-400">
+                                      {child.desc}
+                                    </div>
+                                  </div>
+                                  <ArrowRight className="w-4 h-4 ml-auto shrink-0 text-brand-300" />
                                 </Link>
                               );
                             })}
