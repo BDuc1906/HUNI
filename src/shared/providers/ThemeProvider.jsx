@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 const ThemeContext = createContext({
   theme: "light",
   toggleTheme: () => {},
-  setTheme: () => {}
+  setTheme: () => {},
 });
 
 export function ThemeProvider({ children }) {
@@ -15,16 +15,15 @@ export function ThemeProvider({ children }) {
   useEffect(() => {
     setMounted(true);
     try {
-      const saved = localStorage.getItem("huni_theme");
-      if (saved) {
-        setThemeState(saved);
-        if (saved === "dark") {
+      const savedTheme = localStorage.getItem("huni_theme");
+      if (savedTheme) {
+        setThemeState(savedTheme);
+        if (savedTheme === "dark") {
           document.documentElement.classList.add("dark");
         } else {
           document.documentElement.classList.remove("dark");
         }
       } else {
-        // Default light mode as user requested "chữ đen nền trắng"
         setThemeState("light");
         document.documentElement.classList.remove("dark");
       }
@@ -53,7 +52,14 @@ export function ThemeProvider({ children }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, mounted }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        toggleTheme,
+        setTheme,
+        mounted,
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );

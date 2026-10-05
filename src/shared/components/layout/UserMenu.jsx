@@ -67,7 +67,7 @@ export default function UserMenu() {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 p-1 pl-1 pr-2 rounded-full bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-brand-400/60 transition-colors"
+        className="flex items-center gap-2 p-1 pl-1 pr-2 rounded-full bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-brand-400/60 transition-colors cursor-pointer"
         aria-label="Menu tài khoản"
       >
         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-black text-xs sm:text-sm">
@@ -84,11 +84,10 @@ export default function UserMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50">
-          {/* Header */}
-          <div className="px-4 py-3 bg-gradient-to-r from-[#004f5e] to-[#00677a] border-b border-brand-500/20">
+        <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl overflow-hidden z-50">
+          <div className="p-4 bg-gradient-to-br from-brand-600 to-brand-800 text-white">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-black text-base shrink-0">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-black text-base">
                 {initial}
               </div>
               <div className="min-w-0">
@@ -102,7 +101,6 @@ export default function UserMenu() {
             </div>
           </div>
 
-          {/* Menu items */}
           <div className="p-2">
             {user.role === "ADMIN" && (
               <Link
@@ -118,22 +116,22 @@ export default function UserMenu() {
             <Link
               href="/tai-khoan"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 text-sm font-medium text-slate-300 hover:text-white transition-colors"
             >
-              <User className="w-4 h-4 text-brand-600 shrink-0" />
-              <span>Trang tài khoản</span>
+              <User className="w-4 h-4 text-slate-400" />
+              <span>Hồ sơ cá nhân</span>
             </Link>
 
             <Link
-              href="/tai-khoan?tab=orders"
+              href="/tai-khoan?tab=don-hang"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 text-sm font-medium text-slate-700 transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-800 text-sm font-medium text-slate-300 hover:text-white transition-colors"
             >
-              <Package className="w-4 h-4 text-brand-600 shrink-0" />
+              <Package className="w-4 h-4 text-slate-400" />
               <span>Đơn hàng của tôi</span>
             </Link>
 
-            <div className="h-px bg-slate-100 my-1" />
+            <div className="h-px bg-slate-800 my-1.5" />
 
             <button
               onClick={() => {
@@ -141,7 +139,7 @@ export default function UserMenu() {
                 logout();
                 window.location.href = "/";
               }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 text-sm font-medium text-rose-600 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/20 text-sm font-medium text-rose-400 transition-colors text-left cursor-pointer"
             >
               <LogOut className="w-4 h-4 shrink-0" />
               <span>Đăng xuất</span>
