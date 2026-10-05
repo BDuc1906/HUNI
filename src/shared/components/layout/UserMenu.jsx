@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/shared/providers/AuthProvider";
 import {
   User,
@@ -11,7 +12,8 @@ import {
 } from "lucide-react";
 
 export default function UserMenu() {
-  const auth = useAuth ? useAuth() : null;
+  const router = useRouter();
+  const auth = useAuth();
   const user = auth?.user || null;
   const loading = auth?.loading || false;
   const logout = auth?.logout;
@@ -118,7 +120,8 @@ export default function UserMenu() {
               onClick={() => {
                 setOpen(false);
                 if (logout) logout();
-                window.location.href = "/";
+                router.push("/");
+                router.refresh();
               }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-500/20 text-sm font-medium text-rose-400 transition-colors text-left cursor-pointer"
             >

@@ -130,6 +130,16 @@ export default function HomePromoModal() {
     }
   }, [pathname]);
 
+  const handleClose = React.useCallback(() => {
+    setIsOpen(false);
+    document.body.style.overflow = "";
+  }, []);
+
+  const handleBannerClick = () => {
+    handleClose();
+    setIsQuickQuoteOpen(true);
+  };
+
   // Khóa cuộn trang khi modal mở & hỗ trợ phím ESC
   useEffect(() => {
     if (isOpen && pathname === "/") {
@@ -147,17 +157,7 @@ export default function HomePromoModal() {
     } else {
       document.body.style.overflow = "";
     }
-  }, [isOpen, pathname]);
-
-  const handleClose = () => {
-    setIsOpen(false);
-    document.body.style.overflow = "";
-  };
-
-  const handleBannerClick = () => {
-    handleClose();
-    setIsQuickQuoteOpen(true);
-  };
+  }, [isOpen, pathname, handleClose]);
 
   // Chỉ hiển thị ở trang chủ
   if (!mounted || !isOpen || pathname !== "/" || typeof document === "undefined") {
