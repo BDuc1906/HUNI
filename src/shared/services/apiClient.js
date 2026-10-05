@@ -15,7 +15,10 @@ import {
   MOCK_RETURNS,
 } from "../data/adminMockData";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const rawBaseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").trim().replace(/\/+$/, "");
+const BASE_URL = rawBaseUrl.startsWith("http://") || rawBaseUrl.startsWith("https://")
+  ? rawBaseUrl
+  : `https://${rawBaseUrl}`;
 
 function getToken() {
   if (typeof window === "undefined") return null;
@@ -767,7 +770,15 @@ export const authService = {
 
 export const apiClient = {
   get: (path, options = {}) => apiFetch(path, { ...options, method: 'GET' }),
-  post: (path, body, options = {}) => apiFetch(path, { ...options, method: 'POST', body: JSON.stringify(body) }),
+  post: (path, body, options = {}) => {
+    const { headers = {}, ...rest } = options;
+    return apiFetch(path, {
+      ...rest,
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers,
+    });
+  },
   put: (path, body, options = {}) => apiFetch(path, { ...options, method: 'PUT', body: JSON.stringify(body) }),
   patch: (path, body, options = {}) => apiFetch(path, { ...options, method: 'PATCH', body: JSON.stringify(body) }),
   delete: (path, body, options = {}) => apiFetch(path, { ...options, method: 'DELETE', body: body ? JSON.stringify(body) : undefined }),
