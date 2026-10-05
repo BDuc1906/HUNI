@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { SessionProvider } from "next-auth/react";
+import { authService } from "@/shared/services/apiClient";
 
 const AuthContext = createContext({
   user: null,
@@ -39,21 +39,28 @@ export default function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const login = async () => {};
-  const register = async () => {};
-  const logout = () => {
+  async function login(credentials) {
+    const res = await authService.login(credentials);
+    if (res?.success && res?.user) {
+      setUser(res.user);
+    }
+    return res;
+  }
+
+  async function register(data) {
+    return authService.register(data);
+  }
+
+  function logout() {
     try {
-      localStorage.removeItem("huni_token");
-      localStorage.removeItem("huni_user");
+      authService.logout();
     } catch {}
     setUser(null);
-  };
+  }
 
   return (
-    <SessionProvider>
-      <AuthContext.Provider value={{ user, loading, login, register, logout, setUser }}>
-        {children}
-      </AuthContext.Provider>
-    </SessionProvider>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
