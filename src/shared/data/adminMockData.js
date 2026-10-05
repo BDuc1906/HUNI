@@ -1,13 +1,11 @@
 // ============================================================
 // src/shared/data/adminMockData.js
 // Dữ liệu mẫu chuẩn nghiệp vụ cho Cổng Quản Trị HDC Fashion
+// Tự động kích hoạt khi Backend C# offline để phục vụ demo & vận hành mượt mà
 // ============================================================
 
 import { PRODUCTS } from "./products";
 
-/* ============================================================
-   DASHBOARD STATS
-   ============================================================ */
 export const MOCK_DASHBOARD_STATS = {
   totalOrders: 148,
   totalRevenue: 856400000,
@@ -33,78 +31,6 @@ export const MOCK_DASHBOARD_STATS = {
   },
 };
 
-/* ============================================================
-   DASHBOARD CHARTS DATA (MỚI)
-   ============================================================ */
-export const MOCK_REVENUE_KPI = {
-  current: 856400000,
-  target: 1000000000,
-  delta: 12.5,
-  comparedTo: "last month",
-};
-
-export const MOCK_FUNNEL_B2B = [
-  { stage: "Quote gửi",  value: 34, percentage: 100, color: "#0097B2" },
-  { stage: "Đã liên hệ", value: 28, percentage: 82,  color: "#33B0CB" },
-  { stage: "Đã báo giá", value: 22, percentage: 65,  color: "#66C5D8" },
-  { stage: "Chốt đơn",   value: 14, percentage: 41,  color: "#99D9E5" },
-  { stage: "Hoàn thành", value: 12, percentage: 35,  color: "#CCECF2" },
-];
-
-export const MOCK_REVENUE_BY_CATEGORY = [
-  { category: "Polo Doanh Nghiệp", revenue: 385000000, percentage: 45, color: "#0097B2" },
-  { category: "Sơ Mi Công Sở",     revenue: 214000000, percentage: 25, color: "#33B0CB" },
-  { category: "Vest Lãnh Đạo",     revenue: 128500000, percentage: 15, color: "#66C5D8" },
-  { category: "Đồng Phục Golf",    revenue: 85600000,  percentage: 10, color: "#99D9E5" },
-  { category: "Phụ Kiện",          revenue: 43300000,  percentage: 5,  color: "#CCECF2" },
-];
-
-export const MOCK_TOP_PRODUCTS = [
-  { id: 1, name: "Áo Polo Doanh Nghiệp HDC Classic Gold",  sold: 234, revenue: 43290000 },
-  { id: 2, name: "Sơ Mi Ngắn Tay HDC Classic Xanh Đậm",    sold: 189, revenue: 44415000 },
-  { id: 3, name: "Bộ Vest Doanh Nhân HDC Royal Bespoke",   sold: 145, revenue: 268250000 },
-  { id: 4, name: "Set Golf & Pickleball HDC AeroCool Pro", sold: 98,  revenue: 28910000 },
-  { id: 5, name: "Phụ Kiện Branding VIP Pack HDC",         sold: 67,  revenue: 9715000 },
-];
-
-export const MOCK_ALERTS = [
-  {
-    id: 1,
-    type: "danger",
-    icon: "Clock",
-    title: "5 đơn hàng chờ xử lý quá 24h",
-    action: "/admin/orders?status=PENDING",
-    cta: "Xử lý ngay",
-  },
-  {
-    id: 2,
-    type: "warning",
-    icon: "FileText",
-    title: "3 yêu cầu báo giá mới chưa liên hệ",
-    action: "/admin/quotes?status=NEW",
-    cta: "Xem báo giá",
-  },
-  {
-    id: 3,
-    type: "info",
-    icon: "RotateCcw",
-    title: "2 yêu cầu đổi trả đang chờ duyệt",
-    action: "/admin/returns",
-    cta: "Duyệt",
-  },
-  {
-    id: 4,
-    type: "success",
-    icon: "TrendingUp",
-    title: "Doanh thu tháng này vượt 85% mục tiêu",
-    action: "/admin/orders",
-    cta: "Xem chi tiết",
-  },
-];
-
-/* ============================================================
-   ORDERS — 5 đơn hàng mẫu
-   ============================================================ */
 export const MOCK_ORDERS = [
   {
     id: "HDC-ORD-2026-001",
@@ -115,11 +41,11 @@ export const MOCK_ORDERS = [
     customerEmail: "hung.nv@vingroup.net",
     companyName: "Tập Đoàn Vingroup - Khối Vận Hành",
     shippingAddress: "Tòa nhà Symphony, Chu Huy Mân, Long Biên, Hà Nội",
-    status: "PRODUCING",
+    status: "PRODUCING", // PENDING, QUOTED, CONFIRMED, PRODUCING, SHIPPED, COMPLETED, CANCELLED
     depositPaid: 45000000,
     totalAmount: 89500000,
     paymentMethod: "BANK_TRANSFER",
-    paymentStatus: "PARTIAL",
+    paymentStatus: "PARTIAL", // UNPAID, PARTIAL, PAID
     deliveryDate: "2026-10-15",
     items: [
       {
@@ -284,9 +210,6 @@ export const MOCK_ORDERS = [
   },
 ];
 
-/* ============================================================
-   QUOTES — 4 yêu cầu báo giá
-   ============================================================ */
 export const MOCK_QUOTES = [
   {
     id: "HDC-QT-2026-001",
@@ -302,7 +225,7 @@ export const MOCK_QUOTES = [
     fabricType: "Pique Cotton Compact 4 chiều",
     estimatedBudget: 85000000,
     notes: "May áo polo cho sự kiện chạy Marathon Techcombank 2026, màu đỏ thương hiệu, thêu ngực và in tay áo.",
-    status: "NEW",
+    status: "NEW", // NEW, CONTACTED, QUOTED, CONVERTED, CLOSED
     source: "QuickQuote Widget",
   },
   {
@@ -358,9 +281,6 @@ export const MOCK_QUOTES = [
   },
 ];
 
-/* ============================================================
-   CUSTOMERS — 5 khách hàng
-   ============================================================ */
 export const MOCK_CUSTOMERS = [
   {
     id: "CUST-001",
@@ -429,9 +349,6 @@ export const MOCK_CUSTOMERS = [
   },
 ];
 
-/* ============================================================
-   VOUCHERS — 3 voucher
-   ============================================================ */
 export const MOCK_VOUCHERS = [
   {
     id: "VOUCHER-01",
@@ -477,9 +394,6 @@ export const MOCK_VOUCHERS = [
   },
 ];
 
-/* ============================================================
-   REVIEWS — 3 đánh giá
-   ============================================================ */
 export const MOCK_REVIEWS = [
   {
     id: "REV-01",
@@ -513,9 +427,6 @@ export const MOCK_REVIEWS = [
   },
 ];
 
-/* ============================================================
-   RETURNS — 2 yêu cầu đổi trả
-   ============================================================ */
 export const MOCK_RETURNS = [
   {
     id: "RET-01",

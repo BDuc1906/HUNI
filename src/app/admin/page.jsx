@@ -1,7 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
-import { Calendar, Download } from "lucide-react";
-=======
 import Link from "next/link";
 import {
   ShoppingBag,
@@ -15,33 +12,19 @@ import {
   Scissors,
   CheckCircle2,
 } from "lucide-react";
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
 import StatsCard from "./components/StatsCard";
-import SalesTrendChart from "./components/SalesTrendChart";
-import RevenueGaugeChart from "./components/RevenueGaugeChart";
-import FunnelB2BChart from "./components/FunnelB2BChart";
 import OrderStatusChart from "./components/OrderStatusChart";
-import RevenueByCategoryChart from "./components/RevenueByCategoryChart";
-import TopProductsChart from "./components/TopProductsChart";
-import AlertsPanel from "./components/AlertsPanel";
 import RecentOrdersTable from "./components/RecentOrdersTable";
+import RecentQuotesTable from "./components/RecentQuotesTable";
 import {
   MOCK_DASHBOARD_STATS,
   MOCK_ORDERS,
-  MOCK_REVENUE_KPI,
-  MOCK_FUNNEL_B2B,
-  MOCK_REVENUE_BY_CATEGORY,
-  MOCK_TOP_PRODUCTS,
-  MOCK_ALERTS,
+  MOCK_QUOTES,
 } from "@/shared/data/adminMockData";
 
 export const metadata = {
-<<<<<<< HEAD
-  title: "Dashboard | HDC Fashion Admin",
-=======
   title: "Tổng Quan Vận Hành | Admin HDC Fashion",
   description: "Bảng điều khiển tổng hợp số liệu vận hành và đơn hàng",
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
 };
 
 export const dynamic = "force-dynamic";
@@ -52,10 +35,6 @@ function formatVND(amount) {
 }
 
 export default async function AdminDashboardPage() {
-<<<<<<< HEAD
-  let stats = { totalOrders: 0, totalRevenue: 0, totalQuotes: 0, totalCustomers: 0 };
-  let statusCounts = { orders: { pending: 0, producing: 0, completed: 0, cancelled: 0 } };
-=======
   let totalOrders = 0;
   let totalQuotes = 0;
   let totalCustomers = 0;
@@ -67,8 +46,8 @@ export default async function AdminDashboardPage() {
   let completedOrders = 0;
   let cancelledOrders = 0;
   let newQuotes = 0;
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
   let recentOrders = [];
+  let recentQuotes = [];
 
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
@@ -79,10 +58,6 @@ export default async function AdminDashboardPage() {
       const json = await res.json().catch(() => null);
       const data = json?.data;
       if (data) {
-<<<<<<< HEAD
-        stats = data.stats || stats;
-        statusCounts = data.statusCounts || statusCounts;
-=======
         totalOrders = data.stats?.totalOrders || 0;
         totalRevenue = data.stats?.totalRevenue || 0;
         totalQuotes = data.stats?.totalQuotes || 0;
@@ -96,25 +71,14 @@ export default async function AdminDashboardPage() {
         cancelledOrders = data.statusCounts?.orders?.cancelled || 0;
         newQuotes = data.statusCounts?.quotes?.new || 0;
 
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
         recentOrders = data.recentOrders || [];
+        recentQuotes = data.recentQuotes || [];
       }
     }
-  } catch (err) {
-    console.error("[AdminDashboard]", err);
+  } catch (error) {
+    console.error("[AdminDashboard] Error fetching stats:", error);
   }
 
-<<<<<<< HEAD
-  // Fallback mock
-  if (!stats.totalOrders && !stats.totalRevenue) {
-    stats = {
-      totalOrders: MOCK_DASHBOARD_STATS.totalOrders,
-      totalRevenue: MOCK_DASHBOARD_STATS.totalRevenue,
-      totalQuotes: MOCK_DASHBOARD_STATS.totalQuotes,
-      totalCustomers: MOCK_DASHBOARD_STATS.totalCustomers,
-    };
-    statusCounts = MOCK_DASHBOARD_STATS.statusCounts;
-=======
   // Tự động kích hoạt Mock Data chuẩn nghiệp vụ khi chưa kết nối backend
   if (!totalOrders && !totalRevenue) {
     totalOrders = MOCK_DASHBOARD_STATS.totalOrders;
@@ -128,65 +92,10 @@ export default async function AdminDashboardPage() {
     completedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.completed;
     cancelledOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.cancelled;
     newQuotes = MOCK_DASHBOARD_STATS.statusCounts.quotes.new;
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
     recentOrders = MOCK_ORDERS.slice(0, 5);
+    recentQuotes = MOCK_QUOTES.slice(0, 5);
   }
 
-<<<<<<< HEAD
-  const revenueFormatted = formatVND(stats.totalRevenue);
-  const conversionRate = Math.round((stats.totalOrders / Math.max(1, stats.totalQuotes + stats.totalOrders)) * 100);
-
-  return (
-    <div className="space-y-5">
-
-      {/* ============================================================
-          HEADER BAR
-          ============================================================ */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
-            Welcome back, Admin 👋
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Tổng quan hoạt động kinh doanh HDC Fashion hôm nay.
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 hover:border-[#0097B2] hover:text-[#0097B2] text-slate-700 font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition-all">
-            <Calendar className="w-4 h-4" />
-            <span>Daily</span>
-          </button>
-          <button className="inline-flex items-center gap-2 px-4 py-2 bg-[#0097B2] hover:bg-[#007f96] text-white font-semibold text-xs sm:text-sm rounded-xl shadow-sm shadow-[#0097B2]/20 transition-all">
-            <Download className="w-4 h-4" />
-            <span>Export</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ============================================================
-          TIER 1 — 5 KPI CARDS
-          ============================================================ */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        <StatsCard
-          title="DOANH THU"
-          value={revenueFormatted}
-          trendValue="+12.5%"
-          trendDirection="up"
-          trendLabel="last year"
-          accentColor="#0097B2"
-          sparkline={[35, 55, 40, 70, 55, 85, 65, 90]}
-        />
-        <StatsCard
-          title="ĐƠN HÀNG"
-          value={stats.totalOrders.toLocaleString("vi-VN")}
-          subValue="Orders"
-          trendValue="+8.2%"
-          trendDirection="up"
-          trendLabel="last year"
-          accentColor="#10b981"
-          sparkline={[40, 50, 55, 62, 58, 75, 82, 88]}
-=======
   const statusCounts = {
     pending: pendingOrders,
     confirmed: confirmedOrders,
@@ -249,46 +158,10 @@ export default async function AdminDashboardPage() {
           subtext={`${pendingOrders} đơn đang chờ duyệt cọc`}
           trend={{ isPositive: true, label: "+14.8% tuần này" }}
           sparkHeights={[25, 35, 50, 45, 65, 55, 75, 90, 80, 100]}
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
         />
-        <StatsCard
-<<<<<<< HEAD
-          title="BÁO GIÁ MỚI"
-          value={stats.totalQuotes.toLocaleString("vi-VN")}
-          subValue="Quotes"
-          trendValue="+5.1%"
-          trendDirection="up"
-          trendLabel="last month"
-          accentColor="#f59e0b"
-          sparkline={[30, 35, 42, 38, 55, 48, 62, 58]}
-        />
-        <StatsCard
-          title="KHÁCH HÀNG"
-          value={stats.totalCustomers.toLocaleString("vi-VN")}
-          subValue="New Users"
-          trendValue="-2.1%"
-          trendDirection="down"
-          trendLabel="last year"
-          accentColor="#a855f7"
-          sparkline={[80, 75, 72, 68, 65, 62, 60, 58]}
-        />
-        <StatsCard
-          title="TỶ LỆ CHỐT"
-          value={`${conversionRate}%`}
-          subValue="Conversion"
-          trendValue="+3.4%"
-          trendDirection="up"
-          trendLabel="vs Q trước"
-          accentColor="#0ea5e9"
-          sparkline={[35, 38, 40, 42, 44, 46, 48, 52]}
-        />
-      </div>
 
-      {/* ============================================================
-          TIER 2 — HERO CHART (2/3) + GAUGE (1/3)
-          ============================================================ */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-=======
+        {/* Yêu cầu báo giá */}
+        <StatsCard
           title="YÊU CẦU BÁO GIÁ"
           value={`${totalQuotes} yêu cầu`}
           subtext={`${newQuotes} yêu cầu mới cần gửi giá`}
@@ -309,29 +182,9 @@ export default async function AdminDashboardPage() {
       {/* 3. BIỂU ĐỒ CỘT TIẾN ĐỘ + TIẾN ĐỘ XƯỞNG MAY */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Biểu đồ cột phân bổ trạng thái & sản lượng 6 tháng */}
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
         <div className="lg:col-span-2">
-          <SalesTrendChart totalRevenue={revenueFormatted} totalOrders={stats.totalOrders} />
+          <OrderStatusChart statusCounts={statusCounts} />
         </div>
-<<<<<<< HEAD
-        <div>
-          <RevenueGaugeChart
-            current={MOCK_REVENUE_KPI.current}
-            target={MOCK_REVENUE_KPI.target}
-            delta={MOCK_REVENUE_KPI.delta}
-          />
-        </div>
-      </div>
-
-      {/* ============================================================
-          TIER 3 — 2x2 GRID: Funnel + Status + Category + Top Products
-          ============================================================ */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <FunnelB2BChart data={MOCK_FUNNEL_B2B} />
-        <OrderStatusChart statusCounts={statusCounts.orders} />
-        <RevenueByCategoryChart data={MOCK_REVENUE_BY_CATEGORY} />
-        <TopProductsChart products={MOCK_TOP_PRODUCTS} />
-=======
 
         {/* Thẻ Giám Sát Chuyền May Xưởng HDC */}
         <div className="p-6 rounded-2xl bg-white dark:bg-[#1E293B] border border-slate-200/90 dark:border-slate-700/80 shadow-xs flex flex-col justify-between">
@@ -437,21 +290,7 @@ export default async function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentOrdersTable orders={recentOrders} />
         <RecentQuotesTable quotes={recentQuotes} />
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
       </div>
-
-      {/* ============================================================
-          TIER 4 — Alerts (1/3) + Recent Orders (2/3)
-          ============================================================ */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div>
-          <AlertsPanel alerts={MOCK_ALERTS} />
-        </div>
-        <div className="lg:col-span-2">
-          <RecentOrdersTable orders={recentOrders} />
-        </div>
-      </div>
-
     </div>
   );
 }

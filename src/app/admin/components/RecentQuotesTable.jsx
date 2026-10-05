@@ -20,35 +20,17 @@ function formatDateTime(dateStr) {
     const d = new Date(dateStr);
     return new Intl.DateTimeFormat("vi-VN", {
       timeZone: "Asia/Ho_Chi_Minh",
-<<<<<<< HEAD
-      day: "2-digit", month: "2-digit", year: "numeric",
-      hour: "2-digit", minute: "2-digit",
-=======
       day: "2-digit",
       month: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
     }).format(d);
-  } catch { return "—"; }
+  } catch {
+    return "—";
+  }
 }
 
 export function QuoteBadge({ status }) {
-<<<<<<< HEAD
-  const config = {
-    NEW:       { bg: "bg-[#0097B2]/15",   text: "text-[#33B0CB]",  border: "border-[#0097B2]/25",  label: "🔔 Mới" },
-    CONTACTED: { bg: "bg-amber-500/15",   text: "text-amber-400",  border: "border-amber-500/25",  label: "📞 Đã liên hệ" },
-    QUOTED:    { bg: "bg-purple-500/15",  text: "text-purple-400", border: "border-purple-500/25", label: "📄 Đã báo giá" },
-    CONVERTED: { bg: "bg-emerald-500/15", text: "text-emerald-400",border: "border-emerald-500/25",label: "✅ Chuyển đơn" },
-    CLOSED:    { bg: "bg-white/6",        text: "text-[#64748b]",  border: "border-white/10",      label: "🔒 Đóng" },
-  };
-  const c = config[status] || { bg: "bg-white/6", text: "text-[#94a3b8]", border: "border-white/10", label: status };
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${c.bg} ${c.text} ${c.border}`}>
-      {c.label}
-    </span>
-  );
-=======
   switch (status) {
     case "NEW":
       return (
@@ -92,7 +74,6 @@ export function QuoteBadge({ status }) {
         </span>
       );
   }
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
 }
 
 const CATEGORY_NAMES = {
@@ -102,7 +83,7 @@ const CATEGORY_NAMES = {
   golf: "Trang Phục Golf",
   school: "Đồng Phục Học Sinh",
   accessories: "Phụ Kiện",
-  corporate: "Đồng Phục DN",
+  corporate: "Đồng Phục Doanh Nghiệp",
 };
 
 export default function RecentQuotesTable({ quotes = [] }) {
@@ -111,18 +92,6 @@ export default function RecentQuotesTable({ quotes = [] }) {
   const isDark = theme === "dark";
 
   return (
-<<<<<<< HEAD
-    <div className="rounded-2xl bg-[#071a21] border border-[#0b3440] overflow-hidden flex flex-col">
-      {/* Header */}
-      <div className="p-5 border-b border-[#0b3440] flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-amber-500/12 text-amber-400 border border-amber-500/20">
-            <FileText className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-base font-bold text-white">Yêu Cầu Báo Giá Gần Đây</h3>
-            <p className="text-xs text-[#64748b]">5 yêu cầu cần tư vấn & phản hồi sớm</p>
-=======
     <div
       className={`rounded-2xl transition-all duration-300 border overflow-hidden flex flex-col justify-between ${
         isDark
@@ -143,49 +112,27 @@ export default function RecentQuotesTable({ quotes = [] }) {
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Các yêu cầu cần tư vấn chất liệu & may mẫu thử 0đ
             </p>
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
           </div>
         </div>
 
         <Link
           href="/admin/quotes"
-<<<<<<< HEAD
-          className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1 hover:underline transition-all"
-=======
           className="text-xs font-bold text-amber-600 dark:text-amber-400 hover:text-amber-700 flex items-center gap-1 hover:underline"
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
         >
           <span>Xem tất cả</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Table */}
+      {/* Table Content */}
       <div className="overflow-x-auto">
         {quotes.length === 0 ? (
-<<<<<<< HEAD
-          <div className="p-8 text-center text-[#64748b] text-sm">
-            <FileText className="w-8 h-8 mx-auto mb-2 text-[#1e4a5c]" />
-=======
           <div className="p-8 text-center text-slate-400 text-xs">
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
             Chưa có yêu cầu báo giá nào mới.
           </div>
         ) : (
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-<<<<<<< HEAD
-              <tr className="border-b border-[#0b3440] bg-white/3 text-[#64748b] uppercase tracking-wider text-[11px]">
-                <th className="py-3 px-4 font-semibold">Công ty / Khách</th>
-                <th className="py-3 px-4 font-semibold">SĐT</th>
-                <th className="py-3 px-4 font-semibold">Danh mục</th>
-                <th className="py-3 px-4 font-semibold">Số lượng</th>
-                <th className="py-3 px-4 font-semibold">Trạng thái</th>
-                <th className="py-3 px-4 font-semibold text-right">Thời gian</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#0b3440]">
-=======
               <tr className="border-b border-slate-100 dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/60 text-slate-500 uppercase tracking-wider text-[11px] font-bold">
                 <th className="py-3 px-4">Công ty / Khách hàng</th>
                 <th className="py-3 px-4">SĐT</th>
@@ -196,44 +143,20 @@ export default function RecentQuotesTable({ quotes = [] }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
               {quotes.map((quote) => {
-                const customerName = quote.customer?.fullName || quote.fullName || "Khách hàng";
+                const customerName =
+                  quote.customer?.fullName || quote.fullName || "Khách hàng";
                 const company = quote.customer?.company || quote.company;
                 const categoryLabel =
                   CATEGORY_NAMES[quote.category?.toLowerCase()] ||
-                  quote.categoryLabel || quote.category || "Đồng phục";
+                  quote.categoryLabel ||
+                  quote.category ||
+                  "Đồng phục";
 
                 return (
                   <tr
                     key={quote.id}
                     onClick={() => router.push("/admin/quotes")}
-<<<<<<< HEAD
-                    className={`cursor-pointer transition-colors ${
-                      quote.status === "NEW"
-                        ? "bg-[#0097B2]/5 hover:bg-[#0097B2]/10"
-                        : "hover:bg-white/4"
-                    }`}
-                  >
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-white">{customerName}</div>
-                      {company && (
-                        <div className="text-[11px] text-[#64748b] flex items-center gap-1">
-                          <Building2 className="w-3 h-3 text-[#1e4a5c]" />
-                          <span className="truncate max-w-[130px]">{company}</span>
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-4 font-mono text-[#94a3b8]">{quote.phone || "—"}</td>
-                    <td className="py-3.5 px-4">
-                      <span className="inline-block px-2 py-0.5 rounded-md bg-white/6 text-[#94a3b8] text-[11px] font-medium border border-[#0b3440]">
-                        {categoryLabel}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4 font-mono font-bold text-white">{quote.quantity} chiếc</td>
-                    <td className="py-3.5 px-4"><QuoteBadge status={quote.status} /></td>
-                    <td className="py-3.5 px-4 text-right text-[#64748b] font-mono text-[11px]">
-=======
                     className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
                   >
                     <td className="py-3.5 px-4">
@@ -265,7 +188,6 @@ export default function RecentQuotesTable({ quotes = [] }) {
                       <QuoteBadge status={quote.status} />
                     </td>
                     <td className="py-3.5 px-4 text-right text-slate-400 font-mono text-[11px]">
->>>>>>> ffef8bc5bdf97e0e8ba5db6f73256774b5a491ac
                       {formatDateTime(quote.createdAt)}
                     </td>
                   </tr>
