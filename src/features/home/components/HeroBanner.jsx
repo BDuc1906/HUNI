@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BRAND_INFO } from "@/shared/data";
 import { useShop } from "@/shared/providers/ShopProvider";
-import { Sparkles, PhoneCall, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Sparkles, PhoneCall, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 
 // ============================================================
 // SLIDES DATA — 5 slides
@@ -233,7 +233,7 @@ export default function HeroBanner() {
       <div
         className="absolute inset-0 flex transition-transform ease-out gpu-accelerated"
         style={{
-          transform: `translateX(-${currentSlide * 100}%)`,
+          transform: `translate3d(-${currentSlide * 100}%, 0, 0)`,
           transitionDuration: `${TRANSITION_DURATION}ms`,
         }}
       >
@@ -260,7 +260,9 @@ export default function HeroBanner() {
                 quality={90}
                 priority={idx === 0}
                 loading={idx === 0 ? undefined : "eager"}
-                className="object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)]"
+                className={`object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)] transition-transform duration-7000 ease-out ${
+                  idx === currentSlide ? "scale-105" : "scale-100"
+                }`}
                 style={{ imageRendering: "-webkit-optimize-contrast" }}
               />
 
@@ -274,6 +276,23 @@ export default function HeroBanner() {
           </div>
         ))}
       </div>
+
+      {/* Nút Prev / Next chuyển slide nhanh */}
+      <button
+        onClick={prevSlide}
+        aria-label="Slide trước"
+        className="pointer-events-auto absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-brand-500 text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer opacity-70 hover:opacity-100"
+      >
+        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+      </button>
+
+      <button
+        onClick={nextSlide}
+        aria-label="Slide kế tiếp"
+        className="pointer-events-auto absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-brand-500 text-white border border-white/20 flex items-center justify-center backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer opacity-70 hover:opacity-100"
+      >
+        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+      </button>
 
       {/* ============================================
           CONTENT OVERLAY

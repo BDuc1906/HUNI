@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+.font-editorial {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Didot, 'Bodoni MT', Garamond, 'Times New Roman', serif;
+  letter-spacing: 0.015em;
+  font-feature-settings: "liga" 1, "dlig" 1;
+}
+
 /* =========================================================
    HDC FASHION — BRAND THEME (theo Catalogue 2023-12-28)
    Màu chủ đạo: Teal #0097B2 (đo trực tiếp từ logo & tiêu đề catalogue)
@@ -26,76 +32,32 @@
 /* ---------- Base tokens ---------- */
 @layer base {
   :root {
-    --bg-page: #f8fafc;
+    --bg-page: #f6f8ff;
     --bg-surface: #ffffff;
     --bg-card: #ffffff;
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --text-sub: #64748b;
-    --border-color: #e2e8f0;
-    --border-subtle: #f1f5f9;
+    --text-main: #111827;
+    --text-muted: #52525b;
+    --text-sub: #71717a;
+    --border-color: #e4e4e7;
+    --border-subtle: #f4f4f5;
   }
 
   .dark {
-    --bg-page: #041014;
-    --bg-surface: #071a21;
-    --bg-card: #08212a;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --text-sub: #64748b;
-    --border-color: #0b3440;
-    --border-subtle: #08252e;
+    --bg-page: #00222a;
+    --bg-surface: #003843;
+    --bg-card: #003843;
+    --text-main: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --text-sub: #71717a;
+    --border-color: #00566a;
+    --border-subtle: #003843;
   }
-}
-
-/* Glassmorphism & Luxury Utilities */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
-}
-
-.glass-panel-dark {
-  background: rgba(8, 33, 42, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 151, 178, 0.2);
-}
-
-.luxury-card {
-  background: #ffffff;
-  border-radius: 1.25rem;
-  border: 1px solid #f1f5f9;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.luxury-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 32px -4px rgba(0, 151, 178, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
-  border-color: rgba(0, 151, 178, 0.3);
-}
-
-.luxury-card-dark {
-  background: #09232d;
-  border-radius: 1.25rem;
-  border: 1px solid rgba(0, 151, 178, 0.15);
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.luxury-card-dark:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 36px -4px rgba(0, 151, 178, 0.25);
-  border-color: rgba(0, 151, 178, 0.4);
 }
 
 /* ---------- Scroll behavior ---------- */
 html {
   scroll-behavior: smooth;
   color-scheme: light dark;
-  overflow-x: clip;
 }
 
 body {
@@ -220,8 +182,15 @@ img {
   animation: marquee-scroll 26s linear infinite;
 }
 
+.animate-marquee-slow {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 75s linear infinite;
+}
+
 .animate-marquee-infinite:hover,
-.animate-marquee:hover {
+.animate-marquee:hover,
+.animate-marquee-slow:hover {
   animation-play-state: paused !important;
 }
 
@@ -380,6 +349,165 @@ nextjs-portal,
   animation: metallic-sweep-45 4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
   pointer-events: none;
   z-index: 25;
+}
+
+/* ============================================================
+   GOOGLE TRANSLATE CUSTOM INTEGRATION — HIDE THIRD-PARTY UI
+   Giữ nguyên thiết kế nhận diện thương hiệu HDC FASHION
+   ============================================================ */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+iframe.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+#google_translate_element,
+.skiptranslate {
+  display: none !important;
+}
+
+/* ============================================================
+   SMOOTH PAGE TRANSITION & TOP PROGRESS BAR
+   Hiệu ứng chuyển trang mượt mà & thanh load hiện đại
+   ============================================================ */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition-enter {
+  animation: pageFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+@keyframes progressGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.loading-progress-bar {
+  background: linear-gradient(90deg, #0097b2 0%, #22d3ee 50%, #0097b2 100%);
+  background-size: 200% 100%;
+  animation: progressGlow 1.2s ease infinite;
+  box-shadow: 0 0 10px rgba(0, 151, 178, 0.8), 0 0 5px rgba(34, 211, 238, 0.9);
+}
+
+/* =========================================================
+   HERO SLIDER LUXURY ANIMATIONS
+   ========================================================= */
+@keyframes hero-progress-fill {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-hero-progress {
+  animation: hero-progress-fill 6500ms linear forwards;
+}
+
+@keyframes hero-zoom-in {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+.animate-hero-zoom {
+  animation: hero-zoom-in 7000ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* =========================================================
+   HERO BANNER ENTRANCE & SLIDE ANIMATIONS
+   ========================================================= */
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes heroSlideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: heroFadeIn;
+}
+
+.slide-in-from-left-4 {
+  animation-name: heroSlideInFromLeft;
+}
+
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+.delay-75 {
+  animation-delay: 75ms;
+}
+
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
 }
 
 
