@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import Header from "@/shared/components/layout/Header";
 import Footer from "@/shared/components/layout/Footer";
 import FloatingActions from "@/shared/components/layout/FloatingActions";
+import TopProgressBar from "@/shared/components/layout/TopProgressBar";
+import PageTransition from "@/shared/components/layout/PageTransition";
 import ErrorBoundary from "@/shared/components/ErrorBoundary";
 
 import ProductDetailModal from "@/features/catalog/components/ProductDetailModal";
@@ -13,6 +15,7 @@ import CartDrawer from "@/features/cart/components/CartDrawer";
 import CheckoutModal from "@/features/checkout/components/CheckoutModal";
 import OrderTrackingModal from "@/features/tracking/components/OrderTrackingModal";
 import QuickQuoteModal from "@/features/quote/components/QuickQuoteModal";
+import HomePromoModal from "@/features/home/components/HomePromoModal";
 
 export default function AppShell({ children }) {
   const pathname = usePathname();
@@ -20,35 +23,47 @@ export default function AppShell({ children }) {
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
   if (isAdminPage) {
-    return <>{children}</>;
-  }
-
-  if (isAuthPage) {
-    return <main className="min-h-screen">{children}</main>;
+    return (
+      <div className="flex flex-col min-h-screen">
+        <TopProgressBar />
+        <PageTransition>{children}</PageTransition>
+      </div>
+    );
   }
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ErrorBoundary name="Header">
-        <Header />
-      </ErrorBoundary>
+      <TopProgressBar />
 
-      <main className="flex-1 pb-16 md:pb-0">{children}</main>
+      {!isAuthPage && (
+        <ErrorBoundary name="Header">
+          <Header />
+        </ErrorBoundary>
+      )}
 
-      <ErrorBoundary name="Footer">
-        <Footer />
-      </ErrorBoundary>
+      <main className={isAuthPage ? "min-h-screen flex-1" : "flex-1 pb-16 md:pb-0"}>
+        <PageTransition>{children}</PageTransition>
+      </main>
 
-      <ErrorBoundary name="Modals">
-        <ProductDetailModal />
-        <LogoCustomizerModal />
-        <CartDrawer />
-        <CheckoutModal />
-        <OrderTrackingModal />
-        <QuickQuoteModal />
-      </ErrorBoundary>
+      {!isAuthPage && (
+        <>
+          <ErrorBoundary name="Footer">
+            <Footer />
+          </ErrorBoundary>
 
-      <FloatingActions />
+          <ErrorBoundary name="Modals">
+            <ProductDetailModal />
+            <LogoCustomizerModal />
+            <CartDrawer />
+            <CheckoutModal />
+            <OrderTrackingModal />
+            <QuickQuoteModal />
+            <HomePromoModal />
+          </ErrorBoundary>
+
+          <FloatingActions />
+        </>
+      )}
     </div>
   );
 }
