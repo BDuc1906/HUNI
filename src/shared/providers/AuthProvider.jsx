@@ -1,47 +1,59 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { authService } from "@/shared/services/apiClient";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { SessionProvider } from "next-auth/react";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext({
+  user: null,
+  loading: false,
+  login: async () => {},
+  register: async () => {},
+  logout: () => {},
+  setUser: () => {},
+});
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  return context || {
+    user: null,
+    loading: false,
+    login: async () => {},
+    register: async () => {},
+    logout: () => {},
+    setUser: () => {},
+  };
+}
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("huni_token");
-    const savedUser = localStorage.getItem("huni_user");
-    if (token && savedUser) {
-      try {
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("huni_token") : null;
+      const savedUser = typeof window !== "undefined" ? localStorage.getItem("huni_user") : null;
+      if (token && savedUser) {
         setUser(JSON.parse(savedUser));
-      } catch {}
-    }
+      }
+    } catch {}
     setLoading(false);
   }, []);
 
-  async function login(email, password) {
-    const res = await authService.login({ email, password });
-    if (res.success) setUser(res.user);
-    return res;
-  }
-
-  async function register(data) {
-    return authService.register(data);
-  }
-
-  function logout() {
-    authService.logout();
+  const login = async () => {};
+  const register = async () => {};
+  const logout = () => {
+    try {
+      localStorage.removeItem("huni_token");
+      localStorage.removeItem("huni_user");
+    } catch {}
     setUser(null);
-  }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, register, setUser }}>
-      {children}
-    </AuthContext.Provider>
+    <SessionProvider>
+      <AuthContext.Provider value={{ user, loading, login, register, logout, setUser }}>
+        {children}
+      </AuthContext.Provider>
+    </SessionProvider>
   );
-}
-
-export function useAuth() {
-  return useContext(AuthContext);
 }

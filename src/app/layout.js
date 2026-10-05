@@ -4,6 +4,8 @@ import { Suspense } from "react";
 import { Roboto } from "next/font/google";
 import AuthProvider from "@/shared/providers/AuthProvider";
 import { ThemeProvider } from "@/shared/providers/ThemeProvider";
+import { LanguageProvider } from "@/shared/providers/LanguageProvider";
+import { cookies } from "next/headers";
 import { ShopProvider } from "@/shared/providers/ShopProvider";
 import AppShell from "@/shared/components/layout/AppShell";
 
@@ -114,17 +116,57 @@ export const viewport = {
 /* ============================================================
    ROOT LAYOUT
    ============================================================ */
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
   const isProduction = process.env.NODE_ENV === "production";
+  
+  // Đọc cookie ngôn ngữ để Server Render (SSR) ra đúng ngôn ngữ ngay từ đầu, tránh chớp giao diện (flicker)
+  const cookieStore = await cookies();
+  const initialLanguage = cookieStore.get("hdc_lang")?.value || "vi";
 
   return (
     <html
-      lang="vi"
+      lang={initialLanguage}
       className={`${jakarta.variable} scroll-smooth`}
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
       <head>
+        {/* Google Fonts: Playfair Display + Cormorant Garamond for luxury editorial typography */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet"
+        />
+        {/* DOM safety polyfill for Google Translate compatibility in React */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof Node === 'function' && Node.prototype) {
+                  var origRemoveChild = Node.prototype.removeChild;
+                  Node.prototype.removeChild = function(child) {
+                    if (child.parentNode !== this) {
+                      return child;
+                    }
+                    return origRemoveChild.apply(this, arguments);
+                  };
+                  var origInsertBefore = Node.prototype.insertBefore;
+                  Node.prototype.insertBefore = function(newNode, refNode) {
+                    if (refNode && refNode.parentNode !== this) {
+                      return newNode;
+                    }
+                    return origInsertBefore.apply(this, arguments);
+                  };
+                }
+              })();
+            `,
+          }}
+        />
         {/* ============================================================
             STRIP BROWSER-EXTENSION ATTRIBUTES
             Dọn sạch attribute của Bitdefender, Avast, Grammarly...
@@ -244,7 +286,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        className="min-h-screen bg-[#f8fafc] text-slate-900 antialiased font-[var(--font-jakarta)] selection:bg-brand-500 selection:text-white"
+        className="min-h-screen bg-[#f6f8ff] text-slate-800 antialiased font-[var(--font-jakarta)]"
         suppressHydrationWarning
       >
         {/* ============================================================
@@ -256,9 +298,11 @@ export default function RootLayout({ children }) {
         <Suspense fallback={null}>
           <AuthProvider>
             <ThemeProvider>
-              <ShopProvider>
-                <AppShell>{children}</AppShell>
-              </ShopProvider>
+              <LanguageProvider initialLanguage={initialLanguage}>
+                <ShopProvider>
+                  <AppShell>{children}</AppShell>
+                </ShopProvider>
+              </LanguageProvider>
             </ThemeProvider>
           </AuthProvider>
         </Suspense>

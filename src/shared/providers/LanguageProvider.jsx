@@ -7103,8 +7103,9 @@ export function LanguageProvider({ children, initialLanguage = "vi" }) {
     };
   }, [language, pathname]);
 
-  // 3. Hàm chuyển đổi ngôn ngữ toàn diện (luôn reload trang để đồng bộ SSR và Client)
+  // 3. Hàm chuyển đổi ngôn ngữ tức thì & đồng bộ
   const setLanguage = (newLang) => {
+    if (!newLang) return;
     setLanguageState(newLang);
     try {
       localStorage.setItem("hdc_lang", newLang);
@@ -7112,14 +7113,13 @@ export function LanguageProvider({ children, initialLanguage = "vi" }) {
         document.documentElement.lang = newLang;
         document.cookie = `hdc_lang=${newLang}; path=/; max-age=31536000;`;
         setGoogleTransCookie(newLang);
-        // Luôn reload để SSR đồng bộ và nạp lại toàn bộ trang với ngôn ngữ mới
-        window.location.reload();
+        if (newLang === "vi") {
+          restoreDomTree(document.body);
+        } else {
+          translateDomTree(document.body, newLang);
+        }
       }
-    } catch (_) {
-      if (typeof window !== "undefined") {
-        window.location.reload();
-      }
-    }
+    } catch (_) {}
   };
 
   const currentLang =
@@ -7153,13 +7153,43 @@ export function LanguageProvider({ children, initialLanguage = "vi" }) {
 export function useLanguage() {
   const ctx = useContext(LanguageContext);
   if (!ctx) {
+    const saved = typeof window !== "undefined" ? localStorage.getItem("hdc_lang") || "vi" : "vi";
+    const current = SUPPORTED_LANGUAGES.find((l) => l.code === saved) || SUPPORTED_LANGUAGES[0];
     return {
-      language: "vi",
-      setLanguage: () => {},
-      t: (key, fallback) => fallback || key,
-      currentLang: SUPPORTED_LANGUAGES[0],
+      language: saved,
+      setLanguage: (newLang) => {
+        try {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("hdc_lang", newLang);
+            document.cookie = `hdc_lang=${newLang}; path=/; max-age=31536000;`;
+            setGoogleTransCookie(newLang);
+            if (newLang === "vi") {
+              restoreDomTree(document.body);
+            } else {
+              translateDomTree(document.body, newLang);
+            }
+            window.location.reload();
+          }
+        } catch (_) {}
+      },
+      t: (key, fallback = "") => {
+        if (!key) return fallback || "";
+        const entry = TRANSLATIONS[key] || REVERSE_LOOKUP.get(key.trim().toLowerCase());
+        if (!entry) return fallback || key;
+        return entry[saved] || entry["en"] || entry["vi"] || fallback || key;
+      },
+      currentLang: current,
       supportedLanguages: SUPPORTED_LANGUAGES,
-      changeLanguage: () => {},
+      changeLanguage: (newLang) => {
+        try {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("hdc_lang", newLang);
+            document.cookie = `hdc_lang=${newLang}; path=/; max-age=31536000;`;
+            setGoogleTransCookie(newLang);
+            window.location.reload();
+          }
+        } catch (_) {}
+      },
     };
   }
   return ctx;
