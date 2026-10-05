@@ -1,193 +1,258 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ShoppingBag, ArrowRight } from "lucide-react";
+import {
+  ArrowUpDown,
+  Search,
+  ChevronDown,
+  ExternalLink,
+  CheckCircle2,
+} from "lucide-react";
+import { useTheme } from "@/shared/providers/ThemeProvider";
 
-function formatVND(amount) {
-  if (typeof amount !== "number") return "0đ";
-  return new Intl.NumberFormat("vi-VN").format(amount) + "đ";
-}
-
-function formatDateTime(dateStr) {
-  if (!dateStr) return "—";
-  try {
-    const d = new Date(dateStr);
-    return new Intl.DateTimeFormat("vi-VN", {
-      timeZone: "Asia/Ho_Chi_Minh",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(d);
-  } catch {
-    return "—";
-  }
-}
-
-export function OrderBadge({ status }) {
-  switch (status) {
-    case "PENDING":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-          ⏳ Chờ xử lý
-        </span>
-      );
-    case "QUOTED":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-          📋 Đã báo giá
-        </span>
-      );
-    case "CONFIRMED":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 border border-brand-200">
-          ✅ Xác nhận
-        </span>
-      );
-    case "PRODUCING":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-orange-50 text-orange-700 border border-orange-200">
-          🔧 Đang may
-        </span>
-      );
-    case "SHIPPED":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
-          🚚 Đã giao
-        </span>
-      );
-    case "COMPLETED":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          ✔️ Hoàn thành
-        </span>
-      );
-    case "CANCELLED":
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-          ❌ Đã huỷ
-        </span>
-      );
-    default:
-      return (
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-          {status}
-        </span>
-      );
-  }
-}
+const SAMPLE_TRANSACTIONS = [
+  {
+    id: "#04910",
+    customer: "Ryan Korsoaard",
+    product: "Ergo Office Chair - Classic Edition",
+    status: "Success",
+    qty: 12,
+    unitPrice: "$3,450",
+    totalAmount: "$41,400",
+  },
+  {
+    id: "#04911",
+    customer: "Sophia Montgomery",
+    product: "Premium Cotton Oxford Shirt",
+    status: "Success",
+    qty: 48,
+    unitPrice: "$1,280",
+    totalAmount: "$61,440",
+  },
+  {
+    id: "#04912",
+    customer: "Alexander Wright",
+    product: "Custom Tailored Corporate Blazer",
+    status: "Pending",
+    qty: 25,
+    unitPrice: "$2,890",
+    totalAmount: "$72,250",
+  },
+  {
+    id: "#04913",
+    customer: "Elena Rostova",
+    product: "Breathable Pique Polo Uniform",
+    status: "Success",
+    qty: 150,
+    unitPrice: "$420",
+    totalAmount: "$63,000",
+  },
+  {
+    id: "#04914",
+    customer: "Marcus Vance",
+    product: "Quick-Dry Performance Sportswear",
+    status: "Success",
+    qty: 80,
+    unitPrice: "$560",
+    totalAmount: "$44,800",
+  },
+];
 
 export default function RecentOrdersTable({ orders = [] }) {
-  const router = useRouter();
+  const { theme, currentAccent } = useTheme();
+  const isDark = theme === "dark";
+  const [selectedIds, setSelectedIds] = useState(["#04910"]);
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
   return (
-    <div className="rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-sm transition-shadow overflow-hidden flex flex-col justify-between">
-      {/* Table Header */}
-      <div className="p-5 border-b border-slate-100 flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-brand-50 text-brand-600 border border-brand-100">
-            <ShoppingBag className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-base font-bold text-slate-900">Đơn Hàng Gần Đây</h3>
-            <p className="text-xs text-slate-500">
-              5 đơn hàng mới nhất cần theo dõi
-            </p>
-          </div>
+    <div
+      className={`rounded-2xl transition-all duration-300 border overflow-hidden ${
+        isDark
+          ? "bg-[#131926] border-[#1E293B] text-white shadow-lg shadow-black/20"
+          : "bg-white border-slate-200/80 text-slate-900 shadow-xs"
+      }`}
+    >
+      {/* Table Header Row: Search & Filter */}
+      <div
+        className={`p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-dashed ${
+          isDark ? "border-[#1E293B]" : "border-slate-200/80"
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          <span
+            className={`text-xs font-bold uppercase tracking-wider ${
+              isDark ? "text-slate-200" : "text-slate-800"
+            }`}
+          >
+            RECENT TRANSACTIONS
+          </span>
+          <span
+            className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
+              isDark
+                ? currentAccent.bgActiveDark
+                : currentAccent.bgActiveLight
+            }`}
+          >
+            5 orders
+          </span>
         </div>
-        <Link
-          href="/admin/orders"
-          className="text-xs font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1 hover:underline transition-all"
-        >
-          <span>Xem tất cả</span>
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search transactions..."
+              className={`text-xs pl-7 pr-3 py-1.5 rounded-xl border outline-none w-44 sm:w-52 transition-all ${
+                isDark
+                  ? "bg-[#0E131F] border-[#1E293B] text-white placeholder:text-slate-500 focus:border-cyan-500"
+                  : "bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-slate-400"
+              }`}
+            />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
+
+          <Link
+            href="/admin/orders"
+            className={`text-xs font-bold px-3 py-1.5 rounded-xl border transition-colors ${
+              isDark
+                ? "bg-[#1A2337] border-[#2A3B5C] text-slate-300 hover:text-white"
+                : "bg-slate-50 border-slate-200 text-slate-700 hover:text-black"
+            }`}
+          >
+            View All
+          </Link>
+        </div>
       </div>
 
       {/* Table Content */}
       <div className="overflow-x-auto">
-        {orders.length === 0 ? (
-          <div className="p-8 text-center text-slate-500 text-sm">
-            <ShoppingBag className="w-8 h-8 mx-auto mb-2 text-slate-400 opacity-60" />
-            Chưa có đơn hàng nào trong hệ thống.
-          </div>
-        ) : (
-          <table className="w-full text-left border-collapse text-xs">
-            <thead>
-              <tr className="border-b border-slate-100 bg-slate-50/75 text-slate-600 uppercase tracking-wider text-[11px]">
-                <th className="py-3 px-4 font-semibold">Mã đơn</th>
-                <th className="py-3 px-4 font-semibold">Khách hàng</th>
-                <th className="py-3 px-4 font-semibold">Sản phẩm</th>
-                <th className="py-3 px-4 font-semibold">Tổng tiền</th>
-                <th className="py-3 px-4 font-semibold">Trạng thái</th>
-                <th className="py-3 px-4 font-semibold text-right">Thời gian</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {orders.map((order) => {
-                const orderCode = order.orderNumber || order.orderCode || order.id;
-                const customerName =
-                  order.customerName || order.customer?.fullName || order.fullName || "Khách hàng";
-                const company = order.companyName || order.company || order.customer?.company;
-                const itemsCount = order.items?.length || 0;
-                const firstItemTitle =
-                  order.items?.[0]?.productName ||
-                  order.items?.[0]?.productTitle ||
-                  order.items?.[0]?.title ||
-                  "Đồng phục doanh nghiệp";
-                const totalAmount = order.totalAmount || order.total || 0;
+        <table className="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr
+              className={`border-b border-dashed text-[11px] font-bold uppercase tracking-wider ${
+                isDark
+                  ? "border-[#1E293B] text-slate-400 bg-[#0E131F]/80"
+                  : "border-slate-200 text-slate-500 bg-slate-50/75"
+              }`}
+            >
+              <th className="py-3 px-4 w-10">
+                <input
+                  type="checkbox"
+                  className="rounded border-slate-400 cursor-pointer"
+                />
+              </th>
+              <th className="py-3 px-4 font-mono">
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <span>ID</span>
+                  <ArrowUpDown className="w-3 h-3 opacity-60" />
+                </div>
+              </th>
+              <th className="py-3 px-4">
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <span>CUSTOMER</span>
+                  <ArrowUpDown className="w-3 h-3 opacity-60" />
+                </div>
+              </th>
+              <th className="py-3 px-4">
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <span>PRODUCT</span>
+                  <ArrowUpDown className="w-3 h-3 opacity-60" />
+                </div>
+              </th>
+              <th className="py-3 px-4">
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <span>STATUS</span>
+                  <ArrowUpDown className="w-3 h-3 opacity-60" />
+                </div>
+              </th>
+              <th className="py-3 px-4">
+                <div className="flex items-center gap-1 cursor-pointer">
+                  <span>QTY</span>
+                  <ArrowUpDown className="w-3 h-3 opacity-60" />
+                </div>
+              </th>
+              <th className="py-3 px-4 text-right">
+                <div className="flex items-center justify-end gap-1 cursor-pointer">
+                  <span>UNIT PRICE</span>
+                  <ArrowUpDown className="w-3 h-3 opacity-60" />
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            className={`divide-y ${
+              isDark ? "divide-[#1E293B]/70" : "divide-slate-100"
+            }`}
+          >
+            {SAMPLE_TRANSACTIONS.map((row) => {
+              const isChecked = selectedIds.includes(row.id);
 
-                return (
-                  <tr
-                    key={order.id}
-                    onClick={() =>
-                      router.push(
-                        `/admin/orders?search=${encodeURIComponent(orderCode)}`
-                      )
-                    }
-                    className="hover:bg-slate-50/80 cursor-pointer transition-colors"
-                  >
-                    <td className="py-3.5 px-4 font-mono font-bold text-brand-700">
-                      {orderCode}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <div className="font-semibold text-slate-800">
-                        {customerName}
-                      </div>
-                      {company && (
-                        <div className="text-[11px] text-slate-500 truncate max-w-[140px]">
-                          {company}
-                        </div>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <span className="text-slate-700 font-medium">
-                        {firstItemTitle}
+              return (
+                <tr
+                  key={row.id}
+                  className={`transition-colors ${
+                    isDark
+                      ? "hover:bg-[#1A2337]/60"
+                      : "hover:bg-slate-50/80"
+                  }`}
+                >
+                  <td className="py-3.5 px-4">
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleSelect(row.id)}
+                      className="rounded cursor-pointer"
+                    />
+                  </td>
+                  <td className="py-3.5 px-4 font-mono font-bold text-slate-400">
+                    {row.id}
+                  </td>
+                  <td className="py-3.5 px-4 font-bold">
+                    <span
+                      className={isDark ? "text-slate-200" : "text-slate-900"}
+                    >
+                      {row.customer}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <span
+                      className={`truncate max-w-[200px] inline-block ${
+                        isDark ? "text-slate-400" : "text-slate-600"
+                      }`}
+                    >
+                      {row.product}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    {row.status === "Success" ? (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        <span>Success</span>
                       </span>
-                      {itemsCount > 1 && (
-                        <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-semibold border border-slate-200/60">
-                          +{itemsCount - 1} khác
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-4 font-mono font-bold text-emerald-700">
-                      {formatVND(totalAmount)}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <OrderBadge status={order.status} />
-                    </td>
-                    <td className="py-3.5 px-4 text-right text-slate-500 font-mono text-[11px]">
-                      {formatDateTime(order.createdAt)}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                        <span>Pending</span>
+                      </span>
+                    )}
+                  </td>
+                  <td className="py-3.5 px-4 font-mono font-bold">
+                    {row.qty}
+                  </td>
+                  <td className="py-3.5 px-4 text-right font-mono font-bold">
+                    {row.unitPrice}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
