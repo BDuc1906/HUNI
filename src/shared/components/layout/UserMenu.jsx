@@ -2,18 +2,19 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "@/shared/providers/AuthProvider";
+import { useSession, signOut } from "next-auth/react";
 import {
   User,
   LogIn,
   LogOut,
   Package,
-  ChevronDown,
-  Shield,
+  ChevronDown
 } from "lucide-react";
+import { useLanguage } from "@/shared/providers/LanguageProvider";
 
 export default function UserMenu() {
-  const { user, loading, logout } = useAuth();
+  const { data: session, status } = useSession();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -27,60 +28,34 @@ export default function UserMenu() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  if (loading) {
+  // Khi chưa đăng nhập hoặc đang tải trạng thái khách, hiển thị ngay icon link dẫn tới /login
+  if (!session?.user) {
     return (
-      <div className="w-9 h-9 rounded-full bg-slate-800/60 border border-slate-700 animate-pulse" />
+      <Link
+        href="/login"
+        className="relative p-2 rounded-full text-slate-700 hover:text-[#0097b2] hover:bg-slate-100 transition-colors flex items-center justify-center shrink-0"
+        title={t("action.login", "Đăng nhập")}
+        aria-label="Đăng nhập"
+      >
+        <User className="w-4.5 h-4.5" />
+      </Link>
     );
   }
 
-  if (!user) {
-    return (
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        <Link
-          href="/login"
-          className="hidden sm:flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-extrabold text-slate-700 hover:text-brand-800 bg-slate-50 hover:bg-brand-50/80 border border-slate-200 hover:border-brand-500 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-md hover:shadow-brand-500/10 group"
-        >
-          <LogIn className="w-3.5 h-3.5 text-brand-600 group-hover:text-brand-700 transition-colors" />
-          <span>Đăng nhập</span>
-        </Link>
-        <Link
-          href="/register"
-          className="hidden lg:flex items-center gap-1.5 px-4.5 py-2 text-xs sm:text-sm font-extrabold text-white bg-gradient-to-r from-brand-600 via-brand-600 to-brand-700 hover:from-brand-500 hover:via-brand-600 hover:to-brand-600 rounded-full shadow-md shadow-brand-600/20 hover:shadow-lg hover:shadow-brand-500/30 transition-all duration-300 hover:scale-105"
-        >
-          <span>Đăng ký</span>
-        </Link>
-        <Link
-          href="/login"
-          className="sm:hidden p-2 rounded-full bg-slate-100 hover:bg-brand-50 text-slate-700 hover:text-brand-600 border border-slate-200 hover:border-brand-400 transition-all hover:scale-105"
-          aria-label="Đăng nhập"
-        >
-          <User className="w-5 h-5" />
-        </Link>
-      </div>
-    );
-  }
-
-  const displayName = user.fullName || user.name || "Khách hàng";
-  const initial = displayName.charAt(0).toUpperCase();
+  const user = session.user;
+  const initial = (user.name || user.email || "U").charAt(0).toUpperCase();
 
   return (
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center gap-2 p-1 pl-1 pr-2 rounded-full bg-slate-800/60 hover:bg-slate-800 border border-slate-700 hover:border-brand-400/60 transition-colors"
+        className="relative p-0.5 rounded-full hover:ring-2 hover:ring-[#0097b2]/40 transition-all flex items-center justify-center shrink-0"
         aria-label="Menu tài khoản"
+        title={user.name || "Tài khoản"}
       >
-        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-black text-xs sm:text-sm">
+        <div className="w-8 h-8 rounded-full bg-[#0097b2] text-white flex items-center justify-center font-black text-xs shadow-xs">
           {initial}
         </div>
-        <span className="hidden lg:block text-xs font-bold text-white max-w-[100px] truncate">
-          {displayName.split(" ").slice(-1)[0]}
-        </span>
-        <ChevronDown
-          className={`hidden lg:block w-3.5 h-3.5 text-brand-300 transition-transform ${
-            open ? "rotate-180" : ""
-          }`}
-        />
       </button>
 
       {open && (
@@ -93,7 +68,7 @@ export default function UserMenu() {
               </div>
               <div className="min-w-0">
                 <div className="text-sm font-extrabold text-white truncate">
-                  {displayName}
+                  {user.name}
                 </div>
                 <div className="text-[11px] text-brand-200/80 truncate">
                   {user.email}
@@ -102,19 +77,8 @@ export default function UserMenu() {
             </div>
           </div>
 
-          {/* Menu items */}
+          {/* Menu items — 2 mục, dùng ?tab= để mở đúng tab */}
           <div className="p-2">
-            {user.role === "ADMIN" && (
-              <Link
-                href="/admin"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-brand-50 text-sm font-semibold text-brand-700 transition-colors"
-              >
-                <Shield className="w-4 h-4 text-brand-600 shrink-0" />
-                <span>Trang quản trị (Admin)</span>
-              </Link>
-            )}
-
             <Link
               href="/tai-khoan"
               onClick={() => setOpen(false)}
@@ -138,13 +102,12 @@ export default function UserMenu() {
             <button
               onClick={() => {
                 setOpen(false);
-                logout();
-                window.location.href = "/";
+                signOut({ callbackUrl: "/" });
               }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 text-sm font-medium text-rose-600 transition-colors text-left"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 text-sm font-medium text-rose-600 transition-colors"
             >
               <LogOut className="w-4 h-4 shrink-0" />
-              <span>Đăng xuất</span>
+              <span>{t("action.logout", "Đăng xuất")}</span>
             </button>
           </div>
         </div>
