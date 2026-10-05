@@ -5,189 +5,137 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  ShoppingBag,
+  FileText,
   Package,
-  ArrowLeftRight,
-  BarChart2,
+  Users,
+  Tag,
   MessageSquare,
-  Users2,
-  Megaphone,
-  UserCheck,
-  Radio,
-  FileCheck2,
-  ShieldAlert,
-  CreditCard,
-  Blocks,
-  Settings,
-  Headphones,
-  HelpCircle,
-  ChevronsUpDown,
+  RotateCcw,
+  ExternalLink,
+  ShieldCheck,
+  ChevronRight,
   Menu,
   X,
-  ExternalLink,
+  LogOut,
 } from "lucide-react";
 import { useTheme } from "@/shared/providers/ThemeProvider";
+import { authService } from "@/shared/services/apiClient";
 
-const SIDEBAR_SECTIONS = [
+// CHỈ GIỮ LẠI CÁC TRANG CÓ THỰC VÀ HOẠT ĐỘNG 100% TRONG HỆ THỐNG
+const NAV_GROUPS = [
   {
-    heading: "Main Menu",
+    groupLabel: "Tổng Quan",
     items: [
       {
         href: "/admin",
-        label: "Dashboard",
+        label: "Dashboard Tổng Quan",
         icon: LayoutDashboard,
         exact: true,
       },
-      {
-        href: "/admin/products",
-        label: "Products",
-        icon: Package,
-      },
+    ],
+  },
+  {
+    groupLabel: "Kinh Doanh & Đơn Hàng",
+    items: [
       {
         href: "/admin/orders",
-        label: "Transactions",
-        icon: ArrowLeftRight,
+        label: "Quản Lý Đơn Hàng",
+        icon: ShoppingBag,
         badgeKey: "pendingOrders",
-      },
-      {
-        href: "/admin/analytics",
-        label: "Reports & Analytics",
-        icon: BarChart2,
+        badgeColor: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300",
       },
       {
         href: "/admin/quotes",
-        label: "Messages",
-        icon: MessageSquare,
+        label: "Yêu Cầu Báo Giá",
+        icon: FileText,
         badgeKey: "newQuotes",
+        badgeColor: "bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300",
       },
       {
-        href: "/admin/team",
-        label: "Team Performance",
-        icon: Users2,
+        href: "/admin/customers",
+        label: "Khách Hàng Doanh Nghiệp",
+        icon: Users,
+      },
+    ],
+  },
+  {
+    groupLabel: "Kho Hàng & Ưu Đãi",
+    items: [
+      {
+        href: "/admin/products",
+        label: "Sản Phẩm & Mẫu Vải",
+        icon: Package,
       },
       {
         href: "/admin/vouchers",
-        label: "Campaigns",
-        icon: Megaphone,
+        label: "Khuyến Mãi & Voucher",
+        icon: Tag,
       },
     ],
   },
   {
-    heading: "Customers",
+    groupLabel: "Dịch Vụ & Hậu Mãi",
     items: [
       {
-        href: "/admin/customers",
-        label: "Customer List",
-        icon: UserCheck,
+        href: "/admin/reviews",
+        label: "Đánh Giá & Phản Hồi",
+        icon: MessageSquare,
       },
       {
-        href: "/admin/channels",
-        label: "Channels",
-        icon: Radio,
-      },
-      {
-        href: "/admin/orders",
-        label: "Order Management",
-        icon: FileCheck2,
-      },
-    ],
-  },
-  {
-    heading: "Management",
-    items: [
-      {
-        href: "/admin/roles",
-        label: "Roles & Permissions",
-        icon: ShieldAlert,
-      },
-      {
-        href: "/admin/billing",
-        label: "Billing & Subscription",
-        icon: CreditCard,
-      },
-      {
-        href: "/admin/integrations",
-        label: "Integrations",
-        icon: Blocks,
+        href: "/admin/returns",
+        label: "Đổi Trả & Bảo Hành",
+        icon: RotateCcw,
       },
     ],
   },
 ];
 
-const FOOTER_ITEMS = [
-  { href: "/admin/settings", label: "Settings", icon: Settings },
-  { href: "/admin/support", label: "Customer Support", icon: Headphones },
-  { href: "/admin/help", label: "Help Center", icon: HelpCircle },
-];
-
-function SidebarContent({ user, counts, pathname, isDark, currentAccent, onCloseMobile }) {
+function SidebarContent({ user, counts, pathname, isDark, onCloseMobile, onLogout }) {
   return (
     <div
-      className={`flex flex-col h-full select-none border-r transition-colors duration-200 ${
+      className={`flex flex-col h-full select-none transition-colors duration-200 border-r ${
         isDark
-          ? "bg-[#0F1420] border-[#1E293B] text-slate-300"
-          : "bg-[#FAFAFA] border-slate-200/80 text-slate-600"
+          ? "bg-[#0F172A] border-[#1E293B] text-slate-300"
+          : "bg-white border-slate-200/90 text-slate-700"
       }`}
     >
-      {/* 1. TOP AGENCY / WORKSPACE SELECTOR */}
-      <div
-        className={`p-4 border-b border-dashed ${
-          isDark ? "border-[#1E293B]" : "border-slate-200/80"
-        }`}
-      >
-        <div
-          className={`p-2.5 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
-            isDark
-              ? "bg-[#141C2E] border-[#22314E] hover:border-[#31456E]"
-              : "bg-white border-slate-200 shadow-xs hover:border-slate-300"
-          }`}
+      {/* 1. BRAND HEADER */}
+      <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-[#1E293B]">
+        <Link
+          href="/admin"
+          onClick={onCloseMobile}
+          className="flex items-center gap-3 group"
         >
-          <div className="flex items-center gap-2.5 min-w-0">
-            {/* Logo Squircle with Gradient matching Accent */}
-            <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm shrink-0 shadow-xs text-white bg-gradient-to-tr ${currentAccent.gradient}`}
-            >
-              <span className="font-mono text-base drop-shadow-xs">H</span>
-            </div>
-
-            <div className="min-w-0 text-left">
-              <span
-                className={`block text-[10px] font-bold uppercase tracking-wider ${
-                  isDark ? "text-slate-400" : "text-slate-400"
-                }`}
-              >
-                Atelier Brand
-              </span>
-              <span
-                className={`block text-xs font-bold truncate ${
-                  isDark ? "text-white" : "text-slate-900"
-                }`}
-              >
-                HDC Fashion Studio
-              </span>
-            </div>
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#007F96] to-[#0097B2] flex items-center justify-center text-white font-black text-base shadow-md shadow-[#0097B2]/20 shrink-0 group-hover:scale-105 transition-transform">
+            <ShieldCheck className="w-5 h-5 text-white" />
           </div>
 
-          <ChevronsUpDown
-            className={`w-4 h-4 shrink-0 ${
-              isDark ? "text-slate-400" : "text-slate-400"
-            }`}
-          />
-        </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="font-black text-slate-900 dark:text-white text-base tracking-tight truncate">
+                HDC FASHION
+              </span>
+              <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-[#0097B2]/15 text-[#007F96] dark:text-[#0097B2] border border-[#0097B2]/25">
+                Admin
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+              Hệ Thống Quản Trị Xưởng May
+            </p>
+          </div>
+        </Link>
       </div>
 
-      {/* 2. GROUPED NAVIGATION MENUS */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        {SIDEBAR_SECTIONS.map((section) => (
-          <div key={section.heading} className="space-y-1">
-            <div
-              className={`px-3 pb-1.5 text-[11px] font-bold tracking-tight uppercase tracking-wider ${
-                isDark ? "text-slate-400" : "text-slate-400"
-              }`}
-            >
-              {section.heading}
+      {/* 2. MENU ITEMS - CHỈ CÁC TRANG CÓ THỰC */}
+      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.groupLabel} className="space-y-1">
+            <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              {group.groupLabel}
             </div>
 
-            {section.items.map((item) => {
+            {group.items.map((item) => {
               const isActive = item.exact
                 ? pathname === item.href
                 : pathname.startsWith(item.href);
@@ -196,76 +144,97 @@ function SidebarContent({ user, counts, pathname, isDark, currentAccent, onClose
 
               return (
                 <Link
-                  key={item.label}
+                  key={item.href}
                   href={item.href}
                   onClick={onCloseMobile}
-                  className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all group ${
+                  className={`flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group ${
                     isActive
                       ? isDark
-                        ? "bg-[#182236] text-white shadow-xs border border-[#253450]"
-                        : "bg-white text-slate-950 shadow-xs border border-slate-200/80"
+                        ? "bg-[#1E293B] text-white font-bold border-l-3 border-[#0097B2] shadow-xs"
+                        : "bg-[#0097B2]/10 text-[#007F96] font-bold border-l-3 border-[#0097B2]"
                       : isDark
-                      ? "text-slate-400 hover:text-white hover:bg-[#141C2E]"
-                      : "text-slate-600 hover:text-slate-950 hover:bg-slate-100"
+                      ? "text-slate-400 hover:text-white hover:bg-[#1E293B]/60"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <Icon
                       className={`w-4 h-4 shrink-0 transition-colors ${
                         isActive
-                          ? isDark
-                            ? currentAccent.activeTextDark
-                            : currentAccent.activeTextLight
+                          ? "text-[#0097B2]"
                           : isDark
-                          ? "text-slate-400 group-hover:text-slate-200"
+                          ? "text-slate-500 group-hover:text-slate-300"
                           : "text-slate-400 group-hover:text-slate-700"
                       }`}
                     />
                     <span>{item.label}</span>
                   </div>
 
-                  {badge > 0 && (
-                    <span
-                      className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold ${
-                        isDark
-                          ? currentAccent.bgActiveDark
-                          : currentAccent.bgActiveLight
-                      }`}
-                    >
-                      {badge}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5">
+                    {badge > 0 && (
+                      <span
+                        className={`px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold ${item.badgeColor}`}
+                      >
+                        {badge}
+                      </span>
+                    )}
+                    {isActive && (
+                      <ChevronRight className="w-3.5 h-3.5 text-[#0097B2]" />
+                    )}
+                  </div>
                 </Link>
               );
             })}
           </div>
         ))}
+
+        {/* Lối tắt xem website bán hàng */}
+        <div className="pt-2">
+          <Link
+            href="/"
+            target="_blank"
+            onClick={onCloseMobile}
+            className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors border ${
+              isDark
+                ? "bg-[#141C2E] border-[#1E293B] text-slate-300 hover:text-white hover:bg-[#1E293B]"
+                : "bg-slate-50 border-slate-200/80 text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+            }`}
+          >
+            <div className="flex items-center gap-2">
+              <ExternalLink className="w-3.5 h-3.5 text-[#0097B2]" />
+              <span>Xem Trang Bán Hàng</span>
+            </div>
+            <span className="text-[10px] font-mono opacity-60">huni.vn</span>
+          </Link>
+        </div>
       </div>
 
-      {/* 3. FOOTER ITEMS */}
-      <div
-        className={`p-3 border-t border-dashed space-y-0.5 ${
-          isDark ? "border-[#1E293B]" : "border-slate-200/80"
-        }`}
-      >
-        {FOOTER_ITEMS.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={onCloseMobile}
-              className={`flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                isDark
-                  ? "text-slate-400 hover:text-white hover:bg-[#141C2E]"
-                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-              }`}
-            >
-              <Icon className="w-4 h-4 text-slate-400" />
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
+      {/* 3. PROFILE & ĐĂNG XUẤT FOOTER */}
+      <div className="p-3 border-t border-slate-200/80 dark:border-[#1E293B] bg-slate-50/50 dark:bg-[#0B1120]">
+        <div className="p-2 rounded-xl flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded-lg bg-[#0097B2] flex items-center justify-center text-white font-extrabold text-xs shrink-0 shadow-xs">
+              {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
+            </div>
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                {user?.name || "Quản Trị Viên"}
+              </div>
+              <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">
+                {user?.email || "admin@hdcfashion.vn"}
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onLogout}
+            title="Đăng xuất khỏi hệ thống"
+            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors cursor-pointer"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -273,7 +242,7 @@ function SidebarContent({ user, counts, pathname, isDark, currentAccent, onClose
 
 export default function AdminSidebar({ user, initialCounts = {} }) {
   const pathname = usePathname();
-  const { theme, currentAccent } = useTheme();
+  const { theme } = useTheme();
   const isDark = theme === "dark";
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
@@ -282,47 +251,55 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
     newQuotes: initialCounts.newQuotes || 9,
   };
 
+  const handleLogout = async () => {
+    if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi trang Quản trị?")) {
+      authService.logout();
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <>
       {/* Mobile Bar */}
       <div
-        className={`lg:hidden fixed top-0 left-0 right-0 z-40 px-4 py-3 flex items-center justify-between border-b ${
+        className={`lg:hidden fixed top-0 left-0 right-0 z-40 px-4 py-3 flex items-center justify-between border-b shadow-xs ${
           isDark
-            ? "bg-[#0F1420] border-[#1E293B] text-white"
-            : "bg-[#FAFAFA] border-slate-200 text-slate-900"
+            ? "bg-[#0F172A] border-[#1E293B] text-white"
+            : "bg-white border-slate-200 text-slate-900"
         }`}
       >
-        <button
-          type="button"
-          onClick={() => setIsMobileOpen(true)}
-          className="p-1.5 rounded-lg border border-slate-300 dark:border-slate-700 cursor-pointer"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-
-        <span className="font-extrabold text-sm tracking-tight">
-          HDC Fashion Admin
-        </span>
+        <div className="flex items-center gap-2.5">
+          <button
+            type="button"
+            onClick={() => setIsMobileOpen(true)}
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <span className="font-extrabold text-sm tracking-tight text-[#0097B2]">
+            HDC ADMIN
+          </span>
+        </div>
 
         <Link
           href="/"
           target="_blank"
-          className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1"
+          className="text-xs text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white flex items-center gap-1"
         >
-          <span>Store</span>
-          <ExternalLink className="w-3 h-3" />
+          <span>Cửa hàng</span>
+          <ExternalLink className="w-3.5 h-3.5" />
         </Link>
       </div>
 
-      {/* Desktop Sidebar (w-60) */}
-      <aside className="hidden lg:block w-60 shrink-0 h-full z-30">
+      {/* Desktop Sidebar (w-64) */}
+      <aside className="hidden lg:block w-64 shrink-0 h-full z-30">
         <SidebarContent
           user={user}
           counts={counts}
           pathname={pathname}
           isDark={isDark}
-          currentAccent={currentAccent}
           onCloseMobile={() => setIsMobileOpen(false)}
+          onLogout={handleLogout}
         />
       </aside>
 
@@ -330,17 +307,17 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
       {isMobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-black/70 backdrop-blur-xs"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs"
             onClick={() => setIsMobileOpen(false)}
           />
-          <div className="relative w-64 max-w-[80%] h-full z-10 animate-in slide-in-from-left duration-200">
+          <div className="relative w-72 max-w-[85%] h-full z-10 animate-in slide-in-from-left duration-200">
             <SidebarContent
               user={user}
               counts={counts}
               pathname={pathname}
               isDark={isDark}
-              currentAccent={currentAccent}
               onCloseMobile={() => setIsMobileOpen(false)}
+              onLogout={handleLogout}
             />
           </div>
         </div>

@@ -1,8 +1,21 @@
 import React from "react";
+import Link from "next/link";
+import {
+  ShoppingBag,
+  TrendingUp,
+  FileText,
+  Users,
+  ExternalLink,
+  ShieldCheck,
+  Cpu,
+  Clock,
+  Scissors,
+  CheckCircle2,
+} from "lucide-react";
 import StatsCard from "./components/StatsCard";
 import OrderStatusChart from "./components/OrderStatusChart";
-import RevenueTargetCard from "./components/RevenueTargetCard";
 import RecentOrdersTable from "./components/RecentOrdersTable";
+import RecentQuotesTable from "./components/RecentQuotesTable";
 import {
   MOCK_DASHBOARD_STATS,
   MOCK_ORDERS,
@@ -10,85 +23,273 @@ import {
 } from "@/shared/data/adminMockData";
 
 export const metadata = {
-  title: "Dashboard Overview | Spark Pixel Admin",
-  description: "Executive analytics and operations platform",
+  title: "Tổng Quan Vận Hành | Admin HDC Fashion",
+  description: "Bảng điều khiển tổng hợp số liệu vận hành và đơn hàng",
 };
 
 export const dynamic = "force-dynamic";
 
+function formatVND(amount) {
+  if (typeof amount !== "number") return "0đ";
+  return new Intl.NumberFormat("vi-VN").format(amount) + "đ";
+}
+
 export default async function AdminDashboardPage() {
-  let totalOrders = 10320;
-  let totalRevenue = "$20,320";
-  let totalCustomers = 4305;
+  let totalOrders = 0;
+  let totalQuotes = 0;
+  let totalCustomers = 0;
+  let totalRevenue = 0;
+  let pendingOrders = 0;
+  let confirmedOrders = 0;
+  let producingOrders = 0;
+  let shippedOrders = 0;
+  let completedOrders = 0;
+  let cancelledOrders = 0;
+  let newQuotes = 0;
+  let recentOrders = [];
+  let recentQuotes = [];
+
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const res = await fetch(`${apiUrl}/api/admin/dashboard`, {
+      cache: "no-store",
+    }).catch(() => null);
+    if (res && res.ok) {
+      const json = await res.json().catch(() => null);
+      const data = json?.data;
+      if (data) {
+        totalOrders = data.stats?.totalOrders || 0;
+        totalRevenue = data.stats?.totalRevenue || 0;
+        totalQuotes = data.stats?.totalQuotes || 0;
+        totalCustomers = data.stats?.totalCustomers || 0;
+
+        pendingOrders = data.statusCounts?.orders?.pending || 0;
+        confirmedOrders = data.statusCounts?.orders?.confirmed || 0;
+        producingOrders = data.statusCounts?.orders?.producing || 0;
+        shippedOrders = data.statusCounts?.orders?.shipped || 0;
+        completedOrders = data.statusCounts?.orders?.completed || 0;
+        cancelledOrders = data.statusCounts?.orders?.cancelled || 0;
+        newQuotes = data.statusCounts?.quotes?.new || 0;
+
+        recentOrders = data.recentOrders || [];
+        recentQuotes = data.recentQuotes || [];
+      }
+    }
+  } catch (error) {
+    console.error("[AdminDashboard] Error fetching stats:", error);
+  }
+
+  // Tự động kích hoạt Mock Data chuẩn nghiệp vụ khi chưa kết nối backend
+  if (!totalOrders && !totalRevenue) {
+    totalOrders = MOCK_DASHBOARD_STATS.totalOrders;
+    totalRevenue = MOCK_DASHBOARD_STATS.totalRevenue;
+    totalQuotes = MOCK_DASHBOARD_STATS.totalQuotes;
+    totalCustomers = MOCK_DASHBOARD_STATS.totalCustomers;
+    pendingOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.pending;
+    confirmedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.confirmed || 24;
+    producingOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.producing;
+    shippedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.shipped || 18;
+    completedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.completed;
+    cancelledOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.cancelled;
+    newQuotes = MOCK_DASHBOARD_STATS.statusCounts.quotes.new;
+    recentOrders = MOCK_ORDERS.slice(0, 5);
+    recentQuotes = MOCK_QUOTES.slice(0, 5);
+  }
+
+  const statusCounts = {
+    pending: pendingOrders,
+    confirmed: confirmedOrders,
+    producing: producingOrders,
+    shipped: shippedOrders,
+    completed: completedOrders,
+    cancelled: cancelledOrders,
+  };
 
   return (
-    <div className="space-y-6 sm:space-y-7">
-      {/* 1. Page Title Header: Welcome back, Salung (Như trong ảnh mẫu 1 & 2) */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-1">
+    <div className="space-y-6 sm:space-y-8">
+      {/* 1. Header Banner & Nút Thao Tác Nhanh */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
         <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-black tracking-tight text-slate-900 dark:text-white font-sans">
-            Welcome back, Salung
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2.5">
+            <span>Tổng Quan Hoạt Động</span>
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#0097B2]/10 text-[#007F96] dark:text-[#0097B2] border border-[#0097B2]/25 flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#0097B2] animate-pulse" />
+              Live Demo
+            </span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Track business growth, daily customer interactions, and revenue insights.
+            Theo dõi tiến độ sản xuất, đơn hàng may đo và yêu cầu báo giá theo thời gian thực
           </p>
         </div>
 
-        {/* Live sync pill badge */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold font-mono bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Live Sync
-          </span>
+        <div className="flex items-center gap-2.5">
+          <Link
+            href="/admin/orders"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-xs transition-colors flex items-center gap-1.5"
+          >
+            <ShoppingBag className="w-4 h-4 text-[#0097B2]" />
+            <span>Xem Đơn Hàng ({totalOrders})</span>
+          </Link>
+          <Link
+            href="/admin/quotes"
+            className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#0097B2] hover:bg-[#007F96] text-white shadow-md shadow-[#0097B2]/25 transition-all flex items-center gap-1.5"
+          >
+            <FileText className="w-4 h-4" />
+            <span>Xử Lý Báo Giá ({newQuotes})</span>
+          </Link>
         </div>
       </div>
 
-      {/* 2. STATS CARDS ROW: 3 Thẻ hàng ngang chuẩn xác như ảnh mẫu */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-        {/* Card 1: TOTAL REVENUE */}
+      {/* 2. STATS CARDS (4 Thẻ chỉ số thực tế của HDC Fashion) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Doanh thu ghi nhận */}
         <StatsCard
-          title="TOTAL REVENUE"
-          value="$20,320"
-          unit=""
-          sparkHeights={[25, 40, 35, 60, 50, 75, 95, 80, 100]}
-          trend={{ isPositive: true, label: "+0,94% last year" }}
+          title="DOANH THU GHI NHẬN"
+          value={formatVND(totalRevenue)}
+          subtext="Doanh số tích lũy hợp đồng B2B"
+          trend={{ isPositive: true, label: "+18.2% tháng này" }}
+          sparkHeights={[30, 45, 55, 40, 70, 60, 80, 95, 85, 100]}
         />
 
-        {/* Card 2: TOTAL ORDERS */}
+        {/* Tổng đơn hàng */}
         <StatsCard
-          title="TOTAL ORDERS"
-          value="10,320"
-          unit="Orders"
-          sparkHeights={[30, 20, 50, 45, 65, 55, 70, 90, 85, 100]}
-          trend={{ isPositive: true, label: "+0,12% last year" }}
+          title="TỔNG ĐƠN HÀNG"
+          value={`${totalOrders} đơn`}
+          subtext={`${pendingOrders} đơn đang chờ duyệt cọc`}
+          trend={{ isPositive: true, label: "+14.8% tuần này" }}
+          sparkHeights={[25, 35, 50, 45, 65, 55, 75, 90, 80, 100]}
         />
 
-        {/* Card 3: NEW CUSTOMERS */}
+        {/* Yêu cầu báo giá */}
         <StatsCard
-          title="NEW CUSTOMERS"
-          value="4,305"
-          unit="New Users"
-          sparkHeights={[20, 35, 30, 45, 70, 60, 80, 85, 95, 100]}
-          trend={{ isPositive: true, label: "+0,93% last year" }}
+          title="YÊU CẦU BÁO GIÁ"
+          value={`${totalQuotes} yêu cầu`}
+          subtext={`${newQuotes} yêu cầu mới cần gửi giá`}
+          trend={{ isPositive: true, label: "5 phản hồi hôm nay" }}
+          sparkHeights={[20, 40, 30, 50, 60, 50, 70, 85, 75, 100]}
+        />
+
+        {/* Khách hàng doanh nghiệp */}
+        <StatsCard
+          title="KHÁCH HÀNG DOANH NGHIỆP"
+          value={`${totalCustomers} đối tác`}
+          subtext="Tập đoàn, trường học & chuỗi F&B"
+          trend={{ isPositive: true, label: "+8 đối tác mới" }}
+          sparkHeights={[35, 30, 45, 60, 55, 70, 80, 85, 95, 100]}
         />
       </div>
 
-      {/* 3. HERO CHART & REVENUE TARGET ROW: SALES TREND + REVENUE */}
+      {/* 3. BIỂU ĐỒ CỘT TIẾN ĐỘ + TIẾN ĐỘ XƯỞNG MAY */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Sales Trend Pixel Matrix Column Chart (Chiếm 2 cột) */}
+        {/* Biểu đồ cột phân bổ trạng thái & sản lượng 6 tháng */}
         <div className="lg:col-span-2">
-          <OrderStatusChart />
+          <OrderStatusChart statusCounts={statusCounts} />
         </div>
 
-        {/* Revenue Target Widget Card (Chiếm 1 cột như trong ảnh 2) */}
-        <div className="lg:col-span-1">
-          <RevenueTargetCard />
+        {/* Thẻ Giám Sát Chuyền May Xưởng HDC */}
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#1E293B] border border-slate-200/90 dark:border-slate-700/80 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/60">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-[#0097B2]/10 text-[#0097B2] flex items-center justify-center border border-[#0097B2]/20">
+                  <Cpu className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight">
+                    Tiến Độ Xưởng May
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Giám sát chuyền may HDC</p>
+                </div>
+              </div>
+
+              <span className="px-2.5 py-1 rounded-full text-[11px] font-black font-mono bg-[#0097B2]/10 text-[#007F96] dark:text-[#0097B2] border border-[#0097B2]/30">
+                84% TẢI
+              </span>
+            </div>
+
+            {/* Tiến độ chi tiết từng chuyền */}
+            <div className="space-y-4">
+              {/* Chuyền Polo & T-Shirt */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#0097B2]" />
+                    Chuyền Áo Polo & T-Shirt
+                  </span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">95% công suất</span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-[#0097B2] rounded-full w-[95%]" />
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 flex justify-between">
+                  <span>24 đơn đang may</span>
+                  <span className="text-[#0097B2] font-semibold">Giao 3-5 ngày</span>
+                </div>
+              </div>
+
+              {/* Chuyền Sơ Mi & Quần Tây */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    Chuyền Sơ Mi & Quần Tây
+                  </span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">82% công suất</span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 rounded-full w-[82%]" />
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 flex justify-between">
+                  <span>14 đơn đang may</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Chuẩn đường may</span>
+                </div>
+              </div>
+
+              {/* Chuyền Thêu Vi Tính Tajima */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                    Thêu Logo Vi Tính Tajima
+                  </span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">76% công suất</span>
+                </div>
+                <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-indigo-500 rounded-full w-[76%]" />
+                </div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 flex justify-between">
+                  <span>8 cụm máy thêu</span>
+                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold">Độ nét cao</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Hộp ghi chú xưởng */}
+            <div className="mt-5 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
+              <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div className="text-[11px] leading-relaxed">
+                <strong className="font-bold">{pendingOrders} đơn hàng</strong> cần duyệt hợp đồng mẫu vải hôm nay để kịp lịch xuất xưởng cuối tuần.
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <span className="text-[11px] text-slate-400 font-mono">Quy chuẩn ISO 9001</span>
+            <Link
+              href="/admin/orders"
+              className="text-xs font-bold text-[#0097B2] hover:text-[#007F96] flex items-center gap-1 hover:underline"
+            >
+              <span>Xem chi tiết đơn</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* 4. RECENT TRANSACTIONS DATA TABLE (Bảng danh sách đơn hàng như trong ảnh 2) */}
-      <div className="pt-2">
-        <RecentOrdersTable />
+      {/* 4. HAI BẢNG DỮ LIỆU GẦN NHẤT CÓ THỰC: Đơn Hàng & Báo Giá */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RecentOrdersTable orders={recentOrders} />
+        <RecentQuotesTable quotes={recentQuotes} />
       </div>
     </div>
   );

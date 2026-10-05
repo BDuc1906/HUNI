@@ -1,258 +1,214 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  ArrowUpDown,
-  Search,
-  ChevronDown,
-  ExternalLink,
+  ShoppingBag,
+  ArrowRight,
+  Building2,
+  Clock,
+  Scissors,
   CheckCircle2,
+  Truck,
+  XCircle,
+  FileCheck,
 } from "lucide-react";
 import { useTheme } from "@/shared/providers/ThemeProvider";
 
-const SAMPLE_TRANSACTIONS = [
-  {
-    id: "#04910",
-    customer: "Ryan Korsoaard",
-    product: "Ergo Office Chair - Classic Edition",
-    status: "Success",
-    qty: 12,
-    unitPrice: "$3,450",
-    totalAmount: "$41,400",
-  },
-  {
-    id: "#04911",
-    customer: "Sophia Montgomery",
-    product: "Premium Cotton Oxford Shirt",
-    status: "Success",
-    qty: 48,
-    unitPrice: "$1,280",
-    totalAmount: "$61,440",
-  },
-  {
-    id: "#04912",
-    customer: "Alexander Wright",
-    product: "Custom Tailored Corporate Blazer",
-    status: "Pending",
-    qty: 25,
-    unitPrice: "$2,890",
-    totalAmount: "$72,250",
-  },
-  {
-    id: "#04913",
-    customer: "Elena Rostova",
-    product: "Breathable Pique Polo Uniform",
-    status: "Success",
-    qty: 150,
-    unitPrice: "$420",
-    totalAmount: "$63,000",
-  },
-  {
-    id: "#04914",
-    customer: "Marcus Vance",
-    product: "Quick-Dry Performance Sportswear",
-    status: "Success",
-    qty: 80,
-    unitPrice: "$560",
-    totalAmount: "$44,800",
-  },
-];
+function formatVND(amount) {
+  if (typeof amount !== "number") return "0đ";
+  return new Intl.NumberFormat("vi-VN").format(amount) + "đ";
+}
+
+function formatDateTime(dateStr) {
+  if (!dateStr) return "—";
+  try {
+    const d = new Date(dateStr);
+    return new Intl.DateTimeFormat("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+      day: "2-digit",
+      month: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(d);
+  } catch {
+    return "—";
+  }
+}
+
+export function OrderBadge({ status }) {
+  switch (status) {
+    case "PENDING":
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+          <Clock className="w-3 h-3 text-amber-500" />
+          <span>Chờ xử lý</span>
+        </span>
+      );
+    case "CONFIRMED":
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-sky-50 text-sky-700 dark:bg-sky-950/40 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
+          <FileCheck className="w-3 h-3 text-sky-500" />
+          <span>Xác nhận</span>
+        </span>
+      );
+    case "PRODUCING":
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#0097B2]/10 text-[#007F96] dark:text-[#0097B2] border border-[#0097B2]/30">
+          <Scissors className="w-3 h-3 text-[#0097B2] animate-pulse" />
+          <span>Đang may</span>
+        </span>
+      );
+    case "SHIPPED":
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+          <Truck className="w-3 h-3 text-indigo-500" />
+          <span>Đang giao</span>
+        </span>
+      );
+    case "COMPLETED":
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+          <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+          <span>Hoàn thành</span>
+        </span>
+      );
+    case "CANCELLED":
+      return (
+        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+          <XCircle className="w-3 h-3 text-rose-500" />
+          <span>Đã huỷ</span>
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+          {status}
+        </span>
+      );
+  }
+}
 
 export default function RecentOrdersTable({ orders = [] }) {
-  const { theme, currentAccent } = useTheme();
+  const router = useRouter();
+  const { theme } = useTheme();
   const isDark = theme === "dark";
-  const [selectedIds, setSelectedIds] = useState(["#04910"]);
-
-  const toggleSelect = (id) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
 
   return (
     <div
-      className={`rounded-2xl transition-all duration-300 border overflow-hidden ${
+      className={`rounded-2xl transition-all duration-300 border overflow-hidden flex flex-col justify-between ${
         isDark
-          ? "bg-[#131926] border-[#1E293B] text-white shadow-lg shadow-black/20"
-          : "bg-white border-slate-200/80 text-slate-900 shadow-xs"
+          ? "bg-[#1E293B] border-slate-700/80 text-white shadow-md shadow-black/20"
+          : "bg-white border-slate-200/90 text-slate-900 shadow-xs"
       }`}
     >
-      {/* Table Header Row: Search & Filter */}
-      <div
-        className={`p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-dashed ${
-          isDark ? "border-[#1E293B]" : "border-slate-200/80"
-        }`}
-      >
-        <div className="flex items-center gap-2">
-          <span
-            className={`text-xs font-bold uppercase tracking-wider ${
-              isDark ? "text-slate-200" : "text-slate-800"
-            }`}
-          >
-            RECENT TRANSACTIONS
-          </span>
-          <span
-            className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${
-              isDark
-                ? currentAccent.bgActiveDark
-                : currentAccent.bgActiveLight
-            }`}
-          >
-            5 orders
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search transactions..."
-              className={`text-xs pl-7 pr-3 py-1.5 rounded-xl border outline-none w-44 sm:w-52 transition-all ${
-                isDark
-                  ? "bg-[#0E131F] border-[#1E293B] text-white placeholder:text-slate-500 focus:border-cyan-500"
-                  : "bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-slate-400"
-              }`}
-            />
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+      {/* Table Header */}
+      <div className="p-4 sm:p-5 flex items-center justify-between border-b border-slate-100 dark:border-slate-700/60 bg-slate-50/50 dark:bg-slate-800/30">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#0097B2]/10 text-[#0097B2] flex items-center justify-center border border-[#0097B2]/20">
+            <ShoppingBag className="w-4 h-4" />
           </div>
-
-          <Link
-            href="/admin/orders"
-            className={`text-xs font-bold px-3 py-1.5 rounded-xl border transition-colors ${
-              isDark
-                ? "bg-[#1A2337] border-[#2A3B5C] text-slate-300 hover:text-white"
-                : "bg-slate-50 border-slate-200 text-slate-700 hover:text-black"
-            }`}
-          >
-            View All
-          </Link>
+          <div>
+            <h3 className="text-sm sm:text-base font-extrabold tracking-tight">
+              Đơn Hàng Gần Đây
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              Các đơn may đo đồng phục mới nhất cần theo dõi
+            </p>
+          </div>
         </div>
+
+        <Link
+          href="/admin/orders"
+          className="text-xs font-bold text-[#0097B2] hover:text-[#007F96] flex items-center gap-1 hover:underline"
+        >
+          <span>Xem tất cả</span>
+          <ArrowRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
 
       {/* Table Content */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr
-              className={`border-b border-dashed text-[11px] font-bold uppercase tracking-wider ${
-                isDark
-                  ? "border-[#1E293B] text-slate-400 bg-[#0E131F]/80"
-                  : "border-slate-200 text-slate-500 bg-slate-50/75"
-              }`}
-            >
-              <th className="py-3 px-4 w-10">
-                <input
-                  type="checkbox"
-                  className="rounded border-slate-400 cursor-pointer"
-                />
-              </th>
-              <th className="py-3 px-4 font-mono">
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <span>ID</span>
-                  <ArrowUpDown className="w-3 h-3 opacity-60" />
-                </div>
-              </th>
-              <th className="py-3 px-4">
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <span>CUSTOMER</span>
-                  <ArrowUpDown className="w-3 h-3 opacity-60" />
-                </div>
-              </th>
-              <th className="py-3 px-4">
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <span>PRODUCT</span>
-                  <ArrowUpDown className="w-3 h-3 opacity-60" />
-                </div>
-              </th>
-              <th className="py-3 px-4">
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <span>STATUS</span>
-                  <ArrowUpDown className="w-3 h-3 opacity-60" />
-                </div>
-              </th>
-              <th className="py-3 px-4">
-                <div className="flex items-center gap-1 cursor-pointer">
-                  <span>QTY</span>
-                  <ArrowUpDown className="w-3 h-3 opacity-60" />
-                </div>
-              </th>
-              <th className="py-3 px-4 text-right">
-                <div className="flex items-center justify-end gap-1 cursor-pointer">
-                  <span>UNIT PRICE</span>
-                  <ArrowUpDown className="w-3 h-3 opacity-60" />
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody
-            className={`divide-y ${
-              isDark ? "divide-[#1E293B]/70" : "divide-slate-100"
-            }`}
-          >
-            {SAMPLE_TRANSACTIONS.map((row) => {
-              const isChecked = selectedIds.includes(row.id);
+        {orders.length === 0 ? (
+          <div className="p-8 text-center text-slate-400 text-xs">
+            Chưa có đơn hàng nào trong hệ thống.
+          </div>
+        ) : (
+          <table className="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr className="border-b border-slate-100 dark:border-slate-700/60 bg-slate-50 dark:bg-slate-800/60 text-slate-500 uppercase tracking-wider text-[11px] font-bold">
+                <th className="py-3 px-4">Mã đơn</th>
+                <th className="py-3 px-4">Khách hàng / Doanh nghiệp</th>
+                <th className="py-3 px-4">Sản phẩm</th>
+                <th className="py-3 px-4">Tổng tiền</th>
+                <th className="py-3 px-4">Trạng thái</th>
+                <th className="py-3 px-4 text-right">Thời gian</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-700/50">
+              {orders.map((order) => {
+                const orderCode =
+                  order.orderNumber || order.orderCode || order.id;
+                const customerName =
+                  order.customerName ||
+                  order.customer?.fullName ||
+                  order.fullName ||
+                  "Khách hàng";
+                const company =
+                  order.companyName ||
+                  order.company ||
+                  order.customer?.company;
+                const firstItemTitle =
+                  order.items?.[0]?.productName ||
+                  order.items?.[0]?.title ||
+                  "Đồng phục doanh nghiệp";
+                const totalAmount = order.totalAmount || order.total || 0;
 
-              return (
-                <tr
-                  key={row.id}
-                  className={`transition-colors ${
-                    isDark
-                      ? "hover:bg-[#1A2337]/60"
-                      : "hover:bg-slate-50/80"
-                  }`}
-                >
-                  <td className="py-3.5 px-4">
-                    <input
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() => toggleSelect(row.id)}
-                      className="rounded cursor-pointer"
-                    />
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-bold text-slate-400">
-                    {row.id}
-                  </td>
-                  <td className="py-3.5 px-4 font-bold">
-                    <span
-                      className={isDark ? "text-slate-200" : "text-slate-900"}
-                    >
-                      {row.customer}
-                    </span>
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <span
-                      className={`truncate max-w-[200px] inline-block ${
-                        isDark ? "text-slate-400" : "text-slate-600"
-                      }`}
-                    >
-                      {row.product}
-                    </span>
-                  </td>
-                  <td className="py-3.5 px-4">
-                    {row.status === "Success" ? (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                        <span>Success</span>
+                return (
+                  <tr
+                    key={order.id}
+                    onClick={() =>
+                      router.push(
+                        `/admin/orders?search=${encodeURIComponent(orderCode)}`
+                      )
+                    }
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
+                  >
+                    <td className="py-3.5 px-4 font-mono font-bold text-[#0097B2]">
+                      {orderCode}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <div className="font-bold text-slate-900 dark:text-white leading-tight">
+                        {customerName}
+                      </div>
+                      {company && (
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[150px] flex items-center gap-1 mt-0.5">
+                          <Building2 className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span>{company}</span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className="text-slate-700 dark:text-slate-300 font-medium truncate max-w-[150px] inline-block">
+                        {firstItemTitle}
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30">
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                        <span>Pending</span>
-                      </span>
-                    )}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-bold">
-                    {row.qty}
-                  </td>
-                  <td className="py-3.5 px-4 text-right font-mono font-bold">
-                    {row.unitPrice}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    </td>
+                    <td className="py-3.5 px-4 font-mono font-extrabold text-emerald-600 dark:text-emerald-400 text-xs sm:text-sm">
+                      {formatVND(totalAmount)}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <OrderBadge status={order.status} />
+                    </td>
+                    <td className="py-3.5 px-4 text-right text-slate-400 font-mono text-[11px]">
+                      {formatDateTime(order.createdAt)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
