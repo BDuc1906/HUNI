@@ -60,7 +60,7 @@ public class AuthControllerTests : IClassFixture<HuniWebAppFactory>
     }
 
     [Fact]
-    public async Task POST_Login_ValidCredentials_Returns200WithToken()
+    public async Task Login_ValidCredentials_SetsHttpOnlyCookie()
     {
         var req = new LoginRequest("customer@test.com", "Customer123!");
 
@@ -68,7 +68,32 @@ public class AuthControllerTests : IClassFixture<HuniWebAppFactory>
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         var json = await response.Content.ReadAsStringAsync();
-        json.Should().Contain("\"token\":\"eyJ");
+
+        // Phải có Set-Cookie header
+        response.Headers.Contains("Set-Cookie").Should().BeTrue();
+
+        // KHÔNG có token trong body
+        json.Should().NotContain("\"token\":");
+
+        // Có user info
+        json.Should().Contain("\"user\":");
+    }
+
+    [Fact]
+    public async Task Logout_ClearsCookie()
+    {
+        // Login trước
+        var loginReq = new LoginRequest("customer@test.com", "Customer123!");
+        await _client.PostAsJsonAsync("/api/auth/login", loginReq);
+
+        // Logout
+        var res = await _client.PostAsJsonAsync("/api/auth/logout", new { });
+        res.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        // Cookie phải bị xóa (MaxAge=0)
+        res.Headers.Contains("Set-Cookie").Should().BeTrue();
+        var setCookie = res.Headers.GetValues("Set-Cookie").FirstOrDefault() ?? "";
+        setCookie.ToLowerInvariant().Should().Contain("max-age=0");
     }
 
     [Fact]

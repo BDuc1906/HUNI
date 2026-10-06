@@ -84,8 +84,23 @@ public class HuniWebAppFactory : WebApplicationFactory<Program>
         var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequest(email, password));
         response.EnsureSuccessStatusCode();
 
+        if (response.Headers.TryGetValues("Set-Cookie", out var cookies))
+        {
+            var cookie = cookies.FirstOrDefault(c => c.StartsWith("huni_token="));
+            if (cookie != null)
+            {
+                var tokenPart = cookie.Split(';')[0];
+                return tokenPart["huni_token=".Length..];
+            }
+        }
+
         var json = await response.Content.ReadAsStringAsync();
         using var doc = System.Text.Json.JsonDocument.Parse(json);
-        return doc.RootElement.GetProperty("token").GetString() ?? string.Empty;
+        if (doc.RootElement.TryGetProperty("token", out var tokenProp))
+        {
+            return tokenProp.GetString() ?? string.Empty;
+        }
+
+        return string.Empty;
     }
 }

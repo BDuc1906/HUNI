@@ -126,6 +126,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = jwt["Audience"] ?? "HuniClient",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
+
+        // Đọc token từ httpOnly Cookie
+        opt.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                var cookieToken = context.Request.Cookies["huni_token"];
+                if (!string.IsNullOrEmpty(cookieToken))
+                    context.Token = cookieToken;
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();

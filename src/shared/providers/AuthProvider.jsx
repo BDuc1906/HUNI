@@ -29,14 +29,38 @@ export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("huni_token") : null;
-      const savedUser = typeof window !== "undefined" ? localStorage.getItem("huni_user") : null;
-      if (token && savedUser) {
-        setUser(JSON.parse(savedUser));
+    async function checkSession() {
+      // Thử đọc từ sessionStorage trước (nhanh hơn)
+      const saved = typeof window !== "undefined" ? sessionStorage.getItem("huni_user") : null;
+      if (saved) {
+        try {
+          setUser(JSON.parse(saved));
+        } catch {}
       }
-    } catch {}
-    setLoading(false);
+
+      // Xác thực với server (token trong httpOnly cookie tự gửi)
+      try {
+        const res = await authService.getMe();
+        if (res?.success && res?.user) {
+          setUser(res.user);
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem("huni_user", JSON.stringify(res.user));
+          }
+        } else {
+          // Cookie hết hạn hoặc invalid
+          setUser(null);
+          if (typeof window !== "undefined") {
+            sessionStorage.removeItem("huni_user");
+          }
+        }
+      } catch {
+        // Không có session
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+    checkSession();
   }, []);
 
   const login = async (emailOrObj, maybePassword) => {
@@ -52,6 +76,7 @@ export default function AuthProvider({ children }) {
     const res = await authService.login({ email, password });
     if (res?.success && res?.user) {
       setUser(res.user);
+      // Token đã lưu trong httpOnly cookie bởi backend
     }
     return res;
   };
@@ -65,6 +90,9 @@ export default function AuthProvider({ children }) {
       authService.logout();
     } catch {}
     setUser(null);
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("huni_user");
+    }
   };
 
   return (

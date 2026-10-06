@@ -20,26 +20,13 @@ const BASE_URL = rawBaseUrl.startsWith("http://") || rawBaseUrl.startsWith("http
   ? rawBaseUrl
   : `https://${rawBaseUrl}`;
 
-function getToken() {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("huni_token") || localStorage.getItem("token");
-}
-
-/**
- * Hàm gọi API chung với khả năng xử lý tự động Response Envelope và HTTP Status Codes
- * @param {string} endpoint - Đường dẫn API (ví dụ: "/api/products")
- * @param {RequestInit} [options={}] - Tuỳ chọn fetch
- * @returns {Promise<{success: boolean, data?: any, message?: string, error?: string, details?: any[], status: number}>}
- */
 export async function apiFetch(endpoint, options = {}) {
   const { headers = {}, ...customOptions } = options;
-  const token = getToken();
 
   const url = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
 
   const defaultHeaders = {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...headers,
   };
 
@@ -47,6 +34,7 @@ export async function apiFetch(endpoint, options = {}) {
     const response = await fetch(url, {
       ...customOptions,
       headers: defaultHeaders,
+      credentials: "include", // gửi cookie cross-origin
     });
 
     const status = response.status;
@@ -761,10 +749,8 @@ export const authService = {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
-    if (res.success && res.token && typeof window !== "undefined") {
-      localStorage.setItem("huni_token", res.token);
-      localStorage.setItem("huni_user", JSON.stringify(res.user));
-      document.cookie = `huni_token=${res.token}; path=/; max-age=2592000; SameSite=Lax`;
+    if (res.success && res.user && typeof window !== "undefined") {
+      sessionStorage.setItem("huni_user", JSON.stringify(res.user));
     }
     return res;
   },
@@ -781,9 +767,12 @@ export const authService = {
    */
   logout() {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("huni_token");
-      localStorage.removeItem("huni_user");
-      document.cookie = "huni_token=; path=/; max-age=0; SameSite=Lax";
+      sessionStorage.removeItem("huni_user");
+      // Gọi BE để xóa httpOnly cookie (JS không xóa được)
+      fetch(`${BASE_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include",
+      }).catch(() => {});
     }
   },
 };

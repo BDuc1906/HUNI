@@ -2,6 +2,7 @@ using HuniBackend.API.Extensions;
 using HuniBackend.Application.DTOs.Auth;
 using HuniBackend.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HuniBackend.API.Controllers;
@@ -65,10 +66,24 @@ public class AuthController(IAuthService authService) : BaseApiController
             return Unauthorized(new { success = false, error = error ?? "Email hoặc mật khẩu không đúng" });
         }
 
+        // Set httpOnly cookie — JavaScript không đọc được
+        var isProduction = HttpContext.RequestServices
+            .GetRequiredService<IWebHostEnvironment>().IsProduction();
+
+        Response.Cookies.Append("huni_token", response!.Token, new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = isProduction,        // HTTPS only trên production
+            SameSite = SameSiteMode.Lax,  // Lax cho phép cross-site GET (Vercel→Railway)
+            MaxAge = TimeSpan.FromDays(30),
+            Path = "/"
+        });
+
+        // KHÔNG trả token trong body nữa
         return Ok(new
         {
             success = true,
-            token = response!.Token,
+            message = "Đăng nhập thành công",
             expiresAt = response.ExpiresAt,
             user = new
             {
@@ -79,6 +94,24 @@ public class AuthController(IAuthService authService) : BaseApiController
                 avatar = response.User.Avatar
             }
         });
+    }
+
+    [HttpPost("logout")]
+    [AllowAnonymous]
+    public IActionResult Logout()
+    {
+        var isProduction = HttpContext.RequestServices
+            .GetRequiredService<IWebHostEnvironment>().IsProduction();
+
+        Response.Cookies.Append("huni_token", "", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = isProduction,
+            SameSite = SameSiteMode.Lax,
+            MaxAge = TimeSpan.Zero,
+            Path = "/"
+        });
+        return Ok(new { success = true, message = "Đăng xuất thành công" });
     }
 
     [HttpGet("me")]

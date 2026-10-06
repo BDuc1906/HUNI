@@ -279,6 +279,7 @@ export default function Header() {
   // HELPER: Check link active
   // ============================================================
   const isActive = (href) => {
+    if (!pathname) return false;
     if (href === "/" && pathname === "/") return true;
     if (
       href === "/quy-trinh-may-dong-phuc-doanh-nghiep" &&
@@ -291,7 +292,7 @@ export default function Header() {
   };
 
   const isDropdownActive = (item) => {
-    if (!item.children) return false;
+    if (!item.children || !pathname) return false;
     return item.children.some((child) => pathname.startsWith(child.href));
   };
 
