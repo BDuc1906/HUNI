@@ -30,6 +30,7 @@ import {
   ArrowRight,
   Palette,
   Zap,
+  Globe,
 } from "lucide-react";
 import ZaloIcon from "@/shared/components/icons/ZaloIcon";
 import { useLanguage } from "@/shared/providers/LanguageProvider";
@@ -56,6 +57,12 @@ const navIconMap = {
   "/quy-trinh-may-dong-phuc-doanh-nghiep": ClipboardList,
   "/lien-he": Phone,
 };
+
+// ============================================================
+// CẤU HÌNH BẬT / ẨN ĐA NGÔN NGỮ (FEATURE TOGGLE)
+// Đổi thành true khi cần hiển thị lại nút đổi ngôn ngữ trên web
+// ============================================================
+const ENABLE_LANGUAGE_SWITCHER = false;
 
 // ============================================================
 // HÀM TẠO MENU CHÍNH THEO NGÔN NGỮ HIỆN TẠI (I18N)
@@ -179,10 +186,47 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   // ✅ Đa ngôn ngữ từ LanguageProvider
-  const { t } = useLanguage();
+  const {
+    language,
+    setLanguage,
+    t,
+    currentLang,
+    supportedLanguages,
+  } = useLanguage();
+
+  const CurrentFlag = currentLang.Flag;
+
+  // State dropdown & tìm kiếm ngôn ngữ (Desktop + Mobile modal)
+  const [langOpen, setLangOpen] = useState(false);
+  const [mobileLangOpen, setMobileLangOpen] = useState(false);
+  const [langSearch, setLangSearch] = useState("");
+  const langRef = useRef(null);
 
   // Menu điều hướng dịch theo ngôn ngữ hiện tại
   const mainNav = getMainNav(t);
+
+  // Lọc ngôn ngữ theo từ khóa tìm kiếm (dùng chung cho cả Desktop dropdown và Mobile modal)
+  const filteredLanguages = supportedLanguages.filter((item) => {
+    if (!langSearch.trim()) return true;
+    const q = langSearch.trim().toLowerCase();
+    return (
+      item.label.toLowerCase().includes(q) ||
+      item.nativeLabel.toLowerCase().includes(q) ||
+      item.country.toLowerCase().includes(q) ||
+      item.short.toLowerCase().includes(q) ||
+      (item.keywords && item.keywords.some((kw) => kw.includes(q)))
+    );
+  });
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -650,6 +694,117 @@ export default function Header() {
               )}
             </div>
 
+            {/* Chuyển đổi ngôn ngữ (Icon cờ nước + Tên viết tắt + Tìm kiếm ngôn ngữ) */}
+            {ENABLE_LANGUAGE_SWITCHER && (
+              <div className="relative notranslate" ref={langRef}>
+                <button
+                  onClick={() => {
+                    setLangOpen((v) => !v);
+                    if (!langOpen) setLangSearch("");
+                  }}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full hover:bg-slate-100 text-slate-700 hover:text-[#0097b2] transition-colors text-xs font-bold border border-slate-200/90 shadow-2xs shrink-0"
+                  title={`Đang chọn: ${currentLang.label} (${currentLang.short}) - Nhấn để đổi & tìm kiếm`}
+                  aria-label="Chuyển đổi ngôn ngữ"
+                >
+                  <CurrentFlag className="w-4.5 h-4.5" />
+                  <span className="font-extrabold text-[11px] tracking-wide text-slate-800">
+                    {currentLang.short}
+                  </span>
+                  <ChevronDown
+                    className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${
+                      langOpen ? "rotate-180 text-[#0097b2]" : ""
+                    }`}
+                  />
+                </button>
+
+                {langOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden z-50 animate-in fade-in slide-in-from-top-1 duration-150 text-slate-800">
+                    {/* Header popup */}
+                    <div className="px-3.5 py-2.5 bg-slate-50/80 border-b border-slate-100 flex items-center justify-between">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                        <Globe className="w-3.5 h-3.5 text-[#0097b2]" />
+                        <span>{t("lang.title", "Ngôn ngữ / Language")}</span>
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-500 bg-slate-200/70 px-1.5 py-0.5 rounded-full">
+                        {filteredLanguages.length}
+                      </span>
+                    </div>
+
+                    {/* Mục tìm kiếm ngôn ngữ */}
+                    <div className="p-2 border-b border-slate-100 bg-white">
+                      <div className="relative">
+                        <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type="text"
+                          value={langSearch}
+                          onChange={(e) => setLangSearch(e.target.value)}
+                          placeholder={t("lang.searchPlaceholder", "Tìm kiếm ngôn ngữ, nước...")}
+                          className="w-full pl-8 pr-7 py-1.5 bg-slate-50 hover:bg-slate-100/80 focus:bg-white border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0097b2] focus:ring-1 focus:ring-[#0097b2] transition-all"
+                          autoFocus
+                        />
+                        {langSearch && (
+                          <button
+                            onClick={() => setLangSearch("")}
+                            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                            title="Xóa"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Danh sách cờ các nước & viết tắt */}
+                    <div className="max-h-64 overflow-y-auto p-1.5 space-y-0.5">
+                      {filteredLanguages.length > 0 ? (
+                        filteredLanguages.map((item) => {
+                          const ItemFlag = item.Flag;
+                          const isSelected = language === item.code;
+                          return (
+                            <button
+                              key={item.code}
+                              onClick={() => {
+                                setLanguage(item.code);
+                                setLangOpen(false);
+                                setLangSearch("");
+                              }}
+                              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+                                isSelected
+                                  ? "text-[#0097b2] bg-teal-50 font-bold shadow-2xs"
+                                  : "text-slate-700 hover:bg-slate-50"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <ItemFlag className="w-5 h-5 shrink-0" />
+                                <div className="text-left truncate">
+                                  <div className="truncate font-bold leading-tight">{item.label}</div>
+                                  <div className="text-[10px] text-slate-400 font-normal truncate">
+                                    {item.country} • {item.nativeLabel}
+                                  </div>
+                                </div>
+                              </div>
+                              <span
+                                className={`text-[10px] font-black px-1.5 py-0.5 rounded shrink-0 ml-2 ${
+                                  isSelected
+                                    ? "bg-[#0097b2] text-white"
+                                    : "bg-slate-100 text-slate-600"
+                                }`}
+                              >
+                                {item.short}
+                              </span>
+                            </button>
+                          );
+                        })
+                      ) : (
+                        <div className="p-4 text-center text-xs text-slate-400">
+                          {t("lang.noResults", "Không tìm thấy ngôn ngữ phù hợp")}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Sản phẩm yêu thích (Wishlist) */}
             <Link
@@ -691,6 +846,22 @@ export default function Header() {
 
           {/* BÊN PHẢI: MOBILE CONTROLS (< lg) */}
           <div className="flex lg:hidden items-center gap-1 sm:gap-2">
+            {/* Nút chọn ngôn ngữ trên Mobile: mở modal chọn trực quan */}
+            {ENABLE_LANGUAGE_SWITCHER && (
+              <button
+                onClick={() => {
+                  setMobileLangOpen(true);
+                  setLangSearch("");
+                }}
+                className="px-2 py-1.5 rounded-lg text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-1 border border-slate-200/90 shadow-2xs shrink-0 notranslate"
+                title={`Đang chọn: ${currentLang.label} (${currentLang.short}) - Nhấn để đổi ngôn ngữ`}
+                aria-label="Chọn ngôn ngữ"
+              >
+                <CurrentFlag className="w-4 h-4 shrink-0" />
+                <span className="text-[11px] font-black">{currentLang.short}</span>
+                <ChevronDown className="w-3 h-3 text-slate-400" />
+              </button>
+            )}
 
             <button
               onClick={() => setMobileSearchOpen(true)}
@@ -826,6 +997,108 @@ export default function Header() {
         document.body
       )}
 
+      {/* =============================================
+          MOBILE LANGUAGE SELECTOR MODAL
+          ============================================= */}
+      {ENABLE_LANGUAGE_SWITCHER && mounted && mobileLangOpen && typeof document !== "undefined" && createPortal(
+        <div className="lg:hidden fixed inset-0 z-[9999] flex flex-col justify-start items-center pt-20 px-4">
+          {/* Backdrop mờ nền đen phủ kín toàn bộ màn hình */}
+          <div
+            className="fixed inset-0 bg-black/65 backdrop-blur-sm transition-opacity duration-300 cursor-pointer"
+            onClick={() => setMobileLangOpen(false)}
+          />
+
+          {/* Modal Card */}
+          <div className="relative z-10 w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200 notranslate text-slate-800">
+            {/* Header popup */}
+            <div className="px-4 py-3 bg-slate-50/90 border-b border-slate-100 flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-800">
+                <Globe className="w-4 h-4 text-[#0097b2]" />
+                <span>{t("lang.title", "Chọn ngôn ngữ / Language")}</span>
+              </div>
+              <button
+                onClick={() => setMobileLangOpen(false)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 transition-colors"
+                aria-label="Đóng"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Tìm kiếm ngôn ngữ */}
+            <div className="p-3 border-b border-slate-100 bg-white">
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  value={langSearch}
+                  onChange={(e) => setLangSearch(e.target.value)}
+                  placeholder={t("lang.searchPlaceholder", "Tìm kiếm ngôn ngữ, nước...")}
+                  className="w-full pl-9 pr-8 py-2 bg-slate-50 hover:bg-slate-100/70 focus:bg-white border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#0097b2] focus:ring-1 focus:ring-[#0097b2] transition-all"
+                  autoFocus
+                />
+                {langSearch && (
+                  <button
+                    onClick={() => setLangSearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs"
+                    title="Xóa"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Danh sách cờ các nước & viết tắt */}
+            <div className="max-h-[60vh] overflow-y-auto p-2 space-y-1">
+              {filteredLanguages.length > 0 ? (
+                filteredLanguages.map((item) => {
+                  const ItemFlag = item.Flag;
+                  const isSelected = language === item.code;
+                  return (
+                    <button
+                      key={item.code}
+                      onClick={() => {
+                        setLanguage(item.code);
+                        setMobileLangOpen(false);
+                      }}
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                        isSelected
+                          ? "text-[#0097b2] bg-teal-50/80 font-bold border border-teal-200/80 shadow-2xs"
+                          : "text-slate-700 hover:bg-slate-50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3 min-w-0">
+                        <ItemFlag className="w-5 h-5 shrink-0" />
+                        <div className="text-left truncate">
+                          <div className="truncate font-bold leading-tight text-slate-900">{item.label}</div>
+                          <div className="text-[10px] text-slate-400 font-normal truncate">
+                            {item.country} • {item.nativeLabel}
+                          </div>
+                        </div>
+                      </div>
+                      <span
+                        className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ml-2 ${
+                          isSelected
+                            ? "bg-[#0097b2] text-white"
+                            : "bg-slate-100 text-slate-600"
+                        }`}
+                      >
+                        {item.short}
+                      </span>
+                    </button>
+                  );
+                })
+              ) : (
+                <div className="p-6 text-center text-xs text-slate-400">
+                  {t("lang.noResults", "Không tìm thấy ngôn ngữ phù hợp")}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
 
       {/* =============================================
           MOBILE DRAWER NAV
