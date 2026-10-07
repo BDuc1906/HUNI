@@ -19,7 +19,7 @@ const SLIDES = [
   {
     image: "/images/02_materials_01.jpg",
     focusMobile: "center center",
-    focusDesktop: "center center",
+    focusDesktop: "right center",
     eyebrow: "Bộ Sưu Tập 2026",
     title: "CHẤT LIỆU XANH",
     titleHighlight: "BỀN VỮNG",
@@ -35,9 +35,9 @@ const SLIDES = [
   // SLIDE 2: THỂ THAO & GOLF
   // ============================================
   {
-    image: "/images/08_golf_event_01.jpg",
+    image: "/images/hero_slider_golf.jpg",
     focusMobile: "60% 45%",
-    focusDesktop: "center 40%",
+    focusDesktop: "center center",
     eyebrow: "Công Nghệ AeroCool",
     title: "ĐỒNG PHỤC CÁC GIẢI",
     titleHighlight: "THỂ THAO & GOLF",
@@ -53,9 +53,9 @@ const SLIDES = [
   // SLIDE 3: POLO DOANH NGHIỆP — ĐÃ BỎ CONTAIN
   // ============================================
   {
-    image: "/images/06_polo_01.jpg",
+    image: "/images/hero_slider_polo.jpg",
     focusMobile: "center 20%",
-    focusDesktop: "center 22%",
+    focusDesktop: "center 30%",
     eyebrow: "Bán Chạy Nhất 2026",
     title: "ÁO POLO DOANH NGHIỆP",
     titleHighlight: "HDC CLASSIC",
@@ -71,9 +71,9 @@ const SLIDES = [
   // SLIDE 4: TRƯỜNG HỌC
   // ============================================
   {
-    image: "/images/09_kids_school_03.jpg",
+    image: "/images/hero_slider_school.jpg",
     focusMobile: "center 22%",
-    focusDesktop: "center 25%",
+    focusDesktop: "center 36%",
     eyebrow: "Chuẩn Quốc Tế",
     title: "ĐỒNG PHỤC TRƯỜNG HỌC",
     titleHighlight: "CAO CẤP",
@@ -89,9 +89,9 @@ const SLIDES = [
   // SLIDE 5: KIDS
   // ============================================
   {
-    image: "/images/10_kids_why_02.jpg",
+    image: "/images/09_kids_school_01.jpg",
     focusMobile: "center 22%",
-    focusDesktop: "center 25%",
+    focusDesktop: "center 35%",
     eyebrow: "Dòng Sản Phẩm Trẻ Em",
     title: "ĐỒNG PHỤC HDC KIDS",
     titleHighlight: "VUI NHỘN & AN TOÀN",
@@ -117,40 +117,73 @@ const TRANSITION_DURATION = 700;
 const SLIDE_DURATION = 6000;
 const SWIPE_THRESHOLD = 50;
 
+const N = SLIDES.length;
+// 3 bộ slide liên tiếp → cuộn vòng vô hạn tiến lên
+const SLIDES_TRIPLED = [...SLIDES, ...SLIDES, ...SLIDES];
+
 export default function HeroBanner() {
   const { setIsQuickQuoteOpen } = useShop();
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  // virtualIndex chạy trong [0, 3N-1], khởi đầu ở đầu bộ giữa (index = N)
+  const [virtualIndex, setVirtualIndex] = useState(N);
+  const [noTransition, setNoTransition] = useState(false);
 
   const sectionRef = useRef(null);
+  const virtualIndexRef = useRef(N);
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
   const isSwipingRef = useRef(false);
   const isPausedRef = useRef(false);
 
+  // Slide hiển thị hiện tại cho nội dung và dots (0..N-1)
+  const currentSlide = ((virtualIndex % N) + N) % N;
+
+  // Luôn cập nhật ref của virtualIndex
+  useEffect(() => {
+    virtualIndexRef.current = virtualIndex;
+  }, [virtualIndex]);
+
+  // WRAP SILENT — Chạy khi kết thúc transition để giữ vòng lặp vô hạn luôn tiến tới
+  const handleTransitionEnd = useCallback((e) => {
+    if (e.propertyName !== "transform") return;
+
+    const vi = virtualIndexRef.current;
+    if (vi >= N && vi < 2 * N) return;
+
+    setNoTransition(true);
+    setVirtualIndex((prev) => {
+      if (prev < N) return prev + N;
+      if (prev >= 2 * N) return prev - N;
+      return prev;
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setNoTransition(false));
+    });
+  }, []);
+
   // ============================================================
   // NAVIGATION HANDLERS
   // ============================================================
-  const goToSlide = useCallback((index) => {
-    const total = SLIDES.length;
-    setCurrentSlide(((index % total) + total) % total);
+  const goToSlide = useCallback((targetIndex) => {
+    setVirtualIndex(N + targetIndex);
   }, []);
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    setVirtualIndex((prev) => prev + 1);
   }, []);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setVirtualIndex((prev) => prev - 1);
   }, []);
 
   // ============================================================
-  // AUTO-PLAY — Tự chuyển slide mỗi 6 giây
+  // AUTO-PLAY — Tự chuyển tiến lên slide kế tiếp mỗi 6 giây
   // ============================================================
   useEffect(() => {
     const timer = setInterval(() => {
       if (!isPausedRef.current) {
-        setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+        setVirtualIndex((prev) => prev + 1);
       }
     }, SLIDE_DURATION);
 
@@ -228,70 +261,64 @@ export default function HeroBanner() {
       style={{ touchAction: "pan-y" }}
     >
       {/* ============================================
-          SLIDES — TRƯỢT NGANG
+          SLIDES — TRƯỢT NGANG CUỘN VÒNG VÔ HẠN
           ============================================ */}
       <div
-        className="absolute inset-0 flex transition-transform ease-out gpu-accelerated"
+        onTransitionEnd={handleTransitionEnd}
+        className="absolute inset-0 flex gpu-accelerated"
         style={{
-          transform: `translate3d(-${currentSlide * 100}%, 0, 0)`,
-          transitionDuration: `${TRANSITION_DURATION}ms`,
+          transform: `translate3d(-${virtualIndex * 100}%, 0, 0)`,
+          transitionProperty: "transform",
+          transitionDuration: noTransition ? "0ms" : `${TRANSITION_DURATION}ms`,
+          transitionTimingFunction: "cubic-bezier(0.25, 1, 0.5, 1)",
         }}
       >
-        {SLIDES.map((s, idx) => (
+        {SLIDES_TRIPLED.map((s, idx) => (
           <div
             key={idx}
             className="relative w-full h-full flex-shrink-0 gpu-accelerated bg-[#00222a]"
-            aria-hidden={idx !== currentSlide}
+            aria-hidden={idx !== virtualIndex}
           >
-            {/* Khung ảnh — full màn hình ở mọi kích thước, không bị cắt / tách hình */}
-            <div
-              className="absolute inset-0"
+            {/* Ảnh nền phủ kín 100% full màn hình từ mép trái tới mép phải, không còn khoảng trống */}
+            <Image
+              src={s.image}
+              alt={s.title + " " + s.titleHighlight}
+              fill
+              unoptimized
+              priority={idx === N}
+              className="object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)]"
               style={{
                 "--pos-m": s.focusMobile,
                 "--pos-d": s.focusDesktop,
               }}
-            >
-              <Image
-                src={s.image}
-                alt={s.title + " " + s.titleHighlight}
-                fill
-                sizes="100vw"
-                quality={90}
-                priority={idx === 0}
-                loading={idx === 0 ? undefined : "eager"}
-                className={`object-cover [object-position:var(--pos-m)] lg:[object-position:var(--pos-d)] transition-transform duration-7000 ease-out ${
-                  idx === currentSlide ? "scale-105" : "scale-100"
-                }`}
-                style={{ imageRendering: "-webkit-optimize-contrast" }}
-              />
+            />
 
-              {/* Overlay desktop: phủ chuyển sắc mềm mại từ trái sang phải, chữ luôn sắc nét và hòa quyện tự nhiên với ảnh nền */}
-              <div
-                className="absolute inset-0 hidden lg:block pointer-events-none"
-                style={{
-                  background:
-                    "linear-gradient(to right, rgba(0, 34, 42, 0.94) 0%, rgba(0, 34, 42, 0.82) 32%, rgba(0, 34, 42, 0.5) 58%, rgba(0, 34, 42, 0.15) 80%, transparent 100%)",
-                }}
-              />
+            {/* Gradient phủ nhẹ từ bên trái: bảo vệ độ tương phản của chữ, để ảnh sáng rõ tự nhiên */}
+            <div
+              className="absolute inset-0 hidden lg:block pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(to right, rgba(0, 34, 42, 0.88) 0%, rgba(0, 34, 42, 0.65) 28%, rgba(0, 34, 42, 0.20) 48%, transparent 65%)",
+              }}
+            />
 
-              {/* Overlay mobile/tablet: tối dần từ dưới lên để chữ dễ đọc */}
-              <div
-                className="absolute inset-0 lg:hidden pointer-events-none"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(0, 34, 42, 0.95) 0%, rgba(0, 34, 42, 0.65) 50%, rgba(0, 34, 42, 0.3) 100%)",
-                }}
-              />
+            {/* Overlay mobile/tablet: tối nhẹ từ dưới lên */}
+            <div
+              className="absolute inset-0 lg:hidden pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(0, 34, 42, 0.90) 0%, rgba(0, 34, 42, 0.50) 45%, rgba(0, 34, 42, 0.10) 100%)",
+              }}
+            />
 
-              {/* Overlay đáy cho thanh stats & dots */}
-              <div
-                className="absolute inset-x-0 bottom-0 h-44 pointer-events-none"
-                style={{
-                  background:
-                    "linear-gradient(to top, rgba(0, 34, 42, 0.95) 0%, rgba(0, 34, 42, 0.6) 60%, transparent 100%)",
-                }}
-              />
-            </div>
+            {/* Overlay đáy mỏng bảo vệ thanh stats */}
+            <div
+              className="absolute inset-x-0 bottom-0 h-32 pointer-events-none"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(0, 34, 42, 0.88) 0%, rgba(0, 34, 42, 0.35) 50%, transparent 100%)",
+              }}
+            />
           </div>
         ))}
       </div>
