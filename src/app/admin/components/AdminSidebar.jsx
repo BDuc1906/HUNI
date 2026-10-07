@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -20,7 +20,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { useTheme } from "@/shared/providers/ThemeProvider";
-import { authService } from "@/shared/services/apiClient";
+import { authService, adminService } from "@/shared/services/apiClient";
 
 // CHỈ GIỮ LẠI CÁC TRANG CÓ THỰC VÀ HOẠT ĐỘNG 100% TRONG HỆ THỐNG
 const NAV_GROUPS = [
@@ -246,10 +246,25 @@ export default function AdminSidebar({ user, initialCounts = {} }) {
   const isDark = theme === "dark";
 
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const counts = {
-    pendingOrders: initialCounts.pendingOrders || 12,
-    newQuotes: initialCounts.newQuotes || 9,
-  };
+  const [counts, setCounts] = useState({
+    pendingOrders: Number(initialCounts.pendingOrders) || 0,
+    newQuotes: Number(initialCounts.newQuotes) || 0,
+  });
+
+  useEffect(() => {
+    let ignore = false;
+    adminService.getDashboard().then((res) => {
+      if (!ignore && res?.success && res?.data?.statusCounts) {
+        setCounts({
+          pendingOrders: Number(res.data.statusCounts.orders?.pending) || 0,
+          newQuotes: Number(res.data.statusCounts.quotes?.new) || 0,
+        });
+      }
+    }).catch(() => {});
+    return () => {
+      ignore = true;
+    };
+  }, []);
 
   const handleLogout = async () => {
     if (confirm("Bạn có chắc chắn muốn đăng xuất khỏi trang Quản trị?")) {

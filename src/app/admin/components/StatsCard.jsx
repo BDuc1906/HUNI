@@ -41,17 +41,17 @@ export default function StatsCard({
           {sparkHeights.map((h, i) => {
             const isHighlighted = i >= sparkHeights.length - 3;
             let barBg = "";
-            if (isHighlighted) {
+            if (h > 0 && isHighlighted) {
               barBg = "bg-[#0097B2] shadow-xs shadow-[#0097B2]/30";
             } else {
-              barBg = isDark ? "bg-slate-700" : "bg-slate-200";
+              barBg = isDark ? "bg-slate-700/60" : "bg-slate-200";
             }
 
             return (
               <div
                 key={i}
                 className={`w-[2.5px] rounded-full transition-all duration-300 ${barBg}`}
-                style={{ height: `${Math.max(h, 15)}%` }}
+                style={{ height: `${h > 0 ? Math.max(h, 15) : 8}%` }}
               />
             );
           })}

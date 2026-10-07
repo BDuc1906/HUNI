@@ -93,6 +93,13 @@ export default async function AdminDashboardPage() {
     cancelled: cancelledOrders,
   };
 
+  const poloOrders = producingOrders > 0 ? Math.ceil(producingOrders * 0.6) : 0;
+  const shirtOrders = producingOrders > 0 ? Math.floor(producingOrders * 0.4) : 0;
+  const poloCapacity = producingOrders > 0 ? Math.min(100, Math.round((poloOrders / 20) * 100)) : 0;
+  const shirtCapacity = producingOrders > 0 ? Math.min(100, Math.round((shirtOrders / 15) * 100)) : 0;
+  const embCapacity = producingOrders > 0 ? Math.min(100, Math.round((producingOrders / 25) * 100)) : 0;
+  const totalLoad = producingOrders > 0 ? Math.round((poloCapacity + shirtCapacity + embCapacity) / 3) : 0;
+
   return (
     <div className="space-y-6 sm:space-y-8">
       {/* 1. Header Banner & Nút Thao Tác Nhanh */}
@@ -135,8 +142,8 @@ export default async function AdminDashboardPage() {
           title="DOANH THU GHI NHẬN"
           value={formatVND(totalRevenue)}
           subtext="Doanh số tích lũy hợp đồng B2B"
-          trend={{ isPositive: true, label: "+18.2% tháng này" }}
-          sparkHeights={[30, 45, 55, 40, 70, 60, 80, 95, 85, 100]}
+          trend={totalRevenue > 0 ? { isPositive: true, label: "+18.2% tháng này" } : null}
+          sparkHeights={totalRevenue > 0 ? [30, 45, 55, 40, 70, 60, 80, 95, 85, 100] : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
         />
 
         {/* Tổng đơn hàng */}
@@ -144,8 +151,8 @@ export default async function AdminDashboardPage() {
           title="TỔNG ĐƠN HÀNG"
           value={`${totalOrders} đơn`}
           subtext={`${pendingOrders} đơn đang chờ duyệt cọc`}
-          trend={{ isPositive: true, label: "+14.8% tuần này" }}
-          sparkHeights={[25, 35, 50, 45, 65, 55, 75, 90, 80, 100]}
+          trend={totalOrders > 0 ? { isPositive: true, label: "+14.8% tuần này" } : null}
+          sparkHeights={totalOrders > 0 ? [25, 35, 50, 45, 65, 55, 75, 90, 80, 100] : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
         />
 
         {/* Yêu cầu báo giá */}
@@ -153,8 +160,8 @@ export default async function AdminDashboardPage() {
           title="YÊU CẦU BÁO GIÁ"
           value={`${totalQuotes} yêu cầu`}
           subtext={`${newQuotes} yêu cầu mới cần gửi giá`}
-          trend={{ isPositive: true, label: "Hệ thống tự động" }}
-          sparkHeights={[20, 40, 30, 50, 60, 50, 70, 85, 75, 100]}
+          trend={totalQuotes > 0 ? { isPositive: true, label: "Cập nhật mới" } : null}
+          sparkHeights={totalQuotes > 0 ? [20, 40, 30, 50, 60, 50, 70, 85, 75, 100] : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
         />
 
         {/* Khách hàng doanh nghiệp */}
@@ -162,8 +169,8 @@ export default async function AdminDashboardPage() {
           title="KHÁCH HÀNG DOANH NGHIỆP"
           value={`${totalCustomers} đối tác`}
           subtext="Tập đoàn, trường học & chuỗi F&B"
-          trend={{ isPositive: true, label: "Dữ liệu thực tế" }}
-          sparkHeights={[35, 30, 45, 60, 55, 70, 80, 85, 95, 100]}
+          trend={totalCustomers > 0 ? { isPositive: true, label: "Dữ liệu thực tế" } : null}
+          sparkHeights={totalCustomers > 0 ? [35, 30, 45, 60, 55, 70, 80, 85, 95, 100] : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}
         />
       </div>
 
@@ -191,7 +198,7 @@ export default async function AdminDashboardPage() {
               </div>
 
               <span className="px-2.5 py-1 rounded-full text-[11px] font-black font-mono bg-[#0097B2]/10 text-[#007F96] dark:text-[#0097B2] border border-[#0097B2]/30">
-                84% TẢI
+                {totalLoad}% TẢI
               </span>
             </div>
 
@@ -204,14 +211,14 @@ export default async function AdminDashboardPage() {
                     <span className="w-2 h-2 rounded-full bg-[#0097B2]" />
                     Chuyền Áo Polo & T-Shirt
                   </span>
-                  <span className="font-mono font-bold text-slate-900 dark:text-white">95% công suất</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{poloCapacity}% công suất</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-[#0097B2] rounded-full w-[95%]" />
+                  <div className="h-full bg-[#0097B2] rounded-full transition-all duration-500" style={{ width: `${poloCapacity}%` }} />
                 </div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-400 flex justify-between">
-                  <span>24 đơn đang may</span>
-                  <span className="text-[#0097B2] font-semibold">Giao 3-5 ngày</span>
+                  <span>{poloOrders} đơn đang may</span>
+                  <span className="text-[#0097B2] font-semibold">{poloOrders > 0 ? "Giao 3-5 ngày" : "Sẵn sàng nhận đơn"}</span>
                 </div>
               </div>
 
@@ -222,14 +229,14 @@ export default async function AdminDashboardPage() {
                     <span className="w-2 h-2 rounded-full bg-emerald-500" />
                     Chuyền Sơ Mi & Quần Tây
                   </span>
-                  <span className="font-mono font-bold text-slate-900 dark:text-white">82% công suất</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{shirtCapacity}% công suất</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 rounded-full w-[82%]" />
+                  <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${shirtCapacity}%` }} />
                 </div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-400 flex justify-between">
-                  <span>14 đơn đang may</span>
-                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Chuẩn đường may</span>
+                  <span>{shirtOrders} đơn đang may</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{shirtOrders > 0 ? "Chuẩn đường may" : "Sẵn sàng nhận đơn"}</span>
                 </div>
               </div>
 
@@ -240,14 +247,14 @@ export default async function AdminDashboardPage() {
                     <span className="w-2 h-2 rounded-full bg-indigo-500" />
                     Thêu Logo Vi Tính Tajima
                   </span>
-                  <span className="font-mono font-bold text-slate-900 dark:text-white">76% công suất</span>
+                  <span className="font-mono font-bold text-slate-900 dark:text-white">{embCapacity}% công suất</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-500 rounded-full w-[76%]" />
+                  <div className="h-full bg-indigo-500 rounded-full transition-all duration-500" style={{ width: `${embCapacity}%` }} />
                 </div>
                 <div className="text-[10px] text-slate-500 dark:text-slate-400 flex justify-between">
-                  <span>8 cụm máy thêu</span>
-                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold">Độ nét cao</span>
+                  <span>{producingOrders} đơn cần thêu</span>
+                  <span className="text-indigo-600 dark:text-indigo-400 font-semibold">{producingOrders > 0 ? "Độ nét cao" : "Sẵn sàng máy thêu"}</span>
                 </div>
               </div>
             </div>
@@ -255,9 +262,15 @@ export default async function AdminDashboardPage() {
             {/* Hộp ghi chú xưởng */}
             <div className="mt-5 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2.5">
               <Clock className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-              <div className="text-[11px] leading-relaxed">
-                <strong className="font-bold">{pendingOrders} đơn hàng</strong> cần duyệt hợp đồng mẫu vải hôm nay để kịp lịch xuất xưởng cuối tuần.
-              </div>
+              {pendingOrders > 0 ? (
+                <div className="text-[11px] leading-relaxed">
+                  <strong className="font-bold">{pendingOrders} đơn hàng</strong> cần duyệt hợp đồng mẫu vải hôm nay để kịp lịch xuất xưởng cuối tuần.
+                </div>
+              ) : (
+                <div className="text-[11px] leading-relaxed">
+                  Hiện tại không có đơn hàng nào chờ duyệt cọc. Xưởng sẵn sàng tiếp nhận đơn đặt may mới.
+                </div>
+              )}
             </div>
           </div>
 
