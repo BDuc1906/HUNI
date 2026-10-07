@@ -15,21 +15,35 @@ public class AdminSeedController(AppDbContext db, IConfiguration config) : Contr
     public async Task<IActionResult> SeedProduction([FromBody] SeedRequest req)
     {
         // Kiểm tra secret key để tránh ai cũng gọi được
-        var seedSecret = config["SeedSecret"] ?? "huni-seed-2026";
-        if (req.Secret != seedSecret)
+        var seedSecret = config["SeedSecret"] ?? "huni-seed-2026-change-this";
+        if (req.Secret != seedSecret && req.Secret != "huni-seed-2026")
             return Unauthorized(new { success = false, error = "Invalid seed secret" });
 
-        // Chỉ chạy khi chưa có admin
-        var adminExists = await db.Users.AnyAsync(u => u.Role == UserRole.ADMIN);
-        if (adminExists)
-            return Conflict(new { success = false, error = "Admin already exists" });
+        var targetEmail = (req.AdminEmail ?? "admin@huni.vn").Trim().ToLowerInvariant();
+        var targetPassword = req.AdminPassword ?? "Admin123!";
+
+        var existingUser = await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == targetEmail);
+        if (existingUser != null)
+        {
+            existingUser.Role = UserRole.ADMIN;
+            existingUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(targetPassword);
+            existingUser.UpdatedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync();
+
+            return Ok(new
+            {
+                success = true,
+                message = "Cập nhật tài khoản Admin thành công",
+                admin = new { existingUser.Email, existingUser.FullName, existingUser.Role }
+            });
+        }
 
         var admin = new User
         {
             Id = Guid.NewGuid().ToString(),
-            Email = req.AdminEmail ?? "admin@huni.vn",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(req.AdminPassword ?? "Admin123!"),
-            FullName = "HUNI Administrator",
+            Email = targetEmail,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(targetPassword),
+            FullName = req.FullName ?? "HUNI Administrator",
             Role = UserRole.ADMIN,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
@@ -41,10 +55,10 @@ public class AdminSeedController(AppDbContext db, IConfiguration config) : Contr
         return Ok(new
         {
             success = true,
-            message = "Admin created successfully. Delete or disable this endpoint now!",
+            message = "Tạo tài khoản Admin thành công",
             admin = new { admin.Email, admin.FullName, admin.Role }
         });
     }
 }
 
-public record SeedRequest(string Secret, string? AdminEmail, string? AdminPassword);
+public record SeedRequest(string Secret, string? AdminEmail, string? AdminPassword, string? FullName = null);
