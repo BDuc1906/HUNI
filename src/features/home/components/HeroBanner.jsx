@@ -225,7 +225,7 @@ export default function HeroBanner() {
     <section
       ref={sectionRef}
       className="relative w-full h-[100svh] min-h-[600px] max-h-[900px] overflow-hidden bg-[#00222a]"
-      style={{ touchAction: "pan-y", maxWidth: "1920px", margin: "0 auto" }}
+      style={{ touchAction: "pan-y" }}
     >
       {/* ============================================
           SLIDES — TRƯỢT NGANG
@@ -243,10 +243,9 @@ export default function HeroBanner() {
             className="relative w-full h-full flex-shrink-0 gpu-accelerated bg-[#00222a]"
             aria-hidden={idx !== currentSlide}
           >
-            {/* Khung ảnh — mobile: full màn hình; desktop: chiếm 68% bên phải
-                để chữ nằm trên nền đặc, chủ thể ảnh không bị chữ che */}
+            {/* Khung ảnh — full màn hình ở mọi kích thước, không bị cắt / tách hình */}
             <div
-              className="absolute inset-0 lg:left-[32%]"
+              className="absolute inset-0"
               style={{
                 "--pos-m": s.focusMobile,
                 "--pos-d": s.focusDesktop,
@@ -256,7 +255,7 @@ export default function HeroBanner() {
                 src={s.image}
                 alt={s.title + " " + s.titleHighlight}
                 fill
-                sizes="(min-width: 1024px) 68vw, 100vw"
+                sizes="100vw"
                 quality={90}
                 priority={idx === 0}
                 loading={idx === 0 ? undefined : "eager"}
@@ -266,12 +265,32 @@ export default function HeroBanner() {
                 style={{ imageRendering: "-webkit-optimize-contrast" }}
               />
 
-              {/* Overlay mobile/tablet: tối dần từ dưới lên để chữ dễ đọc */}
-              <div className="absolute inset-0 lg:hidden bg-gradient-to-t from-[#00222a]/90 via-[#00222a]/45 to-[#00222a]/25" />
+              {/* Overlay desktop: phủ chuyển sắc mềm mại từ trái sang phải, chữ luôn sắc nét và hòa quyện tự nhiên với ảnh nền */}
+              <div
+                className="absolute inset-0 hidden lg:block pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to right, rgba(0, 34, 42, 0.94) 0%, rgba(0, 34, 42, 0.82) 32%, rgba(0, 34, 42, 0.5) 58%, rgba(0, 34, 42, 0.15) 80%, transparent 100%)",
+                }}
+              />
 
-              {/* Overlay desktop: hòa mép trái ảnh vào nền, đáy tối nhẹ cho thanh stats */}
-              <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#00222a] via-[#00222a]/55 to-transparent to-[55%]" />
-              <div className="absolute inset-x-0 bottom-0 hidden lg:block h-40 bg-gradient-to-t from-[#00222a]/70 to-transparent" />
+              {/* Overlay mobile/tablet: tối dần từ dưới lên để chữ dễ đọc */}
+              <div
+                className="absolute inset-0 lg:hidden pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0, 34, 42, 0.95) 0%, rgba(0, 34, 42, 0.65) 50%, rgba(0, 34, 42, 0.3) 100%)",
+                }}
+              />
+
+              {/* Overlay đáy cho thanh stats & dots */}
+              <div
+                className="absolute inset-x-0 bottom-0 h-44 pointer-events-none"
+                style={{
+                  background:
+                    "linear-gradient(to top, rgba(0, 34, 42, 0.95) 0%, rgba(0, 34, 42, 0.6) 60%, transparent 100%)",
+                }}
+              />
             </div>
           </div>
         ))}
