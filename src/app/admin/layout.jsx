@@ -1,4 +1,5 @@
 import React from "react";
+import { cookies } from "next/headers";
 import AdminSidebar from "./components/AdminSidebar";
 import AdminHeader from "./components/AdminHeader";
 
@@ -8,9 +9,37 @@ export const metadata = {
   robots: "noindex, nofollow",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminLayout({ children }) {
-  const session = null;
-  const initialCounts = { pendingOrders: 12, newQuotes: 9 };
+  let initialCounts = { pendingOrders: 0, newQuotes: 0 };
+
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const cookieStore = await cookies();
+    const token = cookieStore.get("huni_token")?.value;
+    const fetchHeaders = {};
+    if (token) {
+      fetchHeaders["Cookie"] = `huni_token=${token}`;
+    }
+
+    const res = await fetch(`${apiUrl}/api/admin/dashboard`, {
+      headers: fetchHeaders,
+      cache: "no-store",
+    }).catch(() => null);
+
+    if (res && res.ok) {
+      const json = await res.json().catch(() => null);
+      if (json?.data?.statusCounts) {
+        initialCounts = {
+          pendingOrders: json.data.statusCounts.orders?.pending || 0,
+          newQuotes: json.data.statusCounts.quotes?.new || 0,
+        };
+      }
+    }
+  } catch (err) {
+    console.error("[AdminLayout] Error fetching sidebar counts:", err);
+  }
 
   const currentUser = {
     name: "Quản Trị Viên",

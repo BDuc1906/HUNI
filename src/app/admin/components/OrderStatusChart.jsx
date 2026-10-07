@@ -78,12 +78,12 @@ const STATUS_CONFIGS = [
 ];
 
 const MONTHLY_DATA = [
-  { month: "Tháng 5", count: 28, revenue: "162.000.000đ" },
-  { month: "Tháng 6", count: 32, revenue: "195.000.000đ" },
-  { month: "Tháng 7", count: 36, revenue: "218.000.000đ" },
-  { month: "Tháng 8", count: 39, revenue: "245.000.000đ" },
-  { month: "Tháng 9", count: 44, revenue: "282.000.000đ" },
-  { month: "Tháng 10", count: 40, revenue: "265.400.000đ" },
+  { month: "Tháng 5", count: 0, revenue: "0đ" },
+  { month: "Tháng 6", count: 0, revenue: "0đ" },
+  { month: "Tháng 7", count: 0, revenue: "0đ" },
+  { month: "Tháng 8", count: 0, revenue: "0đ" },
+  { month: "Tháng 9", count: 0, revenue: "0đ" },
+  { month: "Tháng 10", count: 0, revenue: "0đ" },
 ];
 
 export default function OrderStatusChart({ statusCounts = {} }) {
@@ -93,12 +93,12 @@ export default function OrderStatusChart({ statusCounts = {} }) {
   const [activeTab, setActiveTab] = useState("status"); // 'status' | 'monthly'
   const [hoveredIdx, setHoveredIdx] = useState(null);
 
-  const pending = Number(statusCounts.pending) || 12;
-  const confirmed = Number(statusCounts.confirmed) || 24;
-  const producing = Number(statusCounts.producing) || 42;
-  const shipped = Number(statusCounts.shipped) || 18;
-  const completed = Number(statusCounts.completed) || 40;
-  const cancelled = Number(statusCounts.cancelled) || 4;
+  const pending = Number(statusCounts.pending) || 0;
+  const confirmed = Number(statusCounts.confirmed) || 0;
+  const producing = Number(statusCounts.producing) || 0;
+  const shipped = Number(statusCounts.shipped) || 0;
+  const completed = Number(statusCounts.completed) || 0;
+  const cancelled = Number(statusCounts.cancelled) || 0;
 
   const statusValues = {
     pending,
@@ -203,10 +203,10 @@ export default function OrderStatusChart({ statusCounts = {} }) {
                 const count = statusValues[item.key] || 0;
                 const percent =
                   total > 0 ? ((count / total) * 100).toFixed(1) : 0;
-                const heightPercent = Math.max(
-                  Math.min(Math.round((count / yMax) * 100), 100),
-                  6
-                );
+                const heightPercent =
+                  count > 0
+                    ? Math.max(Math.min(Math.round((count / yMax) * 100), 100), 6)
+                    : 0;
                 const isHovered = hoveredIdx === idx;
                 const Icon = item.icon;
 
@@ -314,7 +314,8 @@ export default function OrderStatusChart({ statusCounts = {} }) {
 
             <div className="relative h-full pl-10 pr-2 flex items-end justify-between gap-3 sm:gap-6 z-10">
               {MONTHLY_DATA.map((item, idx) => {
-                const heightPercent = Math.round((item.count / yMax) * 100);
+                const heightPercent =
+                  item.count > 0 ? Math.round((item.count / yMax) * 100) : 0;
                 const isHovered = hoveredIdx === idx;
 
                 return (
