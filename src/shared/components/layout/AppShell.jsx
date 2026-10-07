@@ -22,9 +22,13 @@ export default function AppShell({ children }) {
   const isAdminPage = pathname?.startsWith("/admin");
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
+  // ============================================================
+  // ADMIN SHELL — Bọc riêng với class .admin-shell
+  // để scope dark-mode override (xem globals.css)
+  // ============================================================
   if (isAdminPage) {
     return (
-      <div className="flex flex-col min-h-screen">
+      <div className="admin-shell flex flex-col min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
         <TopProgressBar />
         <PageTransition>{children}</PageTransition>
       </div>

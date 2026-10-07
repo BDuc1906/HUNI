@@ -511,6 +511,134 @@ body {
 .delay-300 {
   animation-delay: 300ms;
 }
+/* ============================================================
+   ADMIN DARK MODE — Global Overrides
+   Scope: html.dark .admin-shell
+   Chỉ ảnh hưởng trang /admin — KHÔNG đụng frontend
+   ============================================================ */
+
+html.dark .admin-shell {
+  color-scheme: dark;
+  background-color: #0b1220;
+  color: #e2e8f0;
+}
+
+/* ---------- BACKGROUNDS ---------- */
+html.dark .admin-shell .bg-white               { background-color: #111827 !important; }
+html.dark .admin-shell .bg-slate-50            { background-color: #0b1220 !important; }
+html.dark .admin-shell .bg-slate-100           { background-color: #1e293b !important; }
+html.dark .admin-shell .bg-slate-200           { background-color: #334155 !important; }
+html.dark .admin-shell .bg-slate-800           { background-color: #1e293b !important; }
+html.dark .admin-shell .bg-slate-900           { background-color: #020617 !important; }
+
+html.dark .admin-shell .bg-slate-50\/50,
+html.dark .admin-shell .bg-slate-50\/60,
+html.dark .admin-shell .bg-slate-50\/70,
+html.dark .admin-shell .bg-slate-50\/80        { background-color: #0f172a !important; }
+
+html.dark .admin-shell .bg-slate-100\/70       { background-color: #1e293b !important; }
+
+html.dark .admin-shell .bg-white\/90,
+html.dark .admin-shell .bg-white\/95           { background-color: rgba(17, 24, 39, 0.95) !important; }
+
+/* Backdrop modal */
+html.dark .admin-shell .bg-slate-900\/40,
+html.dark .admin-shell .bg-slate-900\/60       { background-color: rgba(0, 0, 0, 0.75) !important; }
+
+/* ---------- TEXT COLORS ---------- */
+html.dark .admin-shell .text-slate-900         { color: #f8fafc !important; }
+html.dark .admin-shell .text-slate-800         { color: #e2e8f0 !important; }
+html.dark .admin-shell .text-slate-700         { color: #cbd5e1 !important; }
+html.dark .admin-shell .text-slate-600         { color: #94a3b8 !important; }
+html.dark .admin-shell .text-slate-500         { color: #94a3b8 !important; }
+html.dark .admin-shell .text-slate-400         { color: #64748b !important; }
+
+/* ---------- BORDERS ---------- */
+html.dark .admin-shell .border-slate-100       { border-color: #1e293b !important; }
+html.dark .admin-shell .border-slate-200       { border-color: #334155 !important; }
+html.dark .admin-shell .border-slate-200\/80   { border-color: #334155 !important; }
+html.dark .admin-shell .border-slate-300       { border-color: #475569 !important; }
+
+html.dark .admin-shell .divide-slate-100 > * + * { border-color: #1e293b !important; }
+html.dark .admin-shell .divide-slate-200 > * + * { border-color: #334155 !important; }
+
+/* ---------- FORM CONTROLS ---------- */
+html.dark .admin-shell input:not([type="checkbox"]):not([type="radio"]),
+html.dark .admin-shell textarea,
+html.dark .admin-shell select {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+  border-color: #334155 !important;
+}
+
+html.dark .admin-shell input::placeholder,
+html.dark .admin-shell textarea::placeholder {
+  color: #64748b !important;
+}
+
+html.dark .admin-shell select option {
+  background-color: #1e293b;
+  color: #f1f5f9;
+}
+
+/* ---------- HOVER STATES ---------- */
+html.dark .admin-shell .hover\:bg-slate-50:hover   { background-color: #1e293b !important; }
+html.dark .admin-shell .hover\:bg-slate-100:hover  { background-color: #334155 !important; }
+html.dark .admin-shell .hover\:bg-slate-200:hover  { background-color: #475569 !important; }
+html.dark .admin-shell .hover\:bg-white:hover      { background-color: #1e293b !important; }
+html.dark .admin-shell .hover\:bg-slate-50\/80:hover { background-color: #1e293b !important; }
+
+/* ---------- TABLE ---------- */
+html.dark .admin-shell thead.bg-slate-50,
+html.dark .admin-shell thead tr.bg-slate-50,
+html.dark .admin-shell thead.bg-slate-50\/50,
+html.dark .admin-shell thead.bg-slate-50\/60 {
+  background-color: #0f172a !important;
+}
+html.dark .admin-shell thead tr                { border-color: #334155 !important; }
+html.dark .admin-shell tbody tr:hover          { background-color: #1e293b !important; }
+
+/* ---------- BADGE MÀU SÁNG (giữ contrast trong dark) ---------- */
+html.dark .admin-shell .bg-brand-50             { background-color: rgba(13, 148, 136, 0.15) !important; }
+html.dark .admin-shell .bg-emerald-50           { background-color: rgba(16, 185, 129, 0.15) !important; }
+html.dark .admin-shell .bg-amber-50             { background-color: rgba(245, 158, 11, 0.15) !important; }
+html.dark .admin-shell .bg-rose-50              { background-color: rgba(244, 63, 94, 0.15) !important; }
+html.dark .admin-shell .bg-purple-50            { background-color: rgba(168, 85, 247, 0.15) !important; }
+html.dark .admin-shell .bg-sky-50               { background-color: rgba(14, 165, 233, 0.15) !important; }
+html.dark .admin-shell .bg-indigo-50            { background-color: rgba(99, 102, 241, 0.15) !important; }
+html.dark .admin-shell .bg-orange-50            { background-color: rgba(249, 115, 22, 0.15) !important; }
+html.dark .admin-shell .bg-teal-50              { background-color: rgba(20, 184, 166, 0.15) !important; }
+html.dark .admin-shell .bg-cyan-50              { background-color: rgba(6, 182, 212, 0.15) !important; }
+
+html.dark .admin-shell .bg-brand-100            { background-color: rgba(13, 148, 136, 0.25) !important; }
+html.dark .admin-shell .bg-emerald-100          { background-color: rgba(16, 185, 129, 0.25) !important; }
+html.dark .admin-shell .bg-amber-100            { background-color: rgba(245, 158, 11, 0.25) !important; }
+html.dark .admin-shell .bg-rose-100             { background-color: rgba(244, 63, 94, 0.25) !important; }
+
+html.dark .admin-shell .border-brand-200        { border-color: rgba(13, 148, 136, 0.4) !important; }
+html.dark .admin-shell .border-emerald-200      { border-color: rgba(16, 185, 129, 0.4) !important; }
+html.dark .admin-shell .border-amber-200        { border-color: rgba(245, 158, 11, 0.4) !important; }
+html.dark .admin-shell .border-rose-200         { border-color: rgba(244, 63, 94, 0.4) !important; }
+html.dark .admin-shell .border-purple-200       { border-color: rgba(168, 85, 247, 0.4) !important; }
+html.dark .admin-shell .border-sky-200          { border-color: rgba(14, 165, 233, 0.4) !important; }
+html.dark .admin-shell .border-indigo-200       { border-color: rgba(99, 102, 241, 0.4) !important; }
+html.dark .admin-shell .border-orange-200       { border-color: rgba(249, 115, 22, 0.4) !important; }
+
+/* Text trong badge màu */
+html.dark .admin-shell .text-brand-700          { color: #5eead4 !important; }
+html.dark .admin-shell .text-emerald-700        { color: #6ee7b7 !important; }
+html.dark .admin-shell .text-amber-700          { color: #fcd34d !important; }
+html.dark .admin-shell .text-rose-700           { color: #fda4af !important; }
+html.dark .admin-shell .text-purple-700         { color: #d8b4fe !important; }
+html.dark .admin-shell .text-sky-700            { color: #7dd3fc !important; }
+html.dark .admin-shell .text-indigo-700         { color: #a5b4fc !important; }
+html.dark .admin-shell .text-orange-700         { color: #fdba74 !important; }
+
+/* ---------- SCROLLBAR ---------- */
+html.dark .admin-shell ::-webkit-scrollbar              { width: 8px; height: 8px; }
+html.dark .admin-shell ::-webkit-scrollbar-track        { background: #0f172a; }
+html.dark .admin-shell ::-webkit-scrollbar-thumb        { background: #334155; border-radius: 4px; }
+html.dark .admin-shell ::-webkit-scrollbar-thumb:hover  { background: #475569; }
 
 
 
