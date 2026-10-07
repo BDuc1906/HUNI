@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 .font-editorial {
   font-family: 'Playfair Display', 'Cormorant Garamond', Didot, 'Bodoni MT', Garamond, 'Times New Roman', serif;
   letter-spacing: 0.015em;
