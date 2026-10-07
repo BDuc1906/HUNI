@@ -48,7 +48,22 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
   const redirect = searchParams.get("redirect") || "/";
   const registeredParam = searchParams.get("registered") === "1";
   const isLockedParam = searchParams.get("error") === "account_locked";
-  const { login } = useAuth();
+  const { user, login } = useAuth();
+
+  // Tự động chuyển hướng nếu người dùng đã đăng nhập từ trước
+  useEffect(() => {
+    if (user) {
+      const explicitRedirect = searchParams.get("redirect");
+      const userRole = (user.role || user.Role)?.toString().toUpperCase();
+      if (explicitRedirect && explicitRedirect !== "/") {
+        window.location.href = explicitRedirect;
+      } else if (userRole === "ADMIN" || userRole === "1") {
+        window.location.href = "/admin";
+      } else {
+        window.location.href = "/";
+      }
+    }
+  }, [user, searchParams]);
 
   // Mode: "login" hoặc "register"
   const [mode, setMode] = useState(defaultMode);
@@ -108,8 +123,19 @@ function AuthSlidingDualPanelInner({ defaultMode = "login" }) {
       if (!res.success) {
         setLoginError(res.error || "Email hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại.");
       } else {
-        router.push(redirect);
-        router.refresh();
+        const userRole = (res.user?.role || res.user?.Role)?.toString().toUpperCase();
+        const explicitRedirect = searchParams.get("redirect");
+
+        let targetUrl = "/";
+        if (explicitRedirect && explicitRedirect !== "/") {
+          targetUrl = explicitRedirect;
+        } else if (userRole === "ADMIN" || userRole === "1") {
+          targetUrl = "/admin";
+        } else {
+          targetUrl = "/";
+        }
+
+        window.location.href = targetUrl;
       }
     } catch (err) {
       setLoginError("Có lỗi kết nối xảy ra. Vui lòng thử lại sau.");

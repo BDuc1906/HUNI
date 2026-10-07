@@ -14,6 +14,12 @@ export const dynamic = "force-dynamic";
 export default async function AdminLayout({ children }) {
   let initialCounts = { pendingOrders: 0, newQuotes: 0 };
 
+  let currentUser = {
+    name: "Quản Trị Viên",
+    email: "admin@huni.vn",
+    role: "ADMIN",
+  };
+
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
     const cookieStore = await cookies();
@@ -23,13 +29,19 @@ export default async function AdminLayout({ children }) {
       fetchHeaders["Cookie"] = `huni_token=${token}`;
     }
 
-    const res = await fetch(`${apiUrl}/api/admin/dashboard`, {
-      headers: fetchHeaders,
-      cache: "no-store",
-    }).catch(() => null);
+    const [dashRes, userRes] = await Promise.all([
+      fetch(`${apiUrl}/api/admin/dashboard`, {
+        headers: fetchHeaders,
+        cache: "no-store",
+      }).catch(() => null),
+      fetch(`${apiUrl}/api/auth/me`, {
+        headers: fetchHeaders,
+        cache: "no-store",
+      }).catch(() => null),
+    ]);
 
-    if (res && res.ok) {
-      const json = await res.json().catch(() => null);
+    if (dashRes && dashRes.ok) {
+      const json = await dashRes.json().catch(() => null);
       if (json?.data?.statusCounts) {
         initialCounts = {
           pendingOrders: json.data.statusCounts.orders?.pending || 0,
@@ -37,15 +49,20 @@ export default async function AdminLayout({ children }) {
         };
       }
     }
-  } catch (err) {
-    console.error("[AdminLayout] Error fetching sidebar counts:", err);
-  }
 
-  const currentUser = {
-    name: "Quản Trị Viên",
-    email: "admin@hdcfashion.vn",
-    role: "ADMIN",
-  };
+    if (userRes && userRes.ok) {
+      const userJson = await userRes.json().catch(() => null);
+      if (userJson?.user) {
+        currentUser = {
+          name: userJson.user.fullName || userJson.user.name || "Quản Trị Viên",
+          email: userJson.user.email || "admin@huni.vn",
+          role: userJson.user.role || "ADMIN",
+        };
+      }
+    }
+  } catch (err) {
+    console.error("[AdminLayout] Error fetching admin data:", err);
+  }
 
   return (
     <div className="h-screen h-[100dvh] w-full overflow-hidden flex flex-col lg:flex-row font-sans selection:bg-[#0097B2] selection:text-white transition-colors duration-200 bg-[#F8FAFC] dark:bg-[#0B1120] text-slate-900 dark:text-white">
