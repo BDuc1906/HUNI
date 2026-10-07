@@ -5,15 +5,6 @@
 // ==================================================
 
 import { PRODUCTS } from "../data/products";
-import {
-  MOCK_DASHBOARD_STATS,
-  MOCK_ORDERS,
-  MOCK_QUOTES,
-  MOCK_CUSTOMERS,
-  MOCK_VOUCHERS,
-  MOCK_REVIEWS,
-  MOCK_RETURNS,
-} from "../data/adminMockData";
 
 const rawBaseUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000").trim().replace(/\/+$/, "");
 const BASE_URL = rawBaseUrl.startsWith("http://") || rawBaseUrl.startsWith("https://")
@@ -300,21 +291,7 @@ export const adminService = {
    * Thống kê tổng quan Dashboard
    */
   async getDashboard() {
-    try {
-      const res = await apiFetch("/api/admin/dashboard");
-      if (res?.success && res?.data) return res;
-    } catch (e) {}
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        stats: MOCK_DASHBOARD_STATS,
-        statusCounts: MOCK_DASHBOARD_STATS.statusCounts,
-        recentOrders: MOCK_ORDERS.slice(0, 5),
-        recentQuotes: MOCK_QUOTES.slice(0, 5),
-      },
-    };
+    return apiFetch("/api/admin/dashboard");
   },
 
   /**
@@ -330,70 +307,28 @@ export const adminService = {
     if (params.limit) query.set("limit", params.limit);
 
     const qs = query.toString();
-    try {
-      const res = await apiFetch(`/api/admin/orders${qs ? `?${qs}` : ""}`);
-      if (res?.success && res?.data?.orders && res.data.orders.length > 0) return res;
-    } catch (e) {}
-
-    let list = [...MOCK_ORDERS];
-    if (params.status) {
-      list = list.filter((o) => o.status === params.status);
+    const res = await apiFetch(`/api/admin/orders${qs ? `?${qs}` : ""}`);
+    if (res?.success && res?.data) {
+      if (!res.data.pagination && res.data.total !== undefined) {
+        res.data.pagination = {
+          page: res.data.page || 1,
+          limit: res.data.limit || 20,
+          total: res.data.total || 0,
+          totalPages: res.data.totalPages || 1,
+        };
+      }
     }
-    if (params.search) {
-      const s = params.search.toLowerCase();
-      list = list.filter(
-        (o) =>
-          o.orderCode?.toLowerCase().includes(s) ||
-          o.customerName?.toLowerCase().includes(s) ||
-          o.customerPhone?.includes(s) ||
-          o.companyName?.toLowerCase().includes(s)
-      );
-    }
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        orders: list,
-        pagination: {
-          page: 1,
-          limit: 20,
-          total: list.length,
-          totalPages: 1,
-        },
-        summary: {
-          pending: MOCK_DASHBOARD_STATS.statusCounts.orders.pending,
-          producing: MOCK_DASHBOARD_STATS.statusCounts.orders.producing,
-          completed: MOCK_DASHBOARD_STATS.statusCounts.orders.completed,
-          totalRevenue: MOCK_DASHBOARD_STATS.totalRevenue,
-        },
-      },
-    };
+    return res;
   },
 
   /**
    * Cập nhật trạng thái đơn hàng
    */
   async updateOrderStatus(id, { status, notes }) {
-    try {
-      const res = await apiFetch(`/api/admin/orders/${encodeURIComponent(id)}`, {
-        method: "PATCH",
-        body: JSON.stringify({ status, notes }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-
-    const order = MOCK_ORDERS.find((o) => o.id === id);
-    if (order) {
-      order.status = status;
-      if (notes) order.notes = notes;
-      order.timeline.unshift({
-        time: new Date().toISOString().replace("T", " ").substring(0, 16),
-        text: `Cập nhật trạng thái sang ${status}: ${notes || "Đã lưu"}`,
-      });
-      return { success: true, status: 200, data: order };
-    }
-    return { success: true, status: 200, data: { id, status } };
+    return apiFetch(`/api/admin/orders/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status, notes }),
+    });
   },
 
   /**
@@ -408,58 +343,28 @@ export const adminService = {
     if (params.limit) query.set("limit", params.limit);
 
     const qs = query.toString();
-    try {
-      const res = await apiFetch(`/api/admin/quotes${qs ? `?${qs}` : ""}`);
-      if (res?.success && res?.data?.quotes && res.data.quotes.length > 0) return res;
-    } catch (e) {}
-
-    let list = [...MOCK_QUOTES];
-    if (params.status) list = list.filter((q) => q.status === params.status);
-    if (params.category) list = list.filter((q) => q.category === params.category);
-    if (params.search) {
-      const s = params.search.toLowerCase();
-      list = list.filter(
-        (q) =>
-          q.fullName?.toLowerCase().includes(s) ||
-          q.company?.toLowerCase().includes(s) ||
-          q.phone?.includes(s)
-      );
+    const res = await apiFetch(`/api/admin/quotes${qs ? `?${qs}` : ""}`);
+    if (res?.success && res?.data) {
+      if (!res.data.pagination && res.data.total !== undefined) {
+        res.data.pagination = {
+          page: res.data.page || 1,
+          limit: res.data.limit || 20,
+          total: res.data.total || 0,
+          totalPages: res.data.totalPages || 1,
+        };
+      }
     }
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        quotes: list,
-        pagination: {
-          page: 1,
-          limit: 20,
-          total: list.length,
-          totalPages: 1,
-        },
-      },
-    };
+    return res;
   },
 
   /**
    * Cập nhật trạng thái báo giá
    */
   async updateQuoteStatus(id, { status, estimatedPrice, notes }) {
-    try {
-      const res = await apiFetch(`/api/admin/quotes/${encodeURIComponent(id)}`, {
-        method: "PATCH",
-        body: JSON.stringify({ status, estimatedPrice, notes }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-
-    const quote = MOCK_QUOTES.find((q) => q.id === id);
-    if (quote) {
-      quote.status = status;
-      if (estimatedPrice) quote.estimatedBudget = estimatedPrice;
-      return { success: true, status: 200, data: quote };
-    }
-    return { success: true, status: 200, data: { id, status } };
+    return apiFetch(`/api/admin/quotes/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ status, estimatedPrice, notes }),
+    });
   },
 
   /**
@@ -472,91 +377,45 @@ export const adminService = {
     if (params.limit) query.set("limit", params.limit);
 
     const qs = query.toString();
-    try {
-      const res = await apiFetch(`/api/admin/customers${qs ? `?${qs}` : ""}`);
-      if (res?.success && res?.data?.customers && res.data.customers.length > 0) return res;
-    } catch (e) {}
-
-    let list = [...MOCK_CUSTOMERS];
-    if (params.search) {
-      const s = params.search.toLowerCase();
-      list = list.filter(
-        (c) =>
-          c.name?.toLowerCase().includes(s) ||
-          c.contactPerson?.toLowerCase().includes(s) ||
-          c.phone?.includes(s) ||
-          c.email?.toLowerCase().includes(s)
-      );
+    const res = await apiFetch(`/api/admin/customers${qs ? `?${qs}` : ""}`);
+    if (res?.success && res?.data) {
+      if (!res.data.pagination && res.data.total !== undefined) {
+        res.data.pagination = {
+          page: res.data.page || 1,
+          limit: res.data.limit || 20,
+          total: res.data.total || 0,
+          totalPages: res.data.totalPages || 1,
+        };
+      }
     }
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        customers: list,
-        pagination: {
-          page: 1,
-          limit: 20,
-          total: list.length,
-          totalPages: 1,
-        },
-      },
-    };
+    return res;
   },
 
   /**
    * Danh sách mã voucher
    */
   async getVouchers() {
-    try {
-      const res = await apiFetch("/api/admin/vouchers");
-      if (res?.success && res?.data && res.data.length > 0) return res;
-    } catch (e) {}
-
-    return {
-      success: true,
-      status: 200,
-      data: MOCK_VOUCHERS,
-    };
+    return apiFetch("/api/admin/vouchers");
   },
 
   /**
    * Tạo voucher mới
    */
   async createVoucher(voucherData) {
-    try {
-      const res = await apiFetch("/api/admin/vouchers", {
-        method: "POST",
-        body: JSON.stringify(voucherData),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-
-    const newVoucher = {
-      id: `VOUCHER-${Date.now()}`,
-      ...voucherData,
-      usedCount: 0,
-      active: true,
-    };
-    MOCK_VOUCHERS.unshift(newVoucher);
-    return { success: true, status: 201, data: newVoucher };
+    return apiFetch("/api/admin/vouchers", {
+      method: "POST",
+      body: JSON.stringify(voucherData),
+    });
   },
 
   /**
    * Cập nhật trạng thái kích hoạt của voucher
    */
   async updateVoucherStatus(id, active) {
-    try {
-      const res = await apiFetch("/api/admin/vouchers", {
-        method: "PATCH",
-        body: JSON.stringify({ id, active }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-
-    const v = MOCK_VOUCHERS.find((x) => x.id === id);
-    if (v) v.active = active;
-    return { success: true, status: 200, data: { id, active } };
+    return apiFetch(`/api/admin/vouchers/${encodeURIComponent(id)}`, {
+      method: "PATCH",
+      body: JSON.stringify({ active }),
+    });
   },
 
   /**
@@ -570,59 +429,38 @@ export const adminService = {
     if (params.page) query.set("page", params.page);
     if (params.limit) query.set("limit", params.limit);
     const qs = query.toString();
-    try {
-      const res = await apiFetch(`/api/admin/reviews${qs ? `?${qs}` : ""}`);
-      if (res?.success && res?.data?.reviews && res.data.reviews.length > 0) return res;
-    } catch (e) {}
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        reviews: MOCK_REVIEWS,
-        pagination: {
-          page: 1,
-          limit: 20,
-          total: MOCK_REVIEWS.length,
-          totalPages: 1,
-        },
-      },
-    };
+    const res = await apiFetch(`/api/admin/reviews${qs ? `?${qs}` : ""}`);
+    if (res?.success && res?.data) {
+      if (!res.data.pagination && res.data.total !== undefined) {
+        res.data.pagination = {
+          page: res.data.page || 1,
+          limit: res.data.limit || 10,
+          total: res.data.total || 0,
+          totalPages: res.data.totalPages || 1,
+        };
+      }
+    }
+    return res;
   },
 
   /**
    * Cập nhật trạng thái hoặc gửi phản hồi đánh giá
    */
   async updateReview(id, data) {
-    try {
-      const res = await apiFetch("/api/admin/reviews", {
-        method: "PATCH",
-        body: JSON.stringify({ id, ...data }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-
-    const rev = MOCK_REVIEWS.find((r) => r.id === id);
-    if (rev) {
-      if (data.status) rev.status = data.status;
-      if (data.reply !== undefined) rev.reply = data.reply;
-      return { success: true, status: 200, data: rev };
-    }
-    return { success: true, status: 200, data: { id, ...data } };
+    return apiFetch("/api/admin/reviews", {
+      method: "PATCH",
+      body: JSON.stringify({ id, ...data }),
+    });
   },
 
   /**
    * Xoá 1 hoặc nhiều đánh giá
    */
   async deleteReview(idOrIds) {
-    try {
-      const res = await apiFetch("/api/admin/reviews", {
-        method: "DELETE",
-        body: JSON.stringify({ ids: Array.isArray(idOrIds) ? idOrIds : [idOrIds] }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-    return { success: true, status: 200, data: null };
+    return apiFetch("/api/admin/reviews", {
+      method: "DELETE",
+      body: JSON.stringify({ ids: Array.isArray(idOrIds) ? idOrIds : [idOrIds] }),
+    });
   },
 
   /**
@@ -636,59 +474,43 @@ export const adminService = {
     if (params.page) query.set("page", params.page);
     if (params.limit) query.set("limit", params.limit);
     const qs = query.toString();
-    try {
-      const res = await apiFetch(`/api/admin/returns${qs ? `?${qs}` : ""}`);
-      if (res?.success && res?.data?.returns && res.data.returns.length > 0) return res;
-    } catch (e) {}
-
-    return {
-      success: true,
-      status: 200,
-      data: {
-        returns: MOCK_RETURNS,
-        pagination: {
-          page: 1,
-          limit: 20,
-          total: MOCK_RETURNS.length,
-          totalPages: 1,
-        },
-      },
-    };
+    const res = await apiFetch(`/api/admin/returns${qs ? `?${qs}` : ""}`);
+    if (res?.success && res?.data) {
+      if (!res.data.pagination && res.data.total !== undefined) {
+        res.data.pagination = {
+          page: res.data.page || 1,
+          limit: res.data.limit || 10,
+          total: res.data.total || 0,
+          totalPages: res.data.totalPages || 1,
+        };
+      }
+    }
+    return res;
   },
 
   /**
    * Cập nhật trạng thái yêu cầu đổi trả / hoàn tiền
    */
   async updateReturn(id, data) {
-    try {
-      const res = await apiFetch("/api/admin/returns", {
-        method: "PATCH",
-        body: JSON.stringify({ id, ...data }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-
-    const ret = MOCK_RETURNS.find((r) => r.id === id);
-    if (ret) {
-      if (data.status) ret.status = data.status;
-      if (data.solution) ret.solution = data.solution;
-      return { success: true, status: 200, data: ret };
-    }
-    return { success: true, status: 200, data: { id, ...data } };
+    return apiFetch("/api/admin/returns", {
+      method: "PATCH",
+      body: JSON.stringify({
+        id,
+        status: data.status,
+        adminNotes: data.adminNotes || data.notes || data.solution,
+        refundAmount: data.refundAmount,
+      }),
+    });
   },
 
   /**
    * Xoá 1 hoặc nhiều yêu cầu đổi trả
    */
   async deleteReturn(idOrIds) {
-    try {
-      const res = await apiFetch("/api/admin/returns", {
-        method: "DELETE",
-        body: JSON.stringify({ ids: Array.isArray(idOrIds) ? idOrIds : [idOrIds] }),
-      });
-      if (res?.success) return res;
-    } catch (e) {}
-    return { success: true, status: 200, data: null };
+    return apiFetch("/api/admin/returns", {
+      method: "DELETE",
+      body: JSON.stringify({ ids: Array.isArray(idOrIds) ? idOrIds : [idOrIds] }),
+    });
   },
 };
 

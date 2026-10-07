@@ -60,6 +60,35 @@ public class AdminVouchersController(AppDbContext db, IValidator<CreateVoucherRe
         return ApiCreated(voucher, "Tạo voucher thành công");
     }
 
+    public record UpdateVoucherStatusBody(string? Id, bool? Active);
+
+    [HttpPatch]
+    public async Task<IActionResult> UpdateVoucher([FromBody] UpdateVoucherStatusBody request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Id)) return ApiBadRequest("Thiếu mã voucher");
+        var voucher = await db.Vouchers.FirstOrDefaultAsync(v => v.Id == request.Id || v.Code.ToUpper() == request.Id.ToUpper());
+        if (voucher == null) return ApiNotFound("Không tìm thấy voucher");
+
+        if (request.Active.HasValue) voucher.Active = request.Active.Value;
+        voucher.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        return ApiOk(voucher, "Cập nhật trạng thái voucher thành công");
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateVoucherStatus(string id, [FromBody] UpdateVoucherStatusBody request)
+    {
+        var voucher = await db.Vouchers.FirstOrDefaultAsync(v => v.Id == id || v.Code.ToUpper() == id.ToUpper());
+        if (voucher == null) return ApiNotFound("Không tìm thấy voucher");
+
+        if (request.Active.HasValue) voucher.Active = request.Active.Value;
+        voucher.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        return ApiOk(voucher, "Cập nhật trạng thái voucher thành công");
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteVoucher(string id)
     {
