@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import {
   ShoppingBag,
   TrendingUp,
@@ -16,11 +17,6 @@ import StatsCard from "./components/StatsCard";
 import OrderStatusChart from "./components/OrderStatusChart";
 import RecentOrdersTable from "./components/RecentOrdersTable";
 import RecentQuotesTable from "./components/RecentQuotesTable";
-import {
-  MOCK_DASHBOARD_STATS,
-  MOCK_ORDERS,
-  MOCK_QUOTES,
-} from "@/shared/data/adminMockData";
 
 export const metadata = {
   title: "Tổng Quan Vận Hành | Admin HDC Fashion",
@@ -51,9 +47,18 @@ export default async function AdminDashboardPage() {
 
   try {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    const cookieStore = await cookies();
+    const token = cookieStore.get("huni_token")?.value;
+    const fetchHeaders = {};
+    if (token) {
+      fetchHeaders["Cookie"] = `huni_token=${token}`;
+    }
+
     const res = await fetch(`${apiUrl}/api/admin/dashboard`, {
+      headers: fetchHeaders,
       cache: "no-store",
     }).catch(() => null);
+
     if (res && res.ok) {
       const json = await res.json().catch(() => null);
       const data = json?.data;
@@ -79,23 +84,6 @@ export default async function AdminDashboardPage() {
     console.error("[AdminDashboard] Error fetching stats:", error);
   }
 
-  // Tự động kích hoạt Mock Data chuẩn nghiệp vụ khi chưa kết nối backend
-  if (!totalOrders && !totalRevenue) {
-    totalOrders = MOCK_DASHBOARD_STATS.totalOrders;
-    totalRevenue = MOCK_DASHBOARD_STATS.totalRevenue;
-    totalQuotes = MOCK_DASHBOARD_STATS.totalQuotes;
-    totalCustomers = MOCK_DASHBOARD_STATS.totalCustomers;
-    pendingOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.pending;
-    confirmedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.confirmed || 24;
-    producingOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.producing;
-    shippedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.shipped || 18;
-    completedOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.completed;
-    cancelledOrders = MOCK_DASHBOARD_STATS.statusCounts.orders.cancelled;
-    newQuotes = MOCK_DASHBOARD_STATS.statusCounts.quotes.new;
-    recentOrders = MOCK_ORDERS.slice(0, 5);
-    recentQuotes = MOCK_QUOTES.slice(0, 5);
-  }
-
   const statusCounts = {
     pending: pendingOrders,
     confirmed: confirmedOrders,
@@ -114,7 +102,7 @@ export default async function AdminDashboardPage() {
             <span>Tổng Quan Hoạt Động</span>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#0097B2]/10 text-[#007F96] dark:text-[#0097B2] border border-[#0097B2]/25 flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-[#0097B2] animate-pulse" />
-              Live Demo
+              Thời Gian Thực
             </span>
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -165,7 +153,7 @@ export default async function AdminDashboardPage() {
           title="YÊU CẦU BÁO GIÁ"
           value={`${totalQuotes} yêu cầu`}
           subtext={`${newQuotes} yêu cầu mới cần gửi giá`}
-          trend={{ isPositive: true, label: "5 phản hồi hôm nay" }}
+          trend={{ isPositive: true, label: "Hệ thống tự động" }}
           sparkHeights={[20, 40, 30, 50, 60, 50, 70, 85, 75, 100]}
         />
 
@@ -174,7 +162,7 @@ export default async function AdminDashboardPage() {
           title="KHÁCH HÀNG DOANH NGHIỆP"
           value={`${totalCustomers} đối tác`}
           subtext="Tập đoàn, trường học & chuỗi F&B"
-          trend={{ isPositive: true, label: "+8 đối tác mới" }}
+          trend={{ isPositive: true, label: "Dữ liệu thực tế" }}
           sparkHeights={[35, 30, 45, 60, 55, 70, 80, 85, 95, 100]}
         />
       </div>
@@ -286,7 +274,7 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* 4. HAI BẢNG DỮ LIỆU GẦN NHẤT CÓ THỰC: Đơn Hàng & Báo Giá */}
+      {/* 4. HAI BẢNG DỮ LIỆU GẦN NHẤT: Đơn Hàng & Báo Giá */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentOrdersTable orders={recentOrders} />
         <RecentQuotesTable quotes={recentQuotes} />

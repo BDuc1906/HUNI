@@ -75,6 +75,84 @@ public class HuniWebAppFactory : WebApplicationFactory<Program>
             });
         }
 
+        if (db.Reviews.Find("rev-001") == null)
+        {
+            db.Reviews.Add(new Review
+            {
+                Id = "rev-001",
+                ProductId = "prod-test-001",
+                UserId = "customer-test-001",
+                CustomerName = "Nguyễn Văn Hưng",
+                CustomerPhone = "0912345678",
+                CustomerEmail = "hung@test.com",
+                Rating = 5,
+                Content = "Sản phẩm rất đẹp và chất lượng!",
+                Status = ReviewStatus.PENDING,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+        }
+
+        if (db.Reviews.Find("rev-005") == null)
+        {
+            db.Reviews.Add(new Review
+            {
+                Id = "rev-005",
+                ProductId = "prod-test-001",
+                UserId = "customer-test-001",
+                CustomerName = "Trần Thị B",
+                Rating = 4,
+                Content = "Giao hàng đúng hẹn",
+                Status = ReviewStatus.APPROVED,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+        }
+
+        if (db.ReturnRequests.Find("RT-261001-001") == null)
+        {
+            db.ReturnRequests.Add(new ReturnRequest
+            {
+                Id = "RT-261001-001",
+                OrderNumber = "ORD-TEST-001",
+                CustomerName = "Nguyễn Văn A",
+                CustomerPhone = "0901234567",
+                CustomerEmail = "a@test.com",
+                ProductId = "prod-test-001",
+                ProductTitle = "Áo Polo Test",
+                Quantity = 2,
+                Type = ReturnType.REFUND,
+                Reason = "Sai kích thước",
+                Details = "Cần hoàn tiền cho đơn hàng",
+                RefundAmount = 0,
+                Status = ReturnStatus.PENDING,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+        }
+
+        if (db.ReturnRequests.Find("RT-260928-005") == null)
+        {
+            db.ReturnRequests.Add(new ReturnRequest
+            {
+                Id = "RT-260928-005",
+                OrderNumber = "ORD-TEST-002",
+                CustomerName = "Trần Văn C",
+                CustomerPhone = "0987654321",
+                CustomerEmail = "c@test.com",
+                ProductId = "prod-test-001",
+                ProductTitle = "Áo Polo Test",
+                Quantity = 1,
+                Type = ReturnType.EXCHANGE,
+                Reason = "Đổi màu khác",
+                Details = "Cần đổi sang màu đen",
+                RefundAmount = 0,
+                Status = ReturnStatus.PENDING,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+        }
+
         db.SaveChanges();
     }
 
@@ -101,6 +179,6 @@ public class HuniWebAppFactory : WebApplicationFactory<Program>
             return tokenProp.GetString() ?? string.Empty;
         }
 
-        return string.Empty;
+        throw new InvalidOperationException("No token found in response or cookies");
     }
 }

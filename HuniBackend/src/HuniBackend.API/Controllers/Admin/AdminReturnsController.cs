@@ -1,6 +1,5 @@
 using HuniBackend.Domain.Enums;
 using HuniBackend.Infrastructure.Data;
-using HuniBackend.Infrastructure.InMemory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,121 +21,58 @@ public class AdminReturnsController(AppDbContext db) : BaseApiController
         var safeLimit = Math.Clamp(limit, 1, 100);
         var safePage = Math.Max(1, page);
 
-        var dbCount = await db.ReturnRequests.CountAsync();
-        if (dbCount > 0)
+        var query = db.ReturnRequests.Include(r => r.Product).AsNoTracking().AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(status) && status.ToLower() != "all" && Enum.TryParse<ReturnStatus>(status, true, out var st))
         {
-            var query = db.ReturnRequests.Include(r => r.Product).AsNoTracking().AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(status) && status.ToLower() != "all" && Enum.TryParse<ReturnStatus>(status, true, out var st))
-            {
-                query = query.Where(r => r.Status == st);
-            }
-
-            if (!string.IsNullOrWhiteSpace(type) && type.ToLower() != "all" && Enum.TryParse<ReturnType>(type, true, out var tp))
-            {
-                query = query.Where(r => r.Type == tp);
-            }
-
-            if (!string.IsNullOrWhiteSpace(search))
-            {
-                var s = search.Trim().ToLower();
-                query = query.Where(r => r.Id.ToLower().Contains(s) ||
-                                         r.OrderNumber.ToLower().Contains(s) ||
-                                         r.CustomerName.ToLower().Contains(s) ||
-                                         r.CustomerPhone.Contains(s) ||
-                                         (r.CustomerEmail != null && r.CustomerEmail.ToLower().Contains(s)) ||
-                                         (r.Company != null && r.Company.ToLower().Contains(s)) ||
-                                         r.Reason.ToLower().Contains(s) ||
-                                         r.ProductTitle.ToLower().Contains(s));
-            }
-
-            var total = await query.CountAsync();
-            var returnsList = await query
-                .OrderByDescending(r => r.CreatedAt)
-                .Skip((safePage - 1) * safeLimit)
-                .Take(safeLimit)
-                .ToListAsync();
-
-            var pendingCount = await db.ReturnRequests.CountAsync(r => r.Status == ReturnStatus.PENDING);
-            var processingCount = await db.ReturnRequests.CountAsync(r => r.Status == ReturnStatus.PROCESSING);
-            var completedCount = await db.ReturnRequests.CountAsync(r => r.Status == ReturnStatus.EXCHANGED || r.Status == ReturnStatus.REFUNDED);
-            var totalRefunded = await db.ReturnRequests.Where(r => r.Status == ReturnStatus.REFUNDED).SumAsync(r => (long)r.RefundAmount);
-
-            return ApiOk(new
-            {
-                returns = returnsList,
-                total,
-                page = safePage,
-                limit = safeLimit,
-                totalPages = (int)Math.Ceiling((double)total / safeLimit),
-                stats = new
-                {
-                    totalRequests = dbCount,
-                    pendingCount,
-                    processingCount,
-                    completedCount,
-                    totalRefunded
-                }
-            });
+            query = query.Where(r => r.Status == st);
         }
 
-        // Fallback to In-Memory store
-        var memoryItems = AdminReturnStore.GetAll();
-
-        if (!string.IsNullOrWhiteSpace(status) && status.ToLower() != "all")
+        if (!string.IsNullOrWhiteSpace(type) && type.ToLower() != "all" && Enum.TryParse<ReturnType>(type, true, out var tp))
         {
-            memoryItems = memoryItems.Where(r => r.Status.Equals(status, StringComparison.OrdinalIgnoreCase)).ToList();
-        }
-
-        if (!string.IsNullOrWhiteSpace(type) && type.ToLower() != "all")
-        {
-            memoryItems = memoryItems.Where(r => r.Type.Equals(type, StringComparison.OrdinalIgnoreCase)).ToList();
+            query = query.Where(r => r.Type == tp);
         }
 
         if (!string.IsNullOrWhiteSpace(search))
         {
             var s = search.Trim().ToLower();
-            memoryItems = memoryItems.Where(r => r.Id.ToLower().Contains(s) ||
-                                                 r.OrderNumber.ToLower().Contains(s) ||
-                                                 r.CustomerName.ToLower().Contains(s) ||
-                                                 r.CustomerPhone.Contains(s) ||
-                                                 (r.CustomerEmail != null && r.CustomerEmail.ToLower().Contains(s)) ||
-                                                 (r.Company != null && r.Company.ToLower().Contains(s)) ||
-                                                 r.Reason.ToLower().Contains(s) ||
-                                                 r.ProductTitle.ToLower().Contains(s)).ToList();
+            query = query.Where(r => r.Id.ToLower().Contains(s) ||
+                                     r.OrderNumber.ToLower().Contains(s) ||
+                                     r.CustomerName.ToLower().Contains(s) ||
+                                     r.CustomerPhone.Contains(s) ||
+                                     (r.CustomerEmail != null && r.CustomerEmail.ToLower().Contains(s)) ||
+                                     (r.Company != null && r.Company.ToLower().Contains(s)) ||
+                                     r.Reason.ToLower().Contains(s) ||
+                                     r.ProductTitle.ToLower().Contains(s));
         }
 
-        var memTotal = memoryItems.Count;
-        var paginatedMem = memoryItems
+        var total = await query.CountAsync();
+        var returnsList = await query
             .OrderByDescending(r => r.CreatedAt)
             .Skip((safePage - 1) * safeLimit)
             .Take(safeLimit)
-            .ToList();
+            .ToListAsync();
 
-        var allStoreItems = AdminReturnStore.GetAll();
-        var allStoreCount = allStoreItems.Count;
-        var memPending = allStoreItems.Count(r => r.Status.Equals("PENDING", StringComparison.OrdinalIgnoreCase));
-        var memProcessing = allStoreItems.Count(r => r.Status.Equals("PROCESSING", StringComparison.OrdinalIgnoreCase));
-        var memCompleted = allStoreItems.Count(r => r.Status.Equals("EXCHANGED", StringComparison.OrdinalIgnoreCase) ||
-                                                    r.Status.Equals("REFUNDED", StringComparison.OrdinalIgnoreCase));
-        var memTotalRefunded = allStoreItems
-            .Where(r => r.Status.Equals("REFUNDED", StringComparison.OrdinalIgnoreCase))
-            .Sum(r => (long)r.RefundAmount);
+        var totalRequests = await db.ReturnRequests.CountAsync();
+        var pendingCount = await db.ReturnRequests.CountAsync(r => r.Status == ReturnStatus.PENDING);
+        var processingCount = await db.ReturnRequests.CountAsync(r => r.Status == ReturnStatus.PROCESSING);
+        var completedCount = await db.ReturnRequests.CountAsync(r => r.Status == ReturnStatus.EXCHANGED || r.Status == ReturnStatus.REFUNDED);
+        var totalRefunded = await db.ReturnRequests.Where(r => r.Status == ReturnStatus.REFUNDED).SumAsync(r => (long)r.RefundAmount);
 
         return ApiOk(new
         {
-            returns = paginatedMem,
-            total = memTotal,
+            returns = returnsList,
+            total,
             page = safePage,
             limit = safeLimit,
-            totalPages = (int)Math.Ceiling((double)memTotal / safeLimit),
+            totalPages = (int)Math.Ceiling((double)total / safeLimit),
             stats = new
             {
-                totalRequests = allStoreCount,
-                pendingCount = memPending,
-                processingCount = memProcessing,
-                completedCount = memCompleted,
-                totalRefunded = memTotalRefunded
+                totalRequests,
+                pendingCount,
+                processingCount,
+                completedCount,
+                totalRefunded
             }
         });
     }
@@ -152,37 +88,30 @@ public class AdminReturnsController(AppDbContext db) : BaseApiController
         }
 
         var ret = await db.ReturnRequests.FirstOrDefaultAsync(r => r.Id == request.Id);
-        if (ret != null)
+        if (ret == null)
         {
-            if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<ReturnStatus>(request.Status, true, out var st))
-            {
-                ret.Status = st;
-            }
-
-            if (request.AdminNotes != null)
-            {
-                ret.AdminNotes = request.AdminNotes;
-            }
-
-            if (request.RefundAmount.HasValue)
-            {
-                ret.RefundAmount = request.RefundAmount.Value;
-            }
-
-            ret.UpdatedAt = DateTime.UtcNow;
-            await db.SaveChangesAsync();
-
-            return ApiOk(ret, "Cập nhật yêu cầu đổi trả thành công");
+            return ApiNotFound("Không tìm thấy yêu cầu đổi trả");
         }
 
-        // Try In-Memory Store
-        var memUpdated = AdminReturnStore.Update(request.Id, request.Status, request.AdminNotes, request.RefundAmount);
-        if (memUpdated != null)
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<ReturnStatus>(request.Status, true, out var st))
         {
-            return ApiOk(memUpdated, "Cập nhật yêu cầu đổi trả thành công");
+            ret.Status = st;
         }
 
-        return ApiNotFound("Không tìm thấy yêu cầu đổi trả");
+        if (request.AdminNotes != null)
+        {
+            ret.AdminNotes = request.AdminNotes;
+        }
+
+        if (request.RefundAmount.HasValue)
+        {
+            ret.RefundAmount = request.RefundAmount.Value;
+        }
+
+        ret.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        return ApiOk(ret, "Cập nhật yêu cầu đổi trả thành công");
     }
 
     public record AdminDeleteReturnRequest(string? Id, List<string>? Ids);
@@ -206,18 +135,15 @@ public class AdminReturnsController(AppDbContext db) : BaseApiController
             await db.SaveChangesAsync();
         }
 
-        var deletedFromMemory = AdminReturnStore.Delete(targetIds);
-        var totalDeleted = toDeleteDb.Count + deletedFromMemory;
-
         return Ok(new
         {
             success = true,
-            deletedCount = totalDeleted,
+            deletedCount = toDeleteDb.Count,
             data = new
             {
-                deletedCount = totalDeleted
+                deletedCount = toDeleteDb.Count
             },
-            message = $"Đã xoá {totalDeleted} yêu cầu đổi trả thành công"
+            message = $"Đã xoá {toDeleteDb.Count} yêu cầu đổi trả thành công"
         });
     }
 }
